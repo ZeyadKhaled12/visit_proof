@@ -1,0 +1,112 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:visit_proof/configs/app_toasts.dart';
+import 'package:visit_proof/features/clients/domain/usecases/get_client_detail_uc.dart';
+import 'package:visit_proof/features/clients/domain/usecases/remove_client_uc.dart';
+import 'package:visit_proof/features/clients/presentation/controller/clients_bloc.dart';
+import 'package:visit_proof/features/clients/presentation/screens/add_client_scr.dart';
+import '../../../../../configs/app_colors.dart';
+import '../../../../../core/utils/general_widgets/g_widget_button.dart';
+import '../../../data/models/client_detail_model/client_detail_model.dart';
+
+class ClientDetailWidgetBottomBtns extends StatelessWidget {
+  const ClientDetailWidgetBottomBtns(
+      {super.key,
+      required this.clientDetailModel,
+      required this.removeLoading});
+  final bool removeLoading;
+  final ClientDetailModel clientDetailModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceWhite,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor,
+            blurRadius: 10,
+            offset: const Offset(0, -3),
+          )
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GWidgetButton(
+              text: 'Edit Client',
+              backgroundColor: AppColors.secondary,
+              height: 42,
+              raduis: 12,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              widget: const Padding(
+                padding: EdgeInsets.only(left: 6.0),
+                child: Icon(Icons.edit_square, color: Colors.white, size: 16),
+              ),
+              onPressed: () async {
+                final data = await Navigator.pushNamed(
+                    context, AddClientScr.route,
+                    arguments:
+                        AddClientArgu(client: clientDetailModel).toArgu());
+                if (data is bool) {
+                  if (data) {
+                    if (clientDetailModel.id != null) {
+                      context.read<ClientsBloc>().add(GetClientDetailEvent(
+                          getClientDetailParameters: GetClientDetailParameters(
+                              clientID: clientDetailModel.id!)));
+                    }
+                  }
+                }
+              },
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: GWidgetButton(
+              text: 'Remove',
+              colorText: AppColors.statOrange,
+              backgroundColor: AppColors.statOrange.withValues(alpha: 0.1),
+              border: Border.all(color: AppColors.statOrange, width: 1.2),
+              height: 42,
+              raduis: 12,
+              fontSize: 14,
+              isLoading: removeLoading,
+              loadingSize: 15,
+              loadingColor: AppColors.statOrange,
+              fontWeight: FontWeight.bold,
+              widget: const Padding(
+                padding: EdgeInsets.only(left: 6.0),
+                child: Icon(Icons.delete_outline,
+                    color: AppColors.statOrange, size: 16),
+              ),
+              onPressed: () async {
+                if (clientDetailModel.visits?.isNotEmpty ?? false) {
+                  AppToasts.showMessage(
+                      'This client cannot be deleted because they have existing visits',
+                      isError: true);
+                  return;
+                }
+
+                final data = await AppToasts.showDeleteConfirmation(
+                    headTitle: 'Remove Client?',
+                    title:
+                        'Are you sure you want to remove ${clientDetailModel.name ?? '--'}? This action cannot be undone.');
+                if (data is bool) {
+                  if (data) {
+                    if (clientDetailModel.id != null) {
+                      context.read<ClientsBloc>().add(RemoveClientEvent(
+                          removeClientParameters: RemoveClientParameters(
+                              clientID: clientDetailModel.id!)));
+                    }
+                  }
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
