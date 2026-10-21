@@ -11,6 +11,7 @@ class TechDetailWidgetCategories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClientDetailWidgetTitle(
           title: 'Categories',
@@ -21,6 +22,7 @@ class TechDetailWidgetCategories extends StatelessWidget {
         Wrap(
           spacing: 8.0, // horizontal gap between chips
           runSpacing: 8.0, // vertical gap between lines of chips
+          crossAxisAlignment: WrapCrossAlignment.start,
           children: categories.map((category) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

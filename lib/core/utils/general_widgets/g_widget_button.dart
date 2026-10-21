@@ -52,7 +52,7 @@ class GWidgetButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: !isLoading ? onPressed : null,
+        onTap: !isLoading && isEnable ? onPressed : null,
         highlightColor: AppColors.secondary,
         splashColor: AppColors.secondary,
         child: Container(

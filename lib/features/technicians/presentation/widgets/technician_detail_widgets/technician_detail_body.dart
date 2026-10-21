@@ -12,8 +12,12 @@ import 'tech_detail_widget_header.dart';
 
 class TechnicianDetailBody extends StatelessWidget {
   const TechnicianDetailBody(
-      {super.key, required this.technicianDetailModel, required this.loading});
+      {super.key,
+      required this.technicianDetailModel,
+      required this.loading,
+      required this.removeClientLoading});
   final TechnicianDetailModel technicianDetailModel;
+  final bool removeClientLoading;
   final bool loading;
 
   @override
@@ -27,7 +31,7 @@ class TechnicianDetailBody extends StatelessWidget {
         bottomNavigationBar: loading
             ? null
             : TechDetailWidgetBottomBtns(
-                removeLoading: false,
+                removeLoading: removeClientLoading,
                 technicianDetailModel: technicianDetailModel),
         body: GWidgetLoading(
           isLoading: loading,

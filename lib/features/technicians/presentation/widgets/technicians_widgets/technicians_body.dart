@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
+import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
 
 import '../../../../../configs/app_colors.dart';
 import '../../../../../configs/app_fonts.dart';
+import '../../../../../core/usecase/base_use_case.dart';
 import '../../../../../core/utils/general_widgets/g_widget_appbar.dart';
 import '../../../../../core/utils/general_widgets/g_widget_excel.dart';
 import '../../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
@@ -26,7 +29,7 @@ class TechniciansBody extends StatelessWidget {
           Center(
               child: Padding(
                   padding: const EdgeInsets.only(right: 15),
-                  child: GWidgetExcel())),
+                  child: GWidgetExcel()))
         ]).appbar(),
         body: GWidgetLoading(
           isLoading: loading,
@@ -55,12 +58,11 @@ class TechniciansBody extends StatelessWidget {
                             itemCount: technicians.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: technicians.length - 1 == index
-                                    ? EdgeInsets.only(bottom: 80)
-                                    : EdgeInsets.zero,
-                                child: TechnicianWidgetCard(
-                                    technician: technicians[index]),
-                              );
+                                  padding: technicians.length - 1 == index
+                                      ? EdgeInsets.only(bottom: 80)
+                                      : EdgeInsets.zero,
+                                  child: TechnicianWidgetCard(
+                                      technician: technicians[index]));
                             },
                           )),
               ],
@@ -70,7 +72,14 @@ class TechniciansBody extends StatelessWidget {
         floatingActionButton: GWidgetFloatingBtn(
             text: "Add new technician",
             onPressed: () async {
-              Navigator.pushNamed(context, AddTechScr.route);
+              final data = await Navigator.pushNamed(context, AddTechScr.route);
+              if (data is bool) {
+                if (data) {
+                  context
+                      .read<TechBloc>()
+                      .add(GetTechniciansEvent(noParameters: NoParameters()));
+                }
+              }
             }));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
 
 import '../../../configs/app_colors.dart';
 import '../../../configs/app_fonts.dart';
@@ -23,28 +24,29 @@ class GWidgetDropDown<T> extends StatefulWidget {
   final String searchHintText;
   final String emptyMessage;
   final String Function(DropdownMenuItem<T>)? searchTextBuilder;
+  final bool loading;
 
-  const GWidgetDropDown({
-    super.key,
-    required this.items,
-    this.value,
-    this.onChanged,
-    this.hintText,
-    this.labelText,
-    this.validator,
-    this.errorMsg,
-    this.prefixIcon,
-    this.isExpanded = true,
-    this.iconSize = 24.0,
-    this.icon,
+  const GWidgetDropDown(
+      {super.key,
+      required this.items,
+      this.value,
+      this.onChanged,
+      this.hintText,
+      this.labelText,
+      this.validator,
+      this.errorMsg,
+      this.prefixIcon,
+      this.isExpanded = true,
+      this.iconSize = 24.0,
+      this.icon,
 
-    // New parameters
-    this.enableSearch = false,
-    this.dropdownMaxHeight = 300,
-    this.searchHintText = 'Search...',
-    this.emptyMessage = 'No results found',
-    this.searchTextBuilder,
-  });
+      // New parameters
+      this.enableSearch = false,
+      this.dropdownMaxHeight = 300,
+      this.searchHintText = 'Search...',
+      this.emptyMessage = 'No results found',
+      this.searchTextBuilder,
+      this.loading = false});
 
   @override
   State<GWidgetDropDown<T>> createState() => _GWidgetDropDownState<T>();
@@ -414,7 +416,9 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
             final hasValue = selectedChild != null;
 
             return InkWell(
-              onTap: widget.onChanged != null ? _toggleDropdown : null,
+             onTap: widget.loading || widget.onChanged == null
+                  ? null
+                  : _toggleDropdown,
               borderRadius: BorderRadius.circular(16),
               child: InputDecorator(
                 isEmpty: !hasValue,
@@ -435,6 +439,11 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                   ),
                   prefixIcon: widget.prefixIcon,
                   errorText: widget.errorMsg ?? field.errorText,
+                  errorStyle: AppFonts(
+                    color: AppColors.statOrange,
+                    fontSize: 12.9,
+                    fontWeight: FontWeight.w500,
+                  ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 18,
@@ -498,14 +507,21 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                         ),
                       ),
                     const SizedBox(width: 8),
-                    widget.icon ??
-                        Icon(
-                          _isOpen
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded,
-                          color: AppColors.primary,
-                          size: widget.iconSize,
-                        ),
+                    widget.loading
+                        ? GWidgetLoadingCircle(
+                            width: 15,
+                            height: 15,
+                            strokeWidth: 2.5,
+                            color: AppColors.primary,
+                          )
+                        : widget.icon ??
+                            Icon(
+                              _isOpen
+                                  ? Icons.keyboard_arrow_up_rounded
+                                  : Icons.keyboard_arrow_down_rounded,
+                              color: AppColors.primary,
+                              size: widget.iconSize,
+                            ),
                   ],
                 ),
               ),

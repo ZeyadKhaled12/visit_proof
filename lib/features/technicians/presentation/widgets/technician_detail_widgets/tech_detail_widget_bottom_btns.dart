@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/features/technicians/data/models/technician_detail_model.dart';
+import 'package:visit_proof/features/technicians/domain/usecases/get_tech_detail_uc.dart';
+import 'package:visit_proof/features/technicians/domain/usecases/remove_technician_uc.dart';
+import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
+import 'package:visit_proof/features/technicians/presentation/screens/add_tech_scr.dart';
 
 import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_toasts.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 
 class TechDetailWidgetBottomBtns extends StatelessWidget {
@@ -40,7 +46,22 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
                 padding: EdgeInsets.only(left: 6.0),
                 child: Icon(Icons.edit_square, color: Colors.white, size: 16),
               ),
-              onPressed: () async {},
+              onPressed: () async {
+                final data = await Navigator.pushNamed(
+                    context, AddTechScr.route,
+                    arguments: AddTechArgu(
+                            technicianDetailModel: technicianDetailModel)
+                        .toArgu());
+                if (data is bool) {
+                  if (data) {
+                    if (technicianDetailModel.id != null) {
+                      context.read<TechBloc>().add(GetTechDetailEvent(
+                          getTechDetailParameters: GetTechDetailParameters(
+                              techID: technicianDetailModel.id!)));
+                    }
+                  }
+                }
+              },
             ),
           ),
           const SizedBox(width: 12),
@@ -62,7 +83,29 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
                 child: Icon(Icons.delete_outline,
                     color: AppColors.statOrange, size: 16),
               ),
-              onPressed: () async {},
+              onPressed: () async {
+                if (technicianDetailModel.visits?.isNotEmpty ?? false) {
+                  AppToasts.showMessage(
+                      'This technician cannot be deleted because they have existing visits',
+                      isError: true);
+                  return;
+                }
+
+                final data = await AppToasts.showDeleteConfirmation(
+                    headTitle: 'Remove Technician?',
+                    title:
+                        'Are you sure you want to remove ${technicianDetailModel.name ?? '--'}? This action cannot be undone.');
+                if (data is bool) {
+                  if (data) {
+                    if (technicianDetailModel.id != null) {
+                      context.read<TechBloc>().add(RemoveTechEvent(
+                          removeTechnicianParameters:
+                              RemoveTechnicianParameters(
+                                  techID: technicianDetailModel.id!)));
+                    }
+                  }
+                }
+              },
             ),
           ),
         ],

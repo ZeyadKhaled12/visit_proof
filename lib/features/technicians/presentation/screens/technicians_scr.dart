@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
-import 'package:visit_proof/features/technicians/presentation/widgets/technicians_widgets/technicians_body.dart';
-
 import '../../../../core/services/services_locator.dart';
 import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/enums.dart';
+import '../controller/tech_bloc.dart';
+import '../widgets/technicians_widgets/technicians_body.dart';
 
 class TechniciansScr extends StatelessWidget {
   const TechniciansScr({super.key});
