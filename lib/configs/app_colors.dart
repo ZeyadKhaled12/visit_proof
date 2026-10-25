@@ -35,4 +35,5 @@ class AppColors {
   static Color shadowColor = Colors.black.withValues(alpha: .03);
   static Color cardShadowColor = cardAccent.withValues(alpha: .08);
   static Color fabShadowColor = primary.withValues(alpha: .4);
+
 }

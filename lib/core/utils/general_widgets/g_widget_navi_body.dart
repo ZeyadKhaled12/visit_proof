@@ -8,7 +8,7 @@ class GWidgetNaviBody extends StatelessWidget {
   final String title;
   final Widget body;
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.scaffoldBackground,

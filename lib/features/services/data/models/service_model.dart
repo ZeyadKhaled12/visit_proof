@@ -5,6 +5,7 @@ class ServiceModel {
   final GModelCatg? category;
   final String? serviceName;
   final num? defaultPrice;
+  final int? duration;
   final List<String>? checkList;
 
   ServiceModel(
@@ -12,6 +13,7 @@ class ServiceModel {
       this.category,
       this.serviceName,
       this.defaultPrice,
+      this.duration,
       this.checkList});
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class ServiceModel {
           : GModelCatg.fromJson(json['category']),
       serviceName: json['serviceName'] as String?,
       defaultPrice: json['defaultPrice'] as num?,
+      duration: json['duration'] as int?,
       checkList: (json['checkList'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),
@@ -33,6 +36,7 @@ class ServiceModel {
     GModelCatg? category,
     String? serviceName,
     num? defaultPrice,
+    int? duration,
     List<String>? checkList,
   }) {
     return ServiceModel(
@@ -40,6 +44,7 @@ class ServiceModel {
       category: category ?? this.category,
       serviceName: serviceName ?? this.serviceName,
       defaultPrice: defaultPrice ?? this.defaultPrice,
+      duration: duration ?? this.duration,
       checkList: checkList ?? this.checkList,
     );
   }
@@ -49,6 +54,7 @@ class ServiceModel {
         'category': category?.toJson(),
         'serviceName': serviceName,
         'defaultPrice': defaultPrice,
+        'duration': duration,
         'checkList': checkList
       };
 }

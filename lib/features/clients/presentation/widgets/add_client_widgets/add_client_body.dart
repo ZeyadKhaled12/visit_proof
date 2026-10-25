@@ -11,6 +11,7 @@ import '../../../../../core/utils/general_dummy_data.dart';
 import '../../../../../core/utils/general_functions.dart/g_fun_valid.dart';
 import '../../../../../core/utils/general_models/g_model_catg.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
+import '../../../../../core/utils/general_widgets/g_widget_card_title.dart';
 import '../../../../../core/utils/general_widgets/g_widget_check_whatsapp.dart';
 import '../../../../../core/utils/general_widgets/g_widget_drop_down.dart';
 import '../../../../../core/utils/general_widgets/g_widget_navi_body.dart';
@@ -19,7 +20,6 @@ import '../../../../../core/utils/general_widgets/g_widget_text_field.dart';
 import '../../../data/models/client_detail_model/client_detail_model.dart';
 import '../../../domain/usecases/add_client_uc.dart';
 import '../../controller/clients_bloc.dart';
-import 'add_client_widget_card_title.dart';
 import 'add_client_widget_location.dart';
 
 class AddClientBody extends StatefulWidget {
@@ -109,7 +109,7 @@ class _AddClientBodyState extends State<AddClientBody> {
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
-              AddClientWidgetCardTitle(
+              GWidgetCardTitle(
                   icon: Icons.person_pin,
                   title: 'Personal Info',
                   child: Column(
@@ -139,7 +139,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                     ],
                   )),
               const SizedBox(height: 32),
-              AddClientWidgetCardTitle(
+              GWidgetCardTitle(
                   icon: Icons.contact_phone_outlined,
                   title: 'Contact Info',
                   child: Column(
@@ -174,7 +174,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                     ],
                   )),
               const SizedBox(height: 32),
-              AddClientWidgetCardTitle(
+              GWidgetCardTitle(
                   icon: Icons.map_outlined,
                   title: 'Location Details',
                   child: Column(
@@ -223,7 +223,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                     ],
                   )),
               const SizedBox(height: 32),
-              AddClientWidgetCardTitle(
+              GWidgetCardTitle(
                   icon: Icons.note_alt_outlined,
                   title: 'Extra Info',
                   child: GWidgetTextField(

@@ -416,7 +416,7 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
             final hasValue = selectedChild != null;
 
             return InkWell(
-             onTap: widget.loading || widget.onChanged == null
+              onTap: widget.loading || widget.onChanged == null
                   ? null
                   : _toggleDropdown,
               borderRadius: BorderRadius.circular(16),
@@ -480,6 +480,7 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                 child: Row(
                   mainAxisSize:
                       widget.isExpanded ? MainAxisSize.max : MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (hasValue)
                       Flexible(

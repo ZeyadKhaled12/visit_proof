@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../configs/app_colors.dart';
+import '../../../configs/app_fonts.dart';
 
-class AddClientWidgetCardTitle extends StatelessWidget {
-  const AddClientWidgetCardTitle(
+class GWidgetCardTitle extends StatelessWidget {
+  const GWidgetCardTitle(
       {super.key,
       required this.icon,
       required this.title,

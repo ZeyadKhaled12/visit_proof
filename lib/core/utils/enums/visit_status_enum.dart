@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_colors.dart';
 
-enum VisitStatus { scheduled, enRoute, onSite, inProgress, signed }
+enum VisitStatus {
+  draft,
+  scheduled,
+  assigned,
+  onWay,
+  inProgress,
+  completed,
+  cancel
+}
 
 class VisitStatusSwitch {
   final VisitStatus? visitStatusEnum;
@@ -13,32 +21,40 @@ class VisitStatusSwitch {
     switch (visitStatusEnum) {
       case null:
         return 1;
-      case VisitStatus.scheduled:
+      case VisitStatus.draft:
         return 1;
-      case VisitStatus.enRoute:
+      case VisitStatus.scheduled:
         return 2;
-      case VisitStatus.onSite:
+      case VisitStatus.assigned:
         return 3;
-      case VisitStatus.inProgress:
+      case VisitStatus.onWay:
         return 4;
-      case VisitStatus.signed:
+      case VisitStatus.inProgress:
         return 5;
+      case VisitStatus.completed:
+        return 6;
+      case VisitStatus.cancel:
+        return 7;
     }
   }
 
   VisitStatus switchEnum() {
     if (visitStatusID == 1) {
-      return VisitStatus.scheduled;
+      return VisitStatus.draft;
     } else if (visitStatusID == 2) {
-      return VisitStatus.enRoute;
+      return VisitStatus.scheduled;
     } else if (visitStatusID == 3) {
-      return VisitStatus.onSite;
+      return VisitStatus.assigned;
     } else if (visitStatusID == 4) {
-      return VisitStatus.inProgress;
+      return VisitStatus.onWay;
     } else if (visitStatusID == 5) {
-      return VisitStatus.signed;
+      return VisitStatus.inProgress;
+    } else if (visitStatusID == 6) {
+      return VisitStatus.completed;
+    } else if (visitStatusID == 7) {
+      return VisitStatus.cancel;
     }
-    return VisitStatus.scheduled;
+    return VisitStatus.draft;
   }
 
   Color getColor() {
@@ -47,55 +63,71 @@ class VisitStatusSwitch {
     } else if (visitStatusID == 2) {
       return AppColors.pending;
     } else if (visitStatusID == 3) {
-      return AppColors.secondary;
-    } else if (visitStatusID == 4) {
       return AppColors.primary;
+    } else if (visitStatusID == 4) {
+      return AppColors.secondary;
     } else if (visitStatusID == 5) {
+      return AppColors.pending;
+    } else if (visitStatusID == 6) {
       return AppColors.statGreen;
+    } else if (visitStatusID == 7) {
+      return AppColors.statOrange;
     }
 
     switch (visitStatusEnum) {
       case null:
         return AppColors.iconGrey;
-      case VisitStatus.scheduled:
+      case VisitStatus.draft:
         return AppColors.iconGrey;
-      case VisitStatus.enRoute:
+      case VisitStatus.scheduled:
         return AppColors.pending;
-      case VisitStatus.onSite:
+      case VisitStatus.assigned:
+        return AppColors.primary;
+      case VisitStatus.onWay:
         return AppColors.secondary;
       case VisitStatus.inProgress:
-        return AppColors.primary;
-      case VisitStatus.signed:
+        return AppColors.pending;
+      case VisitStatus.completed:
         return AppColors.statGreen;
+      case VisitStatus.cancel:
+        return AppColors.statOrange;
     }
   }
 
   String getText() {
     if (visitStatusID == 1) {
-      return 'Scheduled';
+      return 'draft';
     } else if (visitStatusID == 2) {
-      return 'En Route';
+      return 'scheduled';
     } else if (visitStatusID == 3) {
-      return 'On Site';
+      return 'assigned';
     } else if (visitStatusID == 4) {
-      return 'In Progress';
+      return 'on way';
     } else if (visitStatusID == 5) {
-      return 'Completed & Signed';
+      return 'in progress';
+    } else if (visitStatusID == 6) {
+      return 'completed';
+    } else if (visitStatusID == 7) {
+      return 'cancel';
     }
 
     switch (visitStatusEnum) {
       case null:
-        return 'Scheduled';
+        return 'draft';
+      case VisitStatus.draft:
+        return 'draft';
       case VisitStatus.scheduled:
-        return 'Scheduled';
-      case VisitStatus.enRoute:
-        return 'En Route';
-      case VisitStatus.onSite:
-        return 'On Site';
+        return 'scheduled';
+      case VisitStatus.assigned:
+        return 'assigned';
+      case VisitStatus.onWay:
+        return 'on way';
       case VisitStatus.inProgress:
-        return 'In Progress';
-      case VisitStatus.signed:
-        return 'Completed & Signed';
+        return 'in progress';
+      case VisitStatus.completed:
+        return 'completed';
+      case VisitStatus.cancel:
+        return 'cancel';
     }
   }
 }
