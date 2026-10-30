@@ -5,8 +5,9 @@ import '../../../configs/app_colors.dart';
 
 class GWidgetBottomSheet extends StatelessWidget {
   const GWidgetBottomSheet(
-      {super.key, required this.title, required this.body});
+      {super.key, required this.title, this.subtitle, required this.body});
   final String title;
+  final String? subtitle;
   final Widget body;
 
   @override
@@ -56,7 +57,16 @@ class GWidgetBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              if (subtitle != null)
+                Text(
+                  subtitle!,
+                  style: AppFonts(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textNotes,
+                  ),
+                ),
+              SizedBox(height: 15),
               body
             ],
           ),
