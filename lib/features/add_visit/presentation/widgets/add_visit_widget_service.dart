@@ -1,109 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_add_btn.dart';
 
+import '../../../../app/app.dart';
 import '../../../../configs/app_colors.dart';
 import '../../../../configs/app_fonts.dart';
-import '../../../../core/utils/general_models/g_model_catg.dart';
 import '../../../../core/utils/general_widgets/g_widget_card_title.dart';
 import '../../../../core/utils/general_widgets/g_widget_drop_down.dart';
 import '../../../../core/utils/general_widgets/g_widget_switcher.dart';
 import '../../../services/data/models/service_model.dart';
-
-final List<ServiceModel> dummyServices = [
-  ServiceModel(
-    id: 'srv_001',
-    category: const GModelCatg(
-      id: 'cat_hvac',
-      name: 'HVAC',
-      description: 'Heating, Ventilation, and Air Conditioning services.',
-    ),
-    serviceName: 'AC Routine Maintenance',
-    defaultPrice: 450.0,
-    duration: 60, // 60 minutes
-    checkList: [
-      'Clean or replace air filters',
-      'Inspect condenser coils',
-      'Check refrigerant levels',
-      'Test thermostat calibration'
-    ],
-  ),
-  ServiceModel(
-    id: 'srv_002',
-    category: const GModelCatg(
-      id: 'cat_hvac',
-      name: 'HVAC',
-      description: 'Heating, Ventilation, and Air Conditioning services.',
-    ),
-    serviceName: 'AC Compressor Repair',
-    defaultPrice: 1200.0,
-    duration: 120, // 2 hours
-    checkList: [
-      'Isolate power supply',
-      'Remove faulty compressor',
-      'Install new compressor unit',
-      'Vacuum and recharge system',
-      'Test for leaks'
-    ],
-  ),
-  ServiceModel(
-    id: 'srv_003',
-    category: const GModelCatg(
-      id: 'cat_elec',
-      name: 'Electrical',
-      description: 'Electrical inspection, repair, and installation.',
-    ),
-    serviceName: 'Electrical Panel Inspection',
-    defaultPrice: 300.0,
-    duration: 45,
-    checkList: [
-      'Check for scorched wires',
-      'Tighten electrical connections',
-      'Measure voltage and amperage',
-      'Verify grounding'
-    ],
-  ),
-  ServiceModel(
-    id: 'srv_004',
-    category: const GModelCatg(
-      id: 'cat_plumb',
-      name: 'Plumbing',
-      description: 'Piping, fixtures, and water systems.',
-    ),
-    serviceName: 'Water Heater Installation',
-    defaultPrice: 850.0,
-    duration: 180,
-    checkList: [
-      'Drain existing water heater',
-      'Disconnect plumbing and electrical/gas',
-      'Position new unit safely',
-      'Connect water lines and test pressure'
-    ],
-  ),
-  ServiceModel(
-    id: 'srv_005',
-    category: const GModelCatg(
-      id: 'cat_clean',
-      name: 'Cleaning',
-      description: 'Residential and commercial cleaning services.',
-    ),
-    serviceName: 'Deep Office Cleaning',
-    defaultPrice: 600.0,
-    duration: 240,
-    checkList: null, // Testing a null checklist
-  ),
-  ServiceModel(
-    id: 'srv_006',
-    category: null, // Testing a null category
-    serviceName: 'General Site Consultation',
-    defaultPrice: 0.0, // Free consultation
-    duration: 30,
-    checkList: [
-      'Client interview',
-      'Site walk-through',
-      'Draft preliminary estimate'
-    ],
-  ),
-];
+import '../../../services/presentation/screens/add_service_scr.dart';
 
 class AddVisitWidgetService extends StatelessWidget {
   const AddVisitWidgetService(
@@ -113,11 +18,17 @@ class AddVisitWidgetService extends StatelessWidget {
       required this.requiresAfterPhotos,
       required this.onServiceChanged,
       required this.onRequiresBefore,
-      required this.onRequiresAfter});
+      required this.onRequiresAfter,
+      required this.services,
+      this.serviceErrorMsg,
+      required this.servicesLoading});
+  final List<ServiceModel> services;
   final ServiceModel? selectedService;
   final bool requiresBeforePhotos;
   final bool requiresAfterPhotos;
-  final Function(ServiceModel? service) onServiceChanged;
+  final bool servicesLoading;
+  final String? serviceErrorMsg;
+  final Function(ServiceModel? service, {bool? isNew}) onServiceChanged;
   final Function(bool requiresBeforePhotos) onRequiresBefore;
   final Function(bool requiresAfterPhotos) onRequiresAfter;
   @override
@@ -126,13 +37,16 @@ class AddVisitWidgetService extends StatelessWidget {
         icon: Icons.build_rounded,
         title: 'Service',
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             GWidgetDropDown<ServiceModel>(
               labelText: 'Service',
               enableSearch: true,
+              loading: servicesLoading,
+              errorMsg: serviceErrorMsg,
               value: selectedService,
               onChanged: onServiceChanged,
-              items: dummyServices.map((service) {
+              items: services.map((service) {
                 return DropdownMenuItem(
                   value: service,
                   child: Column(
@@ -152,10 +66,26 @@ class AddVisitWidgetService extends StatelessWidget {
               searchHintText: 'Search for client',
             ),
             SizedBox(height: 10),
-            GWidgetAddBtn(text: 'Add New Service', onTap: () {}),
+            GWidgetAddBtn(
+                text: 'Add New Service',
+                onTap: () async {
+                  final data = await AddServiceScr.show(context);
+                  if (data is ServiceModel) {
+                    onServiceChanged(data, isNew: true);
+                  }
+                }),
             SizedBox(height: 16),
             if (selectedService != null)
-              _ServiceSummaryCard(service: selectedService!),
+              _ServiceSummaryCard(
+                service: selectedService!,
+                onUpdate: () async {
+                  final data = await AddServiceScr.show(context,
+                      blockSetLocal: true, serviceModel: selectedService);
+                  if (data is ServiceModel) {
+                    onServiceChanged(data);
+                  }
+                },
+              ),
             SizedBox(height: 16),
             GWidgetSwitcher(
                 title: 'Require Before-Work Photos',
@@ -174,10 +104,9 @@ class AddVisitWidgetService extends StatelessWidget {
 
 class _ServiceSummaryCard extends StatelessWidget {
   final ServiceModel service;
+  final VoidCallback onUpdate;
 
-  const _ServiceSummaryCard({
-    required this.service,
-  });
+  const _ServiceSummaryCard({required this.service, required this.onUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +161,7 @@ class _ServiceSummaryCard extends StatelessWidget {
               // Price (Only shows if defaultPrice is not null and > 0)
               if (service.defaultPrice != null && service.defaultPrice! > 0)
                 Text(
-                  '${service.defaultPrice!.toStringAsFixed(2)} EGP', // Change currency as needed
+                  '${service.defaultPrice!.toStringAsFixed(2)} ${App.currency}', // Change currency as needed
                   style: AppFonts(
                     color: AppColors.whatsappGreen,
                     fontSize: 15,
@@ -313,7 +242,7 @@ class _ServiceSummaryCard extends StatelessWidget {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: onUpdate,
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   padding:

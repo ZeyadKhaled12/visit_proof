@@ -14,7 +14,7 @@ import '../../domain/usecases/remove_service_uc.dart';
 abstract class BaseServicesRemoteDataSource {
   Future<List<ServiceModel>> getServices(NoParameters parameters);
   Future<List<GModelCatg>> getCategories(NoParameters parameters);
-  Future<void> addService(AddServiceParameters parameters);
+  Future<ServiceModel> addService(AddServiceParameters parameters);
   Future<List<ServiceModel>> removeService(RemoveServiceParameters parameters);
 }
 
@@ -70,12 +70,13 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
   }
 
   @override
-  Future<void> addService(AddServiceParameters parameters) async {
-    return await HandleLogicErrors<void>(fun: () async {
+  Future<ServiceModel> addService(AddServiceParameters parameters) async {
+    return await HandleLogicErrors<ServiceModel>(fun: () async {
       await Future.delayed(Duration(seconds: 1));
       List<ServiceModel> services = [];
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
       GModelCatg? category;
+      ServiceModel? service;
       if (parameters.categoryName != null) {
         category = await _addCategory(parameters.categoryName!);
       }
@@ -85,32 +86,36 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
             .toList();
         int index =
             services.indexWhere((element) => element.id == parameters.id);
-        ServiceModel service = services[index];
+        service = services[index];
         service = service.copyWith(
             id: parameters.id,
             category: category ?? parameters.category,
+            duration: parameters.duration,
             serviceName: parameters.serviceName,
             defaultPrice: parameters.price,
             checkList: parameters.checkList);
         services[index] = service;
       } else {
-        ServiceModel serviceModel = ServiceModel(
+        service = ServiceModel(
             id: GFunToken.generateRandomId(),
             category: category ?? parameters.category,
             serviceName: parameters.serviceName,
             defaultPrice: parameters.price,
+            duration: parameters.duration,
             checkList: parameters.checkList);
         services = (LocalPref.sharedPreferences.getStringList('services') ?? [])
             .map((e) => ServiceModel.fromJson(jsonDecode(e)))
             .toList();
-        services.insert(0, serviceModel);
+        services.insert(0, service);
       }
-
-      await LocalPref.sharedPreferences.setStringList(
-          'services', services.map((e) => jsonEncode(e.toJson())).toList());
+      if (!parameters.blockSetLocal) {
+        await LocalPref.sharedPreferences.setStringList(
+            'services', services.map((e) => jsonEncode(e.toJson())).toList());
+      }
       AppToasts.showMessage(parameters.id != null
           ? 'Service updated successfuly'
           : 'Service added successfuly');
+      return service;
     }).checkLogicErrors();
   }
 

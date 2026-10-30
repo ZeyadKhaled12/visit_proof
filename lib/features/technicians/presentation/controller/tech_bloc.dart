@@ -49,8 +49,9 @@ class TechBloc extends Bloc<TechEvent, TechState> {
     result.fold(
         (l) =>
             emit(state.copyWith(addTechnicianRequestState: RequestState.error)),
-        (r) => emit(
-            state.copyWith(addTechnicianRequestState: RequestState.loaded)));
+        (r) => emit(state.copyWith(
+            addTechnicianRequestState: RequestState.loaded,
+            technicianDetailModel: r)));
   }
 
   FutureOr<void> _getTechDetail(

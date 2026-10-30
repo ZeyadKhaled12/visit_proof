@@ -1,4 +1,8 @@
 import 'package:get_it/get_it.dart';
+import 'package:visit_proof/features/add_visit/data/datasource/add_visit_remote_data_source.dart';
+import 'package:visit_proof/features/add_visit/domain/repository/base_add_visit_repo.dart';
+import 'package:visit_proof/features/add_visit/domain/usecases/add_visit_uc.dart';
+import 'package:visit_proof/features/add_visit/presentation/controller/add_visit_bloc.dart';
 import 'package:visit_proof/features/clients/data/datasource/clients_remote_data_source.dart';
 import 'package:visit_proof/features/clients/data/repository/clients_repo.dart';
 import 'package:visit_proof/features/clients/domain/repository/base_clients_repo.dart';
@@ -24,8 +28,14 @@ import 'package:visit_proof/features/technicians/domain/usecases/get_tech_detail
 import 'package:visit_proof/features/technicians/domain/usecases/get_technicians_uc.dart';
 import 'package:visit_proof/features/technicians/domain/usecases/remove_technician_uc.dart';
 import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
+import 'package:visit_proof/features/visits/data/datasource/visits_remote_data_source.dart';
+import 'package:visit_proof/features/visits/data/repository/visits_repo.dart';
+import 'package:visit_proof/features/visits/domain/repository/base_visits_repo.dart';
+import 'package:visit_proof/features/visits/presentation/controller/visits_bloc.dart';
 
+import '../../features/add_visit/data/repository/add_visit_repo.dart';
 import '../../features/services/data/repository/services_repo.dart';
+import '../../features/visits/domain/usecases/get_visits_uc.dart';
 
 final sl = GetIt.instance;
 
@@ -35,6 +45,8 @@ class ServicesLocator {
     sl.registerFactory(() => ClientsBloc(sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => TechBloc(sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => ServicesBloc(sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => AddVisitBloc(sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => VisitsBloc(sl()));
 
     //clients usecases
     sl.registerLazySingleton(() => GetClientsUc(sl()));
@@ -56,10 +68,18 @@ class ServicesLocator {
     sl.registerLazySingleton(() => AddServiceUc(sl()));
     sl.registerLazySingleton(() => RemoveServiceUc(sl()));
 
+    //add visit
+    sl.registerLazySingleton(() => AddVisitUc(sl()));
+
+    //visits
+    sl.registerLazySingleton(() => GetVisitsUc(sl()));
+
     //Repo
     sl.registerLazySingleton<BaseClientsRepo>(() => ClientsRepo(sl()));
     sl.registerLazySingleton<BaseTechniciansRepo>(() => TechniciansRepo(sl()));
     sl.registerLazySingleton<BaseServicesRepo>(() => ServicesRepo(sl()));
+    sl.registerLazySingleton<BaseAddVisitRepo>(() => AddVisitRepo(sl()));
+    sl.registerLazySingleton<BaseVisitsRepo>(() => VisitsRepo(sl()));
 
     //Data Source
     sl.registerLazySingleton<BaseClientsRemoteDataSource>(
@@ -68,5 +88,9 @@ class ServicesLocator {
         () => TechniciansRemoteDataSource());
     sl.registerLazySingleton<BaseServicesRemoteDataSource>(
         () => ServicesRemoteDataSource());
+    sl.registerLazySingleton<BaseAddVisitRemoteDataSource>(
+        () => AddVisitRemoteDataSource());
+    sl.registerLazySingleton<BaseVisitsRemoteDataSource>(
+        () => VisitsRemoteDataSource());
   }
 }

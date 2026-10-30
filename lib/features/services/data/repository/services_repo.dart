@@ -27,7 +27,7 @@ class ServicesRepo extends BaseServicesRepo {
   }
 
   @override
-  Future<Either<Failure, void>> addService(
+  Future<Either<Failure, ServiceModel>> addService(
       AddServiceParameters parameters) async {
     try {
       final result = await baseServicesRemoteDataSource.addService(parameters);

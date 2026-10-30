@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:visit_proof/features/clients/data/models/client_detail_model/client_detail_model.dart';
-import 'package:visit_proof/features/clients/presentation/controller/clients_bloc.dart';
-import 'package:visit_proof/features/clients/presentation/widgets/add_client_widgets/add_client_body.dart';
-
 import '../../../../core/services/services_locator.dart';
 import '../../../../core/utils/enums.dart';
+import '../../data/models/client_detail_model/client_detail_model.dart';
+import '../controller/clients_bloc.dart';
+import '../widgets/add_client_widgets/add_client_body.dart';
 
 class AddClientScr extends StatelessWidget {
   const AddClientScr({super.key});
@@ -25,7 +24,11 @@ class AddClientScr extends StatelessWidget {
         child: BlocConsumer<ClientsBloc, ClientsState>(
           listener: (context, state) {
             if (state.addClientRequestState == RequestState.loaded) {
-              Navigator.pop(context, true);
+              if (argu.returnClient) {
+                Navigator.pop(context, state.clientDetailModel);
+              } else {
+                Navigator.pop(context, true);
+              }
             }
           },
           listenWhen: (previous, current) =>
@@ -41,8 +44,10 @@ class AddClientScr extends StatelessWidget {
 
 class AddClientArgu {
   final ClientDetailModel? client;
-  AddClientArgu({this.client});
-  Map<String, dynamic> toArgu() => {'client': client};
+  final bool returnClient;
+  AddClientArgu({this.client, this.returnClient = false});
+  Map<String, dynamic> toArgu() =>
+      {'client': client, 'returnClient': returnClient};
   factory AddClientArgu.fromJson(Map<String, dynamic> argu) =>
-      AddClientArgu(client: argu['client']);
+      AddClientArgu(client: argu['client'], returnClient: argu['returnClient']);
 }

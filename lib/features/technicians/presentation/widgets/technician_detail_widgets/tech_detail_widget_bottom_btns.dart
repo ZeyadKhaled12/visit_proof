@@ -52,8 +52,8 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
                     arguments: AddTechArgu(
                             technicianDetailModel: technicianDetailModel)
                         .toArgu());
-                if (data is bool) {
-                  if (data) {
+                if (data is TechnicianDetailModel) {
+                  if (data.id != null) {
                     if (technicianDetailModel.id != null) {
                       context.read<TechBloc>().add(GetTechDetailEvent(
                           getTechDetailParameters: GetTechDetailParameters(

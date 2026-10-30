@@ -25,7 +25,8 @@ class GWidgetButton extends StatelessWidget {
       this.boxShadow,
       this.fontWeight,
       this.loadingSize,
-      this.gradient});
+      this.gradient,
+      this.loadingStrokeWidth});
   final Color? backgroundColor;
   final Color? noEnablebackgroundColor;
   final Color colorText;
@@ -46,6 +47,7 @@ class GWidgetButton extends StatelessWidget {
   final double? loadingSize;
   final FontWeight? fontWeight;
   final Gradient? gradient;
+  final double? loadingStrokeWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class GWidgetButton extends StatelessWidget {
                     child: GWidgetLoadingCircle(
                         color: loadingColor ?? Colors.white,
                         width: loadingSize,
+                        strokeWidth: loadingStrokeWidth ?? 5,
                         height: loadingSize),
                   )
                 : Row(

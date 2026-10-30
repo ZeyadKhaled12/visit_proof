@@ -115,11 +115,9 @@ class ServicesWidgetCard extends StatelessWidget {
                         onTap: () async {
                           final data = await AddServiceScr.show(context,
                               serviceModel: service);
-                          if (data is bool) {
-                            if (data) {
-                              context.read<ServicesBloc>().add(GetServicesEvent(
-                                  noParameters: NoParameters()));
-                            }
+                          if (data is ServiceModel) {
+                            context.read<ServicesBloc>().add(
+                                GetServicesEvent(noParameters: NoParameters()));
                           }
                         },
                         borderRadius: BorderRadius.circular(6),

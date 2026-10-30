@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:visit_proof/features/clients/data/models/client_model.dart';
-
+import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_client_model.dart';
 import '../../../../../core/utils/general_models/g_model_equipment.dart';
 import '../../../../../core/utils/general_models/g_model_site.dart';
 import 'client_visit_model.dart';
@@ -85,15 +84,14 @@ class ClientDetailModel extends Equatable {
     );
   }
 
-  ClientModel convertToClient() => ClientModel(
+  VisitClientModel convertToVisitClient() => VisitClientModel(
       id: id,
-      name: name,
       email: email,
+      name: name,
       phone: phone,
-      isWhatsAppPhone: isWhatsAppPhone,
-      city: site?.city,
-      ordersCount: ordersCount,
-      totalPaid: totalPaid);
+      sites: site == null ? null : [site!],
+      equipments: equipments,
+      isWhatsAppPhone: isWhatsAppPhone);
 
   Map<String, dynamic> toJson() {
     return {

@@ -3,7 +3,7 @@ import '../../../../../core/utils/enums/visit_status_enum.dart';
 
 class ClientVisitModel {
   final int? id;
-  final String? visitCode;
+  final String? visitNumber;
   final int? clientId;
   final DateTime? visitDate;
   final VisitStatus? status;
@@ -16,7 +16,7 @@ class ClientVisitModel {
 
   const ClientVisitModel({
     this.id,
-    this.visitCode,
+    this.visitNumber,
     this.clientId,
     this.visitDate,
     this.status,
@@ -31,7 +31,7 @@ class ClientVisitModel {
   factory ClientVisitModel.fromJson(Map<String, dynamic> json) {
     return ClientVisitModel(
         id: (json['id'] as num?)?.toInt(),
-        visitCode: json['visitCode'] as String?,
+        visitNumber: json['visitNumber'] as String?,
         clientId: (json['clientId'] as num?)?.toInt(),
         visitDate: json['visitDate'] == null
             ? null
@@ -55,7 +55,7 @@ class ClientVisitModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'visitCode': visitCode,
+      'visitNumber': visitNumber,
       'clientId': clientId,
       'visitDate': visitDate?.toIso8601String(),
       'status': status == null

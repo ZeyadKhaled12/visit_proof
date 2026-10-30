@@ -10,13 +10,13 @@ import '../../../../../core/utils/general_widgets/g_widget_appbar.dart';
 import '../../../../../core/utils/general_widgets/g_widget_excel.dart';
 import '../../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
 import '../../../../../core/utils/general_widgets/g_widget_search.dart';
-import '../../../data/models/client_model.dart';
+import '../../../data/models/client_detail_model/client_detail_model.dart';
 import '../../screens/add_client_scr.dart';
 import 'clients_widget_card.dart';
 
 class ClientsBody extends StatefulWidget {
   const ClientsBody({super.key, required this.clients, required this.loading});
-  final List<ClientModel> clients;
+  final List<ClientDetailModel> clients;
   final bool loading;
 
   @override

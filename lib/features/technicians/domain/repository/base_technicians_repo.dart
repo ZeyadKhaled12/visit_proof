@@ -11,7 +11,7 @@ import '../../../../core/usecase/base_use_case.dart';
 abstract class BaseTechniciansRepo {
   Future<Either<Failure, List<TechnicianModel>>> getTechnicians(
       NoParameters parameters);
-  Future<Either<Failure, void>> addTech(AddTechParameters parameters);
+  Future<Either<Failure, TechnicianDetailModel>> addTech(AddTechParameters parameters);
   Future<Either<Failure, TechnicianDetailModel>> getTechDetail(
       GetTechDetailParameters parameters);
   Future<Either<Failure, void>> removeTechnician(

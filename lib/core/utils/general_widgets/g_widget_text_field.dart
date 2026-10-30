@@ -26,6 +26,7 @@ class GWidgetTextField extends StatefulWidget {
   final bool enabled;
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
+  
   final List<TextInputFormatter>? inputFormatters;
   final TextCapitalization textCapitalization;
   final TextAlign textAlign;

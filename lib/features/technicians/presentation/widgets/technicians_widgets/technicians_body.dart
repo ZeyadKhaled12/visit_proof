@@ -10,6 +10,7 @@ import '../../../../../core/utils/general_widgets/g_widget_appbar.dart';
 import '../../../../../core/utils/general_widgets/g_widget_excel.dart';
 import '../../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
 import '../../../../../core/utils/general_widgets/g_widget_search.dart';
+import '../../../data/models/technician_detail_model.dart';
 import '../../../data/models/technician_model.dart';
 import '../../screens/add_tech_scr.dart';
 import '../technicians_widget_card.dart';
@@ -73,8 +74,8 @@ class TechniciansBody extends StatelessWidget {
             text: "Add new technician",
             onPressed: () async {
               final data = await Navigator.pushNamed(context, AddTechScr.route);
-              if (data is bool) {
-                if (data) {
+              if (data is TechnicianDetailModel) {
+                if (data.id != null) {
                   context
                       .read<TechBloc>()
                       .add(GetTechniciansEvent(noParameters: NoParameters()));

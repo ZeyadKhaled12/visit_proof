@@ -15,7 +15,7 @@ import '../../../../core/utils/general_functions.dart/g_fun_token.dart';
 
 abstract class BaseTechniciansRemoteDataSource {
   Future<List<TechnicianModel>> getTechnicians(NoParameters parameters);
-  Future<void> addTech(AddTechParameters parameters);
+  Future<TechnicianDetailModel> addTech(AddTechParameters parameters);
   Future<void> removeTechnician(RemoveTechnicianParameters parameters);
   Future<TechnicianDetailModel> getTechDetail(
       GetTechDetailParameters parameters);
@@ -23,10 +23,11 @@ abstract class BaseTechniciansRemoteDataSource {
 
 class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
   @override
-  Future<void> addTech(AddTechParameters parameters) async {
-    return await HandleLogicErrors<void>(fun: () async {
+  Future<TechnicianDetailModel> addTech(AddTechParameters parameters) async {
+    return await HandleLogicErrors<TechnicianDetailModel>(fun: () async {
       await Future.delayed(Duration(seconds: 1));
       List<TechnicianDetailModel> technicians = [];
+      TechnicianDetailModel? technician;
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
       if (parameters.id != null) {
         technicians =
@@ -35,7 +36,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
                 .toList();
         int index =
             technicians.indexWhere((element) => element.id == parameters.id);
-        TechnicianDetailModel technician = technicians[index];
+        technician = technicians[index];
         technician = technician.copyWith(
             name: parameters.name,
             email: parameters.email,
@@ -44,7 +45,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
             categories: parameters.categories);
         technicians[index] = technician;
       } else {
-        TechnicianDetailModel technicianDetailModel = TechnicianDetailModel(
+        technician = TechnicianDetailModel(
           id: GFunToken.generateRandomId(),
           name: parameters.name,
           email: parameters.email,
@@ -61,7 +62,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
             (LocalPref.sharedPreferences.getStringList('technicians') ?? [])
                 .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
                 .toList();
-        technicians.insert(0, technicianDetailModel);
+        technicians.insert(0, technician);
       }
 
       await LocalPref.sharedPreferences.setStringList('technicians',
@@ -69,6 +70,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
       AppToasts.showMessage(parameters.id != null
           ? 'Technician updated successfuly'
           : 'Technician added successfuly');
+      return technician;
     }).checkLogicErrors();
   }
 

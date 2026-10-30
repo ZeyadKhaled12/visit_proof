@@ -17,7 +17,7 @@ class TechniciansRepo extends BaseTechniciansRepo {
   TechniciansRepo(this.baseTechniciansRemoteDataSource);
 
   @override
-  Future<Either<Failure, void>> addTech(AddTechParameters parameters) async {
+  Future<Either<Failure, TechnicianDetailModel>> addTech(AddTechParameters parameters) async {
     try {
       final result = await baseTechniciansRemoteDataSource.addTech(parameters);
       return Right(result);

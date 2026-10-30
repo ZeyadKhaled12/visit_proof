@@ -21,6 +21,15 @@ class AppToasts {
     );
   }
 
+  static Future<dynamic> showBottomSheet(
+      BuildContext context, Widget bottomSheet) async {
+    return await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => bottomSheet);
+  }
+
   static Future<dynamic> showDeleteConfirmation(
       {String? headTitle, required String title}) async {
     return await showDialog(

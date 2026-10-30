@@ -7,13 +7,13 @@ import 'package:visit_proof/core/utils/general_widgets/g_widget_button.dart';
 import '../../../../../configs/app_colors.dart';
 import '../../../../../configs/app_fonts.dart';
 import '../../../../../core/usecase/base_use_case.dart';
-import '../../../data/models/client_model.dart';
+import '../../../data/models/client_detail_model/client_detail_model.dart';
 import '../../controller/clients_bloc.dart';
 import '../../screens/client_detail_scr.dart';
 
 class ClientsWidgetCard extends StatelessWidget {
   const ClientsWidgetCard({super.key, required this.client});
-  final ClientModel client;
+  final ClientDetailModel client;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class ClientsWidgetCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (client.city != null)
+                        if (client.site?.city != null)
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 3),
@@ -112,7 +112,7 @@ class ClientsWidgetCard extends StatelessWidget {
                                     size: 12, color: AppColors.primary),
                                 const SizedBox(width: 4),
                                 Text(
-                                  client.city?.name ?? '',
+                                  client.site?.city?.name ?? '',
                                   style: AppFonts(
                                       fontSize: 11,
                                       color: AppColors.textDarkHint,

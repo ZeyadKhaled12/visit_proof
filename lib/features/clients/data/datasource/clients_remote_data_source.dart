@@ -6,7 +6,6 @@ import 'package:visit_proof/core/utils/general_functions.dart/g_fun_token.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_equipment.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_site.dart';
 import 'package:visit_proof/features/clients/data/models/client_detail_model/client_detail_model.dart';
-import 'package:visit_proof/features/clients/data/models/client_model.dart';
 import 'package:visit_proof/features/clients/domain/usecases/add_client_uc.dart';
 import 'package:visit_proof/features/clients/domain/usecases/add_equipment_uc.dart';
 import 'package:visit_proof/features/clients/domain/usecases/get_client_detail_uc.dart';
@@ -15,8 +14,8 @@ import '../../domain/usecases/remove_client_uc.dart';
 import '../../domain/usecases/remove_equipment_uc.dart';
 
 abstract class BaseClientsRemoteDataSource {
-  Future<List<ClientModel>> getClients(NoParameters parameters);
-  Future<void> addClient(AddClientParameters parameters);
+  Future<List<ClientDetailModel>> getClients(NoParameters parameters);
+  Future<ClientDetailModel> addClient(AddClientParameters parameters);
   Future<void> removeClient(RemoveClientParameters parameters);
   Future<ClientDetailModel> getClientDetail(
       GetClientDetailParameters parameters);
@@ -27,21 +26,22 @@ abstract class BaseClientsRemoteDataSource {
 
 class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   @override
-  Future<List<ClientModel>> getClients(NoParameters parameters) async {
-    return await HandleLogicErrors<List<ClientModel>>(fun: () async {
+  Future<List<ClientDetailModel>> getClients(NoParameters parameters) async {
+    return await HandleLogicErrors<List<ClientDetailModel>>(fun: () async {
       await Future.delayed(Duration(seconds: 1));
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
-      return clients.map((e) => e.convertToClient()).toList();
+      return clients;
     }).checkLogicErrors();
   }
 
   @override
-  Future<void> addClient(AddClientParameters parameters) async {
-    return await HandleLogicErrors<void>(fun: () async {
+  Future<ClientDetailModel> addClient(AddClientParameters parameters) async {
+    return await HandleLogicErrors<ClientDetailModel>(fun: () async {
       await Future.delayed(Duration(seconds: 1));
       List<ClientDetailModel> clients = [];
+      ClientDetailModel? client;
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
       if (parameters.id != null) {
         clients = (LocalPref.sharedPreferences.getStringList('clients') ?? [])
@@ -49,7 +49,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
             .toList();
         int index =
             clients.indexWhere((element) => element.id == parameters.id);
-        ClientDetailModel client = clients[index];
+        client = clients[index];
         client = client.copyWith(
           name: parameters.name,
           email: parameters.email,
@@ -64,7 +64,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
         );
         clients[index] = client;
       } else {
-        ClientDetailModel clientDetailModel = ClientDetailModel(
+        client = ClientDetailModel(
           id: GFunToken.generateRandomId(),
           name: parameters.name,
           email: parameters.email,
@@ -83,7 +83,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
         clients = (LocalPref.sharedPreferences.getStringList('clients') ?? [])
             .map((e) => ClientDetailModel.fromJson(jsonDecode(e)))
             .toList();
-        clients.insert(0, clientDetailModel);
+        clients.insert(0, client);
       }
 
       await LocalPref.sharedPreferences.setStringList(
@@ -91,6 +91,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       AppToasts.showMessage(parameters.id != null
           ? 'Client updated successfuly'
           : 'Client added successfuly');
+      return client;
     }).checkLogicErrors();
   }
 

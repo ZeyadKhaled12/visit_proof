@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
 
-class ServiceModel {
+class ServiceModel extends Equatable {
   final String? id;
   final GModelCatg? category;
   final String? serviceName;
@@ -8,7 +9,7 @@ class ServiceModel {
   final int? duration;
   final List<String>? checkList;
 
-  ServiceModel(
+  const ServiceModel(
       {this.id,
       this.category,
       this.serviceName,
@@ -57,4 +58,8 @@ class ServiceModel {
         'duration': duration,
         'checkList': checkList
       };
+
+  @override
+  List<Object?> get props =>
+      [id, category, serviceName, defaultPrice, duration, checkList];
 }

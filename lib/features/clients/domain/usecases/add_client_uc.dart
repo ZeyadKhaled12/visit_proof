@@ -2,15 +2,16 @@ import 'package:either_dart/either.dart';
 import '../../../../core/network/error/failure.dart';
 import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/general_models/g_model_catg.dart';
+import '../../data/models/client_detail_model/client_detail_model.dart';
 import '../repository/base_clients_repo.dart';
 
-class AddClientUc extends BaseUseCase<void, AddClientParameters> {
+class AddClientUc extends BaseUseCase<ClientDetailModel, AddClientParameters> {
   final BaseClientsRepo baseClientsRepo;
 
   AddClientUc(this.baseClientsRepo);
 
   @override
-  Future<Either<Failure, void>> call(AddClientParameters parameters) async {
+  Future<Either<Failure, ClientDetailModel>> call(AddClientParameters parameters) async {
     return await baseClientsRepo.addClient(parameters);
   }
 }

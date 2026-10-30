@@ -57,8 +57,8 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     final result = await addServiceUc.call(event.addServiceParameters);
     result.fold(
         (l) => emit(state.copyWith(addServiceRequestState: RequestState.error)),
-        (r) =>
-            emit(state.copyWith(addServiceRequestState: RequestState.loaded)));
+        (r) => emit(state.copyWith(
+            addServiceRequestState: RequestState.loaded, newService: r)));
   }
 
   FutureOr<void> _removeService(

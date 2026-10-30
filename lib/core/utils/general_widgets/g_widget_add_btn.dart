@@ -15,18 +15,22 @@ class GWidgetAddBtn extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         highlightColor: AppColors.secondary,
-        splashColor: AppColors.secondary,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Icon(Icons.add_circle_outline, color: AppColors.primary, size: 20),
-            SizedBox(width: 5),
-            Text(text,
-                style: AppFonts(
-                    fontSize: 12,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold))
-          ],
+        splashColor: AppColors.secondary.withValues(alpha: .4),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.add_circle_outline,
+                  color: AppColors.primary, size: 20),
+              SizedBox(width: 5),
+              Text(text,
+                  style: AppFonts(
+                      fontSize: 12,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold))
+            ],
+          ),
         ),
       ),
     );

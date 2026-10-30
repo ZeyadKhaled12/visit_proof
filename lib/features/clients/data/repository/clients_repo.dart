@@ -3,7 +3,6 @@ import 'package:visit_proof/core/network/error/failure.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/features/clients/data/datasource/clients_remote_data_source.dart';
 import 'package:visit_proof/features/clients/data/models/client_detail_model/client_detail_model.dart';
-import 'package:visit_proof/features/clients/data/models/client_model.dart';
 import 'package:visit_proof/features/clients/domain/repository/base_clients_repo.dart';
 import 'package:visit_proof/features/clients/domain/usecases/add_client_uc.dart';
 import 'package:visit_proof/features/clients/domain/usecases/add_equipment_uc.dart';
@@ -19,7 +18,7 @@ class ClientsRepo extends BaseClientsRepo {
   ClientsRepo(this.baseClientsRemoteDataSource);
 
   @override
-  Future<Either<Failure, List<ClientModel>>> getClients(
+  Future<Either<Failure, List<ClientDetailModel>>> getClients(
       NoParameters parameters) async {
     try {
       final result = await baseClientsRemoteDataSource.getClients(parameters);
@@ -30,7 +29,7 @@ class ClientsRepo extends BaseClientsRepo {
   }
 
   @override
-  Future<Either<Failure, void>> addClient(
+  Future<Either<Failure, ClientDetailModel>> addClient(
       AddClientParameters parameters) async {
     try {
       final result = await baseClientsRemoteDataSource.addClient(parameters);

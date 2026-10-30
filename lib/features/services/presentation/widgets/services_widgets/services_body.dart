@@ -77,12 +77,10 @@ class ServicesBody extends StatelessWidget {
             text: "Add new service",
             onPressed: () async {
               final data = await AddServiceScr.show(context);
-              if (data is bool) {
-                if (data) {
-                  context
-                      .read<ServicesBloc>()
-                      .add(GetServicesEvent(noParameters: NoParameters()));
-                }
+              if (data is ServiceModel) {
+                context
+                    .read<ServicesBloc>()
+                    .add(GetServicesEvent(noParameters: NoParameters()));
               }
             }));
   }

@@ -72,7 +72,7 @@ class ClientDetailWidgetVisits extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      visit.visitCode ?? '#VST-UNKNOWN',
+                      visit.visitNumber ?? '#VST-UNKNOWN',
                       style: AppFonts(
                           color: AppColors.textPrimary,
                           fontSize: 13,
@@ -246,8 +246,6 @@ class ClientDetailWidgetVisits extends StatelessWidget {
     ));
   }
 }
-
-
 
 Widget _buildBadge(String text, Color color, {bool isOutline = false}) {
   return Container(

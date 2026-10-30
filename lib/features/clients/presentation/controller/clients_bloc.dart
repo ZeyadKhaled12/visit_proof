@@ -10,7 +10,6 @@ import 'package:visit_proof/features/clients/domain/usecases/get_client_detail_u
 import 'package:visit_proof/features/clients/domain/usecases/get_clients_uc.dart';
 
 import '../../../../core/utils/enums.dart';
-import '../../data/models/client_model.dart';
 import '../../domain/usecases/remove_client_uc.dart';
 import '../../domain/usecases/remove_equipment_uc.dart';
 
@@ -51,8 +50,8 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
     final result = await addClientUc.call(event.addClientParameters);
     result.fold(
         (l) => emit(state.copyWith(addClientRequestState: RequestState.error)),
-        (r) =>
-            emit(state.copyWith(addClientRequestState: RequestState.loaded)));
+        (r) => emit(state.copyWith(
+            addClientRequestState: RequestState.loaded, clientDetailModel: r)));
   }
 
   FutureOr<void> _getClientDetail(

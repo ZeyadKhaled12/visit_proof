@@ -9,16 +9,18 @@ import '../../../../core/utils/enums.dart';
 import '../widgets/add_service_widgets/add_service_body.dart';
 
 class AddServiceScr extends StatelessWidget {
-  const AddServiceScr({super.key, this.serviceModel});
+  const AddServiceScr({super.key, this.serviceModel, this.blockSetLocal});
   final ServiceModel? serviceModel;
+  final bool? blockSetLocal;
 
   static Future<dynamic> show(BuildContext context,
-      {ServiceModel? serviceModel}) async {
+      {ServiceModel? serviceModel, bool? blockSetLocal}) async {
     return await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => AddServiceScr(serviceModel: serviceModel),
+      builder: (context) => AddServiceScr(
+          serviceModel: serviceModel, blockSetLocal: blockSetLocal),
     );
   }
 
@@ -30,7 +32,7 @@ class AddServiceScr extends StatelessWidget {
         child: BlocConsumer<ServicesBloc, ServicesState>(
           listener: (context, state) {
             if (state.addServiceRequestState == RequestState.loaded) {
-              Navigator.pop(context, true);
+              Navigator.pop(context, state.newService);
             }
           },
           listenWhen: (previous, current) =>
@@ -39,6 +41,7 @@ class AddServiceScr extends StatelessWidget {
             return AddServiceBody(
                 serviceModel: serviceModel,
                 categories: state.categories,
+                blockSetLocal: blockSetLocal,
                 getCategoriesLoading:
                     state.getCategoriesRequestState == RequestState.loading,
                 loading: state.addServiceRequestState == RequestState.loading);

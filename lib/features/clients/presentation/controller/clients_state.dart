@@ -1,7 +1,7 @@
 part of 'clients_bloc.dart';
 
 class ClientsState extends Equatable {
-  final List<ClientModel> clients;
+  final List<ClientDetailModel> clients;
   final ClientDetailModel clientDetailModel;
   final String equipmentIDActions;
   final RequestState addClientRequestState;
@@ -23,7 +23,7 @@ class ClientsState extends Equatable {
       this.getClientDetailRequestState = RequestState.loaded});
 
   ClientsState copyWith(
-      {List<ClientModel>? clients,
+      {List<ClientDetailModel>? clients,
       ClientDetailModel? clientDetailModel,
       String? equipmentIDActions,
       RequestState? addClientRequestState,

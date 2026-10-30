@@ -12,7 +12,7 @@ abstract class BaseServicesRepo {
       NoParameters parameters);
   Future<Either<Failure, List<GModelCatg>>> getCategories(
       NoParameters parameters);
-  Future<Either<Failure, void>> addService(AddServiceParameters parameters);
+  Future<Either<Failure, ServiceModel>> addService(AddServiceParameters parameters);
   Future<Either<Failure, List<ServiceModel>>> removeService(
       RemoveServiceParameters parameters);
   // Future<Either<Failure, void>> addClient(AddClientParameters parameters);

@@ -10,8 +10,14 @@ import 'features/clients/presentation/screens/client_detail_scr.dart';
 import 'features/clients/presentation/screens/clients_scr.dart';
 import 'features/technicians/presentation/screens/add_tech_scr.dart';
 import 'features/technicians/presentation/screens/technician_detail_scr.dart';
-import 'features/visits/presentation/screens/add_visit_scr.dart';
+import 'features/add_visit/presentation/screens/add_visit_scr.dart';
+import 'features/visits/presentation/screens/visits_scr.dart';
 
+
+/*
+1- add option to move to full screen of picks
+2- add option to add more than one location in client detail
+*/
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,12 +49,13 @@ class MyAppState extends State<MyApp> {
         navigatorKey: App.navigatorKey,
         debugShowCheckedModeBanner: false,
         routes: {
-          '/': (context) => AddVisitScr(),
+          '/': (context) => VisitsScr(),
           ClientDetailScr.route: (context) => ClientDetailScr(),
           ClientsScr.route: (context) => ClientsScr(),
           AddClientScr.route: (context) => AddClientScr(),
           AddTechScr.route: (context) => AddTechScr(),
           TechnicianDetailScr.route: (context) => TechnicianDetailScr(),
+          AddVisitScr.route: (context) => AddVisitScr(),
         });
   }
 }

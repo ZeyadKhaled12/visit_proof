@@ -35,7 +35,7 @@ class AddTechScr extends StatelessWidget {
         child: BlocConsumer<TechBloc, TechState>(
           listener: (context, state) {
             if (state.addTechnicianRequestState == RequestState.loaded) {
-              Navigator.pop(context, true);
+              Navigator.pop(context, state.technicianDetailModel);
             }
           },
           listenWhen: (previous, current) =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
 import 'package:visit_proof/features/services/data/models/service_model.dart';
@@ -17,10 +18,12 @@ class AddServiceBody extends StatefulWidget {
       this.serviceModel,
       required this.categories,
       required this.loading,
-      required this.getCategoriesLoading});
+      required this.getCategoriesLoading,
+      this.blockSetLocal});
   final ServiceModel? serviceModel;
   final List<GModelCatg> categories;
   final bool getCategoriesLoading;
+  final bool? blockSetLocal;
   final bool loading;
 
   @override
@@ -30,6 +33,7 @@ class AddServiceBody extends StatefulWidget {
 class _AddServiceBodyState extends State<AddServiceBody> {
   final _serviceNameController = TextEditingController();
   final _priceController = TextEditingController(text: '25');
+  final _durationController = TextEditingController(text: '60');
   final _newCategoryController = TextEditingController();
   final _checklistInputController = TextEditingController();
 
@@ -41,6 +45,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
   String? _categoryNameErrorMsg;
   String? _serviceNameError;
   String? _priceErrorMsg;
+  String? _durationErrorMsg;
 
   @override
   void initState() {
@@ -57,6 +62,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
     _priceController.dispose();
     _newCategoryController.dispose();
     _checklistInputController.dispose();
+    _durationController.dispose();
     super.dispose();
   }
 
@@ -230,6 +236,28 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primary)),
                       ))),
+              const SizedBox(height: 16),
+
+              // 3. Price
+              GWidgetTextField(
+                  controller: _durationController,
+                  labelText: 'Duration *',
+                  hintText: '60',
+                  errorMsg: _durationErrorMsg,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
+                  prefixIcon: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Center(
+                        child: Text('Min',
+                            style: AppFonts(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary)),
+                      ))),
               const SizedBox(height: 24),
 
               // 4. Checklist (Optional)
@@ -339,6 +367,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       _categoryErrorMsg = null;
                       _serviceNameError = null;
                       _priceErrorMsg = null;
+                      _durationErrorMsg = null;
                       if (_isCreatingNewCategory) {
                         if (_newCategoryController.text.isEmpty) {
                           _categoryNameErrorMsg = 'Category name is required';
@@ -364,11 +393,21 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       } catch (e) {
                         _priceErrorMsg = 'Price must be grater than 0';
                       }
+                      try {
+                        if (int.parse(_durationController.text) < 0) {
+                          _durationErrorMsg =
+                              'Duration must be grater than 0 minutes';
+                        }
+                      } catch (e) {
+                        _durationErrorMsg =
+                            'Duration must be grater than 0 minutes';
+                      }
                     });
                     if (_categoryNameErrorMsg != null ||
                         _categoryErrorMsg != null ||
                         _serviceNameError != null ||
-                        _priceErrorMsg != null) {
+                        _priceErrorMsg != null ||
+                        _durationErrorMsg != null) {
                       return;
                     }
                     context.read<ServicesBloc>().add(AddServiceEvent(
@@ -382,7 +421,9 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                                 ? _newCategoryController.text
                                 : null,
                             price: num.parse(_priceController.text),
-                            checkList: _checklistItems)));
+                            duration: int.parse(_durationController.text),
+                            checkList: _checklistItems,
+                            blockSetLocal: widget.blockSetLocal ?? false)));
                   },
                   isLoading: widget.loading,
                   isEnable: !widget.getCategoriesLoading,
