@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +8,7 @@ import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/core/local/local_pref.dart';
 import 'package:visit_proof/core/network/error/handle_logic_errors.dart';
 import 'package:visit_proof/core/network/error/error_message_model.dart';
+import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/core/utils/general_functions.dart/g_fun_token.dart';
 import 'package:visit_proof/core/utils/enums/payment_method_enum.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
@@ -14,122 +16,38 @@ import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
 
 import 'package:visit_proof/features/invoices/data/models/invoice_detail_model.dart';
 import 'package:visit_proof/features/invoices/data/models/invoice_payment_history_model.dart';
-
-import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_detail_model.dart';
+import 'package:visit_proof/features/invoices/domain/usecases/get_create_invoice_uc.dart';
 import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_history_model.dart';
 
 import '../../../../core/network/error/exception.dart';
-
-// ============================================================
-// PARAMETERS
-// ============================================================
-
-class SaveInvoiceParameters {
-  final InvoiceDetailModel invoice;
-
-  const SaveInvoiceParameters({
-    required this.invoice,
-  });
-}
-
-class GetInvoiceDetailParameters {
-  final String invoiceId;
-
-  const GetInvoiceDetailParameters({
-    required this.invoiceId,
-  });
-}
-
-class IssueInvoiceParameters {
-  final String invoiceId;
-  final bool allowEarlyIssue;
-  final String? overrideReason;
-
-  const IssueInvoiceParameters({
-    required this.invoiceId,
-    this.allowEarlyIssue = false,
-    this.overrideReason,
-  });
-}
-
-class UpdateDraftInvoiceParameters {
-  final String invoiceId;
-  final num discountAmount;
-  final num taxAmount;
-  final String notes;
-  final bool allowPriceOverride;
-  final String? overrideReason;
-
-  const UpdateDraftInvoiceParameters({
-    required this.invoiceId,
-    required this.discountAmount,
-    required this.taxAmount,
-    required this.notes,
-    this.allowPriceOverride = false,
-    this.overrideReason,
-  });
-}
-
-class RecordInvoicePaymentParameters {
-  final String invoiceId;
-  final num amount;
-  final PaymentMethod paymentMethod;
-  final String? referenceNumber;
-  final String? notes;
-  final VisitHistoryActorModel? collectedBy;
-
-  const RecordInvoicePaymentParameters({
-    required this.invoiceId,
-    required this.amount,
-    required this.paymentMethod,
-    this.referenceNumber,
-    this.notes,
-    this.collectedBy,
-  });
-}
-
-class RefundInvoicePaymentParameters {
-  final String invoiceId;
-  final num amount;
-  final String reason;
-  final VisitHistoryActorModel? actor;
-
-  const RefundInvoicePaymentParameters({
-    required this.invoiceId,
-    required this.amount,
-    required this.reason,
-    this.actor,
-  });
-}
+import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
+import '../../domain/usecases/get_invoice_detail_uc.dart';
+import '../../domain/usecases/issue_invoice_uc.dart';
+import '../../domain/usecases/record_payment_uc.dart';
+import '../../domain/usecases/refund_payment_uc.dart';
+import '../../domain/usecases/update_draft_invoice_uc.dart';
 
 // ============================================================
 // BASE DATA SOURCE
 // ============================================================
 
 abstract class BaseInvoicesRemoteDataSource {
+  Future<List<InvoiceDetailModel>> getInvoices(NoParameters parameters);
+
   Future<InvoiceDetailModel> getOrCreateInvoice(
-    SaveInvoiceParameters parameters,
-  );
+      GetCreateInvoiceParameters parameters);
 
   Future<InvoiceDetailModel> getInvoiceDetail(
-    GetInvoiceDetailParameters parameters,
-  );
+      GetInvoiceDetailParameters parameters);
 
-  Future<InvoiceDetailModel> issueInvoice(
-    IssueInvoiceParameters parameters,
-  );
+  Future<InvoiceDetailModel> issueInvoice(IssueInvoiceParameters parameters);
 
   Future<InvoiceDetailModel> updateDraftInvoice(
-    UpdateDraftInvoiceParameters parameters,
-  );
+      UpdateDraftInvoiceParameters parameters);
 
-  Future<InvoiceDetailModel> recordPayment(
-    RecordInvoicePaymentParameters parameters,
-  );
+  Future<InvoiceDetailModel> recordPayment(RecordPaymentParameters parameters);
 
-  Future<InvoiceDetailModel> refundPayment(
-    RefundInvoicePaymentParameters parameters,
-  );
+  Future<InvoiceDetailModel> refundPayment(RefundPaymentParameters parameters);
 }
 
 // ============================================================
@@ -532,7 +450,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
   @override
   Future<InvoiceDetailModel> getOrCreateInvoice(
-    SaveInvoiceParameters parameters,
+    GetCreateInvoiceParameters parameters,
   ) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
@@ -1009,7 +927,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         await AppToasts.showMessage(
           'Draft invoice updated successfully',
         );
-
+        log('DISCOUNT: ${updated.discountAmount}');
         return updated;
       },
     ).checkLogicErrors();
@@ -1021,8 +939,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
   @override
   Future<InvoiceDetailModel> recordPayment(
-    RecordInvoicePaymentParameters parameters,
-  ) async {
+      RecordPaymentParameters parameters) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
         await Future.delayed(
@@ -1163,8 +1080,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
   @override
   Future<InvoiceDetailModel> refundPayment(
-    RefundInvoicePaymentParameters parameters,
-  ) async {
+      RefundPaymentParameters parameters) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
         await Future.delayed(
@@ -1278,4 +1194,76 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       },
     ).checkLogicErrors();
   }
+
+  @override
+  Future<List<InvoiceDetailModel>> getInvoices(NoParameters parameters) async {
+    return await HandleLogicErrors<List<InvoiceDetailModel>>(
+      fun: () async {
+        await Future.delayed(
+          const Duration(seconds: 1),
+        );
+
+        final list =
+            LocalPref.sharedPreferences.getStringList('invoices') ?? [];
+
+        final invoices = list
+            .map(
+              (e) => InvoiceDetailModel.fromJson(
+                Map<String, dynamic>.from(jsonDecode(e) as Map),
+              ),
+            )
+            .toList();
+
+        invoices.sort((a, b) {
+          final aDate = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+          final bDate = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+
+          return bDate.compareTo(aDate);
+        });
+
+        return invoices;
+      },
+    ).checkLogicErrors();
+  }
 }
+
+
+
+
+
+/*
+
+@override
+Future<List<InvoiceDetailModel>> getInvoices(
+    NoParameters parameters) async {
+  return await HandleLogicErrors<List<InvoiceDetailModel>>(
+    fun: () async {
+      await Future.delayed(
+        const Duration(milliseconds: 350),
+      );
+
+      final list =
+          LocalPref.sharedPreferences.getStringList('invoices') ?? [];
+
+      final invoices = list
+          .map(
+            (e) => InvoiceDetailModel.fromJson(
+              Map<String, dynamic>.from(jsonDecode(e) as Map),
+            ),
+          )
+          .toList();
+
+      invoices.sort((a, b) {
+        final aDate =
+            a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final bDate =
+            b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+
+        return bDate.compareTo(aDate);
+      });
+
+      return invoices;
+    },
+  ).checkLogicErrors();
+}
+*/

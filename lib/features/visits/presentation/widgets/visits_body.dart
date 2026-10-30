@@ -5,6 +5,7 @@ import 'package:visit_proof/features/add_visit/presentation/screens/add_visit_sc
 import 'package:visit_proof/features/visits/presentation/controller/visits_bloc.dart';
 
 import '../../../../configs/app_colors.dart';
+import '../../../../configs/app_fonts.dart';
 import '../../../../core/utils/general_widgets/g_widget_appbar.dart';
 import '../../../../core/utils/general_widgets/g_widget_excel.dart';
 import '../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
@@ -48,29 +49,33 @@ class VisitsBody extends StatelessWidget {
         isLoading: loading,
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              const SizedBox(height: 5),
-              VisitsWidgetFilters(),
-              SizedBox(height: 16),
-              Expanded(
-                  child: Container(
-                color: AppColors.scaffoldBackground,
-                child: ListView.separated(
-                  itemCount: visits.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                        padding: index == visits.length - 1
-                            ? EdgeInsets.only(bottom: 140)
-                            : EdgeInsets.zero,
-                        child: VisitsWidgetCard(visit: visits[index]));
-                  },
+          child: visits.isEmpty
+              ? Center(
+                  child: Text('No visits yet',
+                      style: AppFonts(color: AppColors.textDarkHint)))
+              : Column(
+                  children: [
+                    const SizedBox(height: 5),
+                    VisitsWidgetFilters(),
+                    SizedBox(height: 16),
+                    Expanded(
+                        child: Container(
+                      color: AppColors.scaffoldBackground,
+                      child: ListView.separated(
+                        itemCount: visits.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                              padding: index == visits.length - 1
+                                  ? EdgeInsets.only(bottom: 140)
+                                  : EdgeInsets.zero,
+                              child: VisitsWidgetCard(visit: visits[index]));
+                        },
+                      ),
+                    ))
+                  ],
                 ),
-              ))
-            ],
-          ),
         ),
       ),
     );

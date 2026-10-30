@@ -7,10 +7,11 @@ import '../core/utils/general_widgets/g_widget_button.dart';
 
 class AppToasts {
   static Future<void> showMessage(String message,
-      {bool isError = false}) async {
+      {bool isError = false, Color? color}) async {
     ScaffoldMessenger.of(App.navigatorKey.currentContext!).showSnackBar(
       SnackBar(
-        backgroundColor: isError ? AppColors.statOrange : AppColors.statGreen,
+        backgroundColor:
+            color ?? (isError ? AppColors.statOrange : AppColors.statGreen),
         behavior: SnackBarBehavior.floating,
         content: Text(
           message,

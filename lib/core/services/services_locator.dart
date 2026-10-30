@@ -13,6 +13,10 @@ import 'package:visit_proof/features/clients/domain/usecases/get_clients_uc.dart
 import 'package:visit_proof/features/clients/domain/usecases/remove_client_uc.dart';
 import 'package:visit_proof/features/clients/domain/usecases/remove_equipment_uc.dart';
 import 'package:visit_proof/features/clients/presentation/controller/clients_bloc.dart';
+import 'package:visit_proof/features/invoices/data/data_sources/invoices_remote_data_source.dart';
+import 'package:visit_proof/features/invoices/data/repository/invoices_repo.dart';
+import 'package:visit_proof/features/invoices/domain/repository/base_invoices_repo.dart';
+import 'package:visit_proof/features/invoices/presentation/controller/invoices_bloc.dart';
 import 'package:visit_proof/features/services/data/datasource/services_remote_data_source.dart';
 import 'package:visit_proof/features/services/domain/repository/base_services_repo.dart';
 import 'package:visit_proof/features/services/domain/usecases/add_service_uc.dart';
@@ -34,6 +38,13 @@ import 'package:visit_proof/features/visits/domain/repository/base_visits_repo.d
 import 'package:visit_proof/features/visits/presentation/controller/visits_bloc.dart';
 
 import '../../features/add_visit/data/repository/add_visit_repo.dart';
+import '../../features/invoices/domain/usecases/get_create_invoice_uc.dart';
+import '../../features/invoices/domain/usecases/get_invoice_detail_uc.dart';
+import '../../features/invoices/domain/usecases/get_invoices_uc.dart';
+import '../../features/invoices/domain/usecases/issue_invoice_uc.dart';
+import '../../features/invoices/domain/usecases/record_payment_uc.dart';
+import '../../features/invoices/domain/usecases/refund_payment_uc.dart';
+import '../../features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 import '../../features/services/data/repository/services_repo.dart';
 import '../../features/visits/domain/usecases/get_visits_uc.dart';
 
@@ -47,6 +58,8 @@ class ServicesLocator {
     sl.registerFactory(() => ServicesBloc(sl(), sl(), sl(), sl()));
     sl.registerFactory(() => AddVisitBloc(sl(), sl(), sl(), sl()));
     sl.registerFactory(() => VisitsBloc(sl()));
+    sl.registerFactory(
+        () => InvoicesBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 
     //clients usecases
     sl.registerLazySingleton(() => GetClientsUc(sl()));
@@ -74,12 +87,31 @@ class ServicesLocator {
     //visits
     sl.registerLazySingleton(() => GetVisitsUc(sl()));
 
+    //invoices
+    /*
+    final GetInvoicesUc getInvoicesUc;
+  final GetCreateInvoiceUc getCreateInvoiceUc;
+  final GetInvoiceDetailUc getInvoiceDetailUc;
+  final IssueInvoiceUc issueInvoiceUc;
+  final RecordPaymentUc recordPaymentUc;
+  final RefundPaymentUc refundPaymentUc;
+  final UpdateDraftInvoiceUc updateDraftInvoiceUc;
+    */
+    sl.registerLazySingleton(() => GetInvoicesUc(sl()));
+    sl.registerLazySingleton(() => GetCreateInvoiceUc(sl()));
+    sl.registerLazySingleton(() => GetInvoiceDetailUc(sl()));
+    sl.registerLazySingleton(() => IssueInvoiceUc(sl()));
+    sl.registerLazySingleton(() => RecordPaymentUc(sl()));
+    sl.registerLazySingleton(() => RefundPaymentUc(sl()));
+    sl.registerLazySingleton(() => UpdateDraftInvoiceUc(sl()));
+
     //Repo
     sl.registerLazySingleton<BaseClientsRepo>(() => ClientsRepo(sl()));
     sl.registerLazySingleton<BaseTechniciansRepo>(() => TechniciansRepo(sl()));
     sl.registerLazySingleton<BaseServicesRepo>(() => ServicesRepo(sl()));
     sl.registerLazySingleton<BaseAddVisitRepo>(() => AddVisitRepo(sl()));
     sl.registerLazySingleton<BaseVisitsRepo>(() => VisitsRepo(sl()));
+    sl.registerLazySingleton<BaseInvoicesRepo>(() => InvoicesRepo(sl()));
 
     //Data Source
     sl.registerLazySingleton<BaseClientsRemoteDataSource>(
@@ -92,5 +124,7 @@ class ServicesLocator {
         () => AddVisitRemoteDataSource());
     sl.registerLazySingleton<BaseVisitsRemoteDataSource>(
         () => VisitsRemoteDataSource());
+    sl.registerLazySingleton<BaseInvoicesRemoteDataSource>(
+        () => InvoicesRemoteDataSource());
   }
 }
