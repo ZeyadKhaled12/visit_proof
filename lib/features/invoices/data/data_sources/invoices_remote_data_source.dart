@@ -927,7 +927,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         await AppToasts.showMessage(
           'Draft invoice updated successfully',
         );
-        log('DISCOUNT: ${updated.discountAmount}');
+        log('DISCOUNT1: ${updated.discountAmount}');
         return updated;
       },
     ).checkLogicErrors();

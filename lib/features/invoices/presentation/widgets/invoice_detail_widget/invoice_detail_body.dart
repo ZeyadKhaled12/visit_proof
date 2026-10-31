@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
+import 'package:visit_proof/features/invoices/domain/usecases/get_invoice_detail_uc.dart';
 import 'package:visit_proof/features/invoices/domain/usecases/issue_invoice_uc.dart';
 import 'package:visit_proof/features/invoices/presentation/controller/invoices_bloc.dart';
 
@@ -27,10 +28,6 @@ class InvoiceDetailBody extends StatefulWidget {
 }
 
 class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
-  double get _total => widget.invoice.totalAmount?.toDouble() ?? 0;
-  double get _paid => widget.invoice.paidAmount?.toDouble() ?? 0;
-  double get _remaining => widget.invoice.remainingAmount?.toDouble() ?? 0;
-
   bool get _hasId =>
       (widget.invoice.id?.trim().isNotEmpty ?? false) &&
       (widget.invoice.visitId?.trim().isNotEmpty ?? false);
@@ -39,26 +36,17 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
       widget.invoice.totalAmount != null &&
       widget.invoice.paidAmount != null &&
       widget.invoice.remainingAmount != null &&
-      _total.isFinite &&
-      _paid.isFinite &&
-      _remaining.isFinite &&
-      _total >= 0 &&
-      _paid >= 0 &&
-      _remaining >= 0 &&
-      (_total - _paid - _remaining).abs() < 0.011;
-
-  bool get _terminal =>
-      widget.invoice.paymentStatus == PaymentStatus.cancelled ||
-      widget.invoice.paymentStatus == PaymentStatus.refunded;
-
-  bool get _unpaid => widget.invoice.paymentStatus == PaymentStatus.unpaid;
-
-  bool get _partial =>
-      widget.invoice.paymentStatus == PaymentStatus.partiallyPaid;
-
-  bool get _paidInFull => widget.invoice.paymentStatus == PaymentStatus.paid;
-
-  bool get _hasIssueDate => widget.invoice.issueDate != null;
+      widget.invoice.totalAmount!.toDouble().isFinite &&
+      widget.invoice.paidAmount!.toDouble().isFinite &&
+      widget.invoice.remainingAmount!.toDouble().isFinite &&
+      widget.invoice.totalAmount! >= 0 &&
+      widget.invoice.paidAmount! >= 0 &&
+      widget.invoice.remainingAmount! >= 0 &&
+      (widget.invoice.totalAmount! -
+                  widget.invoice.paidAmount! -
+                  widget.invoice.remainingAmount!)
+              .abs() <
+          0.011;
 
   // IMPORTANT:
   // issueDate is only a UI hint, NOT a replacement for InvoiceStatus.
@@ -68,30 +56,38 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
   bool get _canIssue =>
       _hasId &&
-      !_hasIssueDate &&
-      _unpaid &&
+      widget.invoice.issueDate == null &&
+      widget.invoice.paymentStatus == PaymentStatus.unpaid &&
       _hasCompleteAmounts &&
-      _paid == 0 &&
-      _total > 0;
+      widget.invoice.paidAmount == 0 &&
+      (widget.invoice.totalAmount ?? 0) > 0;
 
   bool get _canEdit =>
-      _hasId && !_hasIssueDate && _unpaid && _hasCompleteAmounts && _paid == 0;
+      _hasId &&
+      widget.invoice.issueDate == null &&
+      widget.invoice.paymentStatus == PaymentStatus.unpaid &&
+      _hasCompleteAmounts &&
+      widget.invoice.paidAmount == 0;
 
   bool get _canRecord =>
       _hasId &&
-      _hasIssueDate &&
-      !_terminal &&
-      (_unpaid || _partial) &&
+      widget.invoice.issueDate != null &&
+      widget.invoice.paymentStatus != PaymentStatus.cancelled &&
+      widget.invoice.paymentStatus != PaymentStatus.refunded &&
+      (widget.invoice.paymentStatus == PaymentStatus.unpaid ||
+          widget.invoice.paymentStatus == PaymentStatus.partiallyPaid) &&
       _hasCompleteAmounts &&
-      _remaining > 0;
+      (widget.invoice.remainingAmount ?? 0) > 0;
 
   bool get _canRefund =>
       _hasId &&
-      _hasIssueDate &&
-      !_terminal &&
-      (_partial || _paidInFull) &&
+      widget.invoice.issueDate != null &&
+      widget.invoice.paymentStatus != PaymentStatus.cancelled &&
+      widget.invoice.paymentStatus != PaymentStatus.refunded &&
+      (widget.invoice.paymentStatus == PaymentStatus.partiallyPaid ||
+          widget.invoice.paymentStatus == PaymentStatus.paid) &&
       _hasCompleteAmounts &&
-      _paid > 0;
+      (widget.invoice.paidAmount ?? 0) > 0;
 
   String _money(num? amount) =>
       '${(amount ?? 0).toStringAsFixed(2)} ${widget.invoice.currency ?? ''}'
@@ -157,7 +153,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
     if (((widget.invoice.subtotal! -
                     widget.invoice.discountAmount! +
                     widget.invoice.taxAmount!) -
-                _total)
+                (widget.invoice.totalAmount ?? 0).toDouble())
             .abs() >
         .011) {
       AppToasts.showMessage('Invoice breakdown does not match the total.',
@@ -177,7 +173,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
           ),
         ),
         content: Text(
-          'Total: ${_money(_total)}\n'
+          'Total: ${_money((widget.invoice.totalAmount ?? 0).toDouble())}\n'
           'Check the linked visit before confirming.',
           style: AppFonts(
             color: AppColors.textSecondary,
@@ -214,19 +210,30 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
             IssueInvoiceParameters(invoiceId: widget.invoice.id!)));
   }
 
+  void _getInvoiceDetail() {
+    if (widget.invoice.id == null) return;
+    context.read<InvoicesBloc>().add(GetInvoiceDetailEvent(
+        getInvoiceDetailParameters:
+            GetInvoiceDetailParameters(invoiceId: widget.invoice.id!)));
+  }
+
   // ======================================================
   // SCREEN UI
   // ======================================================
 
   @override
   Widget build(BuildContext context) {
-    final progress = _total > 0 ? (_paid / _total).clamp(0.0, 1.0) : 0.0;
+    final progress = (widget.invoice.totalAmount ?? 0) > 0
+        ? ((widget.invoice.paidAmount ?? 0) / widget.invoice.totalAmount!)
+            .clamp(0.0, 1.0)
+            .toDouble()
+        : 0.0;
 
     final overdue = widget.invoice.dueDate != null &&
         widget.invoice.dueDate!.isBefore(DateTime.now()) &&
-        _remaining > 0 &&
-        !_terminal;
-
+        (widget.invoice.remainingAmount ?? 0) > 0 &&
+        widget.invoice.paymentStatus != PaymentStatus.cancelled &&
+        widget.invoice.paymentStatus != PaymentStatus.refunded;
     return GWidgetNaviBody(
       title: 'Invoice details',
       body: GWidgetLoading(
@@ -236,7 +243,9 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
             constraints: const BoxConstraints(maxWidth: 680),
             child: RefreshIndicator(
               color: AppColors.primary,
-              onRefresh: () async {},
+              onRefresh: () async {
+                _getInvoiceDetail();
+              },
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 25, 16, 32),
                 children: [
@@ -293,7 +302,8 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                         Text(
                           widget.invoice.paymentStatus == PaymentStatus.refunded
                               ? 'Refund completed'
-                              : _paidInFull
+                              : (widget.invoice.paymentStatus ==
+                                      PaymentStatus.paid)
                                   ? 'Amount paid'
                                   : 'Remaining balance',
                           style: AppFonts(
@@ -307,10 +317,13 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           _money(
                             widget.invoice.paymentStatus ==
                                     PaymentStatus.refunded
-                                ? _total
-                                : _paidInFull
-                                    ? _paid
-                                    : _remaining,
+                                ? (widget.invoice.totalAmount ?? 0).toDouble()
+                                : (widget.invoice.paymentStatus ==
+                                        PaymentStatus.paid)
+                                    ? (widget.invoice.paidAmount ?? 0)
+                                        .toDouble()
+                                    : (widget.invoice.remainingAmount ?? 0)
+                                        .toDouble(),
                           ),
                           style: AppFonts(
                             color: AppColors.surfaceWhite,
@@ -336,14 +349,14 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Paid ${_money(_paid)}',
+                              'Paid ${_money((widget.invoice.paidAmount ?? 0).toDouble())}',
                               style: AppFonts(
                                 color: AppColors.surfaceWhite,
                                 fontSize: 12,
                               ),
                             ),
                             Text(
-                              'Total ${_money(_total)}',
+                              'Total ${_money((widget.invoice.totalAmount ?? 0).toDouble())}',
                               style: AppFonts(
                                 color: AppColors.surfaceWhite,
                                 fontSize: 12,
@@ -493,15 +506,19 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           ),
                         ),
                         fontSize: 15,
-                        onPressed: () {
-                          AppToasts.showBottomSheet(
+                        onPressed: () async {
+                          final data = await AppToasts.showBottomSheet(
                               context,
                               InvDetailWidgetRecordPaymentSheet(
                                   invoiceID: widget.invoice.id!,
                                   subtitle:
-                                      'Remaining balance: ${_money(_remaining)}',
-                                  validator: (v) =>
-                                      _requiredMoney(v, max: _remaining)));
+                                      'Remaining balance: ${_money((widget.invoice.remainingAmount ?? 0).toDouble())}',
+                                  validator: (v) => _requiredMoney(v,
+                                      max: (widget.invoice.remainingAmount ?? 0)
+                                          .toDouble())));
+                          if (data == true) {
+                            _getInvoiceDetail();
+                          }
                         }),
 
                   if (_canIssue)
@@ -515,7 +532,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                     const SizedBox(height: 9),
                     OutlinedButton.icon(
                       onPressed: _canEdit
-                          ? () {
+                          ? () async {
                               if (widget.invoice.subtotal == null ||
                                   widget.invoice.discountAmount == null ||
                                   widget.invoice.taxAmount == null) {
@@ -524,7 +541,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                                     'Invoice pricing is incomplete.');
                                 return;
                               }
-                              AppToasts.showBottomSheet(
+                              final data = await AppToasts.showBottomSheet(
                                   context,
                                   InvDetailWidgetEditSheet(
                                     invoice: widget.invoice,
@@ -541,16 +558,24 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                                       allowZero: true,
                                     ),
                                   ));
+                              if (data == true) {
+                                _getInvoiceDetail();
+                              }
                             }
-                          : () {
-                              AppToasts.showBottomSheet(
+                          : () async {
+                              final data = await AppToasts.showBottomSheet(
                                   context,
                                   InvDetailWidgetRefundPaymentSheet(
                                       invoiceID: widget.invoice.id!,
                                       validator: (v) => _requiredMoney(
                                             v,
-                                            max: _paid,
+                                            max:
+                                                (widget.invoice.paidAmount ?? 0)
+                                                    .toDouble(),
                                           )));
+                              if (data == true) {
+                                _getInvoiceDetail();
+                              }
                             },
                       //  _refundPayment,
                       style: OutlinedButton.styleFrom(

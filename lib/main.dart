@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visit_proof/app/app.dart';
-import 'package:visit_proof/features/invoices/presentation/screens/invoices_scr.dart';
 import 'package:visit_proof/features/visits/presentation/screens/visits_scr.dart';
 import 'core/local/local_pref.dart';
 import 'core/services/services_locator.dart';
@@ -14,10 +13,12 @@ import 'features/invoices/presentation/screens/invoice_detail_scr.dart';
 import 'features/technicians/presentation/screens/add_tech_scr.dart';
 import 'features/technicians/presentation/screens/technician_detail_scr.dart';
 import 'features/add_visit/presentation/screens/add_visit_scr.dart';
+import 'features/visit_detail/presentation/screens/visit_detail_scr.dart';
 
 /*
 1- add option to move to full screen of picks
 2- add option to add more than one location in client detail
+3- solve start time in both update visit and create visit
 */
 
 void main() async {
@@ -50,7 +51,7 @@ class MyAppState extends State<MyApp> {
         navigatorKey: App.navigatorKey,
         debugShowCheckedModeBanner: false,
         routes: {
-          '/': (context) => InvoicesScr(),
+          '/': (context) => VisitsScr(),
           ClientDetailScr.route: (context) => ClientDetailScr(),
           ClientsScr.route: (context) => ClientsScr(),
           AddClientScr.route: (context) => AddClientScr(),
@@ -58,7 +59,7 @@ class MyAppState extends State<MyApp> {
           TechnicianDetailScr.route: (context) => TechnicianDetailScr(),
           AddVisitScr.route: (context) => AddVisitScr(),
           InvoiceDetailScr.route: (context) => InvoiceDetailScr(),
-
+          VisitDetailScr.route: (context) => VisitDetailScr(),
         });
   }
 }

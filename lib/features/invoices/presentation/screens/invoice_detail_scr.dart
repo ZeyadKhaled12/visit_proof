@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/enums.dart';
@@ -27,6 +29,7 @@ class InvoiceDetailScr extends StatelessWidget {
                   GetInvoiceDetailParameters(invoiceId: argu.invoiceID))),
         child: BlocBuilder<InvoicesBloc, InvoicesState>(
           builder: (context, state) {
+        log('DISCOUNT3: ${state.invoiceDetailModel.discountAmount}');
             return InvoiceDetailBody(
                 invoice: state.invoiceDetailModel,
                 loading:

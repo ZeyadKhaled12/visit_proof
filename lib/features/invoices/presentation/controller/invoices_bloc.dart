@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
@@ -124,8 +123,10 @@ class InvoicesBloc extends Bloc<InvoicesEvent, InvoicesState> {
     result.fold(
         (l) =>
             emit(state.copyWith(invoiceDetailRequestState: RequestState.error)),
-        (r) => emit(state.copyWith(
-            invoiceDetailRequestState: RequestState.loaded,
-            invoiceDetailModel: r)));
+        (r) {
+      emit(state.copyWith(
+          invoiceDetailRequestState: RequestState.loaded,
+          invoiceDetailModel: r));
+    });
   }
 }

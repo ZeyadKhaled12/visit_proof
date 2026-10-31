@@ -41,7 +41,7 @@ class _InvDetailWidgetRefundPaymentSheetState
       child: BlocConsumer<InvoicesBloc, InvoicesState>(
         listener: (context, state) {
           if (state.invoiceDetailRequestState == RequestState.loaded) {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
         },
         listenWhen: (previous, current) =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visit_proof/features/visit_detail/presentation/screens/visit_detail_scr.dart';
 
 import '../../../../configs/app_colors.dart';
 import '../../../../configs/app_fonts.dart';
@@ -20,7 +21,11 @@ class VisitsWidgetCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: () async {
+          if (visit.id == null) return;
+          Navigator.pushNamed(context, VisitDetailScr.route,
+              arguments: VisitDetailArgu(visitID: visit.id!).toArgu());
+        },
         highlightColor: AppColors.primary.withValues(alpha: 0.05),
         splashColor: AppColors.primary.withValues(alpha: 0.1),
         child: Container(
