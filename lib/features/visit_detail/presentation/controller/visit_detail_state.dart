@@ -1,33 +1,121 @@
 part of 'visit_detail_bloc.dart';
 
 class VisitDetailState extends Equatable {
-  final VisitDetailModel? visit;
-  final List<VisitClientModel> clients;
-  final List<ServiceModel> services;
+  final VisitDetailModel visit;
+  final InvoiceDetailModel invoice;
   final List<TechnicianModel> technicians;
-  final RequestState getState;
-  final RequestState actionState;
-  final RequestState optionsState;
-  final String? error;
-  final int actionSuccessCount;
+  final List<ServiceModel> services;
+  final RequestState getVisitDetailRequestState;
+  final RequestState getInvoiceRequestState;
+  final RequestState getTechniciansRequestState;
+  final RequestState getServicesRequestState;
+  final RequestState changeStatusRequestState;
+  final RequestState assignTechnicianRequestState;
+  final RequestState unassignTechnicianRequestState;
+  final RequestState rescheduleRequestState;
+  final RequestState updateInfoRequestState;
+  final RequestState changeServiceRequestState;
+  final RequestState changeSiteRequestState;
+  final RequestState addCommentRequestState;
+  final RequestState deleteVisitRequestState;
 
-  const VisitDetailState({this.visit, this.clients = const [], this.services = const [],
-    this.technicians = const [], this.getState = RequestState.loaded,
-    this.actionState = RequestState.loaded, this.optionsState = RequestState.loaded,
-    this.error, this.actionSuccessCount = 0});
+  const VisitDetailState({
+    this.visit = const VisitDetailModel(),
+    this.invoice = const InvoiceDetailModel(),
+    this.technicians = const [],
+    this.services = const [],
+    this.getVisitDetailRequestState = RequestState.loaded,
+    this.getInvoiceRequestState = RequestState.loaded,
+    this.getTechniciansRequestState = RequestState.loaded,
+    this.getServicesRequestState = RequestState.loaded,
+    this.changeStatusRequestState = RequestState.loaded,
+    this.assignTechnicianRequestState = RequestState.loaded,
+    this.unassignTechnicianRequestState = RequestState.loaded,
+    this.rescheduleRequestState = RequestState.loaded,
+    this.updateInfoRequestState = RequestState.loaded,
+    this.changeServiceRequestState = RequestState.loaded,
+    this.changeSiteRequestState = RequestState.loaded,
+    this.addCommentRequestState = RequestState.loaded,
+    this.deleteVisitRequestState = RequestState.loaded,
+  });
 
-  VisitDetailState copyWith({VisitDetailModel? visit, List<VisitClientModel>? clients,
-    List<ServiceModel>? services, List<TechnicianModel>? technicians,
-    RequestState? getState, RequestState? actionState, RequestState? optionsState,
-    String? error, bool clearError = false, int? actionSuccessCount}) => VisitDetailState(
-    visit: visit ?? this.visit, clients: clients ?? this.clients,
-    services: services ?? this.services, technicians: technicians ?? this.technicians,
-    getState: getState ?? this.getState, actionState: actionState ?? this.actionState,
-    optionsState: optionsState ?? this.optionsState,
-    error: clearError ? null : (error ?? this.error),
-    actionSuccessCount: actionSuccessCount ?? this.actionSuccessCount,
-  );
+  /// The visit has been loaded at least once.
+  bool get hasVisit => visit.id != null;
 
-  @override List<Object?> get props => [visit, clients, services, technicians,
-    getState, actionState, optionsState, error, actionSuccessCount];
+  /// The linked invoice, or null while it is missing or not loaded yet.
+  InvoiceDetailModel? get linkedInvoice => invoice.id == null ? null : invoice;
+
+  VisitDetailState copyWith({
+    VisitDetailModel? visit,
+    InvoiceDetailModel? invoice,
+    List<TechnicianModel>? technicians,
+    List<ServiceModel>? services,
+    RequestState? getVisitDetailRequestState,
+    RequestState? getInvoiceRequestState,
+    RequestState? getTechniciansRequestState,
+    RequestState? getServicesRequestState,
+    RequestState? changeStatusRequestState,
+    RequestState? assignTechnicianRequestState,
+    RequestState? unassignTechnicianRequestState,
+    RequestState? rescheduleRequestState,
+    RequestState? updateInfoRequestState,
+    RequestState? changeServiceRequestState,
+    RequestState? changeSiteRequestState,
+    RequestState? addCommentRequestState,
+    RequestState? deleteVisitRequestState,
+  }) {
+    return VisitDetailState(
+      visit: visit ?? this.visit,
+      invoice: invoice ?? this.invoice,
+      technicians: technicians ?? this.technicians,
+      services: services ?? this.services,
+      getVisitDetailRequestState:
+          getVisitDetailRequestState ?? this.getVisitDetailRequestState,
+      getInvoiceRequestState:
+          getInvoiceRequestState ?? this.getInvoiceRequestState,
+      getTechniciansRequestState:
+          getTechniciansRequestState ?? this.getTechniciansRequestState,
+      getServicesRequestState:
+          getServicesRequestState ?? this.getServicesRequestState,
+      changeStatusRequestState:
+          changeStatusRequestState ?? this.changeStatusRequestState,
+      assignTechnicianRequestState:
+          assignTechnicianRequestState ?? this.assignTechnicianRequestState,
+      unassignTechnicianRequestState:
+          unassignTechnicianRequestState ?? this.unassignTechnicianRequestState,
+      rescheduleRequestState:
+          rescheduleRequestState ?? this.rescheduleRequestState,
+      updateInfoRequestState:
+          updateInfoRequestState ?? this.updateInfoRequestState,
+      changeServiceRequestState:
+          changeServiceRequestState ?? this.changeServiceRequestState,
+      changeSiteRequestState:
+          changeSiteRequestState ?? this.changeSiteRequestState,
+      addCommentRequestState:
+          addCommentRequestState ?? this.addCommentRequestState,
+      deleteVisitRequestState:
+          deleteVisitRequestState ?? this.deleteVisitRequestState,
+    );
+  }
+
+  @override
+  List<Object> get props => [
+        visit,
+        invoice,
+        technicians,
+        services,
+        getVisitDetailRequestState,
+        getInvoiceRequestState,
+        getTechniciansRequestState,
+        getServicesRequestState,
+        changeStatusRequestState,
+        assignTechnicianRequestState,
+        unassignTechnicianRequestState,
+        rescheduleRequestState,
+        updateInfoRequestState,
+        changeServiceRequestState,
+        changeSiteRequestState,
+        addCommentRequestState,
+        deleteVisitRequestState,
+      ];
 }

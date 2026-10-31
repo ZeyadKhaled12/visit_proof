@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_navi_appbar.dart';
 
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../data/models/client_detail_model/client_detail_model.dart';
+import '../../../domain/usecases/get_client_detail_uc.dart';
+import '../../controller/clients_bloc.dart';
 import 'client_detail_widget_bottom_btns.dart';
 import 'client_detail_widget_equipments.dart';
 import 'client_detail_widget_header.dart';
@@ -32,7 +35,7 @@ class ClientDetailBody extends StatelessWidget {
       top: false,
       bottom: true,
       child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: AppTheme.scaffoldBackground,
         appBar: GWidgetNaviAppbar.appBar(context, 'Client Details'),
         bottomNavigationBar: laoding
             ? null
@@ -65,7 +68,7 @@ class ClientDetailBody extends StatelessWidget {
                 pinned: true,
                 delegate: _StickyHeaderDelegate(
                     child: Container(
-                      color: AppColors.scaffoldBackground,
+                      color: AppTheme.scaffoldBackground,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 12.0),
                       child: ClientDetailWidgetTitle(
@@ -75,7 +78,12 @@ class ClientDetailBody extends StatelessWidget {
               ),
 
               // Visit History List
-              ClientDetailWidgetVisits(visits: client.visits ?? []),
+              ClientDetailWidgetVisits(
+                  visits: client.visits ?? [],
+                  onVisitClosed: () => context.read<ClientsBloc>().add(
+                      GetClientDetailEvent(
+                          getClientDetailParameters: GetClientDetailParameters(
+                              clientID: client.id ?? '')))),
 
               // Bottom padding for safe scrolling
               const SliverToBoxAdapter(child: SizedBox(height: 24))

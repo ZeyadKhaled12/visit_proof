@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:visit_proof/configs/app_fonts.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 
-import '../../../configs/app_colors.dart';
 
 class GWidgetBottomSheet extends StatelessWidget {
   const GWidgetBottomSheet(
@@ -18,8 +17,8 @@ class GWidgetBottomSheet extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: bottomInset),
         padding: EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: AppColors.surfaceWhite,
+        decoration: BoxDecoration(
+          color: AppTheme.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: SingleChildScrollView(
@@ -33,7 +32,7 @@ class GWidgetBottomSheet extends StatelessWidget {
                   height: 5,
                   margin: const EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
-                    color: AppColors.iconLightGrey,
+                    color: AppTheme.iconLightGrey,
                     borderRadius: BorderRadius.circular(50),
                   ),
                 ),
@@ -43,15 +42,15 @@ class GWidgetBottomSheet extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppFonts(
-                      fontSize: 20,
+                    style: AppTheme.font(
+                      fontSize: AppTheme.textHeadline,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close, color: AppColors.iconGrey),
+                    icon: Icon(Icons.close, color: AppTheme.iconGrey),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
@@ -60,10 +59,10 @@ class GWidgetBottomSheet extends StatelessWidget {
               if (subtitle != null)
                 Text(
                   subtitle!,
-                  style: AppFonts(
-                    fontSize: 14,
+                  style: AppTheme.font(
+                    fontSize: AppTheme.textBodyLarge,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textNotes,
+                    color: AppTheme.textNotes,
                   ),
                 ),
               SizedBox(height: 15),

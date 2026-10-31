@@ -4,8 +4,7 @@ import 'package:visit_proof/core/utils/general_models/g_model_site.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_bottom_sheet.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_button.dart';
 
-import '../../../../configs/app_colors.dart';
-import '../../../../configs/app_fonts.dart';
+import '../../../../configs/app_theme.dart';
 import '../../../../core/utils/general_dummy_data.dart';
 import '../../../../core/utils/general_models/g_model_catg.dart';
 import '../../../../core/utils/general_widgets/g_widget_drop_down.dart';
@@ -56,12 +55,12 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
                 labelText: 'Select City *',
                 errorMsg: _cityErrorMsg,
                 prefixIcon:
-                    const Icon(Icons.location_city, color: AppColors.primary),
+                    Icon(Icons.location_city, color: AppTheme.primary),
                 items: GeneralDummyData.getSaudiCities().map((city) {
                   return DropdownMenuItem(
                     value: city,
                     child: Text(city.name ?? '',
-                        style: AppFonts(fontWeight: FontWeight.w500)),
+                        style: AppTheme.font(fontWeight: FontWeight.w500)),
                   );
                 }).toList(),
                 onChanged: (val) {
@@ -73,9 +72,9 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
               const SizedBox(height: 24),
               Text(
                 'Address Configuration',
-                style: AppFonts(
-                  color: AppColors.textPrimary.withValues(alpha: 0.8),
-                  fontSize: 14,
+                style: AppTheme.font(
+                  color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                  fontSize: AppTheme.textBodyLarge,
                   fontWeight: FontWeight.bold,
                 ),
               ),

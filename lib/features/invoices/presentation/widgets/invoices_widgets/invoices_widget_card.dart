@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:visit_proof/configs/app_colors.dart';
-import 'package:visit_proof/configs/app_fonts.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
 import 'package:visit_proof/features/invoices/data/models/invoice_detail_model.dart';
 import 'package:visit_proof/features/invoices/presentation/screens/invoice_detail_scr.dart';
 
 class InvoicesWidgetCard extends StatelessWidget {
-  const InvoicesWidgetCard({super.key, required this.invoice});
+  const InvoicesWidgetCard(
+      {super.key, required this.invoice, required this.onReturn});
 
   final InvoiceDetailModel invoice;
+
+  /// Called after the invoice screen closes, since it may have changed.
+  final VoidCallback onReturn;
 
   // ==========================================================
   // STATUS HELPERS
@@ -56,22 +59,22 @@ class InvoicesWidgetCard extends StatelessWidget {
   }
 
   Color get _statusColor {
-    if (_isDraft) return AppColors.primary;
+    if (_isDraft) return AppTheme.primary;
 
     switch (invoice.paymentStatus) {
       case PaymentStatus.unpaid:
-        return AppColors.statOrange;
+        return AppTheme.statOrange;
       case PaymentStatus.pending:
-        return AppColors.pending;
+        return AppTheme.pending;
       case PaymentStatus.partiallyPaid:
-        return AppColors.primary;
+        return AppTheme.primary;
       case PaymentStatus.paid:
-        return AppColors.statGreen;
+        return AppTheme.statGreen;
       case PaymentStatus.cancelled:
       case PaymentStatus.refunded:
-        return AppColors.textSecondary;
+        return AppTheme.textSecondary;
       case null:
-        return AppColors.iconGrey;
+        return AppTheme.iconGrey;
     }
   }
 
@@ -122,9 +125,9 @@ class InvoicesWidgetCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppFonts(
-            color: AppColors.textSecondary,
-            fontSize: 11,
+          style: AppTheme.font(
+            color: AppTheme.textSecondary,
+            fontSize: AppTheme.textCaption,
           ),
         ),
         const SizedBox(height: 5),
@@ -132,9 +135,9 @@ class InvoicesWidgetCard extends StatelessWidget {
           value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppFonts(
+          style: AppTheme.font(
             color: color,
-            fontSize: 16,
+            fontSize: AppTheme.textTitle,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -153,18 +156,18 @@ class InvoicesWidgetCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceWhite,
+        color: AppTheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadowColor,
+            color: AppTheme.cardShadowColor,
             blurRadius: 18,
             offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Material(
-        color: AppColors.surfaceWhite,
+        color: AppTheme.surface,
         borderRadius: BorderRadius.circular(20),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -172,6 +175,7 @@ class InvoicesWidgetCard extends StatelessWidget {
             if (invoice.id == null) return;
             await Navigator.pushNamed(context, InvoiceDetailScr.route,
                 arguments: InvoiceDetailArgu(invoiceID: invoice.id!).toArgu());
+            onReturn();
           },
           child: Padding(
             padding: const EdgeInsets.all(17),
@@ -187,12 +191,12 @@ class InvoicesWidgetCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: .09),
+                        color: AppTheme.primary.withValues(alpha: .09),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.receipt_long_rounded,
-                        color: AppColors.primary,
+                        color: AppTheme.primary,
                         size: 20,
                       ),
                     ),
@@ -205,18 +209,18 @@ class InvoicesWidgetCard extends StatelessWidget {
                             invoice.invoiceNumber ?? 'Invoice',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: AppFonts(
-                              color: AppColors.textPrimary,
-                              fontSize: 15,
+                            style: AppTheme.font(
+                              color: AppTheme.textPrimary,
+                              fontSize: AppTheme.textSubtitle,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
                           const SizedBox(height: 3),
                           Text(
                             invoice.visitNumber ?? 'No visit number',
-                            style: AppFonts(
-                              color: AppColors.textSecondary,
-                              fontSize: 11,
+                            style: AppTheme.font(
+                              color: AppTheme.textSecondary,
+                              fontSize: AppTheme.textCaption,
                             ),
                           ),
                         ],
@@ -233,9 +237,9 @@ class InvoicesWidgetCard extends StatelessWidget {
                       ),
                       child: Text(
                         _statusText,
-                        style: AppFonts(
+                        style: AppTheme.font(
                           color: statusColor,
-                          fontSize: 11,
+                          fontSize: AppTheme.textCaption,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -251,9 +255,9 @@ class InvoicesWidgetCard extends StatelessWidget {
 
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.person_outline_rounded,
-                      color: AppColors.iconGrey,
+                      color: AppTheme.iconGrey,
                       size: 17,
                     ),
                     const SizedBox(width: 7),
@@ -262,9 +266,9 @@ class InvoicesWidgetCard extends StatelessWidget {
                         invoice.client?.name ?? 'Customer not selected',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppFonts(
-                          color: AppColors.textPrimary,
-                          fontSize: 13,
+                        style: AppTheme.font(
+                          color: AppTheme.textPrimary,
+                          fontSize: AppTheme.textBody,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -275,7 +279,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 Divider(
-                  color: AppColors.iconLightGrey.withValues(alpha: .3),
+                  color: AppTheme.iconLightGrey.withValues(alpha: .3),
                 ),
 
                 const SizedBox(height: 8),
@@ -290,7 +294,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                       child: _amountInfo(
                         label: 'Invoice total',
                         value: _money(invoice.totalAmount),
-                        color: AppColors.textPrimary,
+                        color: AppTheme.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -299,8 +303,8 @@ class InvoicesWidgetCard extends StatelessWidget {
                         label: 'Remaining',
                         value: _money(invoice.remainingAmount),
                         color: (invoice.remainingAmount ?? 0) > 0
-                            ? AppColors.primary
-                            : AppColors.statGreen,
+                            ? AppTheme.primary
+                            : AppTheme.statGreen,
                       ),
                     ),
                   ],
@@ -317,9 +321,9 @@ class InvoicesWidgetCard extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: _paymentProgress,
                     minHeight: 6,
-                    backgroundColor: AppColors.locationChipBg,
-                    valueColor: const AlwaysStoppedAnimation(
-                      AppColors.statGreen,
+                    backgroundColor: AppTheme.locationChipBg,
+                    valueColor: AlwaysStoppedAnimation(
+                      AppTheme.statGreen,
                     ),
                   ),
                 ),
@@ -328,9 +332,9 @@ class InvoicesWidgetCard extends StatelessWidget {
 
                 Text(
                   'Paid ${_money(invoice.paidAmount)}',
-                  style: AppFonts(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
+                  style: AppTheme.font(
+                    color: AppTheme.textSecondary,
+                    fontSize: AppTheme.textCaption,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -349,8 +353,8 @@ class InvoicesWidgetCard extends StatelessWidget {
                           : Icons.calendar_today_outlined,
                       size: 15,
                       color: _isOverdue
-                          ? AppColors.statOrange
-                          : AppColors.iconGrey,
+                          ? AppTheme.statOrange
+                          : AppTheme.iconGrey,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
@@ -360,11 +364,11 @@ class InvoicesWidgetCard extends StatelessWidget {
                             : _isDraft
                                 ? 'Created ${_date(invoice.createdAt)}'
                                 : 'Due ${_date(invoice.dueDate)}',
-                        style: AppFonts(
+                        style: AppTheme.font(
                           color: _isOverdue
-                              ? AppColors.statOrange
-                              : AppColors.textSecondary,
-                          fontSize: 11,
+                              ? AppTheme.statOrange
+                              : AppTheme.textSecondary,
+                          fontSize: AppTheme.textCaption,
                           fontWeight:
                               _isOverdue ? FontWeight.w700 : FontWeight.w500,
                         ),
@@ -372,17 +376,17 @@ class InvoicesWidgetCard extends StatelessWidget {
                     ),
                     Text(
                       'Details',
-                      style: AppFonts(
-                        color: AppColors.primary,
-                        fontSize: 12,
+                      style: AppTheme.font(
+                        color: AppTheme.primary,
+                        fontSize: AppTheme.textSmall,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(
+                    Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 12,
-                      color: AppColors.primary,
+                      color: AppTheme.primary,
                     ),
                   ],
                 ),

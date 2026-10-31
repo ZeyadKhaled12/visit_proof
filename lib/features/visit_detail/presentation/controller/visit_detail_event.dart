@@ -2,38 +2,91 @@ part of 'visit_detail_bloc.dart';
 
 abstract class VisitDetailEvent extends Equatable {
   const VisitDetailEvent();
-  @override List<Object?> get props => [];
+
+  @override
+  List<Object> get props => [];
 }
-class LoadVisitDetailEvent extends VisitDetailEvent {
-  final String visitID;
-  const LoadVisitDetailEvent(this.visitID);
-  @override List<Object?> get props => [visitID];
+
+class GetVisitDetailEvent extends VisitDetailEvent {
+  final GetVisitDetailParameters getVisitDetailParameters;
+  const GetVisitDetailEvent({required this.getVisitDetailParameters});
+  @override
+  List<Object> get props => [getVisitDetailParameters];
 }
-class LoadVisitEditOptionsEvent extends VisitDetailEvent {
-  const LoadVisitEditOptionsEvent();
+
+class GetVisitTechniciansEvent extends VisitDetailEvent {
+  final NoParameters noParameters;
+  const GetVisitTechniciansEvent({required this.noParameters});
+  @override
+  List<Object> get props => [noParameters];
 }
-class UpdateVisitEvent extends VisitDetailEvent {
-  final UpdateVisitParameters parameters;
-  const UpdateVisitEvent(this.parameters);
-  @override List<Object?> get props => [parameters];
+
+class GetVisitServicesEvent extends VisitDetailEvent {
+  final NoParameters noParameters;
+  const GetVisitServicesEvent({required this.noParameters});
+  @override
+  List<Object> get props => [noParameters];
 }
+
 class ChangeVisitStatusEvent extends VisitDetailEvent {
-  final ChangeVisitStatusParameters parameters;
-  const ChangeVisitStatusEvent(this.parameters);
-  @override List<Object?> get props => [parameters];
+  final ChangeVisitStatusParameters changeVisitStatusParameters;
+  const ChangeVisitStatusEvent({required this.changeVisitStatusParameters});
+  @override
+  List<Object> get props => [changeVisitStatusParameters];
 }
-class AssignVisitTechnicianEvent extends VisitDetailEvent {
-  final AssignVisitTechnicianParameters parameters;
-  const AssignVisitTechnicianEvent(this.parameters);
-  @override List<Object?> get props => [parameters];
+
+class AssignTechnicianEvent extends VisitDetailEvent {
+  final AssignTechnicianParameters assignTechnicianParameters;
+  const AssignTechnicianEvent({required this.assignTechnicianParameters});
+  @override
+  List<Object> get props => [assignTechnicianParameters];
 }
-class UnassignVisitTechnicianEvent extends VisitDetailEvent {
-  final UnassignVisitTechnicianParameters parameters;
-  const UnassignVisitTechnicianEvent(this.parameters);
-  @override List<Object?> get props => [parameters];
+
+class UnassignTechnicianEvent extends VisitDetailEvent {
+  final UnassignTechnicianParameters unassignTechnicianParameters;
+  const UnassignTechnicianEvent({required this.unassignTechnicianParameters});
+  @override
+  List<Object> get props => [unassignTechnicianParameters];
 }
+
+class RescheduleVisitEvent extends VisitDetailEvent {
+  final RescheduleVisitParameters rescheduleVisitParameters;
+  const RescheduleVisitEvent({required this.rescheduleVisitParameters});
+  @override
+  List<Object> get props => [rescheduleVisitParameters];
+}
+
+class UpdateVisitInfoEvent extends VisitDetailEvent {
+  final UpdateVisitInfoParameters updateVisitInfoParameters;
+  const UpdateVisitInfoEvent({required this.updateVisitInfoParameters});
+  @override
+  List<Object> get props => [updateVisitInfoParameters];
+}
+
+class ChangeVisitServiceEvent extends VisitDetailEvent {
+  final ChangeVisitServiceParameters changeVisitServiceParameters;
+  const ChangeVisitServiceEvent({required this.changeVisitServiceParameters});
+  @override
+  List<Object> get props => [changeVisitServiceParameters];
+}
+
+class ChangeVisitSiteEvent extends VisitDetailEvent {
+  final ChangeVisitSiteParameters changeVisitSiteParameters;
+  const ChangeVisitSiteEvent({required this.changeVisitSiteParameters});
+  @override
+  List<Object> get props => [changeVisitSiteParameters];
+}
+
 class AddVisitCommentEvent extends VisitDetailEvent {
-  final AddVisitCommentParameters parameters;
-  const AddVisitCommentEvent(this.parameters);
-  @override List<Object?> get props => [parameters];
+  final AddVisitCommentParameters addVisitCommentParameters;
+  const AddVisitCommentEvent({required this.addVisitCommentParameters});
+  @override
+  List<Object> get props => [addVisitCommentParameters];
+}
+
+class DeleteVisitEvent extends VisitDetailEvent {
+  final DeleteVisitParameters deleteVisitParameters;
+  const DeleteVisitEvent({required this.deleteVisitParameters});
+  @override
+  List<Object> get props => [deleteVisitParameters];
 }

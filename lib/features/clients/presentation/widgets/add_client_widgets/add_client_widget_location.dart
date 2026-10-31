@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_widgets/g_widget_location_picker_scr.dart';
 import '../../../../../core/utils/general_widgets/g_widget_map_picked.dart';
 import '../../../../../core/utils/general_widgets/g_widget_text_field.dart';
@@ -23,10 +23,10 @@ class AddClientWidgetLocation extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.scaffoldBackground,
+        color: AppTheme.scaffoldBackground,
         borderRadius: BorderRadius.circular(16),
         border:
-            Border.all(color: AppColors.iconLightGrey.withValues(alpha: 0.3)),
+            Border.all(color: AppTheme.iconLightGrey.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -50,8 +50,8 @@ class AddClientWidgetLocation extends StatelessWidget {
               labelText: 'Detailed Address',
               hintText: 'Building, Street, Area...',
               maxLength: 500,
-              prefixIcon: const Icon(Icons.home_work_outlined,
-                  color: AppColors.primary),
+              prefixIcon: Icon(Icons.home_work_outlined,
+                  color: AppTheme.primary),
               errorMsg: addressDetailErrorMsg),
         ],
       ),

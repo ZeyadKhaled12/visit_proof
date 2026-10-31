@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/usecase/base_use_case.dart';
+import '../../../../../core/utils/general_functions.dart/g_fun_search.dart';
 import '../../../../../core/utils/general_widgets/g_widget_appbar.dart';
-import '../../../../../core/utils/general_widgets/g_widget_excel.dart';
+import '../../../../../core/utils/general_widgets/g_widget_empty.dart';
 import '../../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
 import '../../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../../../../core/utils/general_widgets/g_widget_search.dart';
@@ -14,74 +14,107 @@ import '../../controller/services_bloc.dart';
 import '../../screens/add_service_scr.dart';
 import 'services_widget_card.dart';
 
-class ServicesBody extends StatelessWidget {
+class ServicesBody extends StatefulWidget {
   const ServicesBody(
       {super.key, required this.services, required this.loading});
   final List<ServiceModel> services;
   final bool loading;
 
   @override
+  State<ServicesBody> createState() => _ServicesBodyState();
+}
+
+class _ServicesBodyState extends State<ServicesBody> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<ServiceModel> get _visibleServices => widget.services
+      .where((service) => GFunSearch.matches(_query, [
+            service.serviceName,
+            service.category?.name,
+            ...?service.checkList,
+          ]))
+      .toList();
+
+  Future<void> _addService() async {
+    final data = await AddServiceScr.show(context);
+    if (data is ServiceModel && mounted) {
+      context
+          .read<ServicesBloc>()
+          .add(GetServicesEvent(noParameters: NoParameters()));
+    }
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    setState(() => _query = '');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final services = _visibleServices;
+
     return Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: AppTheme.scaffoldBackground,
         appBar: GWidgetAppbar(
-            title: 'Services',
-            icon: Icons.miscellaneous_services,
-            actions: [
-              Center(
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: GWidgetExcel()),
-              ),
-            ]).appbar(),
+                title: 'Services', icon: Icons.miscellaneous_services)
+            .appbar(),
         body: GWidgetLoading(
-          isLoading: loading,
+          isLoading: widget.loading,
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 const SizedBox(height: 5),
                 GWidgetSearch(
-                  searchController: TextEditingController(),
-                  hint: 'Search services...',
-                  onChanged: (value) {},
-                  onClear: () {},
+                  searchController: _searchController,
+                  hint: 'Search service, category, task...',
+                  onChanged: (value) => setState(() => _query = value ?? ''),
+                  onClear: _clearSearch,
                 ),
                 const SizedBox(height: 16),
                 Expanded(
-                    child: services.isEmpty && !loading
-                        ? Center(
-                            child: Text(
-                              'No services yet!',
-                              style: AppFonts(color: Colors.grey, fontSize: 16),
-                            ),
-                          )
+                    child: services.isEmpty
+                        ? (widget.loading
+                            ? const SizedBox.shrink()
+                            : SingleChildScrollView(child: _emptyState()))
                         : ListView.builder(
                             physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(bottom: 80),
                             itemCount: services.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: services.length - 1 == index
-                                    ? EdgeInsets.only(bottom: 80)
-                                    : EdgeInsets.zero,
-                                child: ServicesWidgetCard(
-                                    service: services[index]),
-                              );
-                            },
+                            itemBuilder: (context, index) =>
+                                ServicesWidgetCard(service: services[index]),
                           ))
               ],
             ),
           ),
         ),
-        floatingActionButton: GWidgetFloatingBtn(
-            text: "Add new service",
-            onPressed: () async {
-              final data = await AddServiceScr.show(context);
-              if (data is ServiceModel) {
-                context
-                    .read<ServicesBloc>()
-                    .add(GetServicesEvent(noParameters: NoParameters()));
-              }
-            }));
+        floatingActionButton:
+            GWidgetFloatingBtn(text: "Add new service", onPressed: _addService));
+  }
+
+  Widget _emptyState() {
+    if (widget.services.isEmpty) {
+      return GWidgetEmpty(
+        icon: Icons.build_circle_rounded,
+        title: 'No services yet',
+        subtitle: 'Add the services you offer with their price and checklist.',
+        actionText: 'Add first service',
+        onAction: _addService,
+      );
+    }
+    return GWidgetEmpty(
+      icon: Icons.search_off_rounded,
+      title: 'No matching services',
+      subtitle: 'Try a different service or category name.',
+      actionText: 'Clear search',
+      onAction: _clearSearch,
+    );
   }
 }

@@ -4,10 +4,10 @@ import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
 import 'package:visit_proof/features/clients/presentation/controller/clients_bloc.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
+import '../../../../../core/utils/general_functions.dart/g_fun_search.dart';
 import '../../../../../core/utils/general_widgets/g_widget_appbar.dart';
-import '../../../../../core/utils/general_widgets/g_widget_excel.dart';
+import '../../../../../core/utils/general_widgets/g_widget_empty.dart';
 import '../../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
 import '../../../../../core/utils/general_widgets/g_widget_search.dart';
 import '../../../data/models/client_detail_model/client_detail_model.dart';
@@ -24,15 +24,8 @@ class ClientsBody extends StatefulWidget {
 }
 
 class _ClientsBodyState extends State<ClientsBody> {
-  // final List<ClientModel> _allClients = [];
-  // List<ClientModel> _filteredClients = [];
   final TextEditingController _searchController = TextEditingController();
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _filteredClients = _allClients;
-  // }
+  String _query = '';
 
   @override
   void dispose() {
@@ -40,20 +33,36 @@ class _ClientsBodyState extends State<ClientsBody> {
     super.dispose();
   }
 
+  List<ClientDetailModel> get _visibleClients => widget.clients
+      .where((client) => GFunSearch.matches(_query, [
+            client.name,
+            client.phone,
+            client.email,
+            client.site?.city?.name,
+            client.site?.addressDetail,
+          ]))
+      .toList();
+
+  Future<void> _addClient() async {
+    final data = await Navigator.pushNamed(context, AddClientScr.route);
+    if (data == true && mounted) {
+      context.read<ClientsBloc>().add(GetClientsEvent(noParameters: NoParameters()));
+    }
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    setState(() => _query = '');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final clients = _visibleClients;
+
     return Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        appBar: GWidgetAppbar(
-            title: 'Clients',
-            icon: Icons.people_alt_outlined,
-            actions: [
-              Center(
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: GWidgetExcel()),
-              ),
-            ]).appbar(),
+        backgroundColor: AppTheme.scaffoldBackground,
+        appBar: GWidgetAppbar(title: 'Clients', icon: Icons.people_alt_outlined)
+            .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,
           body: Padding(
@@ -62,50 +71,48 @@ class _ClientsBodyState extends State<ClientsBody> {
               children: [
                 const SizedBox(height: 5),
                 GWidgetSearch(
-                  searchController: TextEditingController(),
-                  hint: 'Search clients...',
-                  onChanged: (value) {},
-                  onClear: () {},
+                  searchController: _searchController,
+                  hint: 'Search name, phone, email, city...',
+                  onChanged: (value) => setState(() => _query = value ?? ''),
+                  onClear: _clearSearch,
                 ),
                 const SizedBox(height: 16),
                 Expanded(
-                    child: widget.clients.isEmpty && !widget.loading
-                        ? Center(
-                            child: Text(
-                              'No clients yet!',
-                              style: AppFonts(color: Colors.grey, fontSize: 16),
-                            ),
-                          )
+                    child: clients.isEmpty
+                        ? (widget.loading
+                            ? const SizedBox.shrink()
+                            : SingleChildScrollView(child: _emptyState()))
                         : ListView.builder(
                             physics: const BouncingScrollPhysics(),
-                            itemCount: widget.clients.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: widget.clients.length - 1 == index
-                                    ? EdgeInsets.only(bottom: 80)
-                                    : EdgeInsets.zero,
-                                child: ClientsWidgetCard(
-                                    client: widget.clients[index]),
-                              );
-                            },
+                            padding: const EdgeInsets.only(bottom: 80),
+                            itemCount: clients.length,
+                            itemBuilder: (context, index) =>
+                                ClientsWidgetCard(client: clients[index]),
                           )),
               ],
             ),
           ),
         ),
-        floatingActionButton: GWidgetFloatingBtn(
-            text: "Add new client",
-            onPressed: () async {
-              final data =
-                  await Navigator.pushNamed(context, AddClientScr.route);
-              if (data is bool) {
-                if (data) {
-                  context
-                      .read<ClientsBloc>()
-                      .add(GetClientsEvent(noParameters: NoParameters()));
-                }
-              }
-              // log('DATA: $data');
-            }));
+        floatingActionButton:
+            GWidgetFloatingBtn(text: "Add new client", onPressed: _addClient));
+  }
+
+  Widget _emptyState() {
+    if (widget.clients.isEmpty) {
+      return GWidgetEmpty(
+        icon: Icons.people_alt_rounded,
+        title: 'No clients yet',
+        subtitle: 'Add your first client to start booking visits.',
+        actionText: 'Add first client',
+        onAction: _addClient,
+      );
+    }
+    return GWidgetEmpty(
+      icon: Icons.search_off_rounded,
+      title: 'No matching clients',
+      subtitle: 'Try a different name, phone or city.',
+      actionText: 'Clear search',
+      onAction: _clearSearch,
+    );
   }
 }

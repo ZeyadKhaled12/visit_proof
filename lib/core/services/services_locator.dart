@@ -32,13 +32,26 @@ import 'package:visit_proof/features/technicians/domain/usecases/get_tech_detail
 import 'package:visit_proof/features/technicians/domain/usecases/get_technicians_uc.dart';
 import 'package:visit_proof/features/technicians/domain/usecases/remove_technician_uc.dart';
 import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
-import 'package:visit_proof/features/visit_detail/data/datasource/visit_detail_remote_data_source.dart';
+import 'package:visit_proof/features/visit_detail/domain/usecases/change_visit_status_uc.dart';
 import 'package:visit_proof/features/visits/data/datasource/visits_remote_data_source.dart';
 import 'package:visit_proof/features/visits/data/repository/visits_repo.dart';
 import 'package:visit_proof/features/visits/domain/repository/base_visits_repo.dart';
 import 'package:visit_proof/features/visits/presentation/controller/visits_bloc.dart';
 
 import '../../features/add_visit/data/repository/add_visit_repo.dart';
+import '../../features/dashboard/data/datasource/dashboard_remote_data_source.dart';
+import '../../features/dashboard/data/repository/dashboard_repo.dart';
+import '../../features/dashboard/domain/repository/base_dashboard_repo.dart';
+import '../../features/dashboard/domain/usecases/get_dashboard_snapshot_uc.dart';
+import '../../features/dashboard/presentation/controller/dashboard_bloc.dart';
+import '../../features/dispatch/data/datasource/dispatch_remote_data_source.dart';
+import '../../features/dispatch/data/repository/dispatch_repo.dart';
+import '../../features/dispatch/domain/repository/base_dispatch_repo.dart';
+import '../../features/dispatch/domain/usecases/get_dispatch_settings_uc.dart';
+import '../../features/dispatch/domain/usecases/get_technician_days_off_uc.dart';
+import '../../features/dispatch/domain/usecases/save_dispatch_settings_uc.dart';
+import '../../features/dispatch/domain/usecases/set_technician_day_off_uc.dart';
+import '../../features/dispatch/presentation/controller/dispatch_bloc.dart';
 import '../../features/invoices/domain/usecases/get_create_invoice_uc.dart';
 import '../../features/invoices/domain/usecases/get_invoice_detail_uc.dart';
 import '../../features/invoices/domain/usecases/get_invoices_uc.dart';
@@ -47,9 +60,18 @@ import '../../features/invoices/domain/usecases/record_payment_uc.dart';
 import '../../features/invoices/domain/usecases/refund_payment_uc.dart';
 import '../../features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 import '../../features/services/data/repository/services_repo.dart';
+import '../../features/visit_detail/data/datasource/visit_detail_remote_data_source.dart';
 import '../../features/visit_detail/data/repository/visit_detail_repo.dart';
 import '../../features/visit_detail/domain/repository/base_visit_detail_repo.dart';
-import '../../features/visit_detail/domain/usecases/visit_detail_actions_uc.dart';
+import '../../features/visit_detail/domain/usecases/add_visit_comment_uc.dart';
+import '../../features/visit_detail/domain/usecases/assign_technician_uc.dart';
+import '../../features/visit_detail/domain/usecases/change_visit_service_uc.dart';
+import '../../features/visit_detail/domain/usecases/change_visit_site_uc.dart';
+import '../../features/visit_detail/domain/usecases/delete_visit_uc.dart';
+import '../../features/visit_detail/domain/usecases/get_visit_detail_uc.dart';
+import '../../features/visit_detail/domain/usecases/reschedule_visit_uc.dart';
+import '../../features/visit_detail/domain/usecases/unassign_technician_uc.dart';
+import '../../features/visit_detail/domain/usecases/update_visit_info_uc.dart';
 import '../../features/visit_detail/presentation/controller/visit_detail_bloc.dart';
 import '../../features/visits/domain/usecases/get_visits_uc.dart';
 
@@ -65,8 +87,13 @@ class ServicesLocator {
     sl.registerFactory(() => VisitsBloc(sl()));
     sl.registerFactory(
         () => InvoicesBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-    sl.registerFactory(() =>
-        VisitDetailBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => VisitDetailBloc(sl(), sl(), sl(), sl(), sl(), sl(),
+        sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+
+    sl.registerFactory(() => DispatchBloc(
+        sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+
+    sl.registerFactory(() => DashboardBloc(sl()));
 
     //clients usecases
     sl.registerLazySingleton(() => GetClientsUc(sl()));
@@ -103,13 +130,26 @@ class ServicesLocator {
     sl.registerLazySingleton(() => RefundPaymentUc(sl()));
     sl.registerLazySingleton(() => UpdateDraftInvoiceUc(sl()));
 
-    //visit detail
+    //visit detail usecases
     sl.registerLazySingleton(() => GetVisitDetailUc(sl()));
-    sl.registerLazySingleton(() => UpdateVisitUc(sl()));
     sl.registerLazySingleton(() => ChangeVisitStatusUc(sl()));
-    sl.registerLazySingleton(() => AssignVisitTechnicianUc(sl()));
-    sl.registerLazySingleton(() => UnassignVisitTechnicianUc(sl()));
+    sl.registerLazySingleton(() => AssignTechnicianUc(sl()));
+    sl.registerLazySingleton(() => UnassignTechnicianUc(sl()));
+    sl.registerLazySingleton(() => RescheduleVisitUc(sl()));
+    sl.registerLazySingleton(() => UpdateVisitInfoUc(sl()));
+    sl.registerLazySingleton(() => ChangeVisitServiceUc(sl()));
+    sl.registerLazySingleton(() => ChangeVisitSiteUc(sl()));
     sl.registerLazySingleton(() => AddVisitCommentUc(sl()));
+    sl.registerLazySingleton(() => DeleteVisitUc(sl()));
+
+    //dashboard usecases
+    sl.registerLazySingleton(() => GetDashboardSnapshotUc(sl()));
+
+    //dispatch usecases
+    sl.registerLazySingleton(() => GetDispatchSettingsUc(sl()));
+    sl.registerLazySingleton(() => SaveDispatchSettingsUc(sl()));
+    sl.registerLazySingleton(() => GetTechnicianDaysOffUc(sl()));
+    sl.registerLazySingleton(() => SetTechnicianDayOffUc(sl()));
 
     //Repo
     sl.registerLazySingleton<BaseClientsRepo>(() => ClientsRepo(sl()));
@@ -118,9 +158,17 @@ class ServicesLocator {
     sl.registerLazySingleton<BaseAddVisitRepo>(() => AddVisitRepo(sl()));
     sl.registerLazySingleton<BaseVisitsRepo>(() => VisitsRepo(sl()));
     sl.registerLazySingleton<BaseInvoicesRepo>(() => InvoicesRepo(sl()));
-    sl.registerLazySingleton<BaseVisitDetailRepo>(() => VisitDetailRepo(sl()));
+    sl.registerLazySingleton<BaseVisitDetailRepo>(
+        () => VisitDetailRepo(sl()));
+
+    sl.registerLazySingleton<BaseDispatchRepo>(() => DispatchRepo(sl()));
+    sl.registerLazySingleton<BaseDashboardRepo>(() => DashboardRepo(sl()));
 
     //Data Source
+    sl.registerLazySingleton<BaseDispatchRemoteDataSource>(
+        () => DispatchRemoteDataSource());
+    sl.registerLazySingleton<BaseDashboardRemoteDataSource>(
+        () => DashboardRemoteDataSource());
     sl.registerLazySingleton<BaseClientsRemoteDataSource>(
         () => ClientsRemoteDataSource());
     sl.registerLazySingleton<BaseTechniciansRemoteDataSource>(

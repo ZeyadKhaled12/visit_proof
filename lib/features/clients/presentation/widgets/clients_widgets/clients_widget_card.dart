@@ -4,8 +4,7 @@ import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/core/utils/assets_manager.dart';
 import 'package:visit_proof/core/utils/general_functions.dart/g_fun_launch.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_button.dart';
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/usecase/base_use_case.dart';
 import '../../../data/models/client_detail_model/client_detail_model.dart';
 import '../../controller/clients_bloc.dart';
@@ -40,19 +39,19 @@ class ClientsWidgetCard extends StatelessWidget {
             }
           }
         },
-        highlightColor: AppColors.primary.withValues(alpha: 0.05),
-        splashColor: AppColors.primary.withValues(alpha: 0.1),
+        highlightColor: AppTheme.primary.withValues(alpha: 0.05),
+        splashColor: AppTheme.primary.withValues(alpha: 0.1),
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.cardColor,
+            color: AppTheme.cardColor,
             borderRadius: BorderRadius.circular(16),
-            border: const Border(
-                left: BorderSide(color: AppColors.primary, width: 5)),
+            border: Border(
+                left: BorderSide(color: AppTheme.primary, width: 5)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.cardShadowColor.withValues(alpha: .03),
+                color: AppTheme.cardShadowColor.withValues(alpha: .03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -64,13 +63,13 @@ class ClientsWidgetCard extends StatelessWidget {
               // Unified Avatar
               CircleAvatar(
                 radius: 22,
-                backgroundColor: AppColors.primary.withValues(alpha: .12),
+                backgroundColor: AppTheme.primary.withValues(alpha: .12),
                 child: Text(
                   initial,
-                  style: AppFonts(
-                    color: AppColors.primary,
+                  style: AppTheme.font(
+                    color: AppTheme.primary,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: AppTheme.textTitleLarge,
                   ),
                 ),
               ),
@@ -88,10 +87,10 @@ class ClientsWidgetCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             client.name ?? "Unknown",
-                            style: AppFonts(
-                              fontSize: 16,
+                            style: AppTheme.font(
+                              fontSize: AppTheme.textTitle,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: AppTheme.textPrimary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -102,20 +101,20 @@ class ClientsWidgetCard extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: AppColors.locationChipBg,
+                              color: AppTheme.locationChipBg,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.location_on_rounded,
-                                    size: 12, color: AppColors.primary),
+                                Icon(Icons.location_on_rounded,
+                                    size: 12, color: AppTheme.primary),
                                 const SizedBox(width: 4),
                                 Text(
                                   client.site?.city?.name ?? '',
-                                  style: AppFonts(
-                                      fontSize: 11,
-                                      color: AppColors.textDarkHint,
+                                  style: AppTheme.font(
+                                      fontSize: AppTheme.textCaption,
+                                      color: AppTheme.textDarkHint,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -138,19 +137,19 @@ class ClientsWidgetCard extends StatelessWidget {
                               Icon(Icons.phone_rounded,
                                   size: 13,
                                   color: (client.isWhatsAppPhone ?? false)
-                                      ? AppColors.whatsappGreen
-                                      : AppColors.iconLightGrey),
+                                      ? AppTheme.whatsappGreen
+                                      : AppTheme.iconLightGrey),
                               const SizedBox(width: 4),
                               Text(client.phone!,
-                                  style: AppFonts(
-                                      fontSize: 12,
-                                      color: AppColors.textDarkHint)),
+                                  style: AppTheme.font(
+                                      fontSize: AppTheme.textSmall,
+                                      color: AppTheme.textDarkHint)),
                               if (client.isWhatsAppPhone ?? false) ...[
                                 const SizedBox(width: 4),
                                 Image.asset(IconAsset.whatsapp,
                                     width: 14,
                                     height: 14,
-                                    color: AppColors.whatsappGreen)
+                                    color: AppTheme.whatsappGreen)
                               ]
                             ],
                           ),
@@ -158,13 +157,13 @@ class ClientsWidgetCard extends StatelessWidget {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.email_rounded,
-                                  size: 13, color: AppColors.iconLightGrey),
+                              Icon(Icons.email_rounded,
+                                  size: 13, color: AppTheme.iconLightGrey),
                               const SizedBox(width: 4),
                               Text(client.email!,
-                                  style: AppFonts(
-                                      fontSize: 12,
-                                      color: AppColors.textDarkHint)),
+                                  style: AppTheme.font(
+                                      fontSize: AppTheme.textSmall,
+                                      color: AppTheme.textDarkHint)),
                             ],
                           ),
                       ],
@@ -179,14 +178,14 @@ class ClientsWidgetCard extends StatelessWidget {
                         _TinyStateWidget(
                           icon: Icons.shopping_cart_rounded,
                           text: "${client.ordersCount ?? 0}",
-                          color: AppColors.statOrange,
+                          color: AppTheme.statOrange,
                         ),
                         const SizedBox(width: 8),
                         // Paid Chip
                         _TinyStateWidget(
                           text:
                               '${App.currency} ${client.totalPaid?.toStringAsFixed(2) ?? '0'}',
-                          color: AppColors.statGreen,
+                          color: AppTheme.statGreen,
                         ),
                       ],
                     ),
@@ -205,7 +204,7 @@ class ClientsWidgetCard extends StatelessWidget {
                 child: Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 20,
-                  color: AppColors.primary.withValues(alpha: 0.5),
+                  color: AppTheme.primary.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -239,8 +238,8 @@ class _TinyStateWidget extends StatelessWidget {
           ],
           Text(
             text,
-            style: AppFonts(
-              fontSize: 11,
+            style: AppTheme.font(
+              fontSize: AppTheme.textCaption,
               fontWeight: FontWeight.bold,
               color: color,
             ),
@@ -269,23 +268,23 @@ class _ContactActionButtons extends StatelessWidget {
           onPressed: () async {
             await GFunLaunch.makePhoneCall(phoneNumber);
           },
-          backgroundColor: AppColors.cardColor,
+          backgroundColor: AppTheme.cardColor,
           paddingTopBottom: 0,
-          border: Border.all(color: AppColors.primary),
+          border: Border.all(color: AppTheme.primary),
           widget: Row(
             children: [
               Icon(
                 Icons.phone_outlined,
                 size: 18,
-                color: AppColors.primary,
+                color: AppTheme.primary,
               ),
               SizedBox(width: 10),
               Text(
                 "Call",
-                style: AppFonts(
-                  color: AppColors.primary,
+                style: AppTheme.font(
+                  color: AppTheme.primary,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: AppTheme.textSmall,
                 ),
               )
             ],
@@ -298,24 +297,24 @@ class _ContactActionButtons extends StatelessWidget {
             onPressed: () async {
               await GFunLaunch.openWhatsApp(phoneNumber);
             },
-            backgroundColor: AppColors.cardColor,
+            backgroundColor: AppTheme.cardColor,
             paddingTopBottom: 0,
-            border: Border.all(color: AppColors.whatsappGreen),
+            border: Border.all(color: AppTheme.whatsappGreen),
             widget: Row(
               children: [
                 Image.asset(
                   IconAsset.whatsapp,
                   width: 18,
                   height: 18,
-                  color: AppColors.whatsappGreen,
+                  color: AppTheme.whatsappGreen,
                 ),
                 SizedBox(width: 10),
                 Text(
                   "WhatsApp",
-                  style: AppFonts(
-                    color: AppColors.whatsappGreen,
+                  style: AppTheme.font(
+                    color: AppTheme.whatsappGreen,
                     fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                    fontSize: AppTheme.textSmall,
                   ),
                 )
               ],

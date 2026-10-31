@@ -1,10 +1,13 @@
 import '../../../../../core/utils/enums/payment_status_enum.dart';
 import '../../../../../core/utils/enums/visit_status_enum.dart';
+import '../../../../invoices/data/models/invoice_detail_model.dart';
+import '../../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 
+/// Short summary of a visit, shown in client and technician history.
 class ClientVisitModel {
-  final int? id;
+  final String? id;
   final String? visitNumber;
-  final int? clientId;
+  final String? clientId;
   final DateTime? visitDate;
   final VisitStatus? status;
   final String? problem;
@@ -28,14 +31,33 @@ class ClientVisitModel {
     this.paymentStatus,
   });
 
+  /// Builds the summary from a stored visit and its invoice.
+  factory ClientVisitModel.fromVisit(
+    VisitDetailModel visit, {
+    InvoiceDetailModel? invoice,
+  }) {
+    return ClientVisitModel(
+      id: visit.id,
+      visitNumber: visit.visitNumber,
+      clientId: visit.client?.id,
+      visitDate: visit.startDate,
+      status: visit.status,
+      problem: visit.problemDescription,
+      technicianName: visit.technicianModel?.name,
+      serviceName: visit.serviceName,
+      totalAmount: (invoice?.totalAmount ?? visit.price)?.toDouble(),
+      paymentStatus: invoice?.paymentStatus ?? visit.paymentStatus,
+    );
+  }
+
   factory ClientVisitModel.fromJson(Map<String, dynamic> json) {
     return ClientVisitModel(
-        id: (json['id'] as num?)?.toInt(),
+        id: json['id']?.toString(),
         visitNumber: json['visitNumber'] as String?,
-        clientId: (json['clientId'] as num?)?.toInt(),
+        clientId: json['clientId']?.toString(),
         visitDate: json['visitDate'] == null
             ? null
-            : DateTime.parse(json['visit_date'] as String),
+            : DateTime.tryParse(json['visitDate'] as String),
         status: json['status'] == null
             ? null
             : VisitStatusSwitch(visitStatusID: json['status'] as int?)

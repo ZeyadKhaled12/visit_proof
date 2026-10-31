@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 
 // Mock list of available categories
 
@@ -32,9 +31,9 @@ class AddTechWidgetCategories extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
           child: Text(
             'Categories',
-            style: AppFonts(
-              color: AppColors.textPrimary,
-              fontSize: 14,
+            style: AppTheme.font(
+              color: AppTheme.textPrimary,
+              fontSize: AppTheme.textBodyLarge,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -46,12 +45,12 @@ class AddTechWidgetCategories extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surfaceWhite,
+              color: AppTheme.surface,
               borderRadius: BorderRadius.circular(16),
-              border: isError ? Border.all(color: AppColors.statOrange) : null,
+              border: isError ? Border.all(color: AppTheme.statOrange) : null,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.shadowColor,
+                  color: AppTheme.shadowColor,
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -77,12 +76,12 @@ class AddTechWidgetCategories extends StatelessWidget {
                         horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.secondary.withValues(alpha: 0.15)
-                          : AppColors.locationChipBg,
+                          ? AppTheme.secondary.withValues(alpha: 0.15)
+                          : AppTheme.locationChipBg,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: isSelected
-                            ? AppColors.secondary
+                            ? AppTheme.secondary
                             : Colors.transparent,
                         width: 1.5,
                       ),
@@ -92,21 +91,21 @@ class AddTechWidgetCategories extends StatelessWidget {
                       children: [
                         Text(
                           category.name ?? '',
-                          style: AppFonts(
+                          style: AppTheme.font(
                             color: isSelected
-                                ? AppColors.textPrimary
-                                : AppColors.textSecondary,
-                            fontSize: 13,
+                                ? AppTheme.textPrimary
+                                : AppTheme.textSecondary,
+                            fontSize: AppTheme.textBody,
                             fontWeight:
                                 isSelected ? FontWeight.w700 : FontWeight.w500,
                           ),
                         ),
                         if (isSelected) ...[
                           const SizedBox(width: 6),
-                          const Icon(
+                          Icon(
                             Icons.check_circle_rounded,
                             size: 16,
-                            color: AppColors.secondary,
+                            color: AppTheme.secondary,
                           ),
                         ]
                       ],

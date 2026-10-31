@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visit_proof/configs/app_colors.dart';
-import '../../../../configs/app_fonts.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 import '../../../../core/utils/enums/priority_enum.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_date_pick.dart';
 import '../../../../core/utils/general_widgets/g_widget_add_btn.dart';
@@ -64,7 +63,7 @@ class AddVisitWidgetSchedule extends StatelessWidget {
                 return DropdownMenuItem(
                   value: technician,
                   child: Text(technician.name ?? '',
-                      style: AppFonts(fontWeight: FontWeight.w500)),
+                      style: AppTheme.font(fontWeight: FontWeight.w500)),
                 );
               }).toList(),
             ),
@@ -88,7 +87,7 @@ class AddVisitWidgetSchedule extends StatelessWidget {
                 return DropdownMenuItem(
                   value: priority,
                   child: Text(PrioritySwitch(priorityEnum: priority).getText(),
-                      style: AppFonts(fontWeight: FontWeight.w500)),
+                      style: AppTheme.font(fontWeight: FontWeight.w500)),
                 );
               }).toList(),
             ),
@@ -116,8 +115,8 @@ class AddVisitWidgetSchedule extends StatelessWidget {
                 suffixIcon: Icon(
                   Icons.date_range,
                   color: startDate == null
-                      ? AppColors.iconGrey
-                      : AppColors.primary,
+                      ? AppTheme.iconGrey
+                      : AppTheme.primary,
                 ),
               ),
             ),
@@ -143,8 +142,8 @@ class AddVisitWidgetSchedule extends StatelessWidget {
                 suffixIcon: Icon(
                   Icons.watch_later_outlined,
                   color: startTime == null
-                      ? AppColors.iconGrey
-                      : AppColors.primary,
+                      ? AppTheme.iconGrey
+                      : AppTheme.primary,
                 ),
               ),
             ),

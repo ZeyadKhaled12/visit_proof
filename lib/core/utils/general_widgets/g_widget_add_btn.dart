@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetAddBtn extends StatelessWidget {
   const GWidgetAddBtn({super.key, required this.text, required this.onTap});
@@ -14,20 +13,20 @@ class GWidgetAddBtn extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        highlightColor: AppColors.secondary,
-        splashColor: AppColors.secondary.withValues(alpha: .4),
+        highlightColor: AppTheme.secondary,
+        splashColor: AppTheme.secondary.withValues(alpha: .4),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 5),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.add_circle_outline,
-                  color: AppColors.primary, size: 20),
+                  color: AppTheme.primary, size: 20),
               SizedBox(width: 5),
               Text(text,
-                  style: AppFonts(
-                      fontSize: 12,
-                      color: AppColors.primary,
+                  style: AppTheme.font(
+                      fontSize: AppTheme.textSmall,
+                      color: AppTheme.primary,
                       fontWeight: FontWeight.bold))
             ],
           ),

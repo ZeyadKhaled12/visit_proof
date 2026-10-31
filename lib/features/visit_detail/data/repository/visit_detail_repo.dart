@@ -1,30 +1,89 @@
 import 'package:either_dart/either.dart';
-import 'package:visit_proof/core/network/error/exception.dart';
-import 'package:visit_proof/core/network/error/failure.dart';
-import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_detail_model.dart';
+
+import '../../../../core/network/error/exception.dart';
+import '../../../../core/network/error/failure.dart';
 import '../../domain/repository/base_visit_detail_repo.dart';
-import '../../domain/usecases/visit_detail_actions_uc.dart';
+import '../../domain/usecases/add_visit_comment_uc.dart';
+import '../../domain/usecases/assign_technician_uc.dart';
+import '../../domain/usecases/change_visit_service_uc.dart';
+import '../../domain/usecases/change_visit_site_uc.dart';
+import '../../domain/usecases/change_visit_status_uc.dart';
+import '../../domain/usecases/delete_visit_uc.dart';
+import '../../domain/usecases/get_visit_detail_uc.dart';
+import '../../domain/usecases/reschedule_visit_uc.dart';
+import '../../domain/usecases/unassign_technician_uc.dart';
+import '../../domain/usecases/update_visit_info_uc.dart';
+import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../datasource/visit_detail_remote_data_source.dart';
 
 class VisitDetailRepo extends BaseVisitDetailRepo {
-  final BaseVisitDetailRemoteDataSource source;
-  VisitDetailRepo(this.source);
+  final BaseVisitDetailRemoteDataSource baseVisitDetailRemoteDataSource;
 
-  Future<Either<Failure, VisitDetailModel>> _wrap(Future<VisitDetailModel> Function() fn) async {
-    try { return Right(await fn()); }
-    on ServerException catch (e) { return Left(ServerFailure.openFun(e.errorMessageModel)); }
+  VisitDetailRepo(this.baseVisitDetailRemoteDataSource);
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> getVisitDetail(
+          GetVisitDetailParameters parameters) =>
+      _guard(() => baseVisitDetailRemoteDataSource.getVisitDetail(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> changeVisitStatus(
+          ChangeVisitStatusParameters parameters) =>
+      _guard(() =>
+          baseVisitDetailRemoteDataSource.changeVisitStatus(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> assignTechnician(
+          AssignTechnicianParameters parameters) =>
+      _guard(() =>
+          baseVisitDetailRemoteDataSource.assignTechnician(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> unassignTechnician(
+          UnassignTechnicianParameters parameters) =>
+      _guard(() =>
+          baseVisitDetailRemoteDataSource.unassignTechnician(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> rescheduleVisit(
+          RescheduleVisitParameters parameters) =>
+      _guard(
+          () => baseVisitDetailRemoteDataSource.rescheduleVisit(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> updateVisitInfo(
+          UpdateVisitInfoParameters parameters) =>
+      _guard(
+          () => baseVisitDetailRemoteDataSource.updateVisitInfo(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> changeVisitService(
+          ChangeVisitServiceParameters parameters) =>
+      _guard(() =>
+          baseVisitDetailRemoteDataSource.changeVisitService(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> changeVisitSite(
+          ChangeVisitSiteParameters parameters) =>
+      _guard(
+          () => baseVisitDetailRemoteDataSource.changeVisitSite(parameters));
+
+  @override
+  Future<Either<Failure, VisitDetailModel>> addVisitComment(
+          AddVisitCommentParameters parameters) =>
+      _guard(
+          () => baseVisitDetailRemoteDataSource.addVisitComment(parameters));
+
+  @override
+  Future<Either<Failure, void>> deleteVisit(DeleteVisitParameters parameters) =>
+      _guard(() => baseVisitDetailRemoteDataSource.deleteVisit(parameters));
+
+  /// Same try/catch as every repo in the app, written once.
+  Future<Either<Failure, T>> _guard<T>(Future<T> Function() call) async {
+    try {
+      return Right(await call());
+    } on ServerException catch (failure) {
+      return Left(ServerFailure.openFun(failure.errorMessageModel));
+    }
   }
-
-  @override
-  Future<Either<Failure, VisitDetailModel>> getVisitDetail(GetVisitDetailParameters p) => _wrap(() => source.getVisitDetail(p));
-  @override
-  Future<Either<Failure, VisitDetailModel>> updateVisit(UpdateVisitParameters p) => _wrap(() => source.updateVisit(p));
-  @override
-  Future<Either<Failure, VisitDetailModel>> changeVisitStatus(ChangeVisitStatusParameters p) => _wrap(() => source.changeVisitStatus(p));
-  @override
-  Future<Either<Failure, VisitDetailModel>> assignTechnician(AssignVisitTechnicianParameters p) => _wrap(() => source.assignTechnician(p));
-  @override
-  Future<Either<Failure, VisitDetailModel>> unassignTechnician(UnassignVisitTechnicianParameters p) => _wrap(() => source.unassignTechnician(p));
-  @override
-  Future<Either<Failure, VisitDetailModel>> addAdminComment(AddVisitCommentParameters p) => _wrap(() => source.addAdminComment(p));
 }

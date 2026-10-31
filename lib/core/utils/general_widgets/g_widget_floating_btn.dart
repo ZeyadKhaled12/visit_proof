@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetFloatingBtn extends StatelessWidget {
   const GWidgetFloatingBtn(
@@ -19,7 +18,7 @@ class GWidgetFloatingBtn extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.fabShadowColor,
+            color: AppTheme.fabShadowColor,
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -33,8 +32,8 @@ class GWidgetFloatingBtn extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.primary.withValues(alpha: .5),
-                  AppColors.secondary.withValues(alpha: .5),
+                  AppTheme.primary.withValues(alpha: .5),
+                  AppTheme.secondary.withValues(alpha: .5),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -48,13 +47,13 @@ class GWidgetFloatingBtn extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               icon:
-                  iconData == null ? null : Icon(iconData, color: Colors.white),
+                  iconData == null ? null : Icon(iconData, color: AppTheme.onPrimary),
               label: Text(
                 text,
-                style: AppFonts(
-                  color: Colors.white,
+                style: AppTheme.font(
+                  color: AppTheme.onPrimary,
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: AppTheme.textSubtitle,
                   letterSpacing: 0.3,
                 ),
               ),

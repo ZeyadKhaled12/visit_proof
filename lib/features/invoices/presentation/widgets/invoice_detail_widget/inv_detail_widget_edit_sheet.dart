@@ -4,7 +4,7 @@ import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/features/invoices/data/models/invoice_detail_model.dart';
 import 'package:visit_proof/features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/services/services_locator.dart';
 import '../../../../../core/utils/enums.dart';
 import '../../../../../core/utils/general_widgets/g_widget_bottom_sheet.dart';
@@ -77,7 +77,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
-            title: 'Record a payment',
+            title: 'Edit draft invoice',
             subtitle: widget.subtitle,
             body: Form(
               key: form,
@@ -108,7 +108,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
                   const SizedBox(height: 20),
                   GWidgetButton(
                     text: 'Save changes',
-                    fontSize: 15,
+                    fontSize: AppTheme.textSubtitle,
                     isLoading:
                         state.invoiceDetailRequestState == RequestState.loading,
                     onPressed: () async {
@@ -125,7 +125,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
                               (widget.invoice.paidAmount?.toDouble() ?? 0)) {
                         AppToasts.showMessage(
                             'New total cannot be negative or below paid amount.',
-                            color: AppColors.primary);
+                            color: AppTheme.primary);
                         return;
                       }
                       context.read<InvoicesBloc>().add(UpdateDraftInvoiceEvent(

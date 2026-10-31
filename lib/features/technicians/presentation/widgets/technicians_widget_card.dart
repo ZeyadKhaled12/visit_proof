@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../configs/app_colors.dart';
-import '../../../../configs/app_fonts.dart';
+import '../../../../configs/app_theme.dart';
 import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/enums/technician_status_enum.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../../data/models/technician_model.dart';
 import '../controller/tech_bloc.dart';
 import '../screens/technician_detail_scr.dart';
@@ -45,17 +45,17 @@ class TechnicianWidgetCard extends StatelessWidget {
             }
           }
         },
-        highlightColor: AppColors.primary.withValues(alpha: 0.05),
-        splashColor: AppColors.primary.withValues(alpha: 0.1),
+        highlightColor: AppTheme.primary.withValues(alpha: 0.05),
+        splashColor: AppTheme.primary.withValues(alpha: 0.1),
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
-            color: AppColors.surfaceWhite,
+            color: AppTheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+            border: Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.shadowColor,
+                color: AppTheme.shadowColor,
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               )
@@ -74,18 +74,18 @@ class TechnicianWidgetCard extends StatelessWidget {
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.15),
+                        color: AppTheme.primary.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.3),
+                            color: AppTheme.primary.withValues(alpha: 0.3),
                             width: 1.5),
                       ),
                       child: Center(
                         child: Text(
                           initial,
-                          style: AppFonts(
-                            color: AppColors.primary,
-                            fontSize: 20,
+                          style: AppTheme.font(
+                            color: AppTheme.primary,
+                            fontSize: AppTheme.textHeadline,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -106,9 +106,9 @@ class TechnicianWidgetCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   technician.name ?? 'Unknown Technician',
-                                  style: AppFonts(
-                                    color: AppColors.textPrimary,
-                                    fontSize: 16,
+                                  style: AppTheme.font(
+                                    color: AppTheme.textPrimary,
+                                    fontSize: AppTheme.textTitle,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   maxLines: 1,
@@ -133,9 +133,9 @@ class TechnicianWidgetCard extends StatelessWidget {
                                     const SizedBox(width: 4),
                                     Text(
                                       statusText,
-                                      style: AppFonts(
+                                      style: AppTheme.font(
                                         color: statusColor,
-                                        fontSize: 11,
+                                        fontSize: AppTheme.textCaption,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -153,9 +153,9 @@ class TechnicianWidgetCard extends StatelessWidget {
                                       ?.map((e) => e.name ?? '')
                                       .join(', ') ??
                                   '',
-                              style: AppFonts(
-                                color: AppColors.textSecondary,
-                                fontSize: 11,
+                              style: AppTheme.font(
+                                color: AppTheme.textSecondary,
+                                fontSize: AppTheme.textCaption,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -164,19 +164,22 @@ class TechnicianWidgetCard extends StatelessWidget {
 
                           // Bottom Row: Phone and Open Jobs
                           InkWell(
-                            onTap: () {},
+                            onTap: technician.phone == null
+                                ? null
+                                : () =>
+                                    GFunLaunch.makePhoneCall(technician.phone!),
                             borderRadius: BorderRadius.circular(8),
                             child: Row(
                               children: [
-                                const Icon(Icons.phone,
-                                    size: 14, color: AppColors.textLightHint),
+                                Icon(Icons.phone,
+                                    size: 14, color: AppTheme.textLightHint),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
                                     technician.phone ?? 'No Phone',
-                                    style: AppFonts(
-                                      color: AppColors.textDarkHint,
-                                      fontSize: 13,
+                                    style: AppTheme.font(
+                                      color: AppTheme.textDarkHint,
+                                      fontSize: AppTheme.textBody,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     maxLines: 1,
@@ -197,7 +200,7 @@ class TechnicianWidgetCard extends StatelessWidget {
                       child: Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 20,
-                        color: AppColors.primary.withValues(alpha: 0.5),
+                        color: AppTheme.primary.withValues(alpha: 0.5),
                       ),
                     ),
                   ],
@@ -207,20 +210,20 @@ class TechnicianWidgetCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 margin: EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppColors.locationChipBg,
+                  color: AppTheme.locationChipBg,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.assignment_ind_rounded,
-                        size: 14, color: AppColors.primary),
+                    Icon(Icons.assignment_ind_rounded,
+                        size: 14, color: AppTheme.primary),
                     const SizedBox(width: 4),
                     Text(
                       '${technician.openJobs ?? 0} Open Jobs',
-                      style: AppFonts(
-                        color: AppColors.textPrimary,
-                        fontSize: 12,
+                      style: AppTheme.font(
+                        color: AppTheme.textPrimary,
+                        fontSize: AppTheme.textSmall,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

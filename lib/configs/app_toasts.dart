@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:visit_proof/app/app.dart';
-import 'package:visit_proof/configs/app_colors.dart';
-import 'package:visit_proof/configs/app_fonts.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 
 import '../core/utils/general_widgets/g_widget_button.dart';
 
@@ -11,12 +10,12 @@ class AppToasts {
     ScaffoldMessenger.of(App.navigatorKey.currentContext!).showSnackBar(
       SnackBar(
         backgroundColor:
-            color ?? (isError ? AppColors.statOrange : AppColors.statGreen),
+            color ?? (isError ? AppTheme.statOrange : AppTheme.statGreen),
         behavior: SnackBarBehavior.floating,
         content: Text(
           message,
-          style: AppFonts(
-              color: AppColors.surfaceWhite, fontWeight: FontWeight.bold),
+          style: AppTheme.font(
+              color: AppTheme.onPrimary, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -36,33 +35,33 @@ class AppToasts {
     return await showDialog(
       context: App.navigatorKey.currentContext!,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surfaceWhite,
+        backgroundColor: AppTheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: headTitle == null
             ? null
             : Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded,
-                      color: AppColors.statOrange, size: 24),
+                  Icon(Icons.warning_amber_rounded,
+                      color: AppTheme.statOrange, size: 24),
                   const SizedBox(width: 8),
                   Text(headTitle,
-                      style: AppFonts(
-                          color: AppColors.textPrimary,
+                      style: AppTheme.font(
+                          color: AppTheme.textPrimary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18)),
+                          fontSize: AppTheme.textTitleLarge)),
                 ],
               ),
         content: Text(
           title,
-          style: AppFonts(
-              color: AppColors.textSecondary, fontSize: 14, height: 1.5),
+          style: AppTheme.font(
+              color: AppTheme.textSecondary, fontSize: AppTheme.textBodyLarge, height: 1.5),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text('Cancel',
-                style: AppFonts(
-                    color: AppColors.textSecondary,
+                style: AppTheme.font(
+                    color: AppTheme.textSecondary,
                     fontWeight: FontWeight.bold)),
           ),
           GWidgetButton(
@@ -70,7 +69,7 @@ class AppToasts {
             width: 90,
             height: 38,
             paddingTopBottom: 0,
-            backgroundColor: AppColors.statOrange,
+            backgroundColor: AppTheme.statOrange,
             raduis: 10,
             onPressed: () {
               Navigator.pop(ctx, true);

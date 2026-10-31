@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -213,34 +212,34 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
       textCapitalization: widget.textCapitalization,
       textAlign: widget.textAlign,
 
-      style: AppFonts(
-        color: AppColors.textPrimary,
-        fontSize: 16,
+      style: AppTheme.font(
+        color: AppTheme.textPrimary,
+        fontSize: AppTheme.textTitle,
         fontWeight: FontWeight.w500,
       ),
 
-      cursorColor: AppColors.primary,
+      cursorColor: AppTheme.primary,
 
       decoration: InputDecoration(
-          fillColor: AppColors.searchFieldBg,
+          fillColor: AppTheme.searchFieldBg,
           filled: true,
           hintText: widget.hintText,
-          hintStyle: AppFonts(
-            color: AppColors.textLightHint,
-            fontSize: 14,
+          hintStyle: AppTheme.font(
+            color: AppTheme.textLightHint,
+            fontSize: AppTheme.textBodyLarge,
           ),
           labelText: widget.labelText,
-          labelStyle: AppFonts(
-            color: AppColors.textSecondary,
-            fontSize: 14,
+          labelStyle: AppTheme.font(
+            color: AppTheme.textSecondary,
+            fontSize: AppTheme.textBodyLarge,
             fontWeight: FontWeight.w600,
           ),
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon,
           errorText: widget.errorMsg,
-          errorStyle: AppFonts(
-            color: AppColors.statOrange,
-            fontSize: 12.9,
+          errorStyle: AppTheme.font(
+            color: AppTheme.statOrange,
+            fontSize: AppTheme.textSmall,
             fontWeight: FontWeight.w500,
           ),
           contentPadding: const EdgeInsets.symmetric(
@@ -249,36 +248,36 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: AppColors.iconLightGrey,
+            borderSide: BorderSide(
+              color: AppTheme.iconLightGrey,
               width: 1,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: AppColors.primary,
+            borderSide: BorderSide(
+              color: AppTheme.primary,
               width: 2,
             ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: AppColors.statOrange,
+            borderSide: BorderSide(
+              color: AppTheme.statOrange,
               width: 1.5,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: AppColors.statOrange,
+            borderSide: BorderSide(
+              color: AppTheme.statOrange,
               width: 2,
             ),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(
-              color: AppColors.iconLightGrey.withValues(
+              color: AppTheme.iconLightGrey.withValues(
                 alpha: 0.5,
               ),
               width: 1,

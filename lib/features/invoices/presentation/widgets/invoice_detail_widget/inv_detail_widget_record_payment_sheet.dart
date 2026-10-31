@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_bottom_sheet.dart';
 import 'package:visit_proof/features/invoices/domain/usecases/record_payment_uc.dart';
@@ -121,7 +122,7 @@ class _InvDetailWidgetRecordPaymentSheetState
                     text: 'Save payment',
                     isLoading:
                         state.invoiceDetailRequestState == RequestState.loading,
-                    fontSize: 15,
+                    fontSize: AppTheme.textSubtitle,
                     onPressed: () async {
                       if (_form.currentState?.validate() != true) {
                         return;

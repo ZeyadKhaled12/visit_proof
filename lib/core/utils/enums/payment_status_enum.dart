@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visit_proof/configs/app_colors.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 
 enum PaymentStatus { unpaid, pending, partiallyPaid, paid, cancelled, refunded }
 
@@ -47,34 +47,34 @@ class PaymentStatusSwitch {
 
   Color getColor() {
     if (paymentStatusID == 1) {
-      return AppColors.textLightHint;
+      return AppTheme.textLightHint;
     } else if (paymentStatusID == 2) {
-      return AppColors.pending;
+      return AppTheme.pending;
     } else if (paymentStatusID == 3) {
-      return AppColors.cardAccent;
+      return AppTheme.cardAccent;
     } else if (paymentStatusID == 4) {
-      return AppColors.statGreen;
+      return AppTheme.statGreen;
     } else if (paymentStatusID == 5) {
-      return AppColors.statOrange;
+      return AppTheme.statOrange;
     } else if (paymentStatusID == 6) {
-      return AppColors.secondary;
+      return AppTheme.secondary;
     }
 
     switch (paymentStatusEnum) {
       case null:
-        return AppColors.textLightHint;
+        return AppTheme.textLightHint;
       case PaymentStatus.unpaid:
-        return AppColors.textLightHint;
+        return AppTheme.textLightHint;
       case PaymentStatus.pending:
-        return AppColors.pending;
+        return AppTheme.pending;
       case PaymentStatus.partiallyPaid:
-        return AppColors.cardAccent;
+        return AppTheme.cardAccent;
       case PaymentStatus.paid:
-        return AppColors.statGreen;
+        return AppTheme.statGreen;
       case PaymentStatus.cancelled:
-        return AppColors.statOrange;
+        return AppTheme.statOrange;
       case PaymentStatus.refunded:
-        return AppColors.secondary;
+        return AppTheme.secondary;
     }
   }
 
@@ -103,7 +103,7 @@ class PaymentStatusSwitch {
       case PaymentStatus.partiallyPaid:
         return 'Partially Paid';
       case PaymentStatus.paid:
-        return 'paid';
+        return 'Paid';
       case PaymentStatus.cancelled:
         return 'Cancelled';
       case PaymentStatus.refunded:

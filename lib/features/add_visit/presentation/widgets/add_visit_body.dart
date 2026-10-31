@@ -1,13 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:visit_proof/configs/app_fonts.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
 import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
 import 'package:visit_proof/features/add_visit/domain/usecases/add_visit_uc.dart';
 import 'package:visit_proof/features/add_visit/presentation/controller/add_visit_bloc.dart';
 import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_detail_model.dart';
-import '../../../../configs/app_colors.dart';
 import '../../../../core/utils/enums/priority_enum.dart';
 import '../../../../core/utils/general_models/g_model_site.dart';
 import '../../../../core/utils/general_widgets/g_widget_button.dart';
@@ -118,6 +117,14 @@ class _AddVisitBodyState extends State<AddVisitBody> {
     );
   }
 
+  /// The picked date with the picked time, so the visit keeps both.
+  DateTime? get _startDateTime {
+    final date = _startDate;
+    if (date == null) return null;
+    final time = _startTime ?? const TimeOfDay(hour: 0, minute: 0);
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  }
+
   void _addVisit(VisitStatus status) {
     setState(() {
       _status = status;
@@ -130,7 +137,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
         durationInMin: _selectedService?.duration,
         checkList: _selectedService?.checkList,
         priority: _selectedPriority,
-        startDate: _startDate,
+        startDate: _startDateTime,
         notes: _notes.text.isEmpty ? null : _notes.text,
         problemDescription: _problem.text.isEmpty ? null : _problem.text,
         requireAfterWorkPhotos: _requiresAfterPhotos,
@@ -269,9 +276,9 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
                         color: _selectedTechnician != null
-                            ? AppColors.pending.withValues(alpha: .18)
-                            : AppColors.cardColor.withValues(alpha: .2),
-                        boxShadow: [BoxShadow(color: AppColors.shadowColor)],
+                            ? AppTheme.pending.withValues(alpha: .18)
+                            : AppTheme.cardColor.withValues(alpha: .2),
+                        boxShadow: [BoxShadow(color: AppTheme.shadowColor)],
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(25))),
                     child: Column(
@@ -282,16 +289,16 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                             Expanded(
                                 child: GWidgetButton(
                               text: 'Save Draft',
-                              fontSize: 14,
+                              fontSize: AppTheme.textBodyLarge,
                               height: 45,
                               isLoading: _status == VisitStatus.draft &&
                                   widget.addVisitLoading,
                               loadingSize: 16,
                               loadingStrokeWidth: 2.5,
-                              loadingColor: AppColors.iconGrey,
-                              colorText: AppColors.iconGrey,
-                              border: Border.all(color: AppColors.iconGrey),
-                              backgroundColor: AppColors.cardColor,
+                              loadingColor: AppTheme.iconGrey,
+                              colorText: AppTheme.iconGrey,
+                              border: Border.all(color: AppTheme.iconGrey),
+                              backgroundColor: AppTheme.cardColor,
                               raduis: 10,
                               onPressed: () {
                                 _addVisit(VisitStatus.draft);
@@ -303,7 +310,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                               text: _selectedTechnician != null
                                   ? 'Assigned'
                                   : 'Schedule',
-                              fontSize: 14,
+                              fontSize: AppTheme.textBodyLarge,
                               raduis: 10,
                               height: 45,
                               isLoading: (_status == VisitStatus.assigned ||
@@ -337,6 +344,11 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                                   if (_startTime == null) {
                                     _startTimeErrorMsg =
                                         'This field is required to ${_selectedTechnician != null ? 'Assigned' : 'Schedule'}';
+                                  } else if (_startDateTime != null &&
+                                      _startDateTime!
+                                          .isBefore(DateTime.now())) {
+                                    _startTimeErrorMsg =
+                                        'Start time must be in the future';
                                   }
                                 });
                                 if (_clientErrorMsg != null ||
@@ -364,10 +376,10 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                           SizedBox(height: 6),
                           Text(
                             'Tip: Since you\'ve already chosen a technician, the \'Schedule\' button has updated to \'Assigned\'',
-                            style: AppFonts(
-                                color: AppColors.textPrimary,
+                            style: AppTheme.font(
+                                color: AppTheme.textPrimary,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12),
+                                fontSize: AppTheme.textSmall),
                           )
                         ]
                       ],

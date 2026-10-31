@@ -9,7 +9,13 @@ import 'package:visit_proof/features/clients/data/models/client_detail_model/cli
 import 'package:visit_proof/features/clients/domain/usecases/add_client_uc.dart';
 import 'package:visit_proof/features/clients/domain/usecases/add_equipment_uc.dart';
 import 'package:visit_proof/features/clients/domain/usecases/get_client_detail_uc.dart';
+import '../../../../core/network/error/error_message_model.dart';
+import '../../../../core/network/error/exception.dart';
 import '../../../../core/network/error/handle_logic_errors.dart';
+import '../../../../core/utils/enums/visit_status_enum.dart';
+import '../../../invoices/data/models/invoice_detail_model.dart';
+import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
+import '../models/client_detail_model/client_visit_model.dart';
 import '../../domain/usecases/remove_client_uc.dart';
 import '../../domain/usecases/remove_equipment_uc.dart';
 
@@ -32,7 +38,11 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
-      return clients;
+      final visits = _readVisits();
+      final invoices = _readInvoices();
+      return clients
+          .map((client) => _withActivity(client, visits, invoices))
+          .toList();
     }).checkLogicErrors();
   }
 
@@ -103,7 +113,9 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
-      return clients.firstWhere((element) => element.id == parameters.clientID);
+      final client =
+          clients.firstWhere((element) => element.id == parameters.clientID);
+      return _withActivity(client, _readVisits(), _readInvoices());
     }).checkLogicErrors();
   }
 
@@ -114,6 +126,21 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
+
+      // Open visits still need this client, so they must be closed first.
+      final openVisits = _readVisits()
+          .where((visit) =>
+              visit.client?.id == parameters.clientID &&
+              visit.status != VisitStatus.completed &&
+              visit.status != VisitStatus.cancel)
+          .length;
+      if (openVisits > 0) {
+        throw ServerException(ErrorMessageModel(
+            statusMessage: 'This client has $openVisits open '
+                'visit${openVisits == 1 ? '' : 's'}. Complete or cancel '
+                '${openVisits == 1 ? 'it' : 'them'} before deleting.'));
+      }
+
       clients.removeWhere((element) => element.id == parameters.clientID);
       await LocalPref.sharedPreferences.setStringList(
           'clients', clients.map((e) => jsonEncode(e.toJson())).toList());
@@ -172,5 +199,42 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       AppToasts.showMessage('Equipment removed successfuly');
       return clientModel;
     }).checkLogicErrors();
+  }
+
+  List<VisitDetailModel> _readVisits() =>
+      (LocalPref.sharedPreferences.getStringList('visits') ?? [])
+          .map((e) => VisitDetailModel.fromJson(jsonDecode(e)))
+          .toList();
+
+  List<InvoiceDetailModel> _readInvoices() =>
+      (LocalPref.sharedPreferences.getStringList('invoices') ?? [])
+          .map((e) => InvoiceDetailModel.fromJson(jsonDecode(e)))
+          .toList();
+
+  /// History and totals come from the real visits and invoices,
+  /// so they are always up to date instead of being stored on the client.
+  ClientDetailModel _withActivity(
+    ClientDetailModel client,
+    List<VisitDetailModel> visits,
+    List<InvoiceDetailModel> invoices,
+  ) {
+    final invoiceOf = {for (final invoice in invoices) invoice.visitId: invoice};
+    final own = visits
+        .where((visit) => visit.client?.id != null && visit.client?.id == client.id)
+        .toList()
+      ..sort((a, b) => (b.startDate ?? DateTime(0))
+          .compareTo(a.startDate ?? DateTime(0)));
+
+    return client.copyWith(
+      visits: own
+          .map((visit) =>
+              ClientVisitModel.fromVisit(visit, invoice: invoiceOf[visit.id]))
+          .toList(),
+      ordersCount:
+          own.where((visit) => visit.status != VisitStatus.cancel).length,
+      totalPaid: own.fold<num>(
+          0, (sum, visit) => sum + (invoiceOf[visit.id]?.paidAmount ?? 0)),
+      lastVisit: own.where((visit) => visit.startDate != null).firstOrNull?.startDate,
+    );
   }
 }

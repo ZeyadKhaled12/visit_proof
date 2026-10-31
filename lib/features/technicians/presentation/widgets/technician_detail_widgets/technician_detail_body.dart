@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../../../../core/utils/general_widgets/g_widget_navi_appbar.dart';
 import '../../../../clients/presentation/widgets/client_detail_widgets/client_detail_widget_title_card.dart';
 import '../../../../clients/presentation/widgets/client_detail_widgets/client_detail_widget_visits.dart';
 import '../../../data/models/technician_detail_model.dart';
+import '../../../domain/usecases/get_tech_detail_uc.dart';
+import '../../controller/tech_bloc.dart';
 import 'tech_detail_widget_bottom_btns.dart';
 import 'tech_detail_widget_categories.dart';
 import 'tech_detail_widget_header.dart';
@@ -26,7 +29,7 @@ class TechnicianDetailBody extends StatelessWidget {
       top: false,
       bottom: true,
       child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: AppTheme.scaffoldBackground,
         appBar: GWidgetNaviAppbar.appBar(context, 'Technician Detail'),
         bottomNavigationBar: loading
             ? null
@@ -60,7 +63,7 @@ class TechnicianDetailBody extends StatelessWidget {
                 pinned: true,
                 delegate: _StickyHeaderDelegate(
                     child: Container(
-                      color: AppColors.scaffoldBackground,
+                      color: AppTheme.scaffoldBackground,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 12.0),
                       child: ClientDetailWidgetTitle(
@@ -71,7 +74,11 @@ class TechnicianDetailBody extends StatelessWidget {
 
               // Visit History List
               ClientDetailWidgetVisits(
-                  visits: technicianDetailModel.visits ?? []),
+                  visits: technicianDetailModel.visits ?? [],
+                  onVisitClosed: () => context.read<TechBloc>().add(
+                      GetTechDetailEvent(
+                          getTechDetailParameters: GetTechDetailParameters(
+                              techID: technicianDetailModel.id ?? '')))),
 
               // Bottom padding for safe scrolling
               const SliverToBoxAdapter(child: SizedBox(height: 24))

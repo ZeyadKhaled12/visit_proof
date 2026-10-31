@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
+import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/core/local/local_pref.dart';
 import 'package:visit_proof/core/utils/general_functions.dart/g_fun_token.dart';
@@ -360,7 +361,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
             paidAmount: 0,
             remainingAmount: invoiceTotal,
 
-            currency: 'EGP',
+            currency: App.currency,
             notes: null,
           );
 

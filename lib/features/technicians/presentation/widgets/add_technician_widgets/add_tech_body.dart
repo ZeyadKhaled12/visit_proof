@@ -6,7 +6,7 @@ import 'package:intl_phone_field/phone_number.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
 import 'package:visit_proof/features/technicians/domain/usecases/add_tech_uc.dart';
 import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../configs/app_toasts.dart';
 import '../../../../../core/utils/general_functions.dart/g_fun_valid.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
@@ -93,7 +93,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                 maxLength: 100,
                 errorMsg: _nameErrorMsg,
                 prefixIcon:
-                    const Icon(Icons.person_outline, color: AppColors.primary),
+                    Icon(Icons.person_outline, color: AppTheme.primary),
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 20),
@@ -123,7 +123,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                 maxLength: 254,
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon:
-                    const Icon(Icons.alternate_email, color: AppColors.primary),
+                    Icon(Icons.alternate_email, color: AppTheme.primary),
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 20),
@@ -140,7 +140,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                     _isPasswordVisible
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
-                    color: AppColors.iconGrey,
+                    color: AppTheme.iconGrey,
                     size: 22,
                   ),
                   onPressed: () {
@@ -150,7 +150,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                   },
                 ),
                 prefixIcon:
-                    const Icon(Icons.lock_outline, color: AppColors.primary),
+                    Icon(Icons.lock_outline, color: AppTheme.primary),
                 textInputAction: TextInputAction.next,
               ),
 
@@ -281,7 +281,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                 // isLoading: widget.loading,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.fabShadowColor,
+                    color: AppTheme.fabShadowColor,
                     blurRadius: 15,
                     offset: const Offset(0, 6),
                   ),

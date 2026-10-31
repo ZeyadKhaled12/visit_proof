@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_bottom_sheet.dart';
 
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/services/services_locator.dart';
 import '../../../../../core/utils/enums.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
@@ -75,10 +75,10 @@ class _InvDetailWidgetRefundPaymentSheetState
                     const SizedBox(height: 20),
                     GWidgetButton(
                       text: 'Confirm refund',
-                      fontSize: 15,
+                      fontSize: AppTheme.textSubtitle,
                       isLoading: state.invoiceDetailRequestState ==
                           RequestState.loading,
-                      backgroundColor: AppColors.statOrange,
+                      backgroundColor: AppTheme.statOrange,
                       onPressed: () async {
                         if (_form.currentState?.validate() != true) {
                           return;

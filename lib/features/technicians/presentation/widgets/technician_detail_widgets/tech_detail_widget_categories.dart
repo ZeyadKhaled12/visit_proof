@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../clients/presentation/widgets/client_detail_widgets/client_detail_widget_title_card.dart';
 
 class TechDetailWidgetCategories extends StatelessWidget {
@@ -27,17 +26,17 @@ class TechDetailWidgetCategories extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: AppTheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.2),
+                  color: AppTheme.primary.withValues(alpha: 0.2),
                 ),
               ),
               child: Text(
                 category,
-                style: AppFonts(
-                  color: AppColors.primary,
-                  fontSize: 13,
+                style: AppTheme.font(
+                  color: AppTheme.primary,
+                  fontSize: AppTheme.textBody,
                   fontWeight: FontWeight.bold,
                 ),
               ),

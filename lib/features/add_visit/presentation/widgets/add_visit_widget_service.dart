@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_add_btn.dart';
 
 import '../../../../app/app.dart';
-import '../../../../configs/app_colors.dart';
-import '../../../../configs/app_fonts.dart';
+import '../../../../configs/app_theme.dart';
 import '../../../../core/utils/general_widgets/g_widget_card_title.dart';
 import '../../../../core/utils/general_widgets/g_widget_drop_down.dart';
 import '../../../../core/utils/general_widgets/g_widget_switcher.dart';
@@ -53,12 +52,12 @@ class AddVisitWidgetService extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(service.serviceName ?? '',
-                          style: AppFonts(fontWeight: FontWeight.w500)),
+                          style: AppTheme.font(fontWeight: FontWeight.w500)),
                       Text(service.category?.name ?? '',
-                          style: AppFonts(
+                          style: AppTheme.font(
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                              fontSize: 11))
+                              color: AppTheme.iconGrey,
+                              fontSize: AppTheme.textCaption))
                     ],
                   ),
                 );
@@ -119,14 +118,14 @@ class _ServiceSummaryCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceWhite,
+        color: AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.iconLightGrey.withValues(alpha: 0.3),
+          color: AppTheme.iconLightGrey.withValues(alpha: 0.3),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppTheme.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -145,14 +144,14 @@ class _ServiceSummaryCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: AppTheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   service.category?.name ?? 'Uncategorized',
-                  style: AppFonts(
-                    color: AppColors.primary,
-                    fontSize: 12,
+                  style: AppTheme.font(
+                    color: AppTheme.primary,
+                    fontSize: AppTheme.textSmall,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -162,9 +161,9 @@ class _ServiceSummaryCard extends StatelessWidget {
               if (service.defaultPrice != null && service.defaultPrice! > 0)
                 Text(
                   '${service.defaultPrice!.toStringAsFixed(2)} ${App.currency}', // Change currency as needed
-                  style: AppFonts(
-                    color: AppColors.whatsappGreen,
-                    fontSize: 15,
+                  style: AppTheme.font(
+                    color: AppTheme.whatsappGreen,
+                    fontSize: AppTheme.textSubtitle,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -175,9 +174,9 @@ class _ServiceSummaryCard extends StatelessWidget {
           // Service Name
           Text(
             service.serviceName ?? 'Unnamed Service',
-            style: AppFonts(
-              color: AppColors.textPrimary,
-              fontSize: 16,
+            style: AppTheme.font(
+              color: AppTheme.textPrimary,
+              fontSize: AppTheme.textTitle,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -188,7 +187,7 @@ class _ServiceSummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.locationChipBg, // Soft grey background
+                color: AppTheme.locationChipBg, // Soft grey background
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -204,18 +203,18 @@ class _ServiceSummaryCard extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.check_circle_outline,
                             size: 16,
-                            color: AppColors.primary,
+                            color: AppTheme.primary,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               task,
-                              style: AppFonts(
-                                color: AppColors.textDarkHint,
-                                fontSize: 13,
+                              style: AppTheme.font(
+                                color: AppTheme.textDarkHint,
+                                fontSize: AppTheme.textBody,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -244,7 +243,7 @@ class _ServiceSummaryCard extends StatelessWidget {
               TextButton(
                 onPressed: onUpdate,
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.primary,
+                  foregroundColor: AppTheme.primary,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   minimumSize: Size.zero,
@@ -252,15 +251,15 @@ class _ServiceSummaryCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: BorderSide(
-                      color: AppColors.primary.withValues(alpha: 0.5),
+                      color: AppTheme.primary.withValues(alpha: 0.5),
                       width: 1,
                     ),
                   ),
                 ),
                 child: Text(
                   'Update',
-                  style: AppFonts(
-                    fontSize: 13,
+                  style: AppTheme.font(
+                    fontSize: AppTheme.textBody,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -279,14 +278,14 @@ class _ServiceSummaryCard extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: AppColors.iconGrey,
+          color: AppTheme.iconGrey,
         ),
         const SizedBox(width: 4),
         Text(
           text,
-          style: AppFonts(
-            color: AppColors.textSecondary,
-            fontSize: 13,
+          style: AppTheme.font(
+            color: AppTheme.textSecondary,
+            fontSize: AppTheme.textBody,
             fontWeight: FontWeight.w600,
           ),
         ),

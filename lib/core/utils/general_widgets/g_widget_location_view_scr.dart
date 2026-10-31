@@ -3,8 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 /// Displays an immutable geographic location while allowing the camera to move.
 ///
@@ -117,7 +116,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppTheme.textPrimary,
       body: SafeArea(
         child: Stack(
           children: [
@@ -143,10 +142,10 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                       width: 56,
                       height: 56,
                       alignment: Alignment.bottomCenter,
-                      child: const IgnorePointer(
+                      child: IgnorePointer(
                         child: Icon(
                           Icons.location_on_rounded,
-                          color: AppColors.primary,
+                          color: AppTheme.primary,
                           size: 48,
                         ),
                       ),
@@ -169,12 +168,12 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
               child: Row(
                 children: [
                   Material(
-                    color: AppColors.surfaceWhite,
+                    color: AppTheme.surface,
                     elevation: 3,
                     shape: const CircleBorder(),
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color: AppColors.textPrimary),
+                      icon: Icon(Icons.arrow_back,
+                          color: AppTheme.textPrimary),
                       onPressed: () => Navigator.pop(context, null),
                     ),
                   ),
@@ -187,14 +186,14 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
               bottom: 220,
               right: 16,
               child: Material(
-                color: AppColors.surfaceWhite,
+                color: AppTheme.surface,
                 elevation: 3,
                 shape: const CircleBorder(),
                 child: IconButton(
                   tooltip: 'Recenter map',
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.center_focus_strong,
-                    color: AppColors.primary,
+                    color: AppTheme.primary,
                   ),
                   onPressed: _recenterMap,
                 ),
@@ -209,11 +208,11 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceWhite,
+                  color: AppTheme.surface,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.shadowColor,
+                      color: AppTheme.shadowColor,
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -225,19 +224,19 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                   children: [
                     Text(
                       'Location',
-                      style: AppFonts(
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
+                      style: AppTheme.font(
+                        fontSize: AppTheme.textSmall,
+                        color: AppTheme.textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.place,
                           size: 20,
-                          color: AppColors.secondary,
+                          color: AppTheme.secondary,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -245,9 +244,9 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                             _address,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: AppFonts(
-                              color: AppColors.textPrimary,
-                              fontSize: 16,
+                            style: AppTheme.font(
+                              color: AppTheme.textPrimary,
+                              fontSize: AppTheme.textTitle,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

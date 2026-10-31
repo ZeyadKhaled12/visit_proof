@@ -6,7 +6,7 @@ import 'package:visit_proof/features/technicians/domain/usecases/remove_technici
 import 'package:visit_proof/features/technicians/presentation/controller/tech_bloc.dart';
 import 'package:visit_proof/features/technicians/presentation/screens/add_tech_scr.dart';
 
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../configs/app_toasts.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 
@@ -23,10 +23,10 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
       decoration: BoxDecoration(
-        color: AppColors.surfaceWhite,
+        color: AppTheme.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppTheme.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, -3),
           )
@@ -37,14 +37,14 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
           Expanded(
             child: GWidgetButton(
               text: 'Edit Technician',
-              backgroundColor: AppColors.secondary,
+              backgroundColor: AppTheme.secondary,
               height: 42,
               raduis: 12,
-              fontSize: 14,
+              fontSize: AppTheme.textBodyLarge,
               fontWeight: FontWeight.bold,
-              widget: const Padding(
+              widget: Padding(
                 padding: EdgeInsets.only(left: 6.0),
-                child: Icon(Icons.edit_square, color: Colors.white, size: 16),
+                child: Icon(Icons.edit_square, color: AppTheme.onPrimary, size: 16),
               ),
               onPressed: () async {
                 final data = await Navigator.pushNamed(
@@ -68,20 +68,20 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
           Expanded(
             child: GWidgetButton(
               text: 'Remove',
-              colorText: AppColors.statOrange,
-              backgroundColor: AppColors.statOrange.withValues(alpha: 0.1),
-              border: Border.all(color: AppColors.statOrange, width: 1.2),
+              colorText: AppTheme.statOrange,
+              backgroundColor: AppTheme.statOrange.withValues(alpha: 0.1),
+              border: Border.all(color: AppTheme.statOrange, width: 1.2),
               height: 42,
               raduis: 12,
-              fontSize: 14,
+              fontSize: AppTheme.textBodyLarge,
               isLoading: removeLoading,
               loadingSize: 15,
-              loadingColor: AppColors.statOrange,
+              loadingColor: AppTheme.statOrange,
               fontWeight: FontWeight.bold,
-              widget: const Padding(
+              widget: Padding(
                 padding: EdgeInsets.only(left: 6.0),
                 child: Icon(Icons.delete_outline,
-                    color: AppColors.statOrange, size: 16),
+                    color: AppTheme.statOrange, size: 16),
               ),
               onPressed: () async {
                 if (technicianDetailModel.visits?.isNotEmpty ?? false) {

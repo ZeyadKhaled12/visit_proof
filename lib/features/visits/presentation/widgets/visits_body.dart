@@ -4,80 +4,175 @@ import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/features/add_visit/presentation/screens/add_visit_scr.dart';
 import 'package:visit_proof/features/visits/presentation/controller/visits_bloc.dart';
 
-import '../../../../configs/app_colors.dart';
-import '../../../../configs/app_fonts.dart';
+import '../../../../configs/app_theme.dart';
+import '../../../../configs/app_toasts.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_search.dart';
 import '../../../../core/utils/general_widgets/g_widget_appbar.dart';
-import '../../../../core/utils/general_widgets/g_widget_excel.dart';
+import '../../../../core/utils/general_widgets/g_widget_button.dart';
+import '../../../dispatch/presentation/screens/dispatch_scr.dart';
+import '../../../main_menu/presentation/screens/main_menu_scr.dart';
+import '../../../main_menu/presentation/widgets/main_menu_tabs.dart';
+import '../../../../core/utils/general_widgets/g_widget_empty.dart';
 import '../../../../core/utils/general_widgets/g_widget_floating_btn.dart';
 import '../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../data/models/visit_detail_models/visit_detail_model.dart';
 import 'visits_widget_card.dart';
+import 'visits_widget_filter_sheet.dart';
 import 'visits_widget_filters.dart';
 
-class VisitsBody extends StatelessWidget {
+class VisitsBody extends StatefulWidget {
   const VisitsBody({super.key, required this.visits, required this.loading});
   final List<VisitDetailModel> visits;
   final bool loading;
 
   @override
+  State<VisitsBody> createState() => _VisitsBodyState();
+}
+
+class _VisitsBodyState extends State<VisitsBody> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+  VisitsFilter _filter = const VisitsFilter();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<VisitDetailModel> get _visibleVisits => widget.visits
+      .where((visit) =>
+          _filter.matches(visit) &&
+          GFunSearch.matches(_query, [
+            visit.visitNumber,
+            visit.serviceName,
+            visit.category?.name,
+            visit.client?.name,
+            visit.client?.phone,
+            visit.technicianModel?.name,
+            visit.site?.city?.name,
+            visit.site?.addressDetail,
+          ]))
+      .toList();
+
+  void _refresh() =>
+      context.read<VisitsBloc>().add(GetVisitsEvent(noParameters: NoParameters()));
+
+  Future<void> _addVisit() async {
+    final data = await Navigator.pushNamed(context, AddVisitScr.route);
+    if (data == true && mounted) _refresh();
+  }
+
+  Future<void> _openDispatch() async {
+    if (MainMenuScr.open(context, MainMenuTab.dispatch)) return;
+    await Navigator.pushNamed(context, DispatchScr.route);
+    if (mounted) _refresh();
+  }
+
+  Future<void> _openFilters() async {
+    final data = await AppToasts.showBottomSheet(
+        context, VisitsWidgetFilterSheet(filter: _filter));
+    if (data is VisitsFilter) setState(() => _filter = data);
+  }
+
+  void _clearSearchAndFilters() {
+    _searchController.clear();
+    setState(() {
+      _query = '';
+      _filter = const VisitsFilter();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final visits = _visibleVisits;
+
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: GWidgetAppbar(
           title: 'Visits',
           icon: Icons.fact_check_outlined,
           actions: [
-            Center(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: GWidgetExcel()),
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: GWidgetButton(
+                text: 'Dispatch',
+                fontSize: AppTheme.textBody,
+                height: 38,
+                raduis: 12,
+                paddingTopBottom: 0,
+                paddingLeftRight: 12,
+                gradient: LinearGradient(
+                    colors: [AppTheme.primary, AppTheme.secondary]),
+                widget: Padding(
+                  padding: EdgeInsets.only(left: 6),
+                  child: Icon(Icons.hub_rounded,
+                      size: 16, color: AppTheme.onPrimary),
+                ),
+                onPressed: _openDispatch,
+              ),
             ),
           ]).appbar(),
-      floatingActionButton: GWidgetFloatingBtn(
-          text: 'Add New Visit',
-          onPressed: () async {
-            final data = await Navigator.pushNamed(context, AddVisitScr.route);
-            if (data is bool) {
-              if (data) {
-                context
-                    .read<VisitsBloc>()
-                    .add(GetVisitsEvent(noParameters: NoParameters()));
-              }
-            }
-          }),
+      floatingActionButton:
+          GWidgetFloatingBtn(text: 'Add New Visit', onPressed: _addVisit),
       body: GWidgetLoading(
-        isLoading: loading,
-        body: Container(
+        isLoading: widget.loading,
+        body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: visits.isEmpty
-              ? Center(
-                  child: Text('No visits yet',
-                      style: AppFonts(color: AppColors.textDarkHint)))
-              : Column(
-                  children: [
-                    const SizedBox(height: 5),
-                    VisitsWidgetFilters(),
-                    SizedBox(height: 16),
-                    Expanded(
-                        child: Container(
-                      color: AppColors.scaffoldBackground,
-                      child: ListView.separated(
-                        itemCount: visits.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                              padding: index == visits.length - 1
-                                  ? EdgeInsets.only(bottom: 140)
-                                  : EdgeInsets.zero,
-                              child: VisitsWidgetCard(visit: visits[index]));
-                        },
-                      ),
-                    ))
-                  ],
+          child: Column(
+            children: [
+              const SizedBox(height: 5),
+              VisitsWidgetFilters(
+                searchController: _searchController,
+                onSearch: (value) => setState(() => _query = value),
+                activeFilters: _filter.activeCount,
+                onFilter: _openFilters,
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppTheme.primary,
+                  onRefresh: () async => _refresh(),
+                  child: ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 140),
+                    itemCount: visits.isEmpty ? 1 : visits.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
+                    itemBuilder: (context, index) {
+                      if (visits.isEmpty) return _emptyState();
+                      return VisitsWidgetCard(
+                          visit: visits[index], onReturn: _refresh);
+                    },
+                  ),
                 ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _emptyState() {
+    if (widget.loading) return const SizedBox.shrink();
+
+    if (widget.visits.isEmpty) {
+      return GWidgetEmpty(
+        icon: Icons.event_note_rounded,
+        title: 'No visits yet',
+        subtitle: 'Create your first visit to start tracking field work.',
+        actionText: 'Add first visit',
+        onAction: _addVisit,
+      );
+    }
+
+    return GWidgetEmpty(
+      icon: Icons.search_off_rounded,
+      title: 'No matching visits',
+      subtitle: 'Try another search or clear the filters.',
+      actionText: 'Clear search & filters',
+      onAction: _clearSearchAndFilters,
     );
   }
 }

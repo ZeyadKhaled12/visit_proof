@@ -1,83 +1,210 @@
 import 'dart:async';
+
+import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:visit_proof/core/usecase/base_use_case.dart';
-import 'package:visit_proof/core/utils/enums.dart';
-import 'package:visit_proof/features/clients/domain/usecases/get_clients_uc.dart';
-import 'package:visit_proof/features/services/domain/usecases/get_services_uc.dart';
-import 'package:visit_proof/features/technicians/domain/usecases/get_technicians_uc.dart';
-import 'package:visit_proof/features/services/data/models/service_model.dart';
-import 'package:visit_proof/features/technicians/data/models/technician_model.dart';
-import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_client_model.dart';
-import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_detail_model.dart';
-import '../../domain/usecases/visit_detail_actions_uc.dart';
+
+import '../../../../core/network/error/failure.dart';
+import '../../../../core/usecase/base_use_case.dart';
+import '../../../../core/utils/enums.dart';
+import '../../../invoices/data/models/invoice_detail_model.dart';
+import '../../../invoices/domain/usecases/get_invoice_detail_uc.dart';
+import '../../../services/data/models/service_model.dart';
+import '../../../services/domain/usecases/get_services_uc.dart';
+import '../../../technicians/data/models/technician_model.dart';
+import '../../../technicians/domain/usecases/get_technicians_uc.dart';
+import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
+import '../../domain/usecases/add_visit_comment_uc.dart';
+import '../../domain/usecases/assign_technician_uc.dart';
+import '../../domain/usecases/change_visit_service_uc.dart';
+import '../../domain/usecases/change_visit_site_uc.dart';
+import '../../domain/usecases/change_visit_status_uc.dart';
+import '../../domain/usecases/delete_visit_uc.dart';
+import '../../domain/usecases/get_visit_detail_uc.dart';
+import '../../domain/usecases/reschedule_visit_uc.dart';
+import '../../domain/usecases/unassign_technician_uc.dart';
+import '../../domain/usecases/update_visit_info_uc.dart';
 
 part 'visit_detail_event.dart';
 part 'visit_detail_state.dart';
 
+typedef _StateWith = VisitDetailState Function(RequestState requestState);
+
 class VisitDetailBloc extends Bloc<VisitDetailEvent, VisitDetailState> {
   final GetVisitDetailUc getVisitDetailUc;
-  final UpdateVisitUc updateVisitUc;
   final ChangeVisitStatusUc changeVisitStatusUc;
-  final AssignVisitTechnicianUc assignTechnicianUc;
-  final UnassignVisitTechnicianUc unassignTechnicianUc;
+  final AssignTechnicianUc assignTechnicianUc;
+  final UnassignTechnicianUc unassignTechnicianUc;
+  final RescheduleVisitUc rescheduleVisitUc;
+  final UpdateVisitInfoUc updateVisitInfoUc;
+  final ChangeVisitServiceUc changeVisitServiceUc;
+  final ChangeVisitSiteUc changeVisitSiteUc;
   final AddVisitCommentUc addVisitCommentUc;
-  final GetClientsUc getClientsUc;
-  final GetServicesUc getServicesUc;
+  final DeleteVisitUc deleteVisitUc;
   final GetTechniciansUc getTechniciansUc;
+  final GetServicesUc getServicesUc;
+  final GetInvoiceDetailUc getInvoiceDetailUc;
 
-  VisitDetailBloc(this.getVisitDetailUc, this.updateVisitUc, this.changeVisitStatusUc,
-      this.assignTechnicianUc, this.unassignTechnicianUc, this.addVisitCommentUc,
-      this.getClientsUc, this.getServicesUc, this.getTechniciansUc)
+  VisitDetailBloc(
+      this.getVisitDetailUc,
+      this.changeVisitStatusUc,
+      this.assignTechnicianUc,
+      this.unassignTechnicianUc,
+      this.rescheduleVisitUc,
+      this.updateVisitInfoUc,
+      this.changeVisitServiceUc,
+      this.changeVisitSiteUc,
+      this.addVisitCommentUc,
+      this.deleteVisitUc,
+      this.getTechniciansUc,
+      this.getServicesUc,
+      this.getInvoiceDetailUc)
       : super(const VisitDetailState()) {
-    on<LoadVisitDetailEvent>(_load);
-    on<LoadVisitEditOptionsEvent>(_options);
-    on<UpdateVisitEvent>((e, emit) => _run(emit, () => updateVisitUc.call(e.parameters)));
-    on<ChangeVisitStatusEvent>((e, emit) => _run(emit, () => changeVisitStatusUc.call(e.parameters)));
-    on<AssignVisitTechnicianEvent>((e, emit) => _run(emit, () => assignTechnicianUc.call(e.parameters)));
-    on<UnassignVisitTechnicianEvent>((e, emit) => _run(emit, () => unassignTechnicianUc.call(e.parameters)));
-    on<AddVisitCommentEvent>((e, emit) => _run(emit, () => addVisitCommentUc.call(e.parameters)));
+    on<GetVisitDetailEvent>(_getVisitDetail);
+    on<GetVisitTechniciansEvent>(_getVisitTechnicians);
+    on<GetVisitServicesEvent>(_getVisitServices);
+    on<ChangeVisitStatusEvent>(_changeVisitStatus);
+    on<AssignTechnicianEvent>(_assignTechnician);
+    on<UnassignTechnicianEvent>(_unassignTechnician);
+    on<RescheduleVisitEvent>(_rescheduleVisit);
+    on<UpdateVisitInfoEvent>(_updateVisitInfo);
+    on<ChangeVisitServiceEvent>(_changeVisitService);
+    on<ChangeVisitSiteEvent>(_changeVisitSite);
+    on<AddVisitCommentEvent>(_addVisitComment);
+    on<DeleteVisitEvent>(_deleteVisit);
   }
 
-  Future<void> _load(LoadVisitDetailEvent event, Emitter<VisitDetailState> emit) async {
-    emit(state.copyWith(getState: RequestState.loading, clearError: true));
-    final result = await getVisitDetailUc.call(GetVisitDetailParameters(visitID: event.visitID));
+  // ==========================================================
+  // LOAD
+  // ==========================================================
+
+  FutureOr<void> _getVisitDetail(
+      GetVisitDetailEvent event, Emitter<VisitDetailState> emit) async {
+    emit(state.copyWith(getVisitDetailRequestState: RequestState.loading));
+    final result = await getVisitDetailUc.call(event.getVisitDetailParameters);
+    if (result.isLeft) {
+      emit(state.copyWith(getVisitDetailRequestState: RequestState.error));
+      return;
+    }
+    emit(state.copyWith(
+        getVisitDetailRequestState: RequestState.loaded, visit: result.right));
+    await _loadInvoice(emit);
+  }
+
+  /// Same source add_visit uses to list technicians.
+  FutureOr<void> _getVisitTechnicians(
+      GetVisitTechniciansEvent event, Emitter<VisitDetailState> emit) async {
+    emit(state.copyWith(getTechniciansRequestState: RequestState.loading));
+    final result = await getTechniciansUc.call(event.noParameters);
     result.fold(
-      (failure) => emit(state.copyWith(getState: RequestState.error, error: failure.toString())),
-      (visit) => emit(state.copyWith(getState: RequestState.loaded, visit: visit, clearError: true)),
-    );
+        (l) =>
+            emit(state.copyWith(getTechniciansRequestState: RequestState.error)),
+        (r) => emit(state.copyWith(
+            getTechniciansRequestState: RequestState.loaded, technicians: r)));
   }
 
-  Future<void> _options(LoadVisitEditOptionsEvent event, Emitter<VisitDetailState> emit) async {
-    emit(state.copyWith(optionsState: RequestState.loading));
-    final results = await Future.wait<dynamic>([
-      getClientsUc.call(NoParameters()),
-      getServicesUc.call(NoParameters()),
-      getTechniciansUc.call(NoParameters()),
-    ]);
-    var failed = false;
-    List<VisitClientModel> clients = [];
-    List<ServiceModel> services = [];
-    List<TechnicianModel> technicians = [];
-    results[0].fold((dynamic _) => failed = true,
-        (dynamic data) => clients = (data as List).map((e) => e.convertToVisitClient() as VisitClientModel).toList());
-    results[1].fold((dynamic _) => failed = true,
-        (dynamic data) => services = List<ServiceModel>.from(data as List));
-    results[2].fold((dynamic _) => failed = true,
-        (dynamic data) => technicians = List<TechnicianModel>.from(data as List));
-    emit(state.copyWith(optionsState: failed ? RequestState.error : RequestState.loaded,
-      clients: clients, services: services, technicians: technicians));
-  }
-
-  Future<void> _run(Emitter<VisitDetailState> emit, Future<dynamic> Function() action) async {
-    if (state.actionState == RequestState.loading) return;
-    emit(state.copyWith(actionState: RequestState.loading, clearError: true));
-    final result = await action();
+  FutureOr<void> _getVisitServices(
+      GetVisitServicesEvent event, Emitter<VisitDetailState> emit) async {
+    emit(state.copyWith(getServicesRequestState: RequestState.loading));
+    final result = await getServicesUc.call(event.noParameters);
     result.fold(
-      (dynamic failure) => emit(state.copyWith(actionState: RequestState.error, error: failure.toString())),
-      (dynamic visit) => emit(state.copyWith(actionState: RequestState.loaded,
-          visit: visit as VisitDetailModel, actionSuccessCount: state.actionSuccessCount + 1,
-          clearError: true)),
-    );
+        (l) => emit(state.copyWith(getServicesRequestState: RequestState.error)),
+        (r) => emit(state.copyWith(
+            getServicesRequestState: RequestState.loaded, services: r)));
+  }
+
+  /// Loads the linked invoice for the summary card.
+  Future<void> _loadInvoice(Emitter<VisitDetailState> emit) async {
+    final invoiceID = state.visit.invoiceID;
+    if (invoiceID == null || invoiceID.isEmpty) return;
+
+    emit(state.copyWith(getInvoiceRequestState: RequestState.loading));
+    final result = await getInvoiceDetailUc
+        .call(GetInvoiceDetailParameters(invoiceId: invoiceID));
+    result.fold(
+        (l) => emit(state.copyWith(getInvoiceRequestState: RequestState.error)),
+        (r) => emit(state.copyWith(
+            getInvoiceRequestState: RequestState.loaded, invoice: r)));
+  }
+
+  // ==========================================================
+  // VISIT ACTIONS
+  // ==========================================================
+
+  FutureOr<void> _changeVisitStatus(
+          ChangeVisitStatusEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () => changeVisitStatusUc.call(event.changeVisitStatusParameters),
+          stateWith: (s) => state.copyWith(changeStatusRequestState: s));
+
+  FutureOr<void> _assignTechnician(
+          AssignTechnicianEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () => assignTechnicianUc.call(event.assignTechnicianParameters),
+          stateWith: (s) => state.copyWith(assignTechnicianRequestState: s));
+
+  FutureOr<void> _unassignTechnician(
+          UnassignTechnicianEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () =>
+              unassignTechnicianUc.call(event.unassignTechnicianParameters),
+          stateWith: (s) => state.copyWith(unassignTechnicianRequestState: s));
+
+  FutureOr<void> _rescheduleVisit(
+          RescheduleVisitEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () => rescheduleVisitUc.call(event.rescheduleVisitParameters),
+          stateWith: (s) => state.copyWith(rescheduleRequestState: s));
+
+  FutureOr<void> _updateVisitInfo(
+          UpdateVisitInfoEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () => updateVisitInfoUc.call(event.updateVisitInfoParameters),
+          stateWith: (s) => state.copyWith(updateInfoRequestState: s));
+
+  FutureOr<void> _changeVisitService(
+          ChangeVisitServiceEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () =>
+              changeVisitServiceUc.call(event.changeVisitServiceParameters),
+          stateWith: (s) => state.copyWith(changeServiceRequestState: s));
+
+  FutureOr<void> _changeVisitSite(
+          ChangeVisitSiteEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () => changeVisitSiteUc.call(event.changeVisitSiteParameters),
+          stateWith: (s) => state.copyWith(changeSiteRequestState: s));
+
+  FutureOr<void> _addVisitComment(
+          AddVisitCommentEvent event, Emitter<VisitDetailState> emit) =>
+      _updateVisit(emit,
+          call: () => addVisitCommentUc.call(event.addVisitCommentParameters),
+          stateWith: (s) => state.copyWith(addCommentRequestState: s));
+
+  FutureOr<void> _deleteVisit(
+      DeleteVisitEvent event, Emitter<VisitDetailState> emit) async {
+    emit(state.copyWith(deleteVisitRequestState: RequestState.loading));
+    final result = await deleteVisitUc.call(event.deleteVisitParameters);
+    result.fold(
+        (l) => emit(state.copyWith(deleteVisitRequestState: RequestState.error)),
+        (r) =>
+            emit(state.copyWith(deleteVisitRequestState: RequestState.loaded)));
+  }
+
+  /// Visit edits can touch the invoice (cancel, reprice, site), so the
+  /// invoice summary is reloaded after every successful change.
+  Future<void> _updateVisit(
+    Emitter<VisitDetailState> emit, {
+    required Future<Either<Failure, VisitDetailModel>> Function() call,
+    required _StateWith stateWith,
+  }) async {
+    emit(stateWith(RequestState.loading));
+    final result = await call();
+    if (result.isLeft) {
+      emit(stateWith(RequestState.error));
+      return;
+    }
+    emit(stateWith(RequestState.loaded).copyWith(visit: result.right));
+    await _loadInvoice(emit);
   }
 }

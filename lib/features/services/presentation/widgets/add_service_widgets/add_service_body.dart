@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
 import 'package:visit_proof/features/services/data/models/service_model.dart';
 import '../../../../../app/app.dart';
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../../core/utils/general_widgets/g_widget_drop_down.dart';
 import '../../../../../core/utils/general_widgets/g_widget_text_field.dart';
@@ -89,7 +88,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
         widget.categories.map((cat) {
       return DropdownMenuItem<GModelCatg>(
         value: cat,
-        child: Text(cat.name ?? '', style: AppFonts()),
+        child: Text(cat.name ?? '', style: AppTheme.font()),
       );
     }).toList();
 
@@ -99,8 +98,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
         value: GModelCatg(name: 'CREATE_NEW'),
         child: Text(
           '+ Create New Category',
-          style: AppFonts(
-            color: AppColors.primary,
+          style: AppTheme.font(
+            color: AppTheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -109,8 +108,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
 
     return SafeArea(
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surfaceWhite,
+        decoration: BoxDecoration(
+          color: AppTheme.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         // Padding handles keyboard overlap
@@ -131,7 +130,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.locationChipBg,
+                    color: AppTheme.locationChipBg,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -146,18 +145,18 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                     widget.serviceModel?.id != null
                         ? 'Update Service'
                         : 'Create New Service',
-                    style: AppFonts(
-                      color: AppColors.textPrimary,
-                      fontSize: 20,
+                    style: AppTheme.font(
+                      color: AppTheme.textPrimary,
+                      fontSize: AppTheme.textHeadline,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 2),
                   Text(
                     'Fill in the details below to add a service',
-                    style: AppFonts(
-                      color: AppColors.textSecondary,
-                      fontSize: 13,
+                    style: AppTheme.font(
+                      color: AppTheme.textSecondary,
+                      fontSize: AppTheme.textBody,
                     ),
                   ),
                 ],
@@ -171,8 +170,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                 loading: widget.getCategoriesLoading,
                 labelText: 'Category *',
                 errorMsg: _categoryErrorMsg,
-                prefixIcon: const Icon(Icons.category_outlined,
-                    color: AppColors.primary),
+                prefixIcon: Icon(Icons.category_outlined,
+                    color: AppTheme.primary),
                 onChanged: (val) {
                   setState(() {
                     if (val?.name == 'CREATE_NEW') {
@@ -198,9 +197,9 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                           labelText: 'New Category Name *',
                           hintText: 'e.g., HVAC',
                           errorMsg: _categoryNameErrorMsg,
-                          prefixIcon: const Icon(
+                          prefixIcon: Icon(
                               Icons.drive_file_rename_outline,
-                              color: AppColors.primary),
+                              color: AppTheme.primary),
                         ),
                       )
                     : const SizedBox.shrink(),
@@ -213,8 +212,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                 labelText: 'Service Name *',
                 hintText: 'e.g., Standard AC Tune-Up',
                 errorMsg: _serviceNameError,
-                prefixIcon: const Icon(Icons.miscellaneous_services_outlined,
-                    color: AppColors.primary),
+                prefixIcon: Icon(Icons.miscellaneous_services_outlined,
+                    color: AppTheme.primary),
               ),
               const SizedBox(height: 16),
 
@@ -231,10 +230,10 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       height: 50,
                       child: Center(
                         child: Text(App.currency,
-                            style: AppFonts(
-                                fontSize: 12,
+                            style: AppTheme.font(
+                                fontSize: AppTheme.textSmall,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primary)),
+                                color: AppTheme.primary)),
                       ))),
               const SizedBox(height: 16),
 
@@ -253,19 +252,19 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       height: 50,
                       child: Center(
                         child: Text('Min',
-                            style: AppFonts(
-                                fontSize: 12,
+                            style: AppTheme.font(
+                                fontSize: AppTheme.textSmall,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primary)),
+                                color: AppTheme.primary)),
                       ))),
               const SizedBox(height: 24),
 
               // 4. Checklist (Optional)
               Text(
                 'Service Checklist (Optional)',
-                style: AppFonts(
-                  color: AppColors.textPrimary,
-                  fontSize: 14,
+                style: AppTheme.font(
+                  color: AppTheme.textPrimary,
+                  fontSize: AppTheme.textBodyLarge,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -278,8 +277,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                     child: GWidgetTextField(
                       controller: _checklistInputController,
                       hintText: 'Add task (e.g., Wash hair)',
-                      prefixIcon: const Icon(Icons.check_box_outlined,
-                          color: AppColors.secondary),
+                      prefixIcon: Icon(Icons.check_box_outlined,
+                          color: AppTheme.secondary),
                       onFieldSubmitted: (_) => _addChecklistItem(),
                     ),
                   ),
@@ -291,16 +290,16 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       height: 56, // Matches GWidgetTextField default height
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                        color: AppColors.secondary.withValues(alpha: .15),
+                        color: AppTheme.secondary.withValues(alpha: .15),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Center(
                         child: Text(
                           'Add',
-                          style: AppFonts(
-                            color: AppColors.secondary,
+                          style: AppTheme.font(
+                            color: AppTheme.secondary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: AppTheme.textSubtitle,
                           ),
                         ),
                       ),
@@ -320,11 +319,11 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: AppColors.locationChipBg,
+                        color: AppTheme.locationChipBg,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                             color:
-                                AppColors.iconLightGrey.withValues(alpha: .3)),
+                                AppTheme.iconLightGrey.withValues(alpha: .3)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -333,14 +332,14 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                           Expanded(
                             child: Row(
                               children: [
-                                const Icon(Icons.check_circle,
-                                    size: 16, color: AppColors.primary),
+                                Icon(Icons.check_circle,
+                                    size: 16, color: AppTheme.primary),
                                 const SizedBox(width: 6),
                                 Text(
                                   item,
-                                  style: AppFonts(
-                                    color: AppColors.textPrimary,
-                                    fontSize: 13,
+                                  style: AppTheme.font(
+                                    color: AppTheme.textPrimary,
+                                    fontSize: AppTheme.textBody,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -350,8 +349,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                           const SizedBox(width: 6),
                           InkWell(
                             onTap: () => _removeChecklistItem(item),
-                            child: const Icon(Icons.close_rounded,
-                                size: 18, color: AppColors.statOrange),
+                            child: Icon(Icons.close_rounded,
+                                size: 18, color: AppTheme.statOrange),
                           ),
                         ],
                       ),
@@ -429,7 +428,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                   isEnable: !widget.getCategoriesLoading,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.fabShadowColor,
+                      color: AppTheme.fabShadowColor,
                       blurRadius: 15,
                       offset: const Offset(0, 6),
                     ),

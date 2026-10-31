@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visit_proof/configs/app_colors.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 
 enum VisitStatus {
   draft,
@@ -59,75 +59,75 @@ class VisitStatusSwitch {
 
   Color getColor() {
     if (visitStatusID == 1) {
-      return AppColors.iconGrey;
+      return AppTheme.iconGrey;
     } else if (visitStatusID == 2) {
-      return AppColors.pending;
+      return AppTheme.pending;
     } else if (visitStatusID == 3) {
-      return AppColors.primary;
+      return AppTheme.primary;
     } else if (visitStatusID == 4) {
-      return AppColors.secondary;
+      return AppTheme.secondary;
     } else if (visitStatusID == 5) {
-      return AppColors.pending;
+      return AppTheme.pending;
     } else if (visitStatusID == 6) {
-      return AppColors.statGreen;
+      return AppTheme.statGreen;
     } else if (visitStatusID == 7) {
-      return AppColors.statOrange;
+      return AppTheme.statOrange;
     }
 
     switch (visitStatusEnum) {
       case null:
-        return AppColors.iconGrey;
+        return AppTheme.iconGrey;
       case VisitStatus.draft:
-        return AppColors.iconGrey;
+        return AppTheme.iconGrey;
       case VisitStatus.scheduled:
-        return AppColors.pending;
+        return AppTheme.pending;
       case VisitStatus.assigned:
-        return AppColors.primary;
+        return AppTheme.primary;
       case VisitStatus.onWay:
-        return AppColors.secondary;
+        return AppTheme.secondary;
       case VisitStatus.inProgress:
-        return AppColors.pending;
+        return AppTheme.pending;
       case VisitStatus.completed:
-        return AppColors.statGreen;
+        return AppTheme.statGreen;
       case VisitStatus.cancel:
-        return AppColors.statOrange;
+        return AppTheme.statOrange;
     }
   }
 
   String getText() {
     if (visitStatusID == 1) {
-      return 'draft';
+      return 'Draft';
     } else if (visitStatusID == 2) {
-      return 'scheduled';
+      return 'Scheduled';
     } else if (visitStatusID == 3) {
-      return 'assigned';
+      return 'Assigned';
     } else if (visitStatusID == 4) {
-      return 'on way';
+      return 'On The Way';
     } else if (visitStatusID == 5) {
-      return 'in progress';
+      return 'In Progress';
     } else if (visitStatusID == 6) {
-      return 'completed';
+      return 'Completed';
     } else if (visitStatusID == 7) {
-      return 'cancel';
+      return 'Cancelled';
     }
 
     switch (visitStatusEnum) {
       case null:
-        return 'draft';
+        return 'Draft';
       case VisitStatus.draft:
-        return 'draft';
+        return 'Draft';
       case VisitStatus.scheduled:
-        return 'scheduled';
+        return 'Scheduled';
       case VisitStatus.assigned:
-        return 'assigned';
+        return 'Assigned';
       case VisitStatus.onWay:
-        return 'on way';
+        return 'On The Way';
       case VisitStatus.inProgress:
-        return 'in progress';
+        return 'In Progress';
       case VisitStatus.completed:
-        return 'completed';
+        return 'Completed';
       case VisitStatus.cancel:
-        return 'cancel';
+        return 'Cancelled';
     }
   }
 }

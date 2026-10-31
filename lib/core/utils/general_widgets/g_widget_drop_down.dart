@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 import 'dart:math' as math;
 
 class GWidgetDropDown<T> extends StatefulWidget {
@@ -210,9 +209,9 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
               child: SizedBox(
                 width: fieldSize.width,
                 child: Material(
-                  color: AppColors.surfaceWhite,
+                  color: AppTheme.surface,
                   elevation: 8,
-                  shadowColor: Colors.black.withValues(alpha: .12),
+                  shadowColor: AppTheme.textPrimary.withValues(alpha: .12),
                   borderRadius: BorderRadius.circular(16),
                   clipBehavior: Clip.antiAlias,
                   child: Container(
@@ -220,10 +219,10 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                       maxHeight: math.max(0, menuHeight - 4),
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceWhite,
+                      color: AppTheme.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AppColors.iconLightGrey,
+                        color: AppTheme.iconLightGrey,
                         width: 1,
                       ),
                     ),
@@ -237,19 +236,19 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                               controller: _searchController,
                               focusNode: _searchFocusNode,
                               autofocus: false,
-                              style: AppFonts(
-                                color: AppColors.textPrimary,
-                                fontSize: 14,
+                              style: AppTheme.font(
+                                color: AppTheme.textPrimary,
+                                fontSize: AppTheme.textBodyLarge,
                               ),
                               decoration: InputDecoration(
                                 hintText: widget.searchHintText,
-                                hintStyle: AppFonts(
-                                  color: AppColors.textLightHint,
-                                  fontSize: 14,
+                                hintStyle: AppTheme.font(
+                                  color: AppTheme.textLightHint,
+                                  fontSize: AppTheme.textBodyLarge,
                                 ),
-                                prefixIcon: const Icon(
+                                prefixIcon: Icon(
                                   Icons.search_rounded,
-                                  color: AppColors.primary,
+                                  color: AppTheme.primary,
                                   size: 22,
                                 ),
                                 suffixIcon: _searchController.text.isNotEmpty
@@ -264,7 +263,7 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                                       )
                                     : null,
                                 filled: true,
-                                fillColor: AppColors.searchFieldBg,
+                                fillColor: AppTheme.searchFieldBg,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 12,
@@ -283,9 +282,9 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                                     padding: const EdgeInsets.all(20),
                                     child: Text(
                                       widget.emptyMessage,
-                                      style: AppFonts(
-                                        color: AppColors.textSecondary,
-                                        fontSize: 14,
+                                      style: AppTheme.font(
+                                        color: AppTheme.textSecondary,
+                                        fontSize: AppTheme.textBodyLarge,
                                       ),
                                     ),
                                   ),
@@ -315,18 +314,18 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                                           vertical: 12,
                                         ),
                                         color: isSelected
-                                            ? AppColors.primary
+                                            ? AppTheme.primary
                                                 .withValues(alpha: .08)
                                             : Colors.transparent,
                                         child: Row(
                                           children: [
                                             Expanded(
                                               child: DefaultTextStyle(
-                                                style: AppFonts(
+                                                style: AppTheme.font(
                                                   color: item.enabled
-                                                      ? AppColors.textPrimary
-                                                      : AppColors.textSecondary,
-                                                  fontSize: 15,
+                                                      ? AppTheme.textPrimary
+                                                      : AppTheme.textSecondary,
+                                                  fontSize: AppTheme.textSubtitle,
                                                   fontWeight: isSelected
                                                       ? FontWeight.w600
                                                       : FontWeight.w400,
@@ -335,9 +334,9 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                                               ),
                                             ),
                                             if (isSelected)
-                                              const Icon(
+                                              Icon(
                                                 Icons.check_rounded,
-                                                color: AppColors.primary,
+                                                color: AppTheme.primary,
                                                 size: 20,
                                               ),
                                           ],
@@ -424,24 +423,24 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                 isEmpty: !hasValue,
                 isFocused: _isOpen,
                 decoration: InputDecoration(
-                  fillColor: AppColors.searchFieldBg,
+                  fillColor: AppTheme.searchFieldBg,
                   filled: true,
                   hintText: widget.hintText,
-                  hintStyle: AppFonts(
-                    color: AppColors.textLightHint,
-                    fontSize: 14,
+                  hintStyle: AppTheme.font(
+                    color: AppTheme.textLightHint,
+                    fontSize: AppTheme.textBodyLarge,
                   ),
                   labelText: widget.labelText,
-                  labelStyle: AppFonts(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
+                  labelStyle: AppTheme.font(
+                    color: AppTheme.textSecondary,
+                    fontSize: AppTheme.textBodyLarge,
                     fontWeight: FontWeight.w600,
                   ),
                   prefixIcon: widget.prefixIcon,
                   errorText: widget.errorMsg ?? field.errorText,
-                  errorStyle: AppFonts(
-                    color: AppColors.statOrange,
-                    fontSize: 12.9,
+                  errorStyle: AppTheme.font(
+                    color: AppTheme.statOrange,
+                    fontSize: AppTheme.textSmall,
                     fontWeight: FontWeight.w500,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -450,29 +449,29 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.iconLightGrey,
+                    borderSide: BorderSide(
+                      color: AppTheme.iconLightGrey,
                       width: 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
+                    borderSide: BorderSide(
+                      color: AppTheme.primary,
                       width: 2,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.statOrange,
+                    borderSide: BorderSide(
+                      color: AppTheme.statOrange,
                       width: 1.5,
                     ),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.statOrange,
+                    borderSide: BorderSide(
+                      color: AppTheme.statOrange,
                       width: 1.5,
                     ),
                   ),
@@ -485,9 +484,9 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                     if (hasValue)
                       Flexible(
                         child: DefaultTextStyle(
-                          style: AppFonts(
-                            color: AppColors.textPrimary,
-                            fontSize: 16,
+                          style: AppTheme.font(
+                            color: AppTheme.textPrimary,
+                            fontSize: AppTheme.textTitle,
                             fontWeight: FontWeight.w500,
                           ),
                           maxLines: 1,
@@ -501,9 +500,9 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                           widget.hintText ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: AppFonts(
-                            color: AppColors.textLightHint,
-                            fontSize: 14,
+                          style: AppTheme.font(
+                            color: AppTheme.textLightHint,
+                            fontSize: AppTheme.textBodyLarge,
                           ),
                         ),
                       ),
@@ -513,14 +512,14 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                             width: 15,
                             height: 15,
                             strokeWidth: 2.5,
-                            color: AppColors.primary,
+                            color: AppTheme.primary,
                           )
                         : widget.icon ??
                             Icon(
                               _isOpen
                                   ? Icons.keyboard_arrow_up_rounded
                                   : Icons.keyboard_arrow_down_rounded,
-                              color: AppColors.primary,
+                              color: AppTheme.primary,
                               size: widget.iconSize,
                             ),
                   ],

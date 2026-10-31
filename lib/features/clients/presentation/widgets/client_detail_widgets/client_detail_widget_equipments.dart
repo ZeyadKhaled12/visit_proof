@@ -8,8 +8,7 @@ import 'package:visit_proof/features/clients/domain/usecases/add_equipment_uc.da
 import 'package:visit_proof/features/clients/domain/usecases/remove_equipment_uc.dart';
 import 'package:visit_proof/features/clients/presentation/controller/clients_bloc.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import 'client_detail_widget_title_card.dart';
 
@@ -53,15 +52,15 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceWhite,
+                  color: AppTheme.surface,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.locationChipBg),
+                  border: Border.all(color: AppTheme.locationChipBg),
                 ),
                 child: Center(
                   child: Text(
                     'No equipments assigned to this client yet.',
                     style:
-                        AppFonts(color: AppColors.textLightHint, fontSize: 13),
+                        AppTheme.font(color: AppTheme.textLightHint, fontSize: AppTheme.textBody),
                   ),
                 ),
               )
@@ -79,13 +78,13 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                           const EdgeInsets.only(right: 12, bottom: 4, top: 4),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.cardColor,
+                        color: AppTheme.cardColor,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.1)),
+                            color: AppTheme.primary.withValues(alpha: 0.1)),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.cardShadowColor,
+                            color: AppTheme.cardShadowColor,
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           )
@@ -99,17 +98,17 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                               CircleAvatar(
                                 radius: 14,
                                 backgroundColor:
-                                    AppColors.secondary.withValues(alpha: 0.2),
-                                child: const Icon(Icons.settings,
-                                    color: AppColors.secondary, size: 14),
+                                    AppTheme.secondary.withValues(alpha: 0.2),
+                                child: Icon(Icons.settings,
+                                    color: AppTheme.secondary, size: 14),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   eq.name ?? 'Unknown',
-                                  style: AppFonts(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 14,
+                                  style: AppTheme.font(
+                                      color: AppTheme.textPrimary,
+                                      fontSize: AppTheme.textBodyLarge,
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -134,20 +133,20 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                                   }
                                 },
                                 child: CircleAvatar(
-                                  backgroundColor: AppColors.statOrange
+                                  backgroundColor: AppTheme.statOrange
                                       .withValues(alpha: .2),
                                   radius: 12,
                                   child: equipmentIDLoading == eq.id &&
                                           removeEquipmentLoading
                                       ? GWidgetLoadingCircle(
                                           strokeWidth: 2.5,
-                                          color: AppColors.statOrange,
+                                          color: AppTheme.statOrange,
                                           width: 12,
                                           height: 12,
                                         )
                                       : Icon(
                                           Icons.delete,
-                                          color: AppColors.statOrange,
+                                          color: AppTheme.statOrange,
                                           size: 15,
                                         ),
                                 ),
@@ -189,12 +188,12 @@ class _EqDetailRowModel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label,
-            style: AppFonts(color: AppColors.textSecondary, fontSize: 12)),
+            style: AppTheme.font(color: AppTheme.textSecondary, fontSize: AppTheme.textSmall)),
         Text(
           value,
-          style: AppFonts(
-            color: isSn ? AppColors.textLightHint : AppColors.textPrimary,
-            fontSize: 12,
+          style: AppTheme.font(
+            color: isSn ? AppTheme.textLightHint : AppTheme.textPrimary,
+            fontSize: AppTheme.textSmall,
             fontWeight: isSn ? FontWeight.normal : FontWeight.bold,
           ),
         ),
@@ -230,13 +229,13 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.surfaceWhite,
+      backgroundColor: AppTheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
         'Add New Equipment',
-        style: AppFonts(
-          color: AppColors.textPrimary,
-          fontSize: 20,
+        style: AppTheme.font(
+          color: AppTheme.textPrimary,
+          fontSize: AppTheme.textHeadline,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -250,7 +249,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
                 prefixIcon: Icon(
                   Icons.build_circle,
                   size: 20,
-                  color: AppColors.primary,
+                  color: AppTheme.primary,
                 )),
             const SizedBox(height: 12),
             GWidgetTextField(
@@ -259,7 +258,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
                 prefixIcon: Icon(
                   Icons.branding_watermark,
                   size: 20,
-                  color: AppColors.primary,
+                  color: AppTheme.primary,
                 )),
             const SizedBox(height: 12),
             GWidgetTextField(
@@ -268,7 +267,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
                 prefixIcon: Icon(
                   Icons.category,
                   size: 20,
-                  color: AppColors.primary,
+                  color: AppTheme.primary,
                 )),
             const SizedBox(height: 12),
             GWidgetTextField(
@@ -277,7 +276,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
                 prefixIcon: Icon(
                   Icons.qr_code,
                   size: 20,
-                  color: AppColors.primary,
+                  color: AppTheme.primary,
                 ))
           ],
         ),
@@ -288,10 +287,10 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Cancel',
-            style: AppFonts(
-                color: AppColors.textSecondary,
+            style: AppTheme.font(
+                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.bold,
-                fontSize: 14),
+                fontSize: AppTheme.textBodyLarge),
           ),
         ),
         GWidgetButton(
@@ -299,7 +298,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
           width: 90,
           height: 40,
           paddingTopBottom: 0,
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppTheme.primary,
           raduis: 10,
           onPressed: () {
             setState(() {

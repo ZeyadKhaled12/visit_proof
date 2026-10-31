@@ -6,8 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class _PlaceSuggestion {
   final String name;
@@ -355,7 +354,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: AppTheme.scaffoldBackground,
       body: SafeArea(
         child: Stack(
           children: [
@@ -387,9 +386,9 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                     duration: const Duration(milliseconds: 180),
                     transform:
                         Matrix4.translationValues(0, _dragging ? -10 : 0, 0),
-                    child: const Icon(
+                    child: Icon(
                       Icons.location_on_rounded,
-                      color: AppColors.primary,
+                      color: AppTheme.primary,
                       size: 45,
                     ),
                   ),
@@ -405,19 +404,19 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
               child: Row(
                 children: [
                   Material(
-                    color: AppColors.surfaceWhite,
+                    color: AppTheme.surface,
                     elevation: 3,
                     shape: const CircleBorder(),
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color: AppColors.textPrimary),
+                      icon: Icon(Icons.arrow_back,
+                          color: AppTheme.textPrimary),
                       onPressed: () => Navigator.pop(context, null),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Material(
-                      color: AppColors.searchFieldBg,
+                      color: AppTheme.searchFieldBg,
                       elevation: 3,
                       borderRadius: BorderRadius.circular(24),
                       child: TextField(
@@ -430,25 +429,25 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                           }
                         },
                         textInputAction: TextInputAction.search,
-                        style: AppFonts(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
+                        style: AppTheme.font(
+                          color: AppTheme.textPrimary,
+                          fontSize: AppTheme.textTitle,
                           fontWeight: FontWeight.w500,
                         ),
                         decoration: InputDecoration(
                           hintText: 'Search for a place...',
-                          hintStyle: AppFonts(color: AppColors.textSecondary),
-                          prefixIcon: const Icon(Icons.search,
-                              color: AppColors.primary),
+                          hintStyle: AppTheme.font(color: AppTheme.textSecondary),
+                          prefixIcon: Icon(Icons.search,
+                              color: AppTheme.primary),
                           suffixIcon: _searchLoading
-                              ? const Padding(
+                              ? Padding(
                                   padding: EdgeInsets.all(15),
                                   child: SizedBox(
                                     height: 18,
                                     width: 18,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: AppColors.primary,
+                                      color: AppTheme.primary,
                                     ),
                                   ),
                                 )
@@ -456,8 +455,8 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                                   ? IconButton(
                                       tooltip: 'Clear search',
                                       onPressed: _clearSearch,
-                                      icon: const Icon(Icons.close,
-                                          color: AppColors.textSecondary),
+                                      icon: Icon(Icons.close,
+                                          color: AppTheme.textSecondary),
                                     )
                                   : null,
                           border: InputBorder.none,
@@ -481,17 +480,17 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                 right: 16,
                 child: Material(
                   elevation: 9,
-                  color: AppColors.surfaceWhite,
+                  color: AppTheme.surface,
                   borderRadius: BorderRadius.circular(18),
                   clipBehavior: Clip.antiAlias,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxHeight: resultsMaxHeight),
                     child: _searchLoading
-                        ? const Padding(
+                        ? Padding(
                             padding: EdgeInsets.all(24),
                             child: Center(
                               child: CircularProgressIndicator(
-                                color: AppColors.primary,
+                                color: AppTheme.primary,
                               ),
                             ),
                           )
@@ -516,11 +515,11 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                                     itemBuilder: (_, index) {
                                       final place = _suggestions[index];
                                       return ListTile(
-                                        leading: const CircleAvatar(
+                                        leading: CircleAvatar(
                                           backgroundColor:
-                                              AppColors.searchFieldBg,
+                                              AppTheme.searchFieldBg,
                                           child: Icon(Icons.place_outlined,
-                                              color: AppColors.primary),
+                                              color: AppTheme.primary),
                                         ),
                                         title: Text(
                                           place.name,
@@ -551,11 +550,11 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceWhite,
+                    color: AppTheme.surface,
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.shadowColor,
+                        color: AppTheme.shadowColor,
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -567,26 +566,26 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                     children: [
                       Text(
                         'Location',
-                        style: AppFonts(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
+                        style: AppTheme.font(
+                          fontSize: AppTheme.textSmall,
+                          color: AppTheme.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(Icons.place,
-                              size: 20, color: AppColors.secondary),
+                          Icon(Icons.place,
+                              size: 20, color: AppTheme.secondary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _currentAddress,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: AppFonts(
-                                color: AppColors.textPrimary,
-                                fontSize: 16,
+                              style: AppTheme.font(
+                                color: AppTheme.textPrimary,
+                                fontSize: AppTheme.textTitle,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -602,8 +601,8 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                               ? null
                               : () => Navigator.pop(context, _currentCenter),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.surfaceWhite,
+                            backgroundColor: AppTheme.primary,
+                            foregroundColor: AppTheme.onPrimary,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -611,8 +610,8 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                           ),
                           child: Text(
                             'Confirm Location',
-                            style: AppFonts(
-                              fontSize: 16,
+                            style: AppTheme.font(
+                              fontSize: AppTheme.textTitle,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -624,13 +623,13 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
               ),
 
             if (_gpsLoading)
-              const Positioned(
+              Positioned(
                 bottom: 40,
                 left: 0,
                 right: 0,
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: AppColors.primary,
+                    color: AppTheme.primary,
                   ),
                 ),
               ),

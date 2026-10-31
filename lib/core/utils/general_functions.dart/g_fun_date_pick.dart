@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
+import '../../../configs/app_theme.dart';
 
 class GFunDatePick {
   static Future<DateTime?> showCustomDatePicker(
@@ -19,17 +19,17 @@ class GFunDatePick {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primary, // Header background, selected dates
-              onPrimary: AppColors.surfaceWhite, // Text on primary color
-              surface: AppColors.surfaceWhite, // Background of the picker
-              onSurface: AppColors.textPrimary, // Default text color
+            colorScheme: ColorScheme.light(
+              primary: AppTheme.primary, // Header background, selected dates
+              onPrimary: AppTheme.onPrimary, // Text on primary color
+              surface: AppTheme.surface, // Background of the picker
+              onSurface: AppTheme.textPrimary, // Default text color
             ),
-            dialogBackgroundColor: AppColors.surfaceWhite,
+            dialogBackgroundColor: AppTheme.surface,
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor:
-                    AppColors.primary, // Button text colors (OK/CANCEL)
+                    AppTheme.primary, // Button text colors (OK/CANCEL)
               ),
             ),
           ),
@@ -49,21 +49,21 @@ class GFunDatePick {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
+            colorScheme: ColorScheme.light(
               primary:
-                  AppColors.primary, // Clock hand, selected AM/PM background
-              onPrimary: AppColors.surfaceWhite, // Text on primary elements
-              surface: AppColors.surfaceWhite, // Background of the dialog
+                  AppTheme.primary, // Clock hand, selected AM/PM background
+              onPrimary: AppTheme.onPrimary, // Text on primary elements
+              surface: AppTheme.surface, // Background of the dialog
               onSurface:
-                  AppColors.textPrimary, // Default text color (numbers, text)
-              surfaceContainerHighest: AppColors
+                  AppTheme.textPrimary, // Default text color (numbers, text)
+              surfaceContainerHighest: AppTheme
                   .locationChipBg, // Background for unselected input fields/AM-PM
             ),
-            dialogBackgroundColor: AppColors.surfaceWhite,
+            dialogBackgroundColor: AppTheme.surface,
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor:
-                    AppColors.primary, // Button text colors (OK/CANCEL)
+                    AppTheme.primary, // Button text colors (OK/CANCEL)
               ),
             ),
           ),

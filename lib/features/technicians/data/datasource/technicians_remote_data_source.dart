@@ -9,9 +9,15 @@ import 'package:visit_proof/features/technicians/domain/usecases/remove_technici
 
 import '../../../../configs/app_toasts.dart';
 import '../../../../core/local/local_pref.dart';
+import '../../../../core/network/error/error_message_model.dart';
+import '../../../../core/network/error/exception.dart';
 import '../../../../core/network/error/handle_logic_errors.dart';
 import '../../../../core/usecase/base_use_case.dart';
+import '../../../../core/utils/enums/visit_status_enum.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_token.dart';
+import '../../../clients/data/models/client_detail_model/client_visit_model.dart';
+import '../../../invoices/data/models/invoice_detail_model.dart';
+import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 
 abstract class BaseTechniciansRemoteDataSource {
   Future<List<TechnicianModel>> getTechnicians(NoParameters parameters);
@@ -54,7 +60,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
           completedPaid: 0,
           openJobs: 0,
           password: parameters.password,
-          status: TechnicianStatus.offline,
+          status: TechnicianStatus.available,
           categories: parameters.categories,
           visits: [],
         );
@@ -84,8 +90,9 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
       final technicians = list
           .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
           .toList();
-      return technicians
-          .firstWhere((element) => element.id == parameters.techID);
+      final technician =
+          technicians.firstWhere((element) => element.id == parameters.techID);
+      return _withActivity(technician, _readVisits(), _readInvoices());
     }).checkLogicErrors();
   }
 
@@ -95,10 +102,15 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
       await Future.delayed(Duration(seconds: 1));
       final list =
           LocalPref.sharedPreferences.getStringList('technicians') ?? [];
-      final clients = list
+      final technicians = list
           .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
           .toList();
-      return clients.map((e) => e.convertToTechnicianModel()).toList();
+      final visits = _readVisits();
+      final invoices = _readInvoices();
+      return technicians
+          .map((e) =>
+              _withActivity(e, visits, invoices).convertToTechnicianModel())
+          .toList();
     }).checkLogicErrors();
   }
 
@@ -111,11 +123,72 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
       final technicians = list
           .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
           .toList();
+
+      // A technician who is still working on visits cannot be removed.
+      final activeVisits = _readVisits()
+          .where((visit) =>
+              visit.technicianModel?.id == parameters.techID &&
+              _isActive(visit.status))
+          .length;
+      if (activeVisits > 0) {
+        throw ServerException(ErrorMessageModel(
+            statusMessage: 'This technician has $activeVisits active '
+                'visit${activeVisits == 1 ? '' : 's'}. Unassign or finish '
+                '${activeVisits == 1 ? 'it' : 'them'} before deleting.'));
+      }
+
       technicians.removeWhere((element) => element.id == parameters.techID);
       await LocalPref.sharedPreferences.setStringList('technicians',
           technicians.map((e) => jsonEncode(e.toJson())).toList());
       AppToasts.showMessage('Technician removed successfuly');
       return;
     }).checkLogicErrors();
+  }
+
+  List<VisitDetailModel> _readVisits() =>
+      (LocalPref.sharedPreferences.getStringList('visits') ?? [])
+          .map((e) => VisitDetailModel.fromJson(jsonDecode(e)))
+          .toList();
+
+  List<InvoiceDetailModel> _readInvoices() =>
+      (LocalPref.sharedPreferences.getStringList('invoices') ?? [])
+          .map((e) => InvoiceDetailModel.fromJson(jsonDecode(e)))
+          .toList();
+
+  bool _isActive(VisitStatus? status) =>
+      status == VisitStatus.assigned ||
+      status == VisitStatus.onWay ||
+      status == VisitStatus.inProgress;
+
+  /// Job counts and history come from the real visits and invoices,
+  /// so they are always up to date instead of being stored.
+  TechnicianDetailModel _withActivity(
+    TechnicianDetailModel technician,
+    List<VisitDetailModel> visits,
+    List<InvoiceDetailModel> invoices,
+  ) {
+    final invoiceOf = {
+      for (final invoice in invoices) invoice.visitId: invoice
+    };
+    final own = visits
+        .where((visit) =>
+            visit.technicianModel?.id != null &&
+            visit.technicianModel?.id == technician.id)
+        .toList()
+      ..sort((a, b) =>
+          (b.startDate ?? DateTime(0)).compareTo(a.startDate ?? DateTime(0)));
+    final completed =
+        own.where((visit) => visit.status == VisitStatus.completed);
+
+    return technician.copyWith(
+      openJobs: own.where((visit) => _isActive(visit.status)).length,
+      completedJobs: completed.length,
+      completedPaid: completed.fold<num>(
+          0, (sum, visit) => sum + (invoiceOf[visit.id]?.paidAmount ?? 0)),
+      visits: own
+          .map((visit) =>
+              ClientVisitModel.fromVisit(visit, invoice: invoiceOf[visit.id]))
+          .toList(),
+    );
   }
 }

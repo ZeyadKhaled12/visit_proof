@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetSwitcher extends StatelessWidget {
   const GWidgetSwitcher(
@@ -22,21 +21,21 @@ class GWidgetSwitcher extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title,
-                style: AppFonts(
-                    color: AppColors.textPrimary,
-                    fontSize: 13,
+                style: AppTheme.font(
+                    color: AppTheme.textPrimary,
+                    fontSize: AppTheme.textBody,
                     fontWeight: FontWeight.w600)),
             if (subtitle != null)
               Text(subtitle!,
                   style:
-                      AppFonts(color: AppColors.textSecondary, fontSize: 11)),
+                      AppTheme.font(color: AppTheme.textSecondary, fontSize: AppTheme.textCaption)),
           ],
         )),
         Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeTrackColor: AppColors.secondary,
-            inactiveTrackColor: AppColors.locationChipBg,
-            thumbColor: WidgetStateProperty.all(AppColors.surfaceWhite)),
+            activeTrackColor: AppTheme.secondary,
+            inactiveTrackColor: AppTheme.locationChipBg,
+            thumbColor: WidgetStateProperty.all(AppTheme.onPrimary)),
       ]);
 }

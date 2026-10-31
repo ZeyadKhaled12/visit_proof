@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../configs/app_toasts.dart';
 import '../../../../../core/utils/general_dummy_data.dart';
 import '../../../../../core/utils/general_functions.dart/g_fun_valid.dart';
@@ -120,8 +119,8 @@ class _AddClientBodyState extends State<AddClientBody> {
                         hintText: 'e.g. Zeyad Khaled',
                         maxLength: 100,
                         errorMsg: _nameErrorMsg,
-                        prefixIcon: const Icon(Icons.person_outline,
-                            color: AppColors.primary),
+                        prefixIcon: Icon(Icons.person_outline,
+                            color: AppTheme.primary),
                         textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(height: 16),
@@ -132,8 +131,8 @@ class _AddClientBodyState extends State<AddClientBody> {
                         errorMsg: _emailErrorMsg,
                         maxLength: 254,
                         keyboardType: TextInputType.emailAddress,
-                        prefixIcon: const Icon(Icons.alternate_email,
-                            color: AppColors.primary),
+                        prefixIcon: Icon(Icons.alternate_email,
+                            color: AppTheme.primary),
                         textInputAction: TextInputAction.next,
                       ),
                     ],
@@ -185,13 +184,13 @@ class _AddClientBodyState extends State<AddClientBody> {
                         enableSearch: true,
                         labelText: 'Select City *',
                         errorMsg: _cityErrorMsg,
-                        prefixIcon: const Icon(Icons.location_city,
-                            color: AppColors.primary),
+                        prefixIcon: Icon(Icons.location_city,
+                            color: AppTheme.primary),
                         items: _cities.map((city) {
                           return DropdownMenuItem(
                             value: city,
                             child: Text(city.name ?? '',
-                                style: AppFonts(fontWeight: FontWeight.w500)),
+                                style: AppTheme.font(fontWeight: FontWeight.w500)),
                           );
                         }).toList(),
                         onChanged: (val) {
@@ -203,9 +202,9 @@ class _AddClientBodyState extends State<AddClientBody> {
                       const SizedBox(height: 24),
                       Text(
                         'Address Configuration',
-                        style: AppFonts(
-                          color: AppColors.textPrimary.withValues(alpha: 0.8),
-                          fontSize: 14,
+                        style: AppTheme.font(
+                          color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                          fontSize: AppTheme.textBodyLarge,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -233,7 +232,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                     hintText: 'Any special requests or details...',
                     maxLines: 4,
                     prefixIcon:
-                        const Icon(Icons.edit_note, color: AppColors.textNotes),
+                        Icon(Icons.edit_note, color: AppTheme.textNotes),
                   )),
               const SizedBox(height: 40),
               GWidgetButton(
@@ -356,7 +355,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                 isLoading: widget.loading,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.fabShadowColor,
+                    color: AppTheme.fabShadowColor,
                     blurRadius: 15,
                     offset: const Offset(0, 6),
                   ),

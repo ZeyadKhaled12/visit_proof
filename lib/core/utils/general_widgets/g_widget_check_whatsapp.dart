@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 import '../assets_manager.dart';
 
 class GWidgetCheckWhatsapp extends StatelessWidget {
@@ -20,13 +19,13 @@ class GWidgetCheckWhatsapp extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: hasWhatsapp
-              ? AppColors.whatsappGreen.withValues(alpha: 0.1)
-              : AppColors.locationChipBg,
+              ? AppTheme.whatsappGreen.withValues(alpha: 0.1)
+              : AppTheme.locationChipBg,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: hasWhatsapp
-                ? AppColors.whatsappGreen
-                : AppColors.iconLightGrey.withValues(alpha: 0.5),
+                ? AppTheme.whatsappGreen
+                : AppTheme.iconLightGrey.withValues(alpha: 0.5),
             width: hasWhatsapp ? 1.5 : 1.0,
           ),
         ),
@@ -37,24 +36,24 @@ class GWidgetCheckWhatsapp extends StatelessWidget {
                 child: hasWhatsapp
                     ? Image(
                         image: AssetImage(IconAsset.whatsapp),
-                        color: AppColors.whatsappGreen,
+                        color: AppTheme.whatsappGreen,
                         width: 26,
                         height: 26)
                     : Image(
                         image: AssetImage(IconAsset.whatsapp),
-                        color: AppColors.iconGrey,
+                        color: AppTheme.iconGrey,
                         width: 26,
                         height: 26)),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
                 'Number includes WhatsApp',
-                style: AppFonts(
+                style: AppTheme.font(
                   color: hasWhatsapp
-                      ? AppColors.whatsappGreen
-                      : AppColors.textDarkHint,
+                      ? AppTheme.whatsappGreen
+                      : AppTheme.textDarkHint,
                   fontWeight: hasWhatsapp ? FontWeight.bold : FontWeight.w500,
-                  fontSize: 15,
+                  fontSize: AppTheme.textSubtitle,
                 ),
               ),
             ),
@@ -65,17 +64,17 @@ class GWidgetCheckWhatsapp extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: hasWhatsapp
-                    ? AppColors.whatsappGreen
-                    : AppColors.surfaceWhite,
+                    ? AppTheme.whatsappGreen
+                    : AppTheme.surface,
                 border: Border.all(
                   color: hasWhatsapp
-                      ? AppColors.whatsappGreen
-                      : AppColors.iconLightGrey,
+                      ? AppTheme.whatsappGreen
+                      : AppTheme.iconLightGrey,
                 ),
               ),
               child: hasWhatsapp
-                  ? const Icon(Icons.check,
-                      size: 16, color: AppColors.surfaceWhite)
+                  ? Icon(Icons.check,
+                      size: 16, color: AppTheme.onPrimary)
                   : null,
             ),
           ],

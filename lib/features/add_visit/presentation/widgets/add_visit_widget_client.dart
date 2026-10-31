@@ -3,8 +3,7 @@ import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/features/clients/data/models/client_detail_model/client_detail_model.dart';
 import 'package:visit_proof/features/clients/presentation/screens/add_client_scr.dart';
 
-import '../../../../configs/app_colors.dart';
-import '../../../../configs/app_fonts.dart';
+import '../../../../configs/app_theme.dart';
 import '../../../../core/utils/general_models/g_model_site.dart';
 import '../../../../core/utils/general_widgets/g_widget_add_btn.dart';
 import '../../../../core/utils/general_widgets/g_widget_button.dart';
@@ -54,7 +53,7 @@ class AddVisitWidgetClient extends StatelessWidget {
                 return DropdownMenuItem(
                   value: client,
                   child: Text(client.name ?? '',
-                      style: AppFonts(fontWeight: FontWeight.w500)),
+                      style: AppTheme.font(fontWeight: FontWeight.w500)),
                 );
               }).toList(),
               searchHintText: 'Search for client',
@@ -86,7 +85,7 @@ class AddVisitWidgetClient extends StatelessWidget {
                           value: site,
                           child: Text(
                               '${site.city?.name ?? ''} - ${site.addressDetail ?? ''}',
-                              style: AppFonts(fontWeight: FontWeight.w500)),
+                              style: AppTheme.font(fontWeight: FontWeight.w500)),
                         );
                       }).toList(),
                     ),
@@ -95,8 +94,8 @@ class AddVisitWidgetClient extends StatelessWidget {
                     GWidgetButton(
                       backgroundColor: Colors.transparent,
                       text: 'Update\nSite',
-                      colorText: AppColors.primary,
-                      fontSize: 11,
+                      colorText: AppTheme.primary,
+                      fontSize: AppTheme.textCaption,
                       onPressed: () async {
                         final data = await AppToasts.showBottomSheet(
                             context,

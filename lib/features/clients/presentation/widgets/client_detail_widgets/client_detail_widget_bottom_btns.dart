@@ -5,7 +5,7 @@ import 'package:visit_proof/features/clients/domain/usecases/get_client_detail_u
 import 'package:visit_proof/features/clients/domain/usecases/remove_client_uc.dart';
 import 'package:visit_proof/features/clients/presentation/controller/clients_bloc.dart';
 import 'package:visit_proof/features/clients/presentation/screens/add_client_scr.dart';
-import '../../../../../configs/app_colors.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../data/models/client_detail_model/client_detail_model.dart';
 
@@ -22,10 +22,10 @@ class ClientDetailWidgetBottomBtns extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
       decoration: BoxDecoration(
-        color: AppColors.surfaceWhite,
+        color: AppTheme.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppTheme.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, -3),
           )
@@ -36,14 +36,14 @@ class ClientDetailWidgetBottomBtns extends StatelessWidget {
           Expanded(
             child: GWidgetButton(
               text: 'Edit Client',
-              backgroundColor: AppColors.secondary,
+              backgroundColor: AppTheme.secondary,
               height: 42,
               raduis: 12,
-              fontSize: 14,
+              fontSize: AppTheme.textBodyLarge,
               fontWeight: FontWeight.bold,
-              widget: const Padding(
+              widget: Padding(
                 padding: EdgeInsets.only(left: 6.0),
-                child: Icon(Icons.edit_square, color: Colors.white, size: 16),
+                child: Icon(Icons.edit_square, color: AppTheme.onPrimary, size: 16),
               ),
               onPressed: () async {
                 final data = await Navigator.pushNamed(
@@ -66,20 +66,20 @@ class ClientDetailWidgetBottomBtns extends StatelessWidget {
           Expanded(
             child: GWidgetButton(
               text: 'Remove',
-              colorText: AppColors.statOrange,
-              backgroundColor: AppColors.statOrange.withValues(alpha: 0.1),
-              border: Border.all(color: AppColors.statOrange, width: 1.2),
+              colorText: AppTheme.statOrange,
+              backgroundColor: AppTheme.statOrange.withValues(alpha: 0.1),
+              border: Border.all(color: AppTheme.statOrange, width: 1.2),
               height: 42,
               raduis: 12,
-              fontSize: 14,
+              fontSize: AppTheme.textBodyLarge,
               isLoading: removeLoading,
               loadingSize: 15,
-              loadingColor: AppColors.statOrange,
+              loadingColor: AppTheme.statOrange,
               fontWeight: FontWeight.bold,
-              widget: const Padding(
+              widget: Padding(
                 padding: EdgeInsets.only(left: 6.0),
                 child: Icon(Icons.delete_outline,
-                    color: AppColors.statOrange, size: 16),
+                    color: AppTheme.statOrange, size: 16),
               ),
               onPressed: () async {
                 if (clientDetailModel.visits?.isNotEmpty ?? false) {

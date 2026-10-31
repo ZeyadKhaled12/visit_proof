@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/core/local/local_pref.dart';
 import 'package:visit_proof/core/network/error/handle_logic_errors.dart';
@@ -812,8 +813,13 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               );
             }
 
+            // Issuing starts the payment term unless a due date was set.
             return invoice.copyWith(
               issueDate: now,
+              dueDate: invoice.dueDate ??
+                  _day(now).add(
+                    Duration(days: App.invoicePaymentTermDays),
+                  ),
             );
           },
         );

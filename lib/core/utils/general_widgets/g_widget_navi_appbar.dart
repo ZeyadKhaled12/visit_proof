@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetNaviAppbar {
   static AppBar appBar(BuildContext context, String title) => AppBar(
-      backgroundColor: AppColors.primary,
+      systemOverlayStyle: AppTheme.systemOverlayOnPrimary,
+      backgroundColor: AppTheme.primary,
       elevation: 0,
       automaticallyImplyLeading: false,
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: AppTheme.onPrimary),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -18,18 +18,18 @@ class GWidgetNaviAppbar {
               width: 35,
               height: 35,
               decoration: BoxDecoration(
-                color: AppColors.scaffoldBackground,
+                color: AppTheme.scaffoldBackground,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.arrow_back_ios_new,
-                  color: AppColors.textPrimary, size: 20),
+              child: Icon(Icons.arrow_back_ios_new,
+                  color: AppTheme.textPrimary, size: 20),
             ),
           ),
           Text(
             title,
-            style: AppFonts(
-              color: Colors.white,
-              fontSize: 18,
+            style: AppTheme.font(
+              color: AppTheme.onPrimary,
+              fontSize: AppTheme.textTitleLarge,
               fontWeight: FontWeight.bold,
             ),
           ),

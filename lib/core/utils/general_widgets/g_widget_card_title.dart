@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetCardTitle extends StatelessWidget {
   const GWidgetCardTitle(
@@ -21,13 +20,13 @@ class GWidgetCardTitle extends StatelessWidget {
           padding: const EdgeInsets.only(left: 4, bottom: 12),
           child: Row(
             children: [
-              Icon(icon, color: AppColors.secondary, size: 22),
+              Icon(icon, color: AppTheme.secondary, size: 22),
               const SizedBox(width: 8),
               Text(
                 title,
-                style: AppFonts(
-                  color: AppColors.textPrimary,
-                  fontSize: 18,
+                style: AppTheme.font(
+                  color: AppTheme.textPrimary,
+                  fontSize: AppTheme.textTitleLarge,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -37,13 +36,13 @@ class GWidgetCardTitle extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           decoration: BoxDecoration(
-            color: AppColors.cardColor,
+            color: AppTheme.cardColor,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-                color: AppColors.iconLightGrey.withValues(alpha: 0.2)),
+                color: AppTheme.iconLightGrey.withValues(alpha: 0.2)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.cardShadowColor,
+                color: AppTheme.cardShadowColor,
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),

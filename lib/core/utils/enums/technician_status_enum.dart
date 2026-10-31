@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visit_proof/configs/app_colors.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 
 enum TechnicianStatus { available, busy, offline }
 
@@ -35,22 +35,22 @@ class TechnicianStatusSwitch {
 
   Color getColor() {
     if (technicianStatusID == 1) {
-      return AppColors.statGreen;
+      return AppTheme.statGreen;
     } else if (technicianStatusID == 2) {
-      return AppColors.pending;
+      return AppTheme.pending;
     } else if (technicianStatusID == 3) {
-      return AppColors.iconGrey;
+      return AppTheme.iconGrey;
     }
 
     switch (technicianStatusEnum) {
       case null:
-        return AppColors.iconGrey;
+        return AppTheme.iconGrey;
       case TechnicianStatus.available:
-        return AppColors.statGreen;
+        return AppTheme.statGreen;
       case TechnicianStatus.busy:
-        return AppColors.pending;
+        return AppTheme.pending;
       case TechnicianStatus.offline:
-        return AppColors.iconGrey;
+        return AppTheme.iconGrey;
     }
   }
 

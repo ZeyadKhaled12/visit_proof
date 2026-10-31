@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetMapPicked extends StatelessWidget {
   final LatLng? location;
@@ -20,12 +19,12 @@ class GWidgetMapPicked extends StatelessWidget {
       height: 140,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.surfaceWhite,
-        border: Border.all(color: AppColors.iconLightGrey),
+        color: AppTheme.surface,
+        border: Border.all(color: AppTheme.iconLightGrey),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppTheme.shadowColor,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -45,22 +44,22 @@ class GWidgetMapPicked extends StatelessWidget {
   // 2. Improved, cleaner placeholder UI
   Widget _buildPlaceholder() {
     return Container(
-      color: AppColors.locationChipBg,
+      color: AppTheme.locationChipBg,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.map_rounded,
             size: 26,
-            color: AppColors.primary,
+            color: AppTheme.primary,
           ),
           SizedBox(width: 12),
           Text(
             "Pick from map",
-            style: AppFonts(
-              color: AppColors.primary,
+            style: AppTheme.font(
+              color: AppTheme.primary,
               fontWeight: FontWeight.w600,
-              fontSize: 16,
+              fontSize: AppTheme.textTitle,
             ),
           ),
         ],
@@ -68,7 +67,7 @@ class GWidgetMapPicked extends StatelessWidget {
     );
   }
 
-  // 3. Static map using AppColors for the marker and overlay
+  // 3. Static map using AppTheme for the marker and overlay
   Widget _buildStaticMap() {
     return Stack(
       children: [
@@ -91,9 +90,9 @@ class GWidgetMapPicked extends StatelessWidget {
                   point: location!,
                   width: 40,
                   height: 40,
-                  child: const Icon(
+                  child: Icon(
                     Icons.location_on,
-                    color: AppColors
+                    color: AppTheme
                         .primary, // Using your brand's orange for marker
                     size: 40,
                   ),
@@ -110,11 +109,11 @@ class GWidgetMapPicked extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.surfaceWhite.withValues(alpha: 0.9),
+              color: AppTheme.onPrimary.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.shadowColor,
+                  color: AppTheme.shadowColor,
                   blurRadius: 4,
                 ),
               ],
@@ -122,13 +121,13 @@ class GWidgetMapPicked extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.edit, size: 14, color: AppColors.textPrimary),
+                Icon(Icons.edit, size: 14, color: AppTheme.textPrimary),
                 SizedBox(width: 4),
                 Text(
                   "Edit",
-                  style: AppFonts(
-                    fontSize: 14,
-                    color: AppColors.textPrimary,
+                  style: AppTheme.font(
+                    fontSize: AppTheme.textBodyLarge,
+                    color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
+import '../../../configs/app_theme.dart';
 
 enum Priority { emergency, high, normal, low }
 
@@ -40,51 +40,51 @@ class PrioritySwitch {
 
   Color getColor() {
     if (priorityID == 1) {
-      return AppColors.primary;
+      return AppTheme.primary;
     } else if (priorityID == 2) {
-      return AppColors.statOrange;
+      return AppTheme.statOrange;
     } else if (priorityID == 3) {
-      return AppColors.secondary;
+      return AppTheme.secondary;
     } else if (priorityID == 4) {
-      return AppColors.cardColor;
+      return AppTheme.iconGrey;
     }
 
     switch (priorityEnum) {
       case null:
-        return AppColors.primary;
+        return AppTheme.primary;
       case Priority.emergency:
-        return AppColors.statOrange;
+        return AppTheme.statOrange;
       case Priority.high:
-        return AppColors.secondary;
+        return AppTheme.secondary;
       case Priority.normal:
-        return AppColors.primary;
+        return AppTheme.primary;
       case Priority.low:
-        return AppColors.cardColor;
+        return AppTheme.iconGrey;
     }
   }
 
   String getText() {
     if (priorityID == 1) {
-      return 'normal';
+      return 'Normal';
     } else if (priorityID == 2) {
-      return 'emergency';
+      return 'Emergency';
     } else if (priorityID == 3) {
-      return 'high';
+      return 'High';
     } else if (priorityID == 4) {
-      return 'low';
+      return 'Low';
     }
 
     switch (priorityEnum) {
       case null:
-        return 'normal';
+        return 'Normal';
       case Priority.emergency:
-        return 'emergency';
+        return 'Emergency';
       case Priority.high:
-        return 'high';
+        return 'High';
       case Priority.normal:
-        return 'normal';
+        return 'Normal';
       case Priority.low:
-        return 'low';
+        return 'Low';
     }
   }
 }

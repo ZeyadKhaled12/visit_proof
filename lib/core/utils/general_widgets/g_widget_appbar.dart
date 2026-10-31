@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
+import 'g_widget_menu_button.dart';
 
 class GWidgetAppbar {
   final String title;
@@ -16,26 +16,32 @@ class GWidgetAppbar {
       toolbarHeight: 60,
       title: Row(
         children: [
+          // Opens the app menu when the screen sits inside it.
+          const GWidgetMenuButton(),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: .12),
+              color: AppTheme.primary.withValues(alpha: .12),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
               icon,
-              color: AppColors.primary,
+              color: AppTheme.primary,
               size: 20,
             ),
           ),
           const SizedBox(width: 14),
-          Text(
-            title,
-            style: AppFonts(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w800,
-              fontSize: 18,
-              letterSpacing: -0.5,
+          Flexible(
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTheme.font(
+                color: AppTheme.textPrimary,
+                fontWeight: FontWeight.w800,
+                fontSize: AppTheme.textTitleLarge,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ],

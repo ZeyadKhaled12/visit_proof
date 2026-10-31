@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetSearch extends StatelessWidget {
   const GWidgetSearch(
@@ -20,11 +19,11 @@ class GWidgetSearch extends StatelessWidget {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: AppColors.searchFieldBg,
+        color: AppTheme.searchFieldBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppTheme.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -35,15 +34,15 @@ class GWidgetSearch extends StatelessWidget {
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: AppFonts(color: AppColors.textLightHint, fontSize: 15),
+          hintStyle: AppTheme.font(color: AppTheme.textLightHint, fontSize: AppTheme.textSubtitle),
           prefixIcon:
-              const Icon(Icons.search_rounded, color: AppColors.iconGrey),
+              Icon(Icons.search_rounded, color: AppTheme.iconGrey),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
           suffixIcon: searchController.text.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.close_rounded,
-                      color: AppColors.iconGrey, size: 20),
+                  icon: Icon(Icons.close_rounded,
+                      color: AppTheme.iconGrey, size: 20),
                   onPressed: onClear)
               : null,
         ),

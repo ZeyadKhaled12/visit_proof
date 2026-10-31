@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../../../configs/app_colors.dart';
+import '../../../../configs/app_theme.dart';
 
 class GWidgetLoading extends StatelessWidget {
   const GWidgetLoading(
       {super.key,
       required this.isLoading,
       required this.body,
-      this.strockColor = AppColors.primary,
+      this.strockColor,
       this.opacity = 0.4});
   final bool isLoading;
-  final Color strockColor;
+  final Color? strockColor;
   final double opacity;
   final Widget body;
 
@@ -23,7 +23,7 @@ class GWidgetLoading extends StatelessWidget {
           Center(
             child: CircularProgressIndicator(
                 strokeWidth: 5,
-                valueColor: AlwaysStoppedAnimation<Color>(strockColor)),
+                valueColor: AlwaysStoppedAnimation<Color>(strockColor ?? AppTheme.primary)),
           )
       ],
     );
@@ -33,11 +33,11 @@ class GWidgetLoading extends StatelessWidget {
 class GWidgetLoadingCircle extends StatelessWidget {
   const GWidgetLoadingCircle(
       {super.key,
-      this.color = Colors.black,
+      this.color,
       this.strokeWidth = 5,
       this.height,
       this.width});
-  final Color color;
+  final Color? color;
   final double strokeWidth;
   final double? height;
   final double? width;
@@ -49,7 +49,7 @@ class GWidgetLoadingCircle extends StatelessWidget {
       width: width,
       child: CircularProgressIndicator(
           strokeWidth: strokeWidth,
-          valueColor: AlwaysStoppedAnimation<Color>(color)),
+          valueColor: AlwaysStoppedAnimation<Color>(color ?? AppTheme.primary)),
     );
   }
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 import 'g_widget_loading.dart';
 
 class GWidgetButton extends StatelessWidget {
   const GWidgetButton(
       {super.key,
       this.backgroundColor,
-      this.colorText = Colors.white,
+      this.colorText,
       this.fontSize = 18,
       this.text,
       required this.onPressed,
@@ -29,7 +28,8 @@ class GWidgetButton extends StatelessWidget {
       this.loadingStrokeWidth});
   final Color? backgroundColor;
   final Color? noEnablebackgroundColor;
-  final Color colorText;
+  /// Label color; defaults to the text color used on brand colors.
+  final Color? colorText;
   final double fontSize;
   final String? text;
   final Widget? widget;
@@ -55,8 +55,8 @@ class GWidgetButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: !isLoading && isEnable ? onPressed : null,
-        highlightColor: AppColors.secondary,
-        splashColor: AppColors.secondary,
+        highlightColor: AppTheme.secondary,
+        splashColor: AppTheme.secondary,
         child: Container(
             width: width,
             height: height,
@@ -67,14 +67,14 @@ class GWidgetButton extends StatelessWidget {
                 boxShadow: boxShadow,
                 gradient: gradient,
                 color: isEnable
-                    ? backgroundColor ?? AppColors.primary
+                    ? backgroundColor ?? AppTheme.primary
                     : noEnablebackgroundColor ??
-                        Colors.grey.withValues(alpha: .8),
+                        AppTheme.iconGrey.withValues(alpha: .8),
                 borderRadius: BorderRadius.circular(raduis)),
             child: isLoading
                 ? Center(
                     child: GWidgetLoadingCircle(
-                        color: loadingColor ?? Colors.white,
+                        color: loadingColor ?? AppTheme.onPrimary,
                         width: loadingSize,
                         strokeWidth: loadingStrokeWidth ?? 5,
                         height: loadingSize),
@@ -85,8 +85,10 @@ class GWidgetButton extends StatelessWidget {
                       if (text != null)
                         Text(text ?? '',
                             textAlign: TextAlign.center,
-                            style: AppFonts(
-                                color: isEnable ? colorText : Colors.white70,
+                            style: AppTheme.font(
+                                color: isEnable
+                                    ? colorText ?? AppTheme.onPrimary
+                                    : AppTheme.onPrimary.withValues(alpha: .7),
                                 fontSize: fontSize,
                                 fontWeight: fontWeight ?? FontWeight.w600)),
                       if (widget != null) widget!

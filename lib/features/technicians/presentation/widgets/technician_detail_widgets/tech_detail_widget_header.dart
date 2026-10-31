@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/enums/technician_status_enum.dart';
 
 import '../../../../../app/app.dart';
-import '../../../../../configs/app_colors.dart';
-import '../../../../../configs/app_fonts.dart';
+import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../data/models/technician_detail_model.dart';
@@ -20,8 +19,8 @@ class TechDetailWidgetHeader extends StatelessWidget {
       children: [
         Container(
           height: 90,
-          decoration: const BoxDecoration(
-            color: AppColors.primary,
+          decoration: BoxDecoration(
+            color: AppTheme.primary,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24),
@@ -32,11 +31,11 @@ class TechDetailWidgetHeader extends StatelessWidget {
           margin: const EdgeInsets.only(top: 12, left: 16, right: 16),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.surfaceWhite,
+            color: AppTheme.surface,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: AppColors.shadowColor,
+                color: AppTheme.shadowColor,
                 blurRadius: 15,
                 offset: const Offset(0, 5),
               )
@@ -51,10 +50,10 @@ class TechDetailWidgetHeader extends StatelessWidget {
                     width: 55,
                     height: 55,
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withValues(alpha: 0.15),
+                      color: AppTheme.secondary.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                       border:
-                          Border.all(color: AppColors.secondary, width: 1.5),
+                          Border.all(color: AppTheme.secondary, width: 1.5),
                     ),
                     child: Center(
                       child: Text(
@@ -62,9 +61,9 @@ class TechDetailWidgetHeader extends StatelessWidget {
                                 ?.substring(0, 1)
                                 .toUpperCase() ??
                             'T',
-                        style: AppFonts(
-                          color: AppColors.secondary,
-                          fontSize: 24,
+                        style: AppTheme.font(
+                          color: AppTheme.secondary,
+                          fontSize: AppTheme.textDisplay,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -77,9 +76,9 @@ class TechDetailWidgetHeader extends StatelessWidget {
                       children: [
                         Text(
                           technicianDetailModel.name ?? 'Unknown Technician',
-                          style: AppFonts(
-                            color: AppColors.textPrimary,
-                            fontSize: 18,
+                          style: AppTheme.font(
+                            color: AppTheme.textPrimary,
+                            fontSize: AppTheme.textTitleLarge,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -102,9 +101,9 @@ class TechDetailWidgetHeader extends StatelessWidget {
                                         technicianDetailModel.status)
                                 .getText()
                                 .toUpperCase(),
-                            style: AppFonts(
-                                color: AppColors.cardColor,
-                                fontSize: 12,
+                            style: AppTheme.font(
+                                color: AppTheme.cardColor,
+                                fontSize: AppTheme.textSmall,
                                 fontWeight: FontWeight.w600),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -122,7 +121,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                     child: _ContactRowWidget(
                       icon: Icons.phone,
                       text: technicianDetailModel.phone ?? 'No Phone',
-                      iconColor: AppColors.primary,
+                      iconColor: AppTheme.primary,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -130,7 +129,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                     height: 34,
                     paddingLeftRight: 5,
                     raduis: 10,
-                    backgroundColor: AppColors.primary.withValues(alpha: .8),
+                    backgroundColor: AppTheme.primary.withValues(alpha: .8),
                     paddingTopBottom: 0,
                     onPressed: () async {
                       if (technicianDetailModel.phone == null) return;
@@ -139,13 +138,13 @@ class TechDetailWidgetHeader extends StatelessWidget {
                     },
                     widget: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.phone,
                           size: 14,
-                          color: AppColors.cardColor,
+                          color: AppTheme.cardColor,
                         ),
-                        const Icon(Icons.navigate_next_outlined,
-                            color: AppColors.cardColor, size: 14)
+                        Icon(Icons.navigate_next_outlined,
+                            color: AppTheme.cardColor, size: 14)
                       ],
                     ),
                   ),
@@ -155,10 +154,10 @@ class TechDetailWidgetHeader extends StatelessWidget {
               _ContactRowWidget(
                 icon: Icons.email,
                 text: technicianDetailModel.email ?? 'No Email',
-                iconColor: AppColors.statOrange,
+                iconColor: AppTheme.statOrange,
               ),
               const SizedBox(height: 16),
-              Divider(color: AppColors.locationChipBg, thickness: 1),
+              Divider(color: AppTheme.locationChipBg, thickness: 1),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -168,27 +167,27 @@ class TechDetailWidgetHeader extends StatelessWidget {
                         title: 'Open Jobs',
                         value:
                             technicianDetailModel.openJobs?.toString() ?? '0',
-                        color: AppColors.pending),
+                        color: AppTheme.pending),
                   ),
                   Container(
-                      height: 30, width: 1, color: AppColors.locationChipBg),
+                      height: 30, width: 1, color: AppTheme.locationChipBg),
                   Expanded(
                     child: _StatItemWidget(
                         title: 'Completed',
                         value:
                             technicianDetailModel.completedJobs?.toString() ??
                                 '0',
-                        color: AppColors.primary),
+                        color: AppTheme.primary),
                   ),
                   Container(
-                      height: 30, width: 1, color: AppColors.locationChipBg),
+                      height: 30, width: 1, color: AppTheme.locationChipBg),
                   Expanded(
                     flex: 2,
                     child: _StatItemWidget(
                         title: 'Total Paid',
                         value:
                             '${App.currency} ${technicianDetailModel.completedPaid ?? 0}',
-                        color: AppColors.statGreen),
+                        color: AppTheme.statGreen),
                   ),
                 ],
               ),
@@ -232,8 +231,8 @@ class _ContactRowWidget extends StatelessWidget {
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppFonts(
-                  color: iconColor, fontSize: 13, fontWeight: FontWeight.bold),
+              style: AppTheme.font(
+                  color: iconColor, fontSize: AppTheme.textBody, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -256,7 +255,7 @@ class _StatItemWidget extends StatelessWidget {
         Text(
           value,
           style:
-              AppFonts(color: color, fontSize: 20, fontWeight: FontWeight.bold),
+              AppTheme.font(color: color, fontSize: AppTheme.textHeadline, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -264,7 +263,7 @@ class _StatItemWidget extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           title,
-          style: AppFonts(color: AppColors.textSecondary, fontSize: 12),
+          style: AppTheme.font(color: AppTheme.textSecondary, fontSize: AppTheme.textSmall),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

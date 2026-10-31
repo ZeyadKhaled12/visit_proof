@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 
 class GWidgetNaviBody extends StatelessWidget {
   const GWidgetNaviBody({super.key, required this.title, required this.body});
@@ -11,7 +10,7 @@ class GWidgetNaviBody extends StatelessWidget {
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: AppTheme.scaffoldBackground,
         body: SafeArea(
           top: false,
           child: Column(
@@ -25,10 +24,10 @@ class GWidgetNaviBody extends StatelessWidget {
                   right: 20,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceWhite,
+                  color: AppTheme.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.shadowColor,
+                      color: AppTheme.shadowColor,
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     )
@@ -45,19 +44,19 @@ class GWidgetNaviBody extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppColors.scaffoldBackground,
+                          color: AppTheme.scaffoldBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.arrow_back_ios_new,
-                            color: AppColors.textPrimary, size: 20),
+                        child: Icon(Icons.arrow_back_ios_new,
+                            color: AppTheme.textPrimary, size: 20),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Text(
                       title,
-                      style: AppFonts(
-                        color: AppColors.textPrimary,
-                        fontSize: 22,
+                      style: AppTheme.font(
+                        color: AppTheme.textPrimary,
+                        fontSize: AppTheme.textHeadline,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
                       ),

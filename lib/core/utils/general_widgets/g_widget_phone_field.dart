@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
-import '../../../configs/app_colors.dart';
-import '../../../configs/app_fonts.dart';
+import '../../../configs/app_theme.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 
 class GWidgetPhoneField extends StatelessWidget {
@@ -60,41 +59,41 @@ class GWidgetPhoneField extends StatelessWidget {
       ],
       keyboardType: TextInputType.number,
       pickerDialogStyle: PickerDialogStyle(
-        backgroundColor: AppColors.surfaceWhite,
+        backgroundColor: AppTheme.surface,
         padding: const EdgeInsets.all(20),
         searchFieldPadding: const EdgeInsets.only(bottom: 16),
         // Soft divider between countries
-        listTileDivider: const Divider(
-          color: AppColors.locationChipBg,
+        listTileDivider: Divider(
+          color: AppTheme.locationChipBg,
           thickness: 1.5,
           height: 1.5,
         ),
 
         // Styling the country names
-        countryNameStyle: AppFonts(
-          color: AppColors.textPrimary,
-          fontSize: 16,
+        countryNameStyle: AppTheme.font(
+          color: AppTheme.textPrimary,
+          fontSize: AppTheme.textTitle,
           fontWeight: FontWeight.w600,
         ),
         // Adding a creative touch: making the country dial code your relaxing purple
-        countryCodeStyle: AppFonts(
-          color: AppColors.primary,
-          fontSize: 14,
+        countryCodeStyle: AppTheme.font(
+          color: AppTheme.primary,
+          fontSize: AppTheme.textBodyLarge,
           fontWeight: FontWeight.bold,
         ),
-        searchFieldCursorColor: AppColors.primary,
+        searchFieldCursorColor: AppTheme.primary,
         // Soft, borderless search field
         searchFieldInputDecoration: InputDecoration(
-          fillColor: AppColors.locationChipBg,
+          fillColor: AppTheme.locationChipBg,
           filled: true,
           hintText: 'Search country...',
-          hintStyle: AppFonts(
-            color: AppColors.textLightHint,
-            fontSize: 14,
+          hintStyle: AppTheme.font(
+            color: AppTheme.textLightHint,
+            fontSize: AppTheme.textBodyLarge,
           ),
-          prefixIcon: const Icon(
+          prefixIcon: Icon(
             Icons.search_rounded,
-            color: AppColors.primary,
+            color: AppTheme.primary,
           ),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -111,69 +110,69 @@ class GWidgetPhoneField extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(24),
             borderSide:
-                const BorderSide(color: AppColors.secondary, width: 1.5),
+                BorderSide(color: AppTheme.secondary, width: 1.5),
           ),
         ),
       ),
 
       // Styling the input text
-      style: AppFonts(
-        color: AppColors.textPrimary,
-        fontSize: 16,
+      style: AppTheme.font(
+        color: AppTheme.textPrimary,
+        fontSize: AppTheme.textTitle,
         fontWeight: FontWeight.w500,
       ),
-      cursorColor: AppColors.primary,
+      cursorColor: AppTheme.primary,
 
       // Styling the country code dropdown shown in the main UI
-      dropdownTextStyle: AppFonts(
-        color: AppColors.textPrimary,
-        fontSize: 16,
+      dropdownTextStyle: AppTheme.font(
+        color: AppTheme.textPrimary,
+        fontSize: AppTheme.textTitle,
         fontWeight: FontWeight.w500,
       ),
-      dropdownIcon: const Icon(
+      dropdownIcon: Icon(
         Icons.keyboard_arrow_down_rounded, // Slightly softer icon than default
-        color: AppColors.textSecondary,
+        color: AppTheme.textSecondary,
       ),
 
       // Your exact UI Decoration for the main text field
       decoration: InputDecoration(
-        fillColor: AppColors.searchFieldBg,
+        fillColor: AppTheme.searchFieldBg,
         filled: true,
         hintText: hintText,
-        hintStyle: AppFonts(color: AppColors.textLightHint, fontSize: 14),
+        hintStyle: AppTheme.font(color: AppTheme.textLightHint, fontSize: AppTheme.textBodyLarge),
         labelText: labelText,
         errorText: errorMsg,
-        errorStyle: AppFonts(
-            color: AppColors.statOrange,
-            fontSize: 12.9,
+        errorStyle: AppTheme.font(
+            color: AppTheme.statOrange,
+            fontSize: AppTheme.textSmall,
             fontWeight: FontWeight.w500),
-        labelStyle: AppFonts(
-            color: AppColors.textSecondary,
-            fontSize: 14,
+        labelStyle: AppTheme.font(
+            color: AppTheme.textSecondary,
+            fontSize: AppTheme.textBodyLarge,
             fontWeight: FontWeight.w600),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide:
-              const BorderSide(color: AppColors.iconLightGrey, width: 1),
+              BorderSide(color: AppTheme.iconLightGrey, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderSide: BorderSide(color: AppTheme.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.statOrange, width: 1.5),
+          borderSide: BorderSide(color: AppTheme.statOrange, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.statOrange, width: 2),
+          borderSide: BorderSide(color: AppTheme.statOrange, width: 2),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-              color: AppColors.iconLightGrey.withValues(alpha: 0.5), width: 1),
+              color: AppTheme.iconLightGrey.withValues(alpha: 0.5), width: 1),
         ),
       ),
     );

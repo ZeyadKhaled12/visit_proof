@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visit_proof/configs/app_colors.dart';
-import 'package:visit_proof/configs/app_fonts.dart';
+import 'package:visit_proof/configs/app_theme.dart';
 
 class InvDetailWidgetInfoLine extends StatelessWidget {
   const InvDetailWidgetInfoLine({
@@ -24,9 +23,9 @@ class InvDetailWidgetInfoLine extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: AppFonts(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
+                style: AppTheme.font(
+                  fontSize: AppTheme.textBody,
+                  color: AppTheme.textSecondary,
                 ),
               ),
             ),
@@ -35,9 +34,9 @@ class InvDetailWidgetInfoLine extends StatelessWidget {
               child: Text(
                 value,
                 textAlign: TextAlign.end,
-                style: AppFonts(
-                  fontSize: emphasize ? 16 : 13,
-                  color: valueColor ?? AppColors.textPrimary,
+                style: AppTheme.font(
+                  fontSize: emphasize ? AppTheme.textTitle : AppTheme.textBody,
+                  color: valueColor ?? AppTheme.textPrimary,
                   fontWeight: emphasize ? FontWeight.w800 : FontWeight.w600,
                 ),
               ),
@@ -63,11 +62,11 @@ class InvDetailWidgetPanel extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: AppColors.surfaceWhite,
+          color: AppTheme.surface,
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
-              color: AppColors.cardShadowColor,
+              color: AppTheme.cardShadowColor,
               blurRadius: 24,
               offset: const Offset(0, 6),
             ),
@@ -81,12 +80,12 @@ class InvDetailWidgetPanel extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(9),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: .09),
+                    color: AppTheme.primary.withValues(alpha: .09),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     icon,
-                    color: AppColors.primary,
+                    color: AppTheme.primary,
                     size: 19,
                   ),
                 ),
@@ -94,9 +93,9 @@ class InvDetailWidgetPanel extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: AppFonts(
-                      fontSize: 15,
-                      color: AppColors.textPrimary,
+                    style: AppTheme.font(
+                      fontSize: AppTheme.textSubtitle,
+                      color: AppTheme.textPrimary,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -132,8 +131,8 @@ class InvDetailWidgetBadge extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: AppFonts(
-            fontSize: 12,
+          style: AppTheme.font(
+            fontSize: AppTheme.textSmall,
             color: color,
             fontWeight: FontWeight.w800,
           ),
