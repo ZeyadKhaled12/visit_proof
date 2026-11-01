@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/features/clients/data/models/client_detail_model/client_detail_model.dart';
@@ -38,12 +39,12 @@ class AddVisitWidgetClient extends StatelessWidget {
   Widget build(BuildContext context) {
     return GWidgetCardTitle(
         icon: Icons.person_pin_circle,
-        title: 'Client & Site',
+        title: 'Client & Site'.tr,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             GWidgetDropDown<VisitClientModel>(
-              labelText: 'Client',
+              labelText: 'Client'.tr,
               enableSearch: true,
               errorMsg: clientErrorMsg,
               value: selectedClient,
@@ -56,11 +57,11 @@ class AddVisitWidgetClient extends StatelessWidget {
                       style: AppTheme.font(fontWeight: FontWeight.w500)),
                 );
               }).toList(),
-              searchHintText: 'Search for client',
+              searchHintText: 'Search for client'.tr,
             ),
             SizedBox(height: 10),
             GWidgetAddBtn(
-                text: 'Add New Client',
+                text: 'Add New Client'.tr,
                 onTap: () async {
                   final data = await Navigator.pushNamed(
                       context, AddClientScr.route,
@@ -76,7 +77,7 @@ class AddVisitWidgetClient extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GWidgetDropDown<GModelSite>(
-                      labelText: 'Site',
+                      labelText: 'Site'.tr,
                       value: selectedSite,
                       errorMsg: siteErrorMsg,
                       onChanged: onSiteChanged,
@@ -93,7 +94,7 @@ class AddVisitWidgetClient extends StatelessWidget {
                   if (selectedSite != null)
                     GWidgetButton(
                       backgroundColor: Colors.transparent,
-                      text: 'Update\nSite',
+                      text: 'Update\nSite'.tr,
                       colorText: AppTheme.primary,
                       fontSize: AppTheme.textCaption,
                       onPressed: () async {
@@ -112,7 +113,7 @@ class AddVisitWidgetClient extends StatelessWidget {
               ),
               SizedBox(height: 10),
               GWidgetAddBtn(
-                  text: 'Add New Site',
+                  text: 'Add New Site'.tr,
                   onTap: () async {
                     final data = await AppToasts.showBottomSheet(
                         context, AddVisitWidgetSiteSheet());

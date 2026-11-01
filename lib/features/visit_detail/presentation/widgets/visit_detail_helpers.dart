@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -33,14 +34,14 @@ class VisitDetailHelpers {
     if (minutes == null || minutes <= 0) return '—';
     final hours = minutes ~/ 60;
     final rest = minutes % 60;
-    if (hours == 0) return '$rest min';
-    return rest == 0 ? '$hours h' : '$hours h $rest min';
+    if (hours == 0) return '{0} min'.trArgs([rest]);
+    return rest == 0 ? '$hours h' : '{0} h {1} min'.trArgs([hours, rest]);
   }
 
   static String site(GModelSite? site) {
     final parts = [site?.city?.name, site?.addressDetail]
         .where((e) => (e ?? '').trim().isNotEmpty);
-    return parts.isEmpty ? 'No site' : parts.join(' - ');
+    return parts.isEmpty ? 'No site'.tr : parts.join(' - ');
   }
 
   static String initial(String? name) =>
@@ -68,19 +69,19 @@ class VisitDetailHelpers {
   static String statusActionLabel(VisitStatus from, VisitStatus to) {
     switch (to) {
       case VisitStatus.draft:
-        return from == VisitStatus.cancel ? 'Reopen as draft' : 'Back to draft';
+        return from == VisitStatus.cancel ? 'Reopen as draft'.tr : 'Back to draft'.tr;
       case VisitStatus.scheduled:
-        return 'Schedule visit';
+        return 'Schedule visit'.tr;
       case VisitStatus.assigned:
-        return 'Back to assigned';
+        return 'Back to assigned'.tr;
       case VisitStatus.onWay:
-        return 'Start trip';
+        return 'Start trip'.tr;
       case VisitStatus.inProgress:
-        return 'Start work';
+        return 'Start work'.tr;
       case VisitStatus.completed:
-        return 'Complete visit';
+        return 'Complete visit'.tr;
       case VisitStatus.cancel:
-        return 'Cancel visit';
+        return 'Cancel visit'.tr;
     }
   }
 
@@ -106,19 +107,19 @@ class VisitDetailHelpers {
   static String statusHint(VisitStatus status) {
     switch (status) {
       case VisitStatus.draft:
-        return 'Complete the visit info, then schedule it.';
+        return 'Complete the visit info, then schedule it.'.tr;
       case VisitStatus.scheduled:
-        return 'Assign a technician to dispatch this visit.';
+        return 'Assign a technician to dispatch this visit.'.tr;
       case VisitStatus.assigned:
-        return 'Waiting for the technician to start the trip.';
+        return 'Waiting for the technician to start the trip.'.tr;
       case VisitStatus.onWay:
-        return 'The technician is heading to the site.';
+        return 'The technician is heading to the site.'.tr;
       case VisitStatus.inProgress:
-        return 'Work is in progress at the site.';
+        return 'Work is in progress at the site.'.tr;
       case VisitStatus.completed:
-        return 'Visit done. Issue the invoice and collect the payment.';
+        return 'Visit done. Issue the invoice and collect the payment.'.tr;
       case VisitStatus.cancel:
-        return 'This visit is cancelled. Reopen it to plan it again.';
+        return 'This visit is cancelled. Reopen it to plan it again.'.tr;
     }
   }
 
@@ -131,14 +132,14 @@ class VisitDetailHelpers {
     final value = (text ?? '').trim();
 
     if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(value)) {
-      return 'Enter a valid amount (up to 2 decimals)';
+      return 'Enter a valid amount (up to 2 decimals)'.tr;
     }
 
     final number = double.parse(value);
     if (allowZero ? number < 0 : number <= 0) {
-      return allowZero ? 'Amount cannot be negative' : 'Amount must be above zero';
+      return allowZero ? 'Amount cannot be negative'.tr : 'Amount must be above zero'.tr;
     }
-    if (number > max + 0.001) return 'Maximum allowed: ${money(max)}';
+    if (number > max + 0.001) return 'Maximum allowed: {0}'.trArgs([money(max)]);
 
     return null;
   }
@@ -146,10 +147,10 @@ class VisitDetailHelpers {
   static String? reasonError(String? text, {required bool required}) {
     final length = (text ?? '').trim().length;
     if (required && length < VisitRules.minReasonLength) {
-      return 'Enter at least ${VisitRules.minReasonLength} characters';
+      return 'Enter at least {0} characters'.trArgs([VisitRules.minReasonLength]);
     }
     if (length > VisitRules.maxReasonLength) {
-      return 'Keep it under ${VisitRules.maxReasonLength} characters';
+      return 'Keep it under {0} characters'.trArgs([VisitRules.maxReasonLength]);
     }
     return null;
   }
@@ -163,7 +164,7 @@ class VisitDetailHelpers {
       await GFunLaunch.navigateToGoogleMaps(
           latitude: site.latitude!, longitude: site.longitude!);
     } catch (_) {
-      AppToasts.showMessage('Could not open Google Maps', isError: true);
+      AppToasts.showMessage('Could not open Google Maps'.tr, isError: true);
     }
   }
 }

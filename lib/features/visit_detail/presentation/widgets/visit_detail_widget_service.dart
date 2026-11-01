@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -22,10 +23,10 @@ class VisitDetailWidgetService extends StatelessWidget {
     final after = visit.requireAfterWorkPhotos ?? false;
 
     return VisitDetailSection(
-      title: 'Service',
+      title: 'Service'.tr,
       icon: Icons.build_circle_rounded,
       color: AppTheme.primary,
-      actionText: 'Change',
+      actionText: 'Change'.tr,
       actionIcon: Icons.swap_horiz_rounded,
       onAction: VisitRules.canChangeService(visit, invoice)
           ? () => VisitDetailWidgetActionSheet.show(
@@ -40,14 +41,14 @@ class VisitDetailWidgetService extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(visit.serviceName ?? 'No service selected',
+                    Text(visit.serviceName ?? 'No service selected'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textSubtitle,
                             fontWeight: FontWeight.w800)),
                     const SizedBox(height: 6),
                     VisitDetailPill(
-                        text: visit.category?.name ?? 'Uncategorized',
+                        text: visit.category?.name ?? 'Uncategorized'.tr,
                         color: AppTheme.primary,
                         icon: Icons.category_rounded),
                   ],
@@ -65,8 +66,8 @@ class VisitDetailWidgetService extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           if (tasks.isEmpty)
-            const VisitDetailEmpty(
-                icon: Icons.checklist_rounded, text: 'No checklist tasks')
+            VisitDetailEmpty(
+                icon: Icons.checklist_rounded, text: 'No checklist tasks'.tr)
           else
             Container(
               padding: const EdgeInsets.all(12),
@@ -77,7 +78,7 @@ class VisitDetailWidgetService extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Checklist · ${tasks.length} tasks',
+                  Text('Checklist · {0} tasks'.trArgs([tasks.length]),
                       style: AppTheme.font(
                           color: AppTheme.textPrimary,
                           fontSize: AppTheme.textSmall,
@@ -110,17 +111,17 @@ class VisitDetailWidgetService extends StatelessWidget {
             children: [
               if (before)
                 VisitDetailPill(
-                    text: 'Before photos required',
+                    text: 'Before photos required'.tr,
                     color: AppTheme.secondary,
                     icon: Icons.photo_camera_rounded),
               if (after)
                 VisitDetailPill(
-                    text: 'After photos required',
+                    text: 'After photos required'.tr,
                     color: AppTheme.statGreen,
                     icon: Icons.photo_camera_back_rounded),
               if (!before && !after)
                 VisitDetailPill(
-                    text: 'No photo proof required',
+                    text: 'No photo proof required'.tr,
                     color: AppTheme.iconGrey,
                     icon: Icons.no_photography_rounded),
             ],

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,8 +39,8 @@ class _VisitDetailWidgetCommentSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
-      title: 'Add a note',
-      subtitle: 'Notes are added to the visit activity log.',
+      title: 'Add a note'.tr,
+      subtitle: 'Notes are added to the visit activity log.'.tr,
       requestState: (state) => state.addCommentRequestState,
       builder: (context, state, loading) => Form(
         key: _form,
@@ -48,18 +49,18 @@ class _VisitDetailWidgetCommentSheetState
           children: [
             GWidgetTextField(
               controller: _comment,
-              labelText: 'Note',
-              hintText: 'e.g., Client asked to call 30 minutes before arrival',
+              labelText: 'Note'.tr,
+              hintText: 'e.g., Client asked to call 30 minutes before arrival'.tr,
               maxLines: 4,
               maxLength: VisitRules.maxCommentLength,
               validator: (v) =>
                   (v?.trim().length ?? 0) < VisitRules.minCommentLength
-                      ? 'Write at least ${VisitRules.minCommentLength} characters'
+                      ? 'Write at least {0} characters'.trArgs([VisitRules.minCommentLength])
                       : null,
             ),
             const SizedBox(height: 16),
             GWidgetButton(
-              text: 'Add note',
+              text: 'Add note'.tr,
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               isLoading: loading,

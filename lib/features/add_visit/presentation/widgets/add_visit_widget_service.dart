@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_add_btn.dart';
 
@@ -34,12 +35,12 @@ class AddVisitWidgetService extends StatelessWidget {
   Widget build(BuildContext context) {
     return GWidgetCardTitle(
         icon: Icons.build_rounded,
-        title: 'Service',
+        title: 'Service'.tr,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             GWidgetDropDown<ServiceModel>(
-              labelText: 'Service',
+              labelText: 'Service'.tr,
               enableSearch: true,
               loading: servicesLoading,
               errorMsg: serviceErrorMsg,
@@ -62,11 +63,11 @@ class AddVisitWidgetService extends StatelessWidget {
                   ),
                 );
               }).toList(),
-              searchHintText: 'Search for client',
+              searchHintText: 'Search for client'.tr,
             ),
             SizedBox(height: 10),
             GWidgetAddBtn(
-                text: 'Add New Service',
+                text: 'Add New Service'.tr,
                 onTap: () async {
                   final data = await AddServiceScr.show(context);
                   if (data is ServiceModel) {
@@ -87,15 +88,15 @@ class AddVisitWidgetService extends StatelessWidget {
               ),
             SizedBox(height: 16),
             GWidgetSwitcher(
-                title: 'Require Before-Work Photos',
+                title: 'Require Before-Work Photos'.tr,
                 value: requiresBeforePhotos,
                 onChanged: onRequiresBefore,
-                subtitle: 'Technician supplies proof during the visit'),
+                subtitle: 'Technician supplies proof during the visit'.tr),
             GWidgetSwitcher(
-                title: 'Require After-Work Photos',
+                title: 'Require After-Work Photos'.tr,
                 value: requiresAfterPhotos,
                 onChanged: onRequiresAfter,
-                subtitle: 'Technician supplies proof during the visit'),
+                subtitle: 'Technician supplies proof during the visit'.tr),
           ],
         ));
   }
@@ -148,7 +149,7 @@ class _ServiceSummaryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  service.category?.name ?? 'Uncategorized',
+                  service.category?.name ?? 'Uncategorized'.tr,
                   style: AppTheme.font(
                     color: AppTheme.primary,
                     fontSize: AppTheme.textSmall,
@@ -173,7 +174,7 @@ class _ServiceSummaryCard extends StatelessWidget {
 
           // Service Name
           Text(
-            service.serviceName ?? 'Unnamed Service',
+            service.serviceName ?? 'Unnamed Service'.tr,
             style: AppTheme.font(
               color: AppTheme.textPrimary,
               fontSize: AppTheme.textTitle,
@@ -232,12 +233,12 @@ class _ServiceSummaryCard extends StatelessWidget {
             children: [
               _buildInfoChip(
                 icon: Icons.schedule_rounded,
-                text: '${service.duration ?? 0} Min',
+                text: '{0} Min'.trArgs([service.duration ?? 0]),
               ),
               const SizedBox(width: 16),
               _buildInfoChip(
                 icon: Icons.checklist_rtl_rounded,
-                text: '$taskCount Task${taskCount == 1 ? '' : 's'}',
+                text: '{0} Task{1}'.trArgs([taskCount, taskCount == 1 ? '' : 's']),
               ),
               const Spacer(),
               TextButton(
@@ -257,7 +258,7 @@ class _ServiceSummaryCard extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Update',
+                  'Update'.tr,
                   style: AppTheme.font(
                     fontSize: AppTheme.textBody,
                     fontWeight: FontWeight.bold,

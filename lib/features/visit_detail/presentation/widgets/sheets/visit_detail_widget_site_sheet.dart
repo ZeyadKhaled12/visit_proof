@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,14 +50,14 @@ class _VisitDetailWidgetSiteSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
-      title: 'Change site',
-      subtitle: 'Current: ${VisitDetailHelpers.site(widget.visit.site)}',
+      title: 'Change site'.tr,
+      subtitle: 'Current: {0}'.trArgs([VisitDetailHelpers.site(widget.visit.site)]),
       requestState: (state) => state.changeSiteRequestState,
       builder: (context, state, loading) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           GWidgetDropDown<GModelSite>(
-            labelText: 'Site',
+            labelText: 'Site'.tr,
             value: _selected,
             prefixIcon:
                 Icon(Icons.location_on_rounded, color: AppTheme.statOrange),
@@ -72,16 +73,15 @@ class _VisitDetailWidgetSiteSheetState
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerRight,
-            child: GWidgetAddBtn(text: 'Add new site', onTap: _addSite),
+            child: GWidgetAddBtn(text: 'Add new site'.tr, onTap: _addSite),
           ),
           const SizedBox(height: 10),
           VisitDetailNotice(
-              text: 'A draft invoice keeps a copy of the site, so it is '
-                  'updated too. Issued invoices are not changed.',
+              text: 'A draft invoice keeps a copy of the site, so it is updated too. Issued invoices are not changed.'.tr,
               color: AppTheme.secondary),
           const SizedBox(height: 16),
           GWidgetButton(
-            text: 'Save site',
+            text: 'Save site'.tr,
             fontSize: AppTheme.textSubtitle,
             raduis: 14,
             backgroundColor: AppTheme.secondary,

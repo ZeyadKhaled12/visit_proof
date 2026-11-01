@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
@@ -113,8 +114,8 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
             'services', services.map((e) => jsonEncode(e.toJson())).toList());
       }
       AppToasts.showMessage(parameters.id != null
-          ? 'Service updated successfuly'
-          : 'Service added successfuly');
+          ? 'Service updated successfuly'.tr
+          : 'Service added successfuly'.tr);
       return service;
     }).checkLogicErrors();
   }
@@ -131,7 +132,7 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
       await LocalPref.sharedPreferences.setStringList(
           'services', services.map((e) => jsonEncode(e.toJson())).toList());
 
-      AppToasts.showMessage('Service removed successfuly');
+      AppToasts.showMessage('Service removed successfuly'.tr);
       return services;
     }).checkLogicErrors();
   }

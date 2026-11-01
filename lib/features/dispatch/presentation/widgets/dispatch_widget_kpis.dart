@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -32,28 +33,28 @@ class DispatchWidgetKpis extends StatelessWidget {
       child: Row(
         children: [
           _Kpi(
-              label: 'Unassigned',
+              label: 'Unassigned'.tr,
               value: unassigned,
               icon: Icons.inbox_rounded,
               color: AppTheme.pending,
               onTap: onUnassigned),
           const SizedBox(width: 8),
           _Kpi(
-              label: 'Conflicts',
+              label: 'Conflicts'.tr,
               value: conflicts,
               icon: Icons.warning_amber_rounded,
               color: AppTheme.statOrange,
               onTap: onConflicts),
           const SizedBox(width: 8),
           _Kpi(
-              label: 'Late',
+              label: 'Late'.tr,
               value: late,
               icon: Icons.timer_off_rounded,
               color: AppTheme.primary,
               onTap: onLate),
           const SizedBox(width: 8),
           _Kpi(
-              label: 'This day',
+              label: 'This day'.tr,
               value: planned,
               icon: Icons.event_available_rounded,
               color: AppTheme.statGreen,

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -15,10 +16,10 @@ class VisitDetailWidgetInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VisitDetailSection(
-      title: 'Job Notes',
+      title: 'Job Notes'.tr,
       icon: Icons.sticky_note_2_rounded,
       color: AppTheme.statOrange,
-      actionText: 'Edit',
+      actionText: 'Edit'.tr,
       onAction: VisitRules.canEditInfo(visit)
           ? () => VisitDetailWidgetActionSheet.show(
               context, VisitDetailWidgetInfoSheet(visit: visit))
@@ -28,7 +29,7 @@ class VisitDetailWidgetInfo extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('Priority',
+              Text('Priority'.tr,
                   style: AppTheme.font(
                       color: AppTheme.textSecondary,
                       fontSize: AppTheme.textBody,
@@ -43,12 +44,12 @@ class VisitDetailWidgetInfo extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           VisitDetailTextBlock(
-              title: 'Problem',
+              title: 'Problem'.tr,
               text: visit.problemDescription,
               color: AppTheme.statOrange),
           const SizedBox(height: 10),
           VisitDetailTextBlock(
-              title: 'Notes for the technician',
+              title: 'Notes for the technician'.tr,
               text: visit.notes,
               color: AppTheme.secondary),
         ],

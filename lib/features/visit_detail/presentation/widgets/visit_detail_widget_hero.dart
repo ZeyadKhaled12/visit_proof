@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -43,7 +44,7 @@ class VisitDetailWidgetHero extends StatelessWidget {
           Row(
             children: [
               _GlassChip(
-                  icon: Icons.tag_rounded, text: visit.visitNumber ?? 'Visit'),
+                  icon: Icons.tag_rounded, text: visit.visitNumber ?? 'Visit'.tr),
               const Spacer(),
               VisitDetailPill(
                 text: VisitDetailHelpers.statusText(status),
@@ -56,7 +57,7 @@ class VisitDetailWidgetHero extends StatelessWidget {
           const SizedBox(height: 18),
           Text(
             (visit.serviceName ?? '').trim().isEmpty
-                ? 'No service selected'
+                ? 'No service selected'.tr
                 : visit.serviceName!,
             style: AppTheme.font(
                 color: AppTheme.onPrimary,
@@ -70,7 +71,7 @@ class VisitDetailWidgetHero extends StatelessWidget {
                   size: 14,
                   color: AppTheme.onPrimary.withValues(alpha: .85)),
               const SizedBox(width: 5),
-              Text(visit.category?.name ?? 'Uncategorized',
+              Text(visit.category?.name ?? 'Uncategorized'.tr,
                   style: AppTheme.font(
                       color: AppTheme.onPrimary.withValues(alpha: .85),
                       fontSize: AppTheme.textBody,
@@ -82,7 +83,7 @@ class VisitDetailWidgetHero extends StatelessWidget {
             children: [
               Expanded(
                 child: _GlassStat(
-                    label: 'Price',
+                    label: 'Price'.tr,
                     value: visit.price == null
                         ? '—'
                         : VisitDetailHelpers.money(visit.price)),
@@ -90,13 +91,13 @@ class VisitDetailWidgetHero extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: _GlassStat(
-                    label: 'Priority',
+                    label: 'Priority'.tr,
                     value: VisitDetailHelpers.priorityText(visit.priority)),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _GlassStat(
-                    label: 'Payment',
+                    label: 'Payment'.tr,
                     value: VisitDetailHelpers.capitalize(PaymentStatusSwitch(
                             paymentStatusEnum: visit.paymentStatus)
                         .getText())),
@@ -185,7 +186,7 @@ class _WorkflowProgress extends StatelessWidget {
   const _WorkflowProgress({required this.current});
   final VisitStatus current;
 
-  static const _labels = ['Draft', 'Scheduled', 'Assigned', 'On way', 'Work', 'Done'];
+  static List<String> get _labels => ['Draft'.tr, 'Scheduled'.tr, 'Assigned'.tr, 'On way'.tr, 'Work'.tr, 'Done'.tr];
 
   @override
   Widget build(BuildContext context) {
@@ -271,7 +272,7 @@ class _CancelledBanner extends StatelessWidget {
               color: AppTheme.onPrimary, size: 20),
           const SizedBox(width: 8),
           Expanded(
-            child: Text('This visit was cancelled and is out of the workflow.',
+            child: Text('This visit was cancelled and is out of the workflow.'.tr,
                 style: AppTheme.font(
                     color: AppTheme.onPrimary,
                     fontSize: AppTheme.textSmall,

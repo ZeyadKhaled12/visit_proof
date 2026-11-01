@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
@@ -90,13 +91,13 @@ class _VisitsBodyState extends State<VisitsBody> {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: GWidgetAppbar(
-          title: 'Visits',
+          title: 'Visits'.tr,
           icon: Icons.fact_check_outlined,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 12),
               child: GWidgetButton(
-                text: 'Dispatch',
+                text: 'Dispatch'.tr,
                 fontSize: AppTheme.textBody,
                 height: 38,
                 raduis: 12,
@@ -114,7 +115,7 @@ class _VisitsBodyState extends State<VisitsBody> {
             ),
           ]).appbar(),
       floatingActionButton:
-          GWidgetFloatingBtn(text: 'Add New Visit', onPressed: _addVisit),
+          GWidgetFloatingBtn(text: 'Add New Visit'.tr, onPressed: _addVisit),
       body: GWidgetLoading(
         isLoading: widget.loading,
         body: Padding(
@@ -160,18 +161,18 @@ class _VisitsBodyState extends State<VisitsBody> {
     if (widget.visits.isEmpty) {
       return GWidgetEmpty(
         icon: Icons.event_note_rounded,
-        title: 'No visits yet',
-        subtitle: 'Create your first visit to start tracking field work.',
-        actionText: 'Add first visit',
+        title: 'No visits yet'.tr,
+        subtitle: 'Create your first visit to start tracking field work.'.tr,
+        actionText: 'Add first visit'.tr,
         onAction: _addVisit,
       );
     }
 
     return GWidgetEmpty(
       icon: Icons.search_off_rounded,
-      title: 'No matching visits',
-      subtitle: 'Try another search or clear the filters.',
-      actionText: 'Clear search & filters',
+      title: 'No matching visits'.tr,
+      subtitle: 'Try another search or clear the filters.'.tr,
+      actionText: 'Clear search & filters'.tr,
       onAction: _clearSearchAndFilters,
     );
   }

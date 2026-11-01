@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/features/technicians/data/models/technician_detail_model.dart';
@@ -36,7 +37,7 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
         children: [
           Expanded(
             child: GWidgetButton(
-              text: 'Edit Technician',
+              text: 'Edit Technician'.tr,
               backgroundColor: AppTheme.secondary,
               height: 42,
               raduis: 12,
@@ -67,7 +68,7 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: GWidgetButton(
-              text: 'Remove',
+              text: 'Remove'.tr,
               colorText: AppTheme.statOrange,
               backgroundColor: AppTheme.statOrange.withValues(alpha: 0.1),
               border: Border.all(color: AppTheme.statOrange, width: 1.2),
@@ -86,15 +87,15 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
               onPressed: () async {
                 if (technicianDetailModel.visits?.isNotEmpty ?? false) {
                   AppToasts.showMessage(
-                      'This technician cannot be deleted because they have existing visits',
+                      'This technician cannot be deleted because they have existing visits'.tr,
                       isError: true);
                   return;
                 }
 
                 final data = await AppToasts.showDeleteConfirmation(
-                    headTitle: 'Remove Technician?',
+                    headTitle: 'Remove Technician?'.tr,
                     title:
-                        'Are you sure you want to remove ${technicianDetailModel.name ?? '--'}? This action cannot be undone.');
+                        'Are you sure you want to remove {0}? This action cannot be undone.'.trArgs([technicianDetailModel.name ?? '--']));
                 if (data is bool) {
                   if (data) {
                     if (technicianDetailModel.id != null) {

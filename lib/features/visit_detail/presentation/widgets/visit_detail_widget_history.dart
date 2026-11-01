@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -38,16 +39,16 @@ class _VisitDetailWidgetHistoryState
         _expanded ? entries : entries.take(_collapsedCount).toList();
 
     return VisitDetailSection(
-      title: 'Activity',
+      title: 'Activity'.tr,
       icon: Icons.history_rounded,
       color: AppTheme.primary,
-      actionText: 'Add note',
+      actionText: 'Add note'.tr,
       actionIcon: Icons.add_comment_rounded,
       onAction: () => VisitDetailWidgetActionSheet.show(
           context, const VisitDetailWidgetCommentSheet()),
       child: entries.isEmpty
-          ? const VisitDetailEmpty(
-              icon: Icons.history_toggle_off_rounded, text: 'No activity yet')
+          ? VisitDetailEmpty(
+              icon: Icons.history_toggle_off_rounded, text: 'No activity yet'.tr)
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -61,7 +62,7 @@ class _VisitDetailWidgetHistoryState
                   TextButton(
                     onPressed: () => setState(() => _expanded = !_expanded),
                     child: Text(
-                        _expanded ? 'Show less' : 'Show all (${entries.length})',
+                        _expanded ? 'Show less'.tr : 'Show all ({0})'.trArgs([entries.length]),
                         style: AppTheme.font(
                             color: AppTheme.primary,
                             fontSize: AppTheme.textBody,
@@ -119,7 +120,7 @@ class _HistoryTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(entry.description ?? 'Update',
+                  Text(entry.description ?? 'Update'.tr,
                       style: AppTheme.font(
                           color: AppTheme.textPrimary,
                           fontSize: AppTheme.textBody,

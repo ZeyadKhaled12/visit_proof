@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -160,7 +161,7 @@ class DispatchRules {
     final paid = visit.paymentStatus == PaymentStatus.paid ||
         visit.paymentStatus == PaymentStatus.partiallyPaid;
     if (to == VisitStatus.cancel && paid) {
-      return 'Refund all payments from the invoice before cancelling.';
+      return 'Refund all payments from the invoice before cancelling.'.tr;
     }
     return VisitRules.statusChangeError(visit, null, to);
   }
@@ -240,19 +241,19 @@ class DispatchRules {
     final planned = visit.copyWith(startDate: start);
     final end = endOf(planned);
     final day = dayOf(start);
-    final name = technician.name ?? 'This technician';
+    final name = technician.name ?? 'This technician'.tr;
     final violations = <DispatchViolation>[];
 
     final visitError = VisitRules.assignError(planned);
     if (visitError != null) violations.add(DispatchViolation.block(visitError));
 
     if (start.isBefore(now)) {
-      violations.add(const DispatchViolation.block(
-          'The start time has already passed.'));
+      violations.add(DispatchViolation.block(
+          'The start time has already passed.'.tr));
     }
 
     if (isDayOff(daysOff, technician.id, day)) {
-      violations.add(DispatchViolation.block('$name is off on this day.'));
+      violations.add(DispatchViolation.block('{0} is off on this day.'.trArgs([name])));
     }
 
     final others = technicianDay(allVisits, technician.id, day)
@@ -264,27 +265,24 @@ class DispatchRules {
       final otherEnd = endOf(other);
       if (_overlaps(start, end, other.startDate!, otherEnd)) {
         violations.add(DispatchViolation.block(
-            '$name is busy with ${other.visitNumber ?? 'another visit'} '
-            '(${_time.format(other.startDate!)} – ${_time.format(otherEnd)}).'));
+            '{0} is busy with {1} ({2} – {3}).'.trArgs([name, other.visitNumber ?? 'another visit'.tr, _time.format(other.startDate!), _time.format(otherEnd)])));
       } else if (_gapMinutes(start, end, other.startDate!, otherEnd) <
           settings.travelBuffer) {
         violations.add(DispatchViolation.warn(
-            'Less than ${settings.travelBuffer} min of travel time around '
-            '${other.visitNumber ?? 'another visit'}.'));
+            'Less than {0} min of travel time around {1}.'.trArgs([settings.travelBuffer, other.visitNumber ?? 'another visit'.tr])));
       }
     }
 
     final minutes = start.hour * 60 + start.minute;
     final endMinutes = minutes + (visit.durationInMin ?? 0);
     if (minutes < settings.workStart || endMinutes > settings.workEnd) {
-      violations.add(const DispatchViolation.warn(
-          'Outside working hours.'));
+      violations.add(DispatchViolation.warn(
+          'Outside working hours.'.tr));
     }
 
     if (others.length >= settings.maxVisits) {
       violations.add(DispatchViolation.warn(
-          '$name already has ${others.length} visits on this day '
-          '(limit ${settings.maxVisits}).'));
+          '{0} already has {1} visits on this day (limit {2}).'.trArgs([name, others.length, settings.maxVisits])));
     }
 
     final skill = _skillMessage(visit, technician);
@@ -295,7 +293,7 @@ class DispatchRules {
     }
 
     if (technician.status == TechnicianStatus.offline) {
-      violations.add(DispatchViolation.warn('$name is marked offline.'));
+      violations.add(DispatchViolation.warn('{0} is marked offline.'.trArgs([name])));
     }
 
     return violations;
@@ -358,8 +356,8 @@ class DispatchRules {
     final violations = start == null
         ? [
             DispatchViolation.block(dayOff
-                ? '${technician.name ?? 'Technician'} is off on this day.'
-                : 'No free time left on this day.')
+                ? '{0} is off on this day.'.trArgs([technician.name ?? 'Technician'.tr])
+                : 'No free time left on this day.'.tr)
           ]
         : evaluate(
             visit: visit,
@@ -375,24 +373,24 @@ class DispatchRules {
 
     if (_skillMessage(visit, technician) == null && visit.category != null) {
       score += 20;
-      reasons.add('Specialty match');
+      reasons.add('Specialty match'.tr);
     }
 
     final load =
         workMinutes <= 0 ? 0.0 : bookedMinutes(dayVisits) / workMinutes;
     score -= (load * 30).round();
     reasons.add(dayVisits.isEmpty
-        ? 'Free all day'
-        : '${dayVisits.length} visit${dayVisits.length == 1 ? '' : 's'} that day');
+        ? 'Free all day'.tr
+        : '{0} visit{1} that day'.trArgs([dayVisits.length, dayVisits.length == 1 ? '' : 's']));
 
     final distance = _nearestDistanceKm(visit, dayVisits);
     if (distance != null) {
       if (distance < 5) {
         score += 15;
-        reasons.add('${distance.toStringAsFixed(1)} km from another job');
+        reasons.add('{0} km from another job'.trArgs([distance.toStringAsFixed(1)]));
       } else if (distance < 15) {
         score += 8;
-        reasons.add('${distance.toStringAsFixed(0)} km from another job');
+        reasons.add('{0} km from another job'.trArgs([distance.toStringAsFixed(0)]));
       }
     }
 
@@ -453,7 +451,7 @@ class DispatchRules {
         plans.add(PlannedAssignment(
             visit: visit,
             problem: candidates.firstOrNull?.violations.firstOrNull?.message ??
-                'No technician is available.'));
+                'No technician is available.'.tr));
         continue;
       }
 
@@ -512,8 +510,7 @@ class DispatchRules {
     if (category == null) return null;
     final skills = technician.categories ?? const [];
     if (skills.contains(category)) return null;
-    return '${technician.name ?? 'Technician'} has no '
-        '"${category.name ?? 'required'}" specialty.';
+    return '{0} has no "{1}" specialty.'.trArgs([technician.name ?? 'Technician'.tr, category.name ?? 'required'.tr]);
   }
 
   static bool _overlaps(

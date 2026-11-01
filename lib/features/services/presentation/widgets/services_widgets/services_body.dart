@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -63,7 +64,7 @@ class _ServicesBodyState extends State<ServicesBody> {
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
         appBar: GWidgetAppbar(
-                title: 'Services', icon: Icons.miscellaneous_services)
+                title: 'Services'.tr, icon: Icons.miscellaneous_services)
             .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,
@@ -74,7 +75,7 @@ class _ServicesBodyState extends State<ServicesBody> {
                 const SizedBox(height: 5),
                 GWidgetSearch(
                   searchController: _searchController,
-                  hint: 'Search service, category, task...',
+                  hint: 'Search service, category, task...'.tr,
                   onChanged: (value) => setState(() => _query = value ?? ''),
                   onClear: _clearSearch,
                 ),
@@ -96,24 +97,24 @@ class _ServicesBodyState extends State<ServicesBody> {
           ),
         ),
         floatingActionButton:
-            GWidgetFloatingBtn(text: "Add new service", onPressed: _addService));
+            GWidgetFloatingBtn(text: "Add new service".tr, onPressed: _addService));
   }
 
   Widget _emptyState() {
     if (widget.services.isEmpty) {
       return GWidgetEmpty(
         icon: Icons.build_circle_rounded,
-        title: 'No services yet',
-        subtitle: 'Add the services you offer with their price and checklist.',
-        actionText: 'Add first service',
+        title: 'No services yet'.tr,
+        subtitle: 'Add the services you offer with their price and checklist.'.tr,
+        actionText: 'Add first service'.tr,
         onAction: _addService,
       );
     }
     return GWidgetEmpty(
       icon: Icons.search_off_rounded,
-      title: 'No matching services',
-      subtitle: 'Try a different service or category name.',
-      actionText: 'Clear search',
+      title: 'No matching services'.tr,
+      subtitle: 'Try a different service or category name.'.tr,
+      actionText: 'Clear search'.tr,
       onAction: _clearSearch,
     );
   }

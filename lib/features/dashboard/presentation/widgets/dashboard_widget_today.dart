@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -34,11 +35,11 @@ class DashboardWidgetToday extends StatelessWidget {
     final counts = DashboardMetrics.statusCounts(today);
 
     return DashboardSection(
-      title: "Today's operations",
+      title: "Today's operations".tr,
       subtitle: today.isEmpty
-          ? 'No visits planned for today'
-          : '${today.length} visit${today.length == 1 ? '' : 's'} today',
-      actionText: today.isEmpty ? null : 'All',
+          ? 'No visits planned for today'.tr
+          : '{0} visit{1} today'.trArgs([today.length, today.length == 1 ? '' : 's']),
+      actionText: today.isEmpty ? null : 'All'.tr,
       onAction: () => onStage(null),
       child: LayoutBuilder(builder: (context, constraints) {
         final columns = constraints.maxWidth >= 420 ? 5 : 3;

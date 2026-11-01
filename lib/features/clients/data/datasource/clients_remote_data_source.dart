@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/core/local/local_pref.dart';
@@ -99,8 +100,8 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       await LocalPref.sharedPreferences.setStringList(
           'clients', clients.map((e) => jsonEncode(e.toJson())).toList());
       AppToasts.showMessage(parameters.id != null
-          ? 'Client updated successfuly'
-          : 'Client added successfuly');
+          ? 'Client updated successfuly'.tr
+          : 'Client added successfuly'.tr);
       return client;
     }).checkLogicErrors();
   }
@@ -136,15 +137,13 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
           .length;
       if (openVisits > 0) {
         throw ServerException(ErrorMessageModel(
-            statusMessage: 'This client has $openVisits open '
-                'visit${openVisits == 1 ? '' : 's'}. Complete or cancel '
-                '${openVisits == 1 ? 'it' : 'them'} before deleting.'));
+            statusMessage: 'This client has {0} open visit{1}. Complete or cancel {2} before deleting.'.trArgs([openVisits, openVisits == 1 ? '' : 's', openVisits == 1 ? 'it' : 'them'])));
       }
 
       clients.removeWhere((element) => element.id == parameters.clientID);
       await LocalPref.sharedPreferences.setStringList(
           'clients', clients.map((e) => jsonEncode(e.toJson())).toList());
-      AppToasts.showMessage('Client removed successfuly');
+      AppToasts.showMessage('Client removed successfuly'.tr);
       return;
     }).checkLogicErrors();
   }
@@ -170,7 +169,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       clients[index] = clientModel;
       await LocalPref.sharedPreferences.setStringList(
           'clients', clients.map((e) => jsonEncode(e.toJson())).toList());
-      AppToasts.showMessage('Equipment added successfuly');
+      AppToasts.showMessage('Equipment added successfuly'.tr);
       return clientModel;
     }).checkLogicErrors();
   }
@@ -196,7 +195,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
       clients[index] = clientModel;
       await LocalPref.sharedPreferences.setStringList(
           'clients', clients.map((e) => jsonEncode(e.toJson())).toList());
-      AppToasts.showMessage('Equipment removed successfuly');
+      AppToasts.showMessage('Equipment removed successfuly'.tr);
       return clientModel;
     }).checkLogicErrors();
   }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -52,13 +53,13 @@ class _VisitsWidgetFilterSheetState extends State<VisitsWidgetFilterSheet> {
   @override
   Widget build(BuildContext context) {
     return GWidgetBottomSheet(
-      title: 'Filter visits',
-      subtitle: 'Pick one or more options in each group',
+      title: 'Filter visits'.tr,
+      subtitle: 'Pick one or more options in each group'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _Group(
-            title: 'Visit status',
+            title: 'Visit status'.tr,
             children: VisitStatus.values.map((status) {
               final info = VisitStatusSwitch(visitStatusEnum: status);
               return GWidgetChoiceChip(
@@ -70,7 +71,7 @@ class _VisitsWidgetFilterSheetState extends State<VisitsWidgetFilterSheet> {
             }).toList(),
           ),
           _Group(
-            title: 'Payment',
+            title: 'Payment'.tr,
             children: PaymentStatus.values.map((status) {
               final info = PaymentStatusSwitch(paymentStatusEnum: status);
               return GWidgetChoiceChip(
@@ -82,7 +83,7 @@ class _VisitsWidgetFilterSheetState extends State<VisitsWidgetFilterSheet> {
             }).toList(),
           ),
           _Group(
-            title: 'Priority',
+            title: 'Priority'.tr,
             children: Priority.values.map((priority) {
               final info = PrioritySwitch(priorityEnum: priority);
               return GWidgetChoiceChip(
@@ -98,7 +99,7 @@ class _VisitsWidgetFilterSheetState extends State<VisitsWidgetFilterSheet> {
             children: [
               Expanded(
                 child: GWidgetButton(
-                  text: 'Reset',
+                  text: 'Reset'.tr,
                   fontSize: AppTheme.textSubtitle,
                   raduis: 14,
                   colorText: AppTheme.iconGrey,
@@ -111,7 +112,7 @@ class _VisitsWidgetFilterSheetState extends State<VisitsWidgetFilterSheet> {
               const SizedBox(width: 10),
               Expanded(
                 child: GWidgetButton(
-                  text: 'Apply',
+                  text: 'Apply'.tr,
                   fontSize: AppTheme.textSubtitle,
                   raduis: 14,
                   onPressed: () => Navigator.pop(

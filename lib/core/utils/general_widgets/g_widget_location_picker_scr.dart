@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _PlaceSuggestion {
     ].where((s) => s.isNotEmpty && s != name).toSet().join(', ');
 
     return _PlaceSuggestion(
-      name: name.isEmpty ? 'Unnamed place' : name,
+      name: name.isEmpty ? 'Unnamed place'.tr : name,
       description: details,
       // GeoJSON uses [longitude, latitude].
       location: LatLng(
@@ -67,7 +68,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
   final FocusNode _searchFocus = FocusNode();
 
   LatLng _currentCenter = _fallbackLocation;
-  String _currentAddress = 'Locating...';
+  String _currentAddress = 'Locating...'.tr;
 
   List<_PlaceSuggestion> _suggestions = [];
   Timer? _searchDebounce;
@@ -126,7 +127,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
     try {
       if (!await Geolocator.isLocationServiceEnabled()) {
         _useFallback(
-            'Location services are disabled. Select on map or search.');
+            'Location services are disabled. Select on map or search.'.tr);
         return;
       }
       var permission = await Geolocator.checkPermission();
@@ -136,7 +137,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
         _useFallback(
-            'Location permission not granted. Search or move the map.');
+            'Location permission not granted. Search or move the map.'.tr);
         return;
       }
 
@@ -156,7 +157,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
       await _reverseGeocode(coordinates);
     } catch (error) {
       debugPrint('Device location error: $error');
-      _useFallback('Could not fetch GPS. Search or move the map.');
+      _useFallback('Could not fetch GPS. Search or move the map.'.tr);
     }
   }
 
@@ -176,7 +177,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
   Future<void> _reverseGeocode(LatLng target) async {
     final generation = ++_addressGeneration;
     if (!mounted) return;
-    setState(() => _currentAddress = 'Fetching address...');
+    setState(() => _currentAddress = 'Fetching address...'.tr);
     try {
       final placemarks = await placemarkFromCoordinates(
         target.latitude,
@@ -255,7 +256,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
       ).timeout(const Duration(seconds: 10));
       if (!mounted || generation != _searchGeneration) return;
       if (response.statusCode != 200) {
-        throw Exception('Search HTTP ${response.statusCode}');
+        throw Exception('Search HTTP {0}'.trArgs([response.statusCode]));
       }
 
       final payload = jsonDecode(response.body) as Map<String, dynamic>;
@@ -280,7 +281,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
       setState(() {
         _suggestions = [];
         _searchLoading = false;
-        _searchError = 'Search unavailable. Check your connection.';
+        _searchError = 'Search unavailable. Check your connection.'.tr;
       });
     }
   }
@@ -435,7 +436,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                           fontWeight: FontWeight.w500,
                         ),
                         decoration: InputDecoration(
-                          hintText: 'Search for a place...',
+                          hintText: 'Search for a place...'.tr,
                           hintStyle: AppTheme.font(color: AppTheme.textSecondary),
                           prefixIcon: Icon(Icons.search,
                               color: AppTheme.primary),
@@ -453,7 +454,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                                 )
                               : _searchController.text.isNotEmpty
                                   ? IconButton(
-                                      tooltip: 'Clear search',
+                                      tooltip: 'Clear search'.tr,
                                       onPressed: _clearSearch,
                                       icon: Icon(Icons.close,
                                           color: AppTheme.textSecondary),
@@ -501,9 +502,9 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                                     textAlign: TextAlign.center),
                               )
                             : _suggestions.isEmpty
-                                ? const Padding(
+                                ? Padding(
                                     padding: EdgeInsets.all(18),
-                                    child: Text('No places found',
+                                    child: Text('No places found'.tr,
                                         textAlign: TextAlign.center),
                                   )
                                 : ListView.separated(
@@ -565,7 +566,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Location',
+                        'Location'.tr,
                         style: AppTheme.font(
                           fontSize: AppTheme.textSmall,
                           color: AppTheme.textSecondary,
@@ -609,7 +610,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                             ),
                           ),
                           child: Text(
-                            'Confirm Location',
+                            'Confirm Location'.tr,
                             style: AppTheme.font(
                               fontSize: AppTheme.textTitle,
                               fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../clients/presentation/screens/clients_scr.dart';
@@ -14,8 +15,10 @@ enum MainMenuGroup {
   finance('Finance'),
   directory('Directory');
 
-  const MainMenuGroup(this.label);
-  final String label;
+  const MainMenuGroup(this._label);
+  final String _label;
+
+  String get label => _label.tr;
 }
 
 /// The app's main sections, in menu order: daily operations first,
@@ -42,10 +45,14 @@ enum MainMenuTab {
       MainMenuGroup.directory);
 
   const MainMenuTab(
-      this.label, this.hint, this.icon, this.selectedIcon, this.group);
+      this._label, this._hint, this.icon, this.selectedIcon, this.group);
 
-  final String label;
-  final String hint;
+  final String _label;
+  final String _hint;
+
+  /// Name and description in the current language.
+  String get label => _label.tr;
+  String get hint => _hint.tr;
   final IconData icon;
   final IconData selectedIcon;
   final MainMenuGroup group;

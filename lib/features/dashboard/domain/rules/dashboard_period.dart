@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
@@ -56,13 +57,13 @@ class DashboardPeriod extends Equatable {
   String get label {
     switch (range) {
       case DashboardRange.today:
-        return 'Today';
+        return 'Today'.tr;
       case DashboardRange.last7Days:
-        return 'Last 7 days';
+        return 'Last 7 days'.tr;
       case DashboardRange.last30Days:
-        return 'Last 30 days';
+        return 'Last 30 days'.tr;
       case DashboardRange.thisMonth:
-        return 'This month';
+        return 'This month'.tr;
       case DashboardRange.custom:
         return dateLabel;
     }
@@ -76,8 +77,8 @@ class DashboardPeriod extends Equatable {
   }
 
   String get comparisonLabel => days == 1
-      ? 'vs previous day'
-      : 'vs previous $days days';
+      ? 'vs previous day'.tr
+      : 'vs previous {0} days'.trArgs([days]);
 
   static DateTime addDays(DateTime day, int days) => _addDays(day, days);
 

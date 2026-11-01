@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -88,9 +89,9 @@ class _VisitDetailWidgetRescheduleSheetState
     final start = _start;
     setState(() {
       _dateError = start == null
-          ? 'Pick a date and a time'
+          ? 'Pick a date and a time'.tr
           : start.isBefore(DateTime.now())
-              ? 'The new time must be in the future'
+              ? 'The new time must be in the future'.tr
               : null;
     });
     if (_form.currentState?.validate() != true || _dateError != null) return;
@@ -107,9 +108,9 @@ class _VisitDetailWidgetRescheduleSheetState
     final technician = widget.visit.technicianModel;
 
     return VisitDetailWidgetActionSheet(
-      title: 'Reschedule visit',
+      title: 'Reschedule visit'.tr,
       subtitle:
-          'Currently ${VisitDetailHelpers.dateTime(widget.visit.startDate)}',
+          'Currently {0}'.trArgs([VisitDetailHelpers.dateTime(widget.visit.startDate)]),
       requestState: (state) => state.rescheduleRequestState,
       builder: (context, state, loading) => Form(
         key: _form,
@@ -121,7 +122,7 @@ class _VisitDetailWidgetRescheduleSheetState
               child: GWidgetTextField(
                 enabled: false,
                 controller: _dateText,
-                labelText: 'Start date',
+                labelText: 'Start date'.tr,
                 hintText: 'dd MMM yyyy',
                 errorMsg: _dateError,
                 suffixIcon: Icon(Icons.date_range_rounded,
@@ -134,8 +135,8 @@ class _VisitDetailWidgetRescheduleSheetState
               child: GWidgetTextField(
                 enabled: false,
                 controller: _timeText,
-                labelText: 'Start time',
-                hintText: '00:00 AM/PM',
+                labelText: 'Start time'.tr,
+                hintText: '00:00 AM/PM'.tr,
                 suffixIcon: Icon(Icons.watch_later_outlined,
                     color: _time == null ? AppTheme.iconGrey : AppTheme.primary),
               ),
@@ -143,15 +144,14 @@ class _VisitDetailWidgetRescheduleSheetState
             if (technician != null) ...[
               const SizedBox(height: 14),
               VisitDetailNotice(
-                  text: 'We will check that ${technician.name ?? 'the technician'} '
-                      'is free at the new time.',
+                  text: 'We will check that {0} is free at the new time.'.trArgs([technician.name ?? 'the technician'.tr]),
                   color: AppTheme.secondary,
                   icon: Icons.event_busy_rounded),
             ],
             const SizedBox(height: 14),
             GWidgetTextField(
               controller: _reason,
-              labelText: 'Reason (optional)',
+              labelText: 'Reason (optional)'.tr,
               maxLines: 2,
               maxLength: VisitRules.maxReasonLength,
               validator: (v) =>
@@ -159,7 +159,7 @@ class _VisitDetailWidgetRescheduleSheetState
             ),
             const SizedBox(height: 16),
             GWidgetButton(
-              text: 'Save new time',
+              text: 'Save new time'.tr,
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               backgroundColor: AppTheme.pending,

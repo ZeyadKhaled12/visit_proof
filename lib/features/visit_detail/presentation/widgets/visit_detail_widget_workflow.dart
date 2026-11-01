@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -36,7 +37,7 @@ class VisitDetailWidgetWorkflow extends StatelessWidget {
         VisitRules.canAssignTechnician(visit) && visit.technicianModel == null;
 
     return VisitDetailSection(
-      title: 'Next Step',
+      title: 'Next Step'.tr,
       icon: Icons.route_rounded,
       color: color,
       child: Column(
@@ -51,7 +52,7 @@ class VisitDetailWidgetWorkflow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Currently ${VisitDetailHelpers.statusText(status)}',
+                    Text('Currently {0}'.trArgs([VisitDetailHelpers.statusText(status)]),
                         style: AppTheme.font(
                             color: color,
                             fontSize: AppTheme.textSubtitle,
@@ -68,7 +69,7 @@ class VisitDetailWidgetWorkflow extends StatelessWidget {
           if (needsTechnician) ...[
             const SizedBox(height: 14),
             _MoveButton(
-              label: 'Assign technician',
+              label: 'Assign technician'.tr,
               icon: Icons.engineering_rounded,
               color: AppTheme.primary,
               filled: true,
@@ -94,7 +95,7 @@ class VisitDetailWidgetWorkflow extends StatelessWidget {
                 onPressed: () => _openStatusSheet(context, VisitStatus.cancel),
                 icon: Icon(Icons.cancel_outlined,
                     size: 18, color: AppTheme.statOrange),
-                label: Text('Cancel visit',
+                label: Text('Cancel visit'.tr,
                     style: AppTheme.font(
                         color: AppTheme.statOrange,
                         fontSize: AppTheme.textBody,
@@ -105,7 +106,7 @@ class VisitDetailWidgetWorkflow extends StatelessWidget {
           if (next.isEmpty) ...[
             const SizedBox(height: 14),
             VisitDetailNotice(
-              text: 'This visit has reached the end of its workflow.',
+              text: 'This visit has reached the end of its workflow.'.tr,
               color: AppTheme.statGreen,
               icon: Icons.verified_rounded,
             ),

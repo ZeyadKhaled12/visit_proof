@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -113,7 +114,7 @@ class _Card extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(visit.visitNumber ?? 'Visit',
+                      child: Text(visit.visitNumber ?? 'Visit'.tr,
                           style: AppTheme.font(
                               color: AppTheme.textPrimary,
                               fontSize: AppTheme.textSmall,
@@ -138,7 +139,7 @@ class _Card extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(visit.serviceName ?? 'No service',
+                Text(visit.serviceName ?? 'No service'.tr,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
@@ -146,7 +147,7 @@ class _Card extends StatelessWidget {
                         fontSize: AppTheme.textBody,
                         fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
-                Text(visit.client?.name ?? 'No client',
+                Text(visit.client?.name ?? 'No client'.tr,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
@@ -161,7 +162,7 @@ class _Card extends StatelessWidget {
                     Flexible(
                       child: Text(
                           start == null
-                              ? 'No time'
+                              ? 'No time'.tr
                               : otherDay
                                   ? VisitDetailHelpers.dateTime(start)
                                   : '${VisitDetailHelpers.time(start)} · '

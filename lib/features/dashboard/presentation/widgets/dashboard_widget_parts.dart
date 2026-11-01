@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app.dart';
@@ -132,7 +133,7 @@ class DashboardDelta extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = change;
     if (value == null) {
-      return Text('No earlier data',
+      return Text('No earlier data'.tr,
           style: AppTheme.font(color: AppTheme.textLightHint, fontSize: AppTheme.textCaption));
     }
 
@@ -159,7 +160,7 @@ class DashboardDelta extends StatelessWidget {
         const SizedBox(width: 2),
         Flexible(
           child: Text(
-              flat ? 'No change' : '$amount${asPoints ? ' pts' : '%'}',
+              flat ? 'No change'.tr : '$amount${asPoints ? ' pts' : '%'}',
               overflow: TextOverflow.ellipsis,
               style: AppTheme.font(
                   color: color, fontSize: AppTheme.textCaption, fontWeight: FontWeight.w800)),

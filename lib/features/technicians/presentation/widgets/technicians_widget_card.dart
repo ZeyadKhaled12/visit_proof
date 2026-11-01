@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../configs/app_theme.dart';
@@ -105,7 +106,7 @@ class TechnicianWidgetCard extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  technician.name ?? 'Unknown Technician',
+                                  technician.name ?? 'Unknown Technician'.tr,
                                   style: AppTheme.font(
                                     color: AppTheme.textPrimary,
                                     fontSize: AppTheme.textTitle,
@@ -176,7 +177,7 @@ class TechnicianWidgetCard extends StatelessWidget {
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
-                                    technician.phone ?? 'No Phone',
+                                    technician.phone ?? 'No Phone'.tr,
                                     style: AppTheme.font(
                                       color: AppTheme.textDarkHint,
                                       fontSize: AppTheme.textBody,
@@ -220,7 +221,7 @@ class TechnicianWidgetCard extends StatelessWidget {
                         size: 14, color: AppTheme.primary),
                     const SizedBox(width: 4),
                     Text(
-                      '${technician.openJobs ?? 0} Open Jobs',
+                      '{0} Open Jobs'.trArgs([technician.openJobs ?? 0]),
                       style: AppTheme.font(
                         color: AppTheme.textPrimary,
                         fontSize: AppTheme.textSmall,

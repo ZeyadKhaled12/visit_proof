@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 
@@ -80,34 +81,34 @@ class PaymentStatusSwitch {
 
   String getText() {
     if (paymentStatusID == 1) {
-      return 'Unpaid';
+      return 'Unpaid'.tr;
     } else if (paymentStatusID == 2) {
-      return 'Pending';
+      return 'Pending'.tr;
     } else if (paymentStatusID == 3) {
-      return 'Partially Paid';
+      return 'Partially Paid'.tr;
     } else if (paymentStatusID == 4) {
-      return 'Paid';
+      return 'Paid'.tr;
     } else if (paymentStatusID == 5) {
-      return 'Cancelled';
+      return 'Cancelled'.tr;
     } else if (paymentStatusID == 6) {
-      return 'Refunded';
+      return 'Refunded'.tr;
     }
 
     switch (paymentStatusEnum) {
       case null:
-        return 'Unpaid';
+        return 'Unpaid'.tr;
       case PaymentStatus.unpaid:
-        return 'Unpaid';
+        return 'Unpaid'.tr;
       case PaymentStatus.pending:
-        return 'Pending';
+        return 'Pending'.tr;
       case PaymentStatus.partiallyPaid:
-        return 'Partially Paid';
+        return 'Partially Paid'.tr;
       case PaymentStatus.paid:
-        return 'Paid';
+        return 'Paid'.tr;
       case PaymentStatus.cancelled:
-        return 'Cancelled';
+        return 'Cancelled'.tr;
       case PaymentStatus.refunded:
-        return 'Refunded';
+        return 'Refunded'.tr;
     }
   }
 }

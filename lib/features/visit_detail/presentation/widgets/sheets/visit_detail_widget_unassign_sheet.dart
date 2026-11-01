@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,7 +43,7 @@ class _VisitDetailWidgetUnassignSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
-      title: 'Unassign technician',
+      title: 'Unassign technician'.tr,
       subtitle: widget.visit.technicianModel?.name,
       requestState: (state) => state.unassignTechnicianRequestState,
       builder: (context, state, loading) => Form(
@@ -51,13 +52,12 @@ class _VisitDetailWidgetUnassignSheetState
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             VisitDetailNotice(
-                text: 'The visit goes back to Scheduled until another '
-                    'technician is assigned.',
+                text: 'The visit goes back to Scheduled until another technician is assigned.'.tr,
                 color: AppTheme.pending),
             const SizedBox(height: 14),
             GWidgetTextField(
               controller: _reason,
-              labelText: 'Reason (optional)',
+              labelText: 'Reason (optional)'.tr,
               maxLines: 3,
               maxLength: VisitRules.maxReasonLength,
               validator: (v) =>
@@ -65,7 +65,7 @@ class _VisitDetailWidgetUnassignSheetState
             ),
             const SizedBox(height: 16),
             GWidgetButton(
-              text: 'Unassign',
+              text: 'Unassign'.tr,
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               backgroundColor: AppTheme.statOrange,

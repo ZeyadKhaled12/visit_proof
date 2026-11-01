@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 enum PaymentMethod {
   cash,
   card,
@@ -51,15 +52,15 @@ class PaymentMethodSwitch {
 
     switch (method) {
       case PaymentMethod.cash:
-        return 'Cash';
+        return 'Cash'.tr;
       case PaymentMethod.card:
-        return 'Card';
+        return 'Card'.tr;
       case PaymentMethod.bankTransfer:
-        return 'Bank Transfer';
+        return 'Bank Transfer'.tr;
       case PaymentMethod.mobileWallet:
-        return 'Mobile Wallet';
+        return 'Mobile Wallet'.tr;
       case PaymentMethod.other:
-        return 'Other';
+        return 'Other'.tr;
     }
   }
 }

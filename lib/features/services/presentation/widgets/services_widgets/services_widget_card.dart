@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/app/app.dart';
@@ -59,7 +60,7 @@ class ServicesWidgetCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            service.serviceName ?? 'Unnamed Service',
+                            service.serviceName ?? 'Unnamed Service'.tr,
                             style: AppTheme.font(
                               color: AppTheme.textPrimary,
                               fontSize: AppTheme.textSubtitle,
@@ -86,7 +87,7 @@ class ServicesWidgetCard extends StatelessWidget {
                               size: 12, color: AppTheme.secondary),
                           const SizedBox(width: 4),
                           Text(
-                            service.category?.name ?? 'No Category',
+                            service.category?.name ?? 'No Category'.tr,
                             style: AppTheme.font(
                               color: AppTheme.secondary,
                               fontSize: AppTheme.textCaption,
@@ -136,8 +137,8 @@ class ServicesWidgetCard extends StatelessWidget {
                           if (service.id == null) return;
                           final data = await AppToasts.showDeleteConfirmation(
                             title:
-                                'Are you sure you want to remove this service? This action cannot be undone.',
-                            headTitle: 'Remove Service?',
+                                'Are you sure you want to remove this service? This action cannot be undone.'.tr,
+                            headTitle: 'Remove Service?'.tr,
                           );
                           if (data is bool) {
                             if (data) {

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
@@ -65,26 +66,26 @@ class PrioritySwitch {
 
   String getText() {
     if (priorityID == 1) {
-      return 'Normal';
+      return 'Normal'.tr;
     } else if (priorityID == 2) {
-      return 'Emergency';
+      return 'Emergency'.tr;
     } else if (priorityID == 3) {
-      return 'High';
+      return 'High'.tr;
     } else if (priorityID == 4) {
-      return 'Low';
+      return 'Low'.tr;
     }
 
     switch (priorityEnum) {
       case null:
-        return 'Normal';
+        return 'Normal'.tr;
       case Priority.emergency:
-        return 'Emergency';
+        return 'Emergency'.tr;
       case Priority.high:
-        return 'High';
+        return 'High'.tr;
       case Priority.normal:
-        return 'Normal';
+        return 'Normal'.tr;
       case Priority.low:
-        return 'Low';
+        return 'Low'.tr;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
 
@@ -20,12 +21,12 @@ class GWidgetDropDown<T> extends StatefulWidget {
   // New properties
   final bool enableSearch;
   final double dropdownMaxHeight;
-  final String searchHintText;
-  final String emptyMessage;
+  final String? searchHintText;
+  final String? emptyMessage;
   final String Function(DropdownMenuItem<T>)? searchTextBuilder;
   final bool loading;
 
-  const GWidgetDropDown(
+  GWidgetDropDown(
       {super.key,
       required this.items,
       this.value,
@@ -42,8 +43,8 @@ class GWidgetDropDown<T> extends StatefulWidget {
       // New parameters
       this.enableSearch = false,
       this.dropdownMaxHeight = 300,
-      this.searchHintText = 'Search...',
-      this.emptyMessage = 'No results found',
+      this.searchHintText,
+      this.emptyMessage,
       this.searchTextBuilder,
       this.loading = false});
 
@@ -241,7 +242,7 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                                 fontSize: AppTheme.textBodyLarge,
                               ),
                               decoration: InputDecoration(
-                                hintText: widget.searchHintText,
+                                hintText: widget.searchHintText ?? 'Search...'.tr,
                                 hintStyle: AppTheme.font(
                                   color: AppTheme.textLightHint,
                                   fontSize: AppTheme.textBodyLarge,
@@ -281,7 +282,7 @@ class _GWidgetDropDownState<T> extends State<GWidgetDropDown<T>> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(20),
                                     child: Text(
-                                      widget.emptyMessage,
+                                      widget.emptyMessage ?? 'No results found'.tr,
                                       style: AppTheme.font(
                                         color: AppTheme.textSecondary,
                                         fontSize: AppTheme.textBodyLarge,

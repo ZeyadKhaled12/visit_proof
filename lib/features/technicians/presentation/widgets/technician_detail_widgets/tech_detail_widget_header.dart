@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/enums/technician_status_enum.dart';
 
@@ -75,7 +76,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          technicianDetailModel.name ?? 'Unknown Technician',
+                          technicianDetailModel.name ?? 'Unknown Technician'.tr,
                           style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textTitleLarge,
@@ -120,7 +121,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                   Expanded(
                     child: _ContactRowWidget(
                       icon: Icons.phone,
-                      text: technicianDetailModel.phone ?? 'No Phone',
+                      text: technicianDetailModel.phone ?? 'No Phone'.tr,
                       iconColor: AppTheme.primary,
                     ),
                   ),
@@ -153,7 +154,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
               const SizedBox(height: 8),
               _ContactRowWidget(
                 icon: Icons.email,
-                text: technicianDetailModel.email ?? 'No Email',
+                text: technicianDetailModel.email ?? 'No Email'.tr,
                 iconColor: AppTheme.statOrange,
               ),
               const SizedBox(height: 16),
@@ -164,7 +165,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _StatItemWidget(
-                        title: 'Open Jobs',
+                        title: 'Open Jobs'.tr,
                         value:
                             technicianDetailModel.openJobs?.toString() ?? '0',
                         color: AppTheme.pending),
@@ -173,7 +174,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                       height: 30, width: 1, color: AppTheme.locationChipBg),
                   Expanded(
                     child: _StatItemWidget(
-                        title: 'Completed',
+                        title: 'Completed'.tr,
                         value:
                             technicianDetailModel.completedJobs?.toString() ??
                                 '0',
@@ -184,7 +185,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: _StatItemWidget(
-                        title: 'Total Paid',
+                        title: 'Total Paid'.tr,
                         value:
                             '${App.currency} ${technicianDetailModel.completedPaid ?? 0}',
                         color: AppTheme.statGreen),

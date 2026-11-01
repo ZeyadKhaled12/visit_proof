@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/app/app.dart';
@@ -86,7 +87,7 @@ class ClientsWidgetCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            client.name ?? "Unknown",
+                            client.name ?? "Unknown".tr,
                             style: AppTheme.font(
                               fontSize: AppTheme.textTitle,
                               fontWeight: FontWeight.w700,
@@ -280,7 +281,7 @@ class _ContactActionButtons extends StatelessWidget {
               ),
               SizedBox(width: 10),
               Text(
-                "Call",
+                "Call".tr,
                 style: AppTheme.font(
                   color: AppTheme.primary,
                   fontWeight: FontWeight.w600,
@@ -310,7 +311,7 @@ class _ContactActionButtons extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  "WhatsApp",
+                  "WhatsApp".tr,
                   style: AppTheme.font(
                     color: AppTheme.whatsappGreen,
                     fontWeight: FontWeight.w600,

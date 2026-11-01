@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/core/utils/assets_manager.dart';
@@ -75,7 +76,7 @@ class ClientDetailWidgetHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          clientDetailModel.name ?? 'Unknown Client',
+                          clientDetailModel.name ?? 'Unknown Client'.tr,
                           style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textTitleLarge,
@@ -107,7 +108,7 @@ class ClientDetailWidgetHeader extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         clientDetailModel.site?.addressDetail ??
-                                            'No Address',
+                                            'No Address'.tr,
                                         style: AppTheme.font(
                                             color: AppTheme.textDarkHint,
                                             fontSize: AppTheme.textSmall,
@@ -164,7 +165,7 @@ class ClientDetailWidgetHeader extends StatelessWidget {
                                                     size: 14,
                                                     color: AppTheme.primary),
                                                 const SizedBox(width: 4),
-                                                Text('Map',
+                                                Text('Map'.tr,
                                                     style: AppTheme.font(
                                                         color:
                                                             AppTheme.primary,
@@ -206,7 +207,7 @@ class ClientDetailWidgetHeader extends StatelessWidget {
                                                     size: 14,
                                                     color: AppTheme.statGreen),
                                                 const SizedBox(width: 4),
-                                                Text('Directions',
+                                                Text('Directions'.tr,
                                                     style: AppTheme.font(
                                                         color:
                                                             AppTheme.statGreen,
@@ -233,7 +234,7 @@ class ClientDetailWidgetHeader extends StatelessWidget {
                   Expanded(
                     child: _ContactRowWidget(
                       icon: Icons.phone,
-                      text: clientDetailModel.phone ?? 'No Phone',
+                      text: clientDetailModel.phone ?? 'No Phone'.tr,
                       iconColor: clientDetailModel.isWhatsAppPhone == true
                           ? AppTheme.whatsappGreen
                           : AppTheme.primary,
@@ -295,7 +296,7 @@ class ClientDetailWidgetHeader extends StatelessWidget {
               const SizedBox(height: 8),
               _ContactRowWidget(
                 icon: Icons.email,
-                text: clientDetailModel.email ?? 'No Email',
+                text: clientDetailModel.email ?? 'No Email'.tr,
                 iconColor: AppTheme.statOrange,
                 showWhatsapp: false,
               ),
@@ -306,13 +307,13 @@ class ClientDetailWidgetHeader extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _StatItemWidget(
-                      title: 'Total Orders',
+                      title: 'Total Orders'.tr,
                       value: clientDetailModel.ordersCount?.toString() ?? '0',
                       color: AppTheme.primary),
                   Container(
                       height: 30, width: 1, color: AppTheme.locationChipBg),
                   _StatItemWidget(
-                      title: 'Total Paid',
+                      title: 'Total Paid'.tr,
                       value:
                           '${App.currency} ${clientDetailModel.totalPaid ?? 0}',
                       color: AppTheme.statGreen),

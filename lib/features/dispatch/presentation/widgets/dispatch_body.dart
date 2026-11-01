@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -74,9 +75,9 @@ class _DispatchBodyState extends State<DispatchBody> {
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
-      appBar: GWidgetAppbar(title: 'Dispatch', icon: Icons.hub_rounded, actions: [
+      appBar: GWidgetAppbar(title: 'Dispatch'.tr, icon: Icons.hub_rounded, actions: [
         IconButton(
-          tooltip: 'Dispatch rules',
+          tooltip: 'Dispatch rules'.tr,
           icon: Icon(Icons.tune_rounded, color: AppTheme.primary),
           onPressed: () => DispatchWidgetActionSheet.show(
               context, const DispatchWidgetSettingsSheet()),
@@ -109,13 +110,13 @@ class _DispatchBodyState extends State<DispatchBody> {
                           late: late.length,
                           planned: dayVisits.length,
                           onUnassigned: () => wide
-                              ? _showList('Waiting for a technician', unassigned)
+                              ? _showList('Waiting for a technician'.tr, unassigned)
                               : setState(() => _view = DispatchView.queue),
                           onConflicts: () =>
-                              _showList('Conflicts on this day', conflicts),
-                          onLate: () => _showList('Late visits', late),
+                              _showList('Conflicts on this day'.tr, conflicts),
+                          onLate: () => _showList('Late visits'.tr, late),
                           onPlanned: () =>
-                              _showList('Visits on this day', dayVisits),
+                              _showList('Visits on this day'.tr, dayVisits),
                         ),
                         const SizedBox(height: 4),
                       ],
@@ -188,9 +189,9 @@ class _DispatchBodyState extends State<DispatchBody> {
       return SingleChildScrollView(
         child: GWidgetEmpty(
           icon: Icons.engineering_rounded,
-          title: 'No technicians yet',
-          subtitle: 'Add technicians to start dispatching visits.',
-          actionText: 'Add technician',
+          title: 'No technicians yet'.tr,
+          subtitle: 'Add technicians to start dispatching visits.'.tr,
+          actionText: 'Add technician'.tr,
           onAction: _addTechnician,
         ),
       );
@@ -227,10 +228,10 @@ class _ViewSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = [
-      (DispatchView.technicians, 'Technicians', Icons.engineering_rounded),
+      (DispatchView.technicians, 'Technicians'.tr, Icons.engineering_rounded),
       if (showQueue)
-        (DispatchView.queue, 'Queue ($queueCount)', Icons.inbox_rounded),
-      (DispatchView.map, 'Map', Icons.map_rounded),
+        (DispatchView.queue, 'Queue ({0})'.trArgs([queueCount]), Icons.inbox_rounded),
+      (DispatchView.map, 'Map'.tr, Icons.map_rounded),
     ];
 
     return Container(

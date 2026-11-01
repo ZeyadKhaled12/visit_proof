@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,8 +46,8 @@ class _DispatchWidgetBulkAssignSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Assign ${widget.visitIDs.length} visits',
-      subtitle: 'Review the plan, then confirm',
+      title: 'Assign {0} visits'.trArgs([widget.visitIDs.length]),
+      subtitle: 'Review the plan, then confirm'.tr,
       requestState: (state) => state.bulkAssignRequestState,
       builder: (context, state, loading) {
         final visits = [
@@ -72,7 +73,7 @@ class _DispatchWidgetBulkAssignSheetState
             Row(
               children: [
                 Expanded(
-                  child: Text('Plan for',
+                  child: Text('Plan for'.tr,
                       style: AppTheme.font(
                           color: AppTheme.textPrimary,
                           fontSize: AppTheme.textBody,
@@ -92,14 +93,14 @@ class _DispatchWidgetBulkAssignSheetState
               runSpacing: 8,
               children: [
                 GWidgetChoiceChip(
-                  label: 'Best for each',
+                  label: 'Best for each'.tr,
                   color: AppTheme.secondary,
                   selected: _technician == null,
                   onTap: () => setState(() => _technician = null),
                 ),
                 for (final technician in state.technicians)
                   GWidgetChoiceChip(
-                    label: technician.name ?? 'Technician',
+                    label: technician.name ?? 'Technician'.tr,
                     color: AppTheme.primary,
                     selected: _technician?.id == technician.id,
                     onTap: () => setState(() => _technician = technician),
@@ -111,16 +112,15 @@ class _DispatchWidgetBulkAssignSheetState
             if (warned) ...[
               const SizedBox(height: 4),
               VisitDetailNotice(
-                  text: 'Some assignments break a warning rule. They will be '
-                      'saved with a note in the visit history.',
+                  text: 'Some assignments break a warning rule. They will be saved with a note in the visit history.'.tr,
                   color: AppTheme.pending,
                   icon: Icons.warning_amber_rounded),
             ],
             const SizedBox(height: 12),
             GWidgetButton(
               text: ready.isEmpty
-                  ? 'Nothing can be assigned'
-                  : 'Assign ${ready.length} of ${plans.length}',
+                  ? 'Nothing can be assigned'.tr
+                  : 'Assign {0} of {1}'.trArgs([ready.length, plans.length]),
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               isEnable: ready.isNotEmpty,
@@ -140,7 +140,7 @@ class _DispatchWidgetBulkAssignSheetState
                     startDate: plan.start,
                     reason: plan.warnings.isEmpty
                         ? null
-                        : 'Bulk dispatch: ${plan.warnings.first.message}',
+                        : 'Bulk dispatch: {0}'.trArgs([plan.warnings.first.message]),
                   ),
               ])),
             ),

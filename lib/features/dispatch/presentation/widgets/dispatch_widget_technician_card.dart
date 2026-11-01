@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,9 +142,9 @@ class _DispatchWidgetTechnicianCardState
                 if (_expanded) ...[
                   const SizedBox(height: 12),
                   if (dayVisits.isEmpty)
-                    const VisitDetailEmpty(
+                    VisitDetailEmpty(
                         icon: Icons.event_available_rounded,
-                        text: 'No visits on this day')
+                        text: 'No visits on this day'.tr)
                   else
                     for (final visit in dayVisits)
                       Padding(
@@ -162,14 +163,14 @@ class _DispatchWidgetTechnicianCardState
                     children: [
                       if ((_technician.phone ?? '').isNotEmpty)
                         VisitDetailActionChip(
-                          label: 'Call',
+                          label: 'Call'.tr,
                           icon: Icons.phone_rounded,
                           color: AppTheme.primary,
                           onTap: () =>
                               GFunLaunch.makePhoneCall(_technician.phone!),
                         ),
                       VisitDetailActionChip(
-                        label: dayOff ? 'Back to work' : 'Mark day off',
+                        label: dayOff ? 'Back to work'.tr : 'Mark day off'.tr,
                         icon: dayOff
                             ? Icons.event_available_rounded
                             : Icons.event_busy_rounded,
@@ -178,7 +179,7 @@ class _DispatchWidgetTechnicianCardState
                       ),
                       if (movable.isNotEmpty)
                         VisitDetailActionChip(
-                          label: 'Redistribute',
+                          label: 'Redistribute'.tr,
                           icon: Icons.alt_route_rounded,
                           color: AppTheme.secondary,
                           onTap: () => DispatchWidgetActionSheet.show(
@@ -251,7 +252,7 @@ class _Header extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(technician.name ?? 'Technician',
+                Text(technician.name ?? 'Technician'.tr,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
@@ -265,14 +266,14 @@ class _Header extends StatelessWidget {
                   children: [
                     if (dayOff)
                       VisitDetailPill(
-                          text: 'Day off',
+                          text: 'Day off'.tr,
                           color: AppTheme.statOrange,
                           icon: Icons.event_busy_rounded)
                     else
                       VisitDetailPill(
                           text: status.getText(), color: status.getColor()),
                     VisitDetailPill(
-                        text: '$visitCount visit${visitCount == 1 ? '' : 's'}',
+                        text: '{0} visit{1}'.trArgs([visitCount, visitCount == 1 ? '' : 's']),
                         color: AppTheme.primary),
                     if (_skills.isNotEmpty)
                       VisitDetailPill(text: _skills, color: AppTheme.secondary),
@@ -317,9 +318,8 @@ class _Workload extends StatelessWidget {
             Expanded(
               child: Text(
                   dayOff
-                      ? 'Not available on this day'
-                      : '${VisitDetailHelpers.duration(booked)} booked of '
-                          '${VisitDetailHelpers.duration(workMinutes)}',
+                      ? 'Not available on this day'.tr
+                      : '{0} booked of {1}'.trArgs([VisitDetailHelpers.duration(booked), VisitDetailHelpers.duration(workMinutes)]),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTheme.font(
@@ -408,13 +408,13 @@ class _DropHint extends StatelessWidget {
     final start = VisitDetailHelpers.time(suggestion.start);
     if (suggestion.violations.isNotEmpty) {
       return VisitDetailNotice(
-          text: 'Drop to assign at $start · ${suggestion.violations.first.message}',
+          text: 'Drop to assign at {0} · {1}'.trArgs([start, suggestion.violations.first.message]),
           color: AppTheme.pending,
           icon: Icons.warning_amber_rounded);
     }
 
     return VisitDetailNotice(
-        text: 'Drop to assign at $start',
+        text: 'Drop to assign at {0}'.trArgs([start]),
         color: AppTheme.statGreen,
         icon: Icons.check_circle_rounded);
   }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -22,18 +23,18 @@ class VisitDetailWidgetClient extends StatelessWidget {
     final phone = client?.phone ?? '';
 
     return VisitDetailSection(
-      title: 'Client & Site',
+      title: 'Client & Site'.tr,
       icon: Icons.person_pin_circle_rounded,
       color: AppTheme.secondary,
-      actionText: 'Change site',
+      actionText: 'Change site'.tr,
       actionIcon: Icons.edit_location_alt_rounded,
       onAction: VisitRules.canChangeSite(visit)
           ? () => VisitDetailWidgetActionSheet.show(
               context, VisitDetailWidgetSiteSheet(visit: visit))
           : null,
       child: client == null
-          ? const VisitDetailEmpty(
-              icon: Icons.person_off_rounded, text: 'No client selected')
+          ? VisitDetailEmpty(
+              icon: Icons.person_off_rounded, text: 'No client selected'.tr)
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -48,7 +49,7 @@ class VisitDetailWidgetClient extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(client.name ?? 'Unknown client',
+                          Text(client.name ?? 'Unknown client'.tr,
                               style: AppTheme.font(
                                   color: AppTheme.textPrimary,
                                   fontSize: AppTheme.textTitle,
@@ -78,7 +79,7 @@ class VisitDetailWidgetClient extends StatelessWidget {
                     runSpacing: 8,
                     children: [
                       VisitDetailActionChip(
-                        label: 'Call',
+                        label: 'Call'.tr,
                         icon: Icons.phone_rounded,
                         color: AppTheme.primary,
                         onTap: () => GFunLaunch.makePhoneCall(phone),
@@ -116,7 +117,7 @@ class _WhatsAppChip extends StatelessWidget {
               Image.asset(IconAsset.whatsapp,
                   width: 15, height: 15, color: AppTheme.whatsappGreen),
               const SizedBox(width: 5),
-              Text('WhatsApp',
+              Text('WhatsApp'.tr,
                   style: AppTheme.font(
                       color: AppTheme.whatsappGreen,
                       fontSize: AppTheme.textSmall,
@@ -157,7 +158,7 @@ class _SiteBox extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(site?.city?.name ?? 'No site selected',
+                    Text(site?.city?.name ?? 'No site selected'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textBodyLarge,
@@ -180,7 +181,7 @@ class _SiteBox extends StatelessWidget {
               runSpacing: 8,
               children: [
                 VisitDetailActionChip(
-                  label: 'Map',
+                  label: 'Map'.tr,
                   icon: Icons.map_rounded,
                   color: AppTheme.primary,
                   onTap: () => Navigator.push(
@@ -191,7 +192,7 @@ class _SiteBox extends StatelessWidget {
                               longitude: site.longitude!))),
                 ),
                 VisitDetailActionChip(
-                  label: 'Directions',
+                  label: 'Directions'.tr,
                   icon: Icons.directions_rounded,
                   color: AppTheme.statGreen,
                   onTap: () => VisitDetailHelpers.openDirections(site),

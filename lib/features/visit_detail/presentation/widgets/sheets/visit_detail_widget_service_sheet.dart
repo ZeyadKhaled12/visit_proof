@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,16 +45,16 @@ class _VisitDetailWidgetServiceSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
-      title: 'Change service',
-      subtitle: 'Current: ${widget.visit.serviceName ?? 'none'}',
+      title: 'Change service'.tr,
+      subtitle: 'Current: {0}'.trArgs([widget.visit.serviceName ?? 'none'.tr]),
       requestState: (state) => state.changeServiceRequestState,
       builder: (context, state, loading) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           GWidgetDropDown<ServiceModel>(
-            labelText: 'Service',
+            labelText: 'Service'.tr,
             enableSearch: true,
-            searchHintText: 'Search for a service',
+            searchHintText: 'Search for a service'.tr,
             loading: state.getServicesRequestState == RequestState.loading,
             value: _selected,
             onChanged: (service) => setState(() => _selected = service),
@@ -76,7 +77,7 @@ class _VisitDetailWidgetServiceSheetState
                 Expanded(
                   child: VisitDetailStatTile(
                       icon: Icons.timelapse_rounded,
-                      label: 'Duration',
+                      label: 'Duration'.tr,
                       value: VisitDetailHelpers.duration(_selected!.duration),
                       color: AppTheme.statOrange),
                 ),
@@ -84,7 +85,7 @@ class _VisitDetailWidgetServiceSheetState
                 Expanded(
                   child: VisitDetailStatTile(
                       icon: Icons.checklist_rounded,
-                      label: 'Tasks',
+                      label: 'Tasks'.tr,
                       value: '${_selected!.checkList?.length ?? 0}',
                       color: AppTheme.secondary),
                 ),
@@ -92,14 +93,13 @@ class _VisitDetailWidgetServiceSheetState
             ),
             const SizedBox(height: 12),
             VisitDetailNotice(
-                text: 'The draft invoice is repriced: discount and tax stay '
-                    'the same, the total follows the new price.',
+                text: 'The draft invoice is repriced: discount and tax stay the same, the total follows the new price.'.tr,
                 color: AppTheme.primary,
                 icon: Icons.receipt_long_rounded),
           ],
           const SizedBox(height: 16),
           GWidgetButton(
-            text: 'Change service',
+            text: 'Change service'.tr,
             fontSize: AppTheme.textSubtitle,
             raduis: 14,
             isEnable: _selected != null,

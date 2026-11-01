@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,8 +102,8 @@ class _AddClientBodyState extends State<AddClientBody> {
   Widget build(BuildContext context) {
     return GWidgetNaviBody(
         title: widget.clientDetailModel?.id != null
-            ? 'Edit Client'
-            : 'Add New Client',
+            ? 'Edit Client'.tr
+            : 'Add New Client'.tr,
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -110,13 +111,13 @@ class _AddClientBodyState extends State<AddClientBody> {
             children: [
               GWidgetCardTitle(
                   icon: Icons.person_pin,
-                  title: 'Personal Info',
+                  title: 'Personal Info'.tr,
                   child: Column(
                     children: [
                       GWidgetTextField(
                         controller: _nameController,
-                        labelText: 'Full Name *',
-                        hintText: 'e.g. Zeyad Khaled',
+                        labelText: 'Full Name *'.tr,
+                        hintText: 'e.g. Zeyad Khaled'.tr,
                         maxLength: 100,
                         errorMsg: _nameErrorMsg,
                         prefixIcon: Icon(Icons.person_outline,
@@ -126,8 +127,8 @@ class _AddClientBodyState extends State<AddClientBody> {
                       const SizedBox(height: 16),
                       GWidgetTextField(
                         controller: _emailController,
-                        labelText: 'Email Address (Optional)',
-                        hintText: 'client@example.com',
+                        labelText: 'Email Address (Optional)'.tr,
+                        hintText: 'client@example.com'.tr,
                         errorMsg: _emailErrorMsg,
                         maxLength: 254,
                         keyboardType: TextInputType.emailAddress,
@@ -140,15 +141,15 @@ class _AddClientBodyState extends State<AddClientBody> {
               const SizedBox(height: 32),
               GWidgetCardTitle(
                   icon: Icons.contact_phone_outlined,
-                  title: 'Contact Info',
+                  title: 'Contact Info'.tr,
                   child: Column(
                     children: [
                       GWidgetPhoneField(
                         initialCountryCode:
                             _phoneNumber?.countryISOCode ?? 'SA',
                         controller: _phoneController,
-                        labelText: 'Phone Number *',
-                        hintText: 'XXX XXXX XXXX',
+                        labelText: 'Phone Number *'.tr,
+                        hintText: 'XXX XXXX XXXX'.tr,
                         errorMsg: _phoneErrorMsg,
                         onChanged: (phoneNumber) {
                           setState(() {
@@ -175,14 +176,14 @@ class _AddClientBodyState extends State<AddClientBody> {
               const SizedBox(height: 32),
               GWidgetCardTitle(
                   icon: Icons.map_outlined,
-                  title: 'Location Details',
+                  title: 'Location Details'.tr,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GWidgetDropDown<GModelCatg>(
                         value: _selectedCity,
                         enableSearch: true,
-                        labelText: 'Select City *',
+                        labelText: 'Select City *'.tr,
                         errorMsg: _cityErrorMsg,
                         prefixIcon: Icon(Icons.location_city,
                             color: AppTheme.primary),
@@ -201,7 +202,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'Address Configuration',
+                        'Address Configuration'.tr,
                         style: AppTheme.font(
                           color: AppTheme.textPrimary.withValues(alpha: 0.8),
                           fontSize: AppTheme.textBodyLarge,
@@ -224,12 +225,12 @@ class _AddClientBodyState extends State<AddClientBody> {
               const SizedBox(height: 32),
               GWidgetCardTitle(
                   icon: Icons.note_alt_outlined,
-                  title: 'Extra Info',
+                  title: 'Extra Info'.tr,
                   child: GWidgetTextField(
                     controller: _notesController,
                     maxLength: 1000,
-                    labelText: 'Notes (Optional)',
-                    hintText: 'Any special requests or details...',
+                    labelText: 'Notes (Optional)'.tr,
+                    hintText: 'Any special requests or details...'.tr,
                     maxLines: 4,
                     prefixIcon:
                         Icon(Icons.edit_note, color: AppTheme.textNotes),
@@ -248,7 +249,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                       _phoneController.text.isEmpty &&
                       _selectedCity == null) {
                     AppToasts.showMessage(
-                        'Please fill in all fields marked with an asterisk (*).',
+                        'Please fill in all fields marked with an asterisk (*).'.tr,
                         isError: true);
                     setState(() {
                       _nameErrorMsg = _nameController.text.isEmpty ? '' : null;
@@ -261,7 +262,7 @@ class _AddClientBodyState extends State<AddClientBody> {
 
                   if (_nameController.text.length < 2) {
                     AppToasts.showMessage(
-                        'Name must be at least 2 characters long',
+                        'Name must be at least 2 characters long'.tr,
                         isError: true);
                     setState(() {
                       _nameErrorMsg = '';
@@ -271,7 +272,7 @@ class _AddClientBodyState extends State<AddClientBody> {
 
                   if (_emailController.text.isNotEmpty &&
                       !GFunValid.isValidEmail(_emailController.text)) {
-                    AppToasts.showMessage('Please enter a valid email address',
+                    AppToasts.showMessage('Please enter a valid email address'.tr,
                         isError: true);
                     setState(() {
                       _emailErrorMsg = '';
@@ -280,7 +281,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                   }
 
                   if (!GFunValid.isValidPhoneNumber(_phoneNumber)) {
-                    AppToasts.showMessage('Invalid phone number',
+                    AppToasts.showMessage('Invalid phone number'.tr,
                         isError: true);
                     setState(() {
                       _phoneErrorMsg = '';
@@ -289,7 +290,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                   }
 
                   if (_selectedCity == null) {
-                    AppToasts.showMessage('City is required', isError: true);
+                    AppToasts.showMessage('City is required'.tr, isError: true);
                     setState(() {
                       _cityErrorMsg = '';
                     });
@@ -298,7 +299,7 @@ class _AddClientBodyState extends State<AddClientBody> {
 
                   if (_location == null && _addressController.text.isEmpty) {
                     AppToasts.showMessage(
-                        'Please provide an address detail or pick a location from the map.',
+                        'Please provide an address detail or pick a location from the map.'.tr,
                         isError: true);
                     setState(() {
                       _addressErrorMsg = '';
@@ -310,7 +311,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                       (_addressController.text.length < 10 &&
                           _addressController.text.isNotEmpty)) {
                     AppToasts.showMessage(
-                        'Detailed address must be at least 10 characters long',
+                        'Detailed address must be at least 10 characters long'.tr,
                         isError: true);
                     setState(() {
                       _addressErrorMsg = '';
@@ -349,8 +350,8 @@ class _AddClientBodyState extends State<AddClientBody> {
                       )));
                 },
                 text: widget.clientDetailModel?.id != null
-                    ? 'Update Client'
-                    : 'Save Client',
+                    ? 'Update Client'.tr
+                    : 'Save Client'.tr,
                 height: 60,
                 isLoading: widget.loading,
                 boxShadow: [

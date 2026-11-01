@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../configs/app_theme.dart';
@@ -50,9 +51,9 @@ class InvoicesWidgetFilterSheet extends StatefulWidget {
 
 class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
   static Map<InvoiceStage, (String, Color)> get _stageStyle => {
-    InvoiceStage.draft: ('Draft', AppTheme.iconGrey),
-    InvoiceStage.issued: ('Issued', AppTheme.secondary),
-    InvoiceStage.overdue: ('Overdue', AppTheme.statOrange),
+    InvoiceStage.draft: ('Draft'.tr, AppTheme.iconGrey),
+    InvoiceStage.issued: ('Issued'.tr, AppTheme.secondary),
+    InvoiceStage.overdue: ('Overdue'.tr, AppTheme.statOrange),
   };
 
   late final Set<PaymentStatus> _payments = {...widget.filter.payments};
@@ -64,13 +65,13 @@ class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
   @override
   Widget build(BuildContext context) {
     return GWidgetBottomSheet(
-      title: 'Filter invoices',
-      subtitle: 'Pick one or more options in each group',
+      title: 'Filter invoices'.tr,
+      subtitle: 'Pick one or more options in each group'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _Group(
-            title: 'Stage',
+            title: 'Stage'.tr,
             children: InvoiceStage.values.map((stage) {
               final (label, color) = _stageStyle[stage]!;
               return GWidgetChoiceChip(
@@ -82,7 +83,7 @@ class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
             }).toList(),
           ),
           _Group(
-            title: 'Payment',
+            title: 'Payment'.tr,
             children: PaymentStatus.values.map((status) {
               final info = PaymentStatusSwitch(paymentStatusEnum: status);
               return GWidgetChoiceChip(
@@ -98,7 +99,7 @@ class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
             children: [
               Expanded(
                 child: GWidgetButton(
-                  text: 'Reset',
+                  text: 'Reset'.tr,
                   fontSize: AppTheme.textSubtitle,
                   raduis: 14,
                   colorText: AppTheme.iconGrey,
@@ -111,7 +112,7 @@ class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
               const SizedBox(width: 10),
               Expanded(
                 child: GWidgetButton(
-                  text: 'Apply',
+                  text: 'Apply'.tr,
                   fontSize: AppTheme.textSubtitle,
                   raduis: 14,
                   onPressed: () => Navigator.pop(context,

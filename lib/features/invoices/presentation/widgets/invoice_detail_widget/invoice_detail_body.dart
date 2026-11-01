@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
@@ -111,7 +112,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
     final v = (text ?? '').trim();
 
     if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(v)) {
-      return 'Enter a valid amount (up to 2 decimals)';
+      return 'Enter a valid amount (up to 2 decimals)'.tr;
     }
 
     final number = double.tryParse(v);
@@ -120,12 +121,12 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
         !number.isFinite ||
         (allowZero ? number < 0 : number <= 0)) {
       return allowZero
-          ? 'Amount cannot be negative'
-          : 'Amount must be above zero';
+          ? 'Amount cannot be negative'.tr
+          : 'Amount must be above zero'.tr;
     }
 
     if (number > max + 0.001) {
-      return 'Maximum allowed: ${_money(max)}';
+      return 'Maximum allowed: {0}'.trArgs([_money(max)]);
     }
 
     return null;
@@ -144,7 +145,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
         widget.invoice.subtotal == null ||
         widget.invoice.discountAmount == null ||
         widget.invoice.taxAmount == null) {
-      AppToasts.showMessage('Complete client, currency and invoice amounts.',
+      AppToasts.showMessage('Complete client, currency and invoice amounts.'.tr,
           color: AppTheme.primary);
       return;
     }
@@ -155,7 +156,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                 (widget.invoice.totalAmount ?? 0).toDouble())
             .abs() >
         .011) {
-      AppToasts.showMessage('Invoice breakdown does not match the total.',
+      AppToasts.showMessage('Invoice breakdown does not match the total.'.tr,
           color: AppTheme.primary);
       return;
     }
@@ -165,15 +166,14 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surface,
         title: Text(
-          'Issue invoice?',
+          'Issue invoice?'.tr,
           style: AppTheme.font(
             color: AppTheme.textPrimary,
             fontWeight: FontWeight.w800,
           ),
         ),
         content: Text(
-          'Total: ${_money((widget.invoice.totalAmount ?? 0).toDouble())}\n'
-          'Check the linked visit before confirming.',
+          'Total: {0}\nCheck the linked visit before confirming.'.trArgs([_money((widget.invoice.totalAmount ?? 0).toDouble())]),
           style: AppTheme.font(
             color: AppTheme.textSecondary,
             fontSize: AppTheme.textBodyLarge,
@@ -183,7 +183,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(
-              'Back',
+              'Back'.tr,
               style: AppTheme.font(
                 color: AppTheme.textSecondary,
               ),
@@ -192,7 +192,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(
-              'Continue',
+              'Continue'.tr,
               style: AppTheme.font(
                 color: AppTheme.primary,
                 fontWeight: FontWeight.w800,
@@ -234,7 +234,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
         widget.invoice.paymentStatus != PaymentStatus.cancelled &&
         widget.invoice.paymentStatus != PaymentStatus.refunded;
     return GWidgetNaviBody(
-      title: 'Invoice details',
+      title: 'Invoice details'.tr,
       body: GWidgetLoading(
         isLoading: widget.loading,
         body: Center(
@@ -257,7 +257,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.invoice.invoiceNumber ?? 'Invoice',
+                          widget.invoice.invoiceNumber ?? 'Invoice'.tr,
                           style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textTitle,
@@ -300,11 +300,11 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                       children: [
                         Text(
                           widget.invoice.paymentStatus == PaymentStatus.refunded
-                              ? 'Refund completed'
+                              ? 'Refund completed'.tr
                               : (widget.invoice.paymentStatus ==
                                       PaymentStatus.paid)
-                                  ? 'Amount paid'
-                                  : 'Remaining balance',
+                                  ? 'Amount paid'.tr
+                                  : 'Remaining balance'.tr,
                           style: AppTheme.font(
                             color: AppTheme.onPrimary,
                             fontSize: AppTheme.textBody,
@@ -348,14 +348,14 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Paid ${_money((widget.invoice.paidAmount ?? 0).toDouble())}',
+                              'Paid {0}'.trArgs([_money((widget.invoice.paidAmount ?? 0).toDouble())]),
                               style: AppTheme.font(
                                 color: AppTheme.onPrimary,
                                 fontSize: AppTheme.textSmall,
                               ),
                             ),
                             Text(
-                              'Total ${_money((widget.invoice.totalAmount ?? 0).toDouble())}',
+                              'Total {0}'.trArgs([_money((widget.invoice.totalAmount ?? 0).toDouble())]),
                               style: AppTheme.font(
                                 color: AppTheme.onPrimary,
                                 fontSize: AppTheme.textSmall,
@@ -370,7 +370,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   if (overdue) ...[
                     const SizedBox(height: 10),
                     InvDetailWidgetBadge(
-                      text: 'Overdue since ${_date(widget.invoice.dueDate)}',
+                      text: 'Overdue since {0}'.trArgs([_date(widget.invoice.dueDate)]),
                       color: AppTheme.statOrange,
                     ),
                   ],
@@ -380,8 +380,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                       widget.invoice.paymentStatus == null) ...[
                     const SizedBox(height: 12),
                     Text(
-                      'Invoice data or local storage is unavailable. '
-                      'Financial actions are locked.',
+                      'Invoice data or local storage is unavailable. Financial actions are locked.'.tr,
                       style: AppTheme.font(
                         color: AppTheme.statOrange,
                         fontSize: AppTheme.textBody,
@@ -396,24 +395,24 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   // -----------------------------------------
 
                   InvDetailWidgetPanel(
-                    title: 'Customer & visit',
+                    title: 'Customer & visit'.tr,
                     icon: Icons.home_repair_service_outlined,
                     child: Column(
                       children: [
                         InvDetailWidgetInfoLine(
-                          label: 'Customer',
+                          label: 'Customer'.tr,
                           value: widget.invoice.client?.name ?? '—',
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Visit number',
+                          label: 'Visit number'.tr,
                           value: widget.invoice.visitNumber ?? '—',
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Location',
+                          label: 'Location'.tr,
                           value: widget.invoice.site?.addressDetail ?? '—',
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Due date',
+                          label: 'Due date'.tr,
                           value: _date(widget.invoice.dueDate),
                         ),
                       ],
@@ -427,38 +426,38 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   // -----------------------------------------
 
                   InvDetailWidgetPanel(
-                    title: 'Amount breakdown',
+                    title: 'Amount breakdown'.tr,
                     icon: Icons.calculate_outlined,
                     child: Column(
                       children: [
                         InvDetailWidgetInfoLine(
-                          label: 'Subtotal',
+                          label: 'Subtotal'.tr,
                           value: _money(widget.invoice.subtotal),
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Discount',
+                          label: 'Discount'.tr,
                           value: '- ${_money(widget.invoice.discountAmount)}',
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Tax',
+                          label: 'Tax'.tr,
                           value: _money(widget.invoice.taxAmount),
                         ),
                         Divider(
                           color: AppTheme.iconLightGrey.withValues(alpha: .5),
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Invoice total',
+                          label: 'Invoice total'.tr,
                           value: _money(widget.invoice.totalAmount),
                           emphasize: true,
                           valueColor: AppTheme.primary,
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Paid',
+                          label: 'Paid'.tr,
                           value: _money(widget.invoice.paidAmount),
                           valueColor: AppTheme.statGreen,
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Remaining',
+                          label: 'Remaining'.tr,
                           value: _money(widget.invoice.remainingAmount),
                           emphasize: true,
                         ),
@@ -473,7 +472,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   if ((widget.invoice.notes ?? '').trim().isNotEmpty) ...[
                     const SizedBox(height: 14),
                     InvDetailWidgetPanel(
-                      title: 'Notes',
+                      title: 'Notes'.tr,
                       icon: Icons.sticky_note_2_outlined,
                       child: Text(
                         widget.invoice.notes!,
@@ -495,7 +494,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
                   if (_canRecord)
                     GWidgetButton(
-                        text: 'Record payment',
+                        text: 'Record payment'.tr,
                         widget: Padding(
                           padding: EdgeInsets.only(left: 8),
                           child: Icon(
@@ -511,7 +510,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                               InvDetailWidgetRecordPaymentSheet(
                                   invoiceID: widget.invoice.id!,
                                   subtitle:
-                                      'Remaining balance: ${_money((widget.invoice.remainingAmount ?? 0).toDouble())}',
+                                      'Remaining balance: {0}'.trArgs([_money((widget.invoice.remainingAmount ?? 0).toDouble())]),
                                   validator: (v) => _requiredMoney(v,
                                       max: (widget.invoice.remainingAmount ?? 0)
                                           .toDouble())));
@@ -522,7 +521,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
                   if (_canIssue)
                     GWidgetButton(
-                      text: 'Issue invoice',
+                      text: 'Issue invoice'.tr,
                       fontSize: AppTheme.textSubtitle,
                       onPressed: _issueInvoice,
                     ),
@@ -537,7 +536,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                                   widget.invoice.taxAmount == null) {
                                 AppToasts.showMessage(
                                     color: AppTheme.primary,
-                                    'Invoice pricing is incomplete.');
+                                    'Invoice pricing is incomplete.'.tr);
                                 return;
                               }
                               final data = await AppToasts.showBottomSheet(
@@ -545,7 +544,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                                   InvDetailWidgetEditSheet(
                                     invoice: widget.invoice,
                                     subtitle:
-                                        'Subtotal ${_money(widget.invoice.subtotal)} · only before issue',
+                                        'Subtotal {0} · only before issue'.trArgs([_money(widget.invoice.subtotal)]),
                                     validatorDiscount: (v) => _requiredMoney(
                                       v,
                                       max: widget.invoice.subtotal!.toDouble(),
@@ -591,7 +590,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                         _canEdit ? Icons.edit_outlined : Icons.undo_rounded,
                       ),
                       label: Text(
-                        _canEdit ? 'Edit draft' : 'Refund payment',
+                        _canEdit ? 'Edit draft'.tr : 'Refund payment'.tr,
                         style: AppTheme.font(
                           color: _canEdit
                               ? AppTheme.primary
@@ -607,8 +606,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Text(
-                          'No financial actions available '
-                          'for this invoice.',
+                          'No financial actions available for this invoice.'.tr,
                           textAlign: TextAlign.center,
                           style: AppTheme.font(
                             color: AppTheme.textSecondary,
@@ -622,7 +620,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
                   Center(
                     child: Text(
-                      'Changes are saved locally on this device.',
+                      'Changes are saved locally on this device.'.tr,
                       style: AppTheme.font(
                         color: AppTheme.textLightHint,
                         fontSize: AppTheme.textCaption,

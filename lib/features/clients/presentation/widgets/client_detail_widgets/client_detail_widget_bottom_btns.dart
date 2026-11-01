@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
@@ -35,7 +36,7 @@ class ClientDetailWidgetBottomBtns extends StatelessWidget {
         children: [
           Expanded(
             child: GWidgetButton(
-              text: 'Edit Client',
+              text: 'Edit Client'.tr,
               backgroundColor: AppTheme.secondary,
               height: 42,
               raduis: 12,
@@ -65,7 +66,7 @@ class ClientDetailWidgetBottomBtns extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: GWidgetButton(
-              text: 'Remove',
+              text: 'Remove'.tr,
               colorText: AppTheme.statOrange,
               backgroundColor: AppTheme.statOrange.withValues(alpha: 0.1),
               border: Border.all(color: AppTheme.statOrange, width: 1.2),
@@ -84,15 +85,15 @@ class ClientDetailWidgetBottomBtns extends StatelessWidget {
               onPressed: () async {
                 if (clientDetailModel.visits?.isNotEmpty ?? false) {
                   AppToasts.showMessage(
-                      'This client cannot be deleted because they have existing visits',
+                      'This client cannot be deleted because they have existing visits'.tr,
                       isError: true);
                   return;
                 }
 
                 final data = await AppToasts.showDeleteConfirmation(
-                    headTitle: 'Remove Client?',
+                    headTitle: 'Remove Client?'.tr,
                     title:
-                        'Are you sure you want to remove ${clientDetailModel.name ?? '--'}? This action cannot be undone.');
+                        'Are you sure you want to remove {0}? This action cannot be undone.'.trArgs([clientDetailModel.name ?? '--']));
                 if (data is bool) {
                   if (data) {
                     if (clientDetailModel.id != null) {

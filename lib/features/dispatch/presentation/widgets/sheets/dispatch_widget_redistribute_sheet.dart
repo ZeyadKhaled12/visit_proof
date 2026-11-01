@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,8 +23,8 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Redistribute visits',
-      subtitle: 'From ${technician.name ?? 'technician'}',
+      title: 'Redistribute visits'.tr,
+      subtitle: 'From {0}'.trArgs([technician.name ?? 'technician'.tr]),
       requestState: (state) => state.bulkAssignRequestState,
       builder: (context, state, loading) {
         final day = state.day;
@@ -35,9 +36,9 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
             dayVisits.where(VisitRules.isClosed).length;
 
         if (movable.isEmpty) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.task_alt_rounded,
-              text: 'No visits on this day can be moved');
+              text: 'No visits on this day can be moved'.tr);
         }
 
         final plans = DispatchRules.planAssignments(
@@ -55,17 +56,14 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             VisitDetailNotice(
-              text: 'Plan for ${VisitDetailHelpers.date(day)}. Each visit goes '
-                  'to the best available colleague at the closest time.',
+              text: 'Plan for {0}. Each visit goes to the best available colleague at the closest time.'.trArgs([VisitDetailHelpers.date(day)]),
               color: AppTheme.secondary,
               icon: Icons.alt_route_rounded,
             ),
             if (started > 0) ...[
               const SizedBox(height: 8),
               VisitDetailNotice(
-                text: '$started visit${started == 1 ? ' is' : 's are'} already '
-                    'under way and stay${started == 1 ? 's' : ''} with '
-                    '${technician.name ?? 'the technician'}.',
+                text: '{0} visit{1} already under way and stay{2} with {3}.'.trArgs([started, started == 1 ? ' is' : 's are', started == 1 ? 's' : '', technician.name ?? 'the technician'.tr]),
                 color: AppTheme.pending,
                 icon: Icons.warning_amber_rounded,
               ),
@@ -75,8 +73,8 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
             const SizedBox(height: 8),
             GWidgetButton(
               text: ready.isEmpty
-                  ? 'Nobody is available'
-                  : 'Move ${ready.length} of ${plans.length}',
+                  ? 'Nobody is available'.tr
+                  : 'Move {0} of {1}'.trArgs([ready.length, plans.length]),
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               isEnable: ready.isNotEmpty,
@@ -91,8 +89,7 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
                     visitID: plan.visit.id!,
                     technician: plan.technician!,
                     startDate: plan.start,
-                    reason: 'Redistributed from ${technician.name ?? 'technician'}'
-                        '${plan.warnings.isEmpty ? '' : ' · ${plan.warnings.first.message}'}',
+                    reason: 'Redistributed from {0}{1}'.trArgs([technician.name ?? 'technician'.tr, plan.warnings.isEmpty ? '' : ' · ${plan.warnings.first.message}']),
                   ),
               ])),
             ),

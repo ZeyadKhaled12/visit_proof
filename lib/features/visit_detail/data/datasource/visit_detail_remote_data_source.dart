@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -77,9 +78,9 @@ class VisitDetailRemoteDataSource
 
   static const Duration _latency = Duration(milliseconds: 450);
 
-  static const VisitHistoryActorModel _admin = VisitHistoryActorModel(
+  static VisitHistoryActorModel _admin = VisitHistoryActorModel(
     id: 'local-admin',
-    name: 'Local Admin',
+    name: 'Local Admin'.tr,
     role: 'admin',
   );
 
@@ -113,7 +114,7 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Visit moved to ${_statusText(to)}',
+      successMessage: 'Visit moved to {0}'.trArgs([_statusText(to)]),
       edit: (visit, invoice, allVisits) {
         final from = VisitRules.statusOf(visit);
 
@@ -132,7 +133,7 @@ class VisitDetailRemoteDataSource
         return (
           visit: updated,
           updatedInvoice: _invoiceForStatus(invoice, to),
-          log: 'Status changed from ${_statusText(from)} to ${_statusText(to)}',
+          log: 'Status changed from {0} to {1}'.trArgs([_statusText(from), _statusText(to)]),
           reason: parameters.reason,
         );
       },
@@ -166,7 +167,7 @@ class VisitDetailRemoteDataSource
       AssignTechnicianParameters parameters) {
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Technician assigned successfully',
+      successMessage: 'Technician assigned successfully'.tr,
       edit: (visit, invoice, allVisits) {
         // Dispatch can set the time in the same step as the technician.
         final newStart = parameters.startDate;
@@ -178,11 +179,11 @@ class VisitDetailRemoteDataSource
 
         final startDate = planned.startDate;
         if (startDate == null) {
-          _fail('Set a start date before assigning a technician.');
+          _fail('Set a start date before assigning a technician.'.tr);
         }
 
         if (newStart != null && newStart.isBefore(DateTime.now())) {
-          _fail('The start time must be in the future.');
+          _fail('The start time must be in the future.'.tr);
         }
 
         _checkReason(parameters.reason, required: false);
@@ -191,7 +192,7 @@ class VisitDetailRemoteDataSource
         final previous = visit.technicianModel;
 
         if (previous?.id == technician.id) {
-          _fail('${technician.name} is already assigned to this visit.');
+          _fail('{0} is already assigned to this visit.'.trArgs([technician.name]));
         }
 
         _checkTechnicianIsFree(
@@ -203,8 +204,8 @@ class VisitDetailRemoteDataSource
         );
 
         final assigned = previous == null
-            ? 'Technician ${technician.name} assigned'
-            : 'Technician changed from ${previous.name} to ${technician.name}';
+            ? 'Technician {0} assigned'.trArgs([technician.name])
+            : 'Technician changed from {0} to {1}'.trArgs([previous.name, technician.name]);
 
         return (
           visit: planned.copyWith(
@@ -214,7 +215,7 @@ class VisitDetailRemoteDataSource
           updatedInvoice: null,
           log: newStart == null || newStart == visit.startDate
               ? assigned
-              : '$assigned for ${_dateTime(startDate)}',
+              : '{0} for {1}'.trArgs([assigned, _dateTime(startDate)]),
           reason: parameters.reason,
         );
       },
@@ -226,11 +227,10 @@ class VisitDetailRemoteDataSource
       UnassignTechnicianParameters parameters) {
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Technician unassigned',
+      successMessage: 'Technician unassigned'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canUnassignTechnician(visit)) {
-          _fail('Only an assigned visit can release its technician. '
-              'Move the visit back to Assigned first.');
+          _fail('Only an assigned visit can release its technician. Move the visit back to Assigned first.'.tr);
         }
 
         _checkReason(parameters.reason, required: false);
@@ -239,7 +239,7 @@ class VisitDetailRemoteDataSource
           visit: _withoutTechnician(visit)
               .copyWith(status: VisitStatus.scheduled),
           updatedInvoice: null,
-          log: 'Technician ${visit.technicianModel?.name ?? ''} unassigned',
+          log: 'Technician {0} unassigned'.trArgs([visit.technicianModel?.name ?? '']),
           reason: parameters.reason,
         );
       },
@@ -257,18 +257,18 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Visit rescheduled',
+      successMessage: 'Visit rescheduled'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canReschedule(visit)) {
-          _fail('Only draft, scheduled or assigned visits can be rescheduled.');
+          _fail('Only draft, scheduled or assigned visits can be rescheduled.'.tr);
         }
 
         if (newStart.isBefore(DateTime.now())) {
-          _fail('The new start time must be in the future.');
+          _fail('The new start time must be in the future.'.tr);
         }
 
         if (visit.startDate == newStart) {
-          _fail('Pick a time different from the current one.');
+          _fail('Pick a time different from the current one.'.tr);
         }
 
         _checkReason(parameters.reason, required: false);
@@ -290,9 +290,8 @@ class VisitDetailRemoteDataSource
           visit: visit.copyWith(startDate: newStart),
           updatedInvoice: null,
           log: previous == null
-              ? 'Visit scheduled for ${_dateTime(newStart)}'
-              : 'Visit rescheduled from ${_dateTime(previous)} '
-                  'to ${_dateTime(newStart)}',
+              ? 'Visit scheduled for {0}'.trArgs([_dateTime(newStart)])
+              : 'Visit rescheduled from {0} to {1}'.trArgs([_dateTime(previous), _dateTime(newStart)]),
           reason: parameters.reason,
         );
       },
@@ -307,19 +306,18 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Visit details updated',
+      successMessage: 'Visit details updated'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canEditInfo(visit)) {
-          _fail('Completed or cancelled visits cannot be edited.');
+          _fail('Completed or cancelled visits cannot be edited.'.tr);
         }
 
         if (problem.length > VisitRules.maxProblemLength) {
-          _fail('Problem description cannot exceed '
-              '${VisitRules.maxProblemLength} characters.');
+          _fail('Problem description cannot exceed {0} characters.'.trArgs([VisitRules.maxProblemLength]));
         }
 
         if (notes.length > VisitRules.maxNotesLength) {
-          _fail('Notes cannot exceed ${VisitRules.maxNotesLength} characters.');
+          _fail('Notes cannot exceed {0} characters.'.trArgs([VisitRules.maxNotesLength]));
         }
 
         final proofChanged = parameters.requireBeforeWorkPhotos !=
@@ -328,8 +326,7 @@ class VisitDetailRemoteDataSource
                 (visit.requireAfterWorkPhotos ?? false);
 
         if (proofChanged && !VisitRules.canChangeProofRequirements(visit)) {
-          _fail('Photo requirements are locked once the technician '
-              'is on the way.');
+          _fail('Photo requirements are locked once the technician is on the way.'.tr);
         }
 
         final nothingChanged = !proofChanged &&
@@ -337,7 +334,7 @@ class VisitDetailRemoteDataSource
             problem == (visit.problemDescription ?? '') &&
             notes == (visit.notes ?? '');
 
-        if (nothingChanged) _fail('There are no changes to save.');
+        if (nothingChanged) _fail('There are no changes to save.'.tr);
 
         return (
           visit: visit.copyWith(
@@ -348,7 +345,7 @@ class VisitDetailRemoteDataSource
             requireAfterWorkPhotos: parameters.requireAfterWorkPhotos,
           ),
           updatedInvoice: null,
-          log: 'Visit details updated',
+          log: 'Visit details updated'.tr,
           reason: null,
         );
       },
@@ -362,20 +359,19 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Service changed and invoice repriced',
+      successMessage: 'Service changed and invoice repriced'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canChangeService(visit, invoice)) {
-          _fail('The service can only change before dispatch and before '
-              'the invoice is issued or paid.');
+          _fail('The service can only change before dispatch and before the invoice is issued or paid.'.tr);
         }
 
         if ((service.serviceName ?? '').trim().isEmpty) {
-          _fail('Please select a valid service.');
+          _fail('Please select a valid service.'.tr);
         }
 
         final duration = service.duration ?? 0;
         if (duration <= 0) {
-          _fail('The selected service has no valid duration.');
+          _fail('The selected service has no valid duration.'.tr);
         }
 
         final priceInCents = _cents(service.defaultPrice);
@@ -402,8 +398,7 @@ class VisitDetailRemoteDataSource
           ),
           updatedInvoice:
               invoice == null ? null : _repriceInvoice(invoice, priceInCents),
-          log: 'Service changed from ${visit.serviceName ?? 'none'} '
-              'to ${service.serviceName}',
+          log: 'Service changed from {0} to {1}'.trArgs([visit.serviceName ?? 'none'.tr, service.serviceName]),
           reason: null,
         );
       },
@@ -419,8 +414,7 @@ class VisitDetailRemoteDataSource
     final tax = _cents(invoice.taxAmount ?? 0);
 
     if (discount > subtotal) {
-      _fail('The invoice discount is higher than the new price. '
-          'Lower the discount first.');
+      _fail('The invoice discount is higher than the new price. Lower the discount first.'.tr);
     }
 
     final total = subtotal - discount + tax;
@@ -439,18 +433,18 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Visit site updated',
+      successMessage: 'Visit site updated'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canChangeSite(visit)) {
-          _fail('The site can only change before the technician leaves.');
+          _fail('The site can only change before the technician leaves.'.tr);
         }
 
-        if (site.city == null) _fail('Please select a city for the site.');
+        if (site.city == null) _fail('Please select a city for the site.'.tr);
 
         final hasAddress = (site.addressDetail ?? '').trim().isNotEmpty;
         final hasCoordinates = site.latitude != null && site.longitude != null;
         if (!hasAddress && !hasCoordinates) {
-          _fail('Add an address or pick the site on the map.');
+          _fail('Add an address or pick the site on the map.'.tr);
         }
 
         // The invoice keeps a snapshot of the site until it is issued.
@@ -460,7 +454,7 @@ class VisitDetailRemoteDataSource
         return (
           visit: visit.copyWith(site: site),
           updatedInvoice: syncInvoice ? invoice.copyWith(site: site) : null,
-          log: 'Site changed to ${_siteText(site)}',
+          log: 'Site changed to {0}'.trArgs([_siteText(site)]),
           reason: null,
         );
       },
@@ -478,18 +472,17 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
-      successMessage: 'Note added',
+      successMessage: 'Note added'.tr,
       edit: (visit, invoice, allVisits) {
         if (comment.length < VisitRules.minCommentLength ||
             comment.length > VisitRules.maxCommentLength) {
-          _fail('A note must be ${VisitRules.minCommentLength}–'
-              '${VisitRules.maxCommentLength} characters.');
+          _fail('A note must be {0}–{1} characters.'.trArgs([VisitRules.minCommentLength, VisitRules.maxCommentLength]));
         }
 
         return (
           visit: visit,
           updatedInvoice: null,
-          log: 'Admin added a note',
+          log: 'Admin added a note'.tr,
           reason: comment,
         );
       },
@@ -511,8 +504,7 @@ class VisitDetailRemoteDataSource
         // The ledger keeps refunded payments too, so it is checked as well.
         if (!VisitRules.canDelete(visit, invoice) ||
             _hasPaymentHistory(invoice?.id)) {
-          _fail('Only draft or cancelled visits with no issued invoice '
-              'and no payment history can be deleted.');
+          _fail('Only draft or cancelled visits with no issued invoice and no payment history can be deleted.'.tr);
         }
 
         visits.removeWhere((e) => e.id == visit.id);
@@ -521,7 +513,7 @@ class VisitDetailRemoteDataSource
         await _save(visits: visits, invoices: invoices);
       });
 
-      await AppToasts.showMessage('Visit and its invoice were deleted');
+      await AppToasts.showMessage('Visit and its invoice were deleted'.tr);
     }).checkLogicErrors();
   }
 
@@ -625,13 +617,11 @@ class VisitDetailRemoteDataSource
     final length = reason?.trim().length ?? 0;
 
     if (required && length < VisitRules.minReasonLength) {
-      _fail('Please give a reason of at least '
-          '${VisitRules.minReasonLength} characters.');
+      _fail('Please give a reason of at least {0} characters.'.trArgs([VisitRules.minReasonLength]));
     }
 
     if (length > VisitRules.maxReasonLength) {
-      _fail('The reason cannot exceed ${VisitRules.maxReasonLength} '
-          'characters.');
+      _fail('The reason cannot exceed {0} characters.'.trArgs([VisitRules.maxReasonLength]));
     }
   }
 
@@ -659,9 +649,7 @@ class VisitDetailRemoteDataSource
           otherStart.add(Duration(minutes: other.durationInMin ?? 0));
 
       if (start.isBefore(otherEnd) && otherStart.isBefore(end)) {
-        _fail('${technician.name ?? 'This technician'} is already booked on '
-            '${other.visitNumber ?? 'another visit'} at '
-            '${_dateTime(otherStart)}.');
+        _fail('{0} is already booked on {1} at {2}.'.trArgs([technician.name ?? 'This technician'.tr, other.visitNumber ?? 'another visit'.tr, _dateTime(otherStart)]));
       }
     }
   }
@@ -669,13 +657,13 @@ class VisitDetailRemoteDataSource
   /// Money is validated in cents to avoid floating point errors.
   int _cents(num? value) {
     if (value == null || !value.toDouble().isFinite || value < 0) {
-      _fail('A valid, non-negative amount is required.');
+      _fail('A valid, non-negative amount is required.'.tr);
     }
 
     final amount = value.toDouble() * 100;
 
     if ((amount - amount.round()).abs() > 0.000001) {
-      _fail('Amounts must have at most 2 decimal places.');
+      _fail('Amounts must have at most 2 decimal places.'.tr);
     }
 
     return amount.round();
@@ -715,12 +703,12 @@ class VisitDetailRemoteDataSource
       _readList(_invoicesKey, InvoiceDetailModel.fromJson);
 
   VisitDetailModel _findVisit(List<VisitDetailModel> visits, String visitID) {
-    if (visitID.trim().isEmpty) _fail('Visit ID is required.');
+    if (visitID.trim().isEmpty) _fail('Visit ID is required.'.tr);
 
     final matches = visits.where((e) => e.id == visitID).toList();
 
-    if (matches.isEmpty) _fail('This visit no longer exists.');
-    if (matches.length > 1) _fail('This visit is duplicated in storage.');
+    if (matches.isEmpty) _fail('This visit no longer exists.'.tr);
+    if (matches.length > 1) _fail('This visit is duplicated in storage.'.tr);
 
     return matches.single;
   }
@@ -736,7 +724,7 @@ class VisitDetailRemoteDataSource
         .toList();
 
     if (matches.length > 1) {
-      _fail('This visit is linked to more than one invoice.');
+      _fail('This visit is linked to more than one invoice.'.tr);
     }
 
     return matches.firstOrNull;
@@ -747,7 +735,7 @@ class VisitDetailRemoteDataSource
         .where((e) => e.id != null && e.id == technicianID)
         .firstOrNull;
 
-    if (technician == null) _fail('This technician no longer exists.');
+    if (technician == null) _fail('This technician no longer exists.'.tr);
 
     return technician.convertToTechnicianModel();
   }
@@ -780,7 +768,7 @@ class VisitDetailRemoteDataSource
 
   Future<void> _write(String key, List<String> value) async {
     final saved = await _preferences.setStringList(key, value);
-    if (!saved) _fail('Could not save the changes locally.');
+    if (!saved) _fail('Could not save the changes locally.'.tr);
   }
 
   Future<void> _restore(String key, List<String>? value) async {

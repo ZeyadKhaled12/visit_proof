@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/utils/enums/payment_status_enum.dart';
@@ -133,7 +134,7 @@ class DashboardMetrics {
       List<VisitDetailModel> visits) {
     final counts = <String, int>{};
     for (final visit in visits) {
-      final name = visit.category?.name ?? 'Uncategorized';
+      final name = visit.category?.name ?? 'Uncategorized'.tr;
       counts[name] = (counts[name] ?? 0) + 1;
     }
     return counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));

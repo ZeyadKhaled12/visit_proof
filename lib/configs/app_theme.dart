@@ -9,8 +9,9 @@
 //   1. Colors      → edit [AppTheme.light] (light mode) and [AppTheme.dark]
 //                    (dark mode). Colors are written as 0xAARRGGBB:
 //                    AA = opacity (FF solid, 00 invisible), then the hex color.
-//   2. Font family → set [AppTheme.fontFamily] to any Google Fonts name, as
-//                    written on fonts.google.com ('Cairo', 'Poppins', 'Inter').
+//   2. Font family → set [AppTheme.fontFamily] (English) and
+//                    [AppTheme.fontFamilyArabic] (Arabic) to Google Fonts names,
+//                    as written on fonts.google.com ('Poppins', 'Cairo').
 //   3. Text sizes  → edit a size token, or [AppTheme.fontScale] to make all
 //                    text bigger or smaller at once.
 //   4. Dark mode   → [AppTheme.darkModeEnabled] shows or hides the switch;
@@ -23,6 +24,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'app_language.dart';
 
 /// One full set of colors. The app has two: [AppTheme.light] and
 /// [AppTheme.dark]. Each field says where the color is used.
@@ -214,8 +217,12 @@ class AppTheme {
   // TYPOGRAPHY
   // ===========================================================================
 
-  /// Font of the whole app, loaded from Google Fonts by name.
+  /// Font of the whole app in English, loaded from Google Fonts by name.
   static const String fontFamily = 'Manrope';
+
+  /// Font used when the app is in Arabic. Pick a Google Font that has
+  /// Arabic letters (e.g. 'Cairo', 'Tajawal', 'Almarai', 'IBM Plex Sans Arabic').
+  static const String fontFamilyArabic = 'Cairo';
 
   /// Multiplies every text size. 1.0 = as designed, 1.1 = 10 % bigger.
   static const double fontScale = 1.0;
@@ -261,6 +268,10 @@ class AppTheme {
 
   static bool get isDark => darkMode.value;
 
+  /// The font for the current language.
+  static String get activeFontFamily =>
+      AppLanguage.isArabic ? fontFamilyArabic : fontFamily;
+
   /// The palette in use right now.
   static AppPalette get palette => isDark ? dark : light;
 
@@ -304,7 +315,7 @@ class AppTheme {
     List<FontFeature>? fontFeatures,
   }) {
     return GoogleFonts.getFont(
-      fontFamily,
+      activeFontFamily,
       fontSize: fontSize == null ? null : fontSize * fontScale,
       color: color,
       fontWeight: fontWeight,
@@ -359,7 +370,7 @@ class AppTheme {
         onSurface: textPrimary,
         error: statOrange,
       ),
-      textTheme: GoogleFonts.getTextTheme(fontFamily).apply(
+      textTheme: GoogleFonts.getTextTheme(activeFontFamily).apply(
         bodyColor: textPrimary,
         displayColor: textPrimary,
       ),

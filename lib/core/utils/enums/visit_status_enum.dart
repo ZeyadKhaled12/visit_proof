@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 
@@ -96,38 +97,38 @@ class VisitStatusSwitch {
 
   String getText() {
     if (visitStatusID == 1) {
-      return 'Draft';
+      return 'Draft'.tr;
     } else if (visitStatusID == 2) {
-      return 'Scheduled';
+      return 'Scheduled'.tr;
     } else if (visitStatusID == 3) {
-      return 'Assigned';
+      return 'Assigned'.tr;
     } else if (visitStatusID == 4) {
-      return 'On The Way';
+      return 'On The Way'.tr;
     } else if (visitStatusID == 5) {
-      return 'In Progress';
+      return 'In Progress'.tr;
     } else if (visitStatusID == 6) {
-      return 'Completed';
+      return 'Completed'.tr;
     } else if (visitStatusID == 7) {
-      return 'Cancelled';
+      return 'Cancelled'.tr;
     }
 
     switch (visitStatusEnum) {
       case null:
-        return 'Draft';
+        return 'Draft'.tr;
       case VisitStatus.draft:
-        return 'Draft';
+        return 'Draft'.tr;
       case VisitStatus.scheduled:
-        return 'Scheduled';
+        return 'Scheduled'.tr;
       case VisitStatus.assigned:
-        return 'Assigned';
+        return 'Assigned'.tr;
       case VisitStatus.onWay:
-        return 'On The Way';
+        return 'On The Way'.tr;
       case VisitStatus.inProgress:
-        return 'In Progress';
+        return 'In Progress'.tr;
       case VisitStatus.completed:
-        return 'Completed';
+        return 'Completed'.tr;
       case VisitStatus.cancel:
-        return 'Cancelled';
+        return 'Cancelled'.tr;
     }
   }
 }

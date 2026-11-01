@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -21,11 +22,11 @@ class DispatchWidgetMap extends StatelessWidget {
         .toList();
 
     if (located.isEmpty) {
-      return const SingleChildScrollView(
+      return SingleChildScrollView(
         child: GWidgetEmpty(
           icon: Icons.location_off_rounded,
-          title: 'No visits on the map',
-          subtitle: 'Visits appear here when their site was picked on a map.',
+          title: 'No visits on the map'.tr,
+          subtitle: 'Visits appear here when their site was picked on a map.'.tr,
         ),
       );
     }
@@ -70,9 +71,9 @@ class DispatchWidgetMap extends StatelessWidget {
                       ),
                   ],
                 ),
-                const RichAttributionWidget(
+                RichAttributionWidget(
                   attributions: [
-                    TextSourceAttribution('OpenStreetMap contributors'),
+                    TextSourceAttribution('OpenStreetMap contributors'.tr),
                   ],
                 ),
               ],
@@ -96,7 +97,7 @@ class DispatchWidgetMap extends StatelessWidget {
                     Icon(Icons.person_off_rounded,
                         size: 14, color: AppTheme.pending),
                     const SizedBox(width: 4),
-                    Text('Waiting',
+                    Text('Waiting'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textCaption,
@@ -105,7 +106,7 @@ class DispatchWidgetMap extends StatelessWidget {
                     Icon(Icons.engineering_rounded,
                         size: 14, color: AppTheme.primary),
                     const SizedBox(width: 4),
-                    Text('Assigned',
+                    Text('Assigned'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textCaption,

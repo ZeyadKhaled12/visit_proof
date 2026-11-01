@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_bottom_sheet.dart';
@@ -49,8 +50,8 @@ class _InvDetailWidgetRefundPaymentSheetState
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
-              title: 'Refund payment',
-              subtitle: 'Refunds require a verified payment ledger.',
+              title: 'Refund payment'.tr,
+              subtitle: 'Refunds require a verified payment ledger.'.tr,
               body: Form(
                 key: _form,
                 child: Column(
@@ -58,7 +59,7 @@ class _InvDetailWidgetRefundPaymentSheetState
                   children: [
                     GWidgetTextField(
                         controller: _amount,
-                        labelText: 'Refund amount',
+                        labelText: 'Refund amount'.tr,
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
@@ -66,15 +67,15 @@ class _InvDetailWidgetRefundPaymentSheetState
                     const SizedBox(height: 13),
                     GWidgetTextField(
                       controller: _reason,
-                      labelText: 'Reason',
+                      labelText: 'Reason'.tr,
                       maxLines: 3,
                       validator: (v) => (v?.trim().length ?? 0) < 8
-                          ? 'Enter at least 8 characters'
+                          ? 'Enter at least 8 characters'.tr
                           : null,
                     ),
                     const SizedBox(height: 20),
                     GWidgetButton(
-                      text: 'Confirm refund',
+                      text: 'Confirm refund'.tr,
                       fontSize: AppTheme.textSubtitle,
                       isLoading: state.invoiceDetailRequestState ==
                           RequestState.loading,

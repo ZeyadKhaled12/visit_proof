@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,8 +23,10 @@ class DispatchScr extends StatelessWidget {
             if (state.bulkAssignRequestState != RequestState.loaded) return;
             final failed = state.bulkFailures.length;
             AppToasts.showMessage(
-                '${state.bulkSucceeded} visit${state.bulkSucceeded == 1 ? '' : 's'} '
-                'assigned${failed == 0 ? '' : ', $failed could not be assigned'}',
+                failed == 0
+                    ? 'Visits assigned: {0}'.trArgs([state.bulkSucceeded])
+                    : 'Visits assigned: {0}, not assigned: {1}'
+                        .trArgs([state.bulkSucceeded, failed]),
                 isError: failed > 0 && state.bulkSucceeded == 0);
           },
           listenWhen: (previous, current) =>

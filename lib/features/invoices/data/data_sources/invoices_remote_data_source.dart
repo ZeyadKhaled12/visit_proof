@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -66,7 +67,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
   static final VisitHistoryActorModel _demoActor = VisitHistoryActorModel(
     id: 'local-admin',
-    name: 'Local Admin',
+    name: 'Local Admin'.tr,
     role: 'admin',
   );
 
@@ -161,7 +162,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       if (!paymentsSaved) {
         throw ServerException(
           ErrorMessageModel(
-            statusMessage: 'Could not save payments.',
+            statusMessage: 'Could not save payments.'.tr,
           ),
         );
       }
@@ -174,7 +175,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       if (!visitsSaved) {
         throw ServerException(
           ErrorMessageModel(
-            statusMessage: 'Could not save visits.',
+            statusMessage: 'Could not save visits.'.tr,
           ),
         );
       }
@@ -187,7 +188,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       if (!invoicesSaved) {
         throw ServerException(
           ErrorMessageModel(
-            statusMessage: 'Could not save invoices.',
+            statusMessage: 'Could not save invoices.'.tr,
           ),
         );
       }
@@ -240,7 +241,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (matches.length != 1) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Invoice not found or duplicated: $invoiceId',
+          statusMessage: 'Invoice not found or duplicated: {0}'.trArgs([invoiceId]),
         ),
       );
     }
@@ -257,8 +258,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (matches.length != 1) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'The linked visit is missing from local storage. '
-              'Save the VisitDetailModel in the "visits" preference first.',
+          statusMessage: 'The linked visit is missing from local storage. Save the VisitDetailModel in the "visits" preference first.'.tr,
         ),
       );
     }
@@ -268,7 +268,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (visit.invoiceID != null && visit.invoiceID != invoice.id) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'This visit is already linked to another invoice.',
+          statusMessage: 'This visit is already linked to another invoice.'.tr,
         ),
       );
     }
@@ -276,7 +276,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (visit.status == null) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Visit status is missing.',
+          statusMessage: 'Visit status is missing.'.tr,
         ),
       );
     }
@@ -292,7 +292,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (value == null || !value.toDouble().isFinite) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'A valid financial amount is required.',
+          statusMessage: 'A valid financial amount is required.'.tr,
         ),
       );
     }
@@ -302,7 +302,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (!amount.isFinite || amount.abs() > 9000000000000000) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Amount is outside the supported range.',
+          statusMessage: 'Amount is outside the supported range.'.tr,
         ),
       );
     }
@@ -310,7 +310,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if ((amount - amount.round()).abs() > 0.000001) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Amounts must have at most 2 decimal places.',
+          statusMessage: 'Amounts must have at most 2 decimal places.'.tr,
         ),
       );
     }
@@ -320,7 +320,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if ((!allowNegative && cents < 0) || (!allowZero && cents == 0)) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Amount must be greater than zero.',
+          statusMessage: 'Amount must be greater than zero.'.tr,
         ),
       );
     }
@@ -335,7 +335,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         (invoice.visitId ?? '').trim().isEmpty) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Invoice and visit IDs are required.',
+          statusMessage: 'Invoice and visit IDs are required.'.tr,
         ),
       );
     }
@@ -343,7 +343,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (invoice.paymentStatus == null) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Invoice payment status is missing.',
+          statusMessage: 'Invoice payment status is missing.'.tr,
         ),
       );
     }
@@ -355,7 +355,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (paid > total || remaining != total - paid) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Invoice totals are inconsistent.',
+          statusMessage: 'Invoice totals are inconsistent.'.tr,
         ),
       );
     }
@@ -366,7 +366,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         (invoice.paymentStatus == PaymentStatus.paid && paid != total)) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Payment status does not match the paid amount.',
+          statusMessage: 'Payment status does not match the paid amount.'.tr,
         ),
       );
     }
@@ -378,7 +378,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if (discount > subtotal || subtotal - discount + tax != total) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Subtotal, discount, tax and total do not match.',
+          statusMessage: 'Subtotal, discount, tax and total do not match.'.tr,
         ),
       );
     }
@@ -386,7 +386,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     if ((invoice.currency ?? '').trim().isEmpty) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Invoice currency is required.',
+          statusMessage: 'Invoice currency is required.'.tr,
         ),
       );
     }
@@ -395,7 +395,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         (invoice.client?.name ?? '').trim().isEmpty) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Invoice client must be complete.',
+          statusMessage: 'Invoice client must be complete.'.tr,
         ),
       );
     }
@@ -407,7 +407,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         )) {
       throw ServerException(
         ErrorMessageModel(
-          statusMessage: 'Due date cannot precede issue date.',
+          statusMessage: 'Due date cannot precede issue date.'.tr,
         ),
       );
     }
@@ -466,7 +466,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               (invoice.visitId ?? '').trim().isEmpty) {
             throw ServerException(
               ErrorMessageModel(
-                statusMessage: 'Invoice and visit IDs are required.',
+                statusMessage: 'Invoice and visit IDs are required.'.tr,
               ),
             );
           }
@@ -486,7 +486,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
-                      'Cannot change the visit of an existing invoice.',
+                      'Cannot change the visit of an existing invoice.'.tr,
                 ),
               );
             }
@@ -499,7 +499,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
           )) {
             throw ServerException(
               ErrorMessageModel(
-                statusMessage: 'Only one invoice is allowed per visit.',
+                statusMessage: 'Only one invoice is allowed per visit.'.tr,
               ),
             );
           }
@@ -536,8 +536,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                   paymentMethod: PaymentMethod.other,
                   collectedBy: _demoActor,
                   referenceNumber: 'OPENING-${invoice.id}',
-                  notes: 'DEMO OPENING BALANCE: imported snapshot, '
-                      'not a verified payment transaction.',
+                  notes: 'DEMO OPENING BALANCE: imported snapshot, not a verified payment transaction.'.tr,
                 ),
               );
             } on ServerException {
@@ -576,7 +575,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
           if (parameters.invoiceId.trim().isEmpty) {
             throw ServerException(
               ErrorMessageModel(
-                statusMessage: 'Invoice ID is required.',
+                statusMessage: 'Invoice ID is required.'.tr,
               ),
             );
           }
@@ -643,7 +642,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       if (ledgerPaid != _cents(current.paidAmount)) {
         throw ServerException(
           ErrorMessageModel(
-            statusMessage: 'Payment history and paid balance are inconsistent.',
+            statusMessage: 'Payment history and paid balance are inconsistent.'.tr,
           ),
         );
       }
@@ -659,7 +658,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       if (updated.id != current.id || updated.visitId != current.visitId) {
         throw ServerException(
           ErrorMessageModel(
-            statusMessage: 'Invoice identity cannot be changed.',
+            statusMessage: 'Invoice identity cannot be changed.'.tr,
           ),
         );
       }
@@ -669,7 +668,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       )) {
         throw ServerException(
           ErrorMessageModel(
-            statusMessage: 'Only one invoice is allowed per visit.',
+            statusMessage: 'Only one invoice is allowed per visit.'.tr,
           ),
         );
       }
@@ -681,7 +680,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         if (payment.id == null) {
           throw ServerException(
             ErrorMessageModel(
-              statusMessage: 'Payment entry is missing its identifier.',
+              statusMessage: 'Payment entry is missing its identifier.'.tr,
             ),
           );
         }
@@ -749,7 +748,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
         final updated = await _change(
           parameters.invoiceId,
-          description: 'Invoice issued',
+          description: 'Invoice issued'.tr,
           reason: parameters.overrideReason,
           edit: (invoice, visit, ledger) {
             if (invoice.issueDate != null ||
@@ -757,7 +756,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 _cents(invoice.paidAmount) != 0) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Only an unpaid draft invoice can be issued.',
+                  statusMessage: 'Only an unpaid draft invoice can be issued.'.tr,
                 ),
               );
             }
@@ -765,7 +764,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (ledger.isNotEmpty) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'A draft invoice cannot have payment entries.',
+                  statusMessage: 'A draft invoice cannot have payment entries.'.tr,
                 ),
               );
             }
@@ -773,7 +772,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (_cents(invoice.totalAmount) <= 0) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Invoice total must exceed zero.',
+                  statusMessage: 'Invoice total must exceed zero.'.tr,
                 ),
               );
             }
@@ -782,7 +781,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
-                      'Cannot issue an invoice for a cancelled visit.',
+                      'Cannot issue an invoice for a cancelled visit.'.tr,
                 ),
               );
             }
@@ -793,8 +792,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 throw ServerException(
                   ErrorMessageModel(
                     statusMessage:
-                        'Complete the visit first, or provide an approved '
-                        'early-issue override with a reason.',
+                        'Complete the visit first, or provide an approved early-issue override with a reason.'.tr,
                   ),
                 );
               }
@@ -808,7 +806,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 )) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Due date must not be before issue date.',
+                  statusMessage: 'Due date must not be before issue date.'.tr,
                 ),
               );
             }
@@ -825,7 +823,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         );
 
         await AppToasts.showMessage(
-          'Invoice issued successfully',
+          'Invoice issued successfully'.tr,
         );
 
         return updated;
@@ -849,7 +847,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
         final updated = await _change(
           parameters.invoiceId,
-          description: 'Draft invoice updated',
+          description: 'Draft invoice updated'.tr,
           reason: parameters.overrideReason,
           edit: (invoice, visit, ledger) {
             if (invoice.issueDate != null ||
@@ -858,7 +856,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 ledger.isNotEmpty) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Only an unpaid draft can be edited.',
+                  statusMessage: 'Only an unpaid draft can be edited.'.tr,
                 ),
               );
             }
@@ -877,7 +875,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
-                      'The visit status does not allow invoice edits.',
+                      'The visit status does not allow invoice edits.'.tr,
                 ),
               );
             }
@@ -897,7 +895,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (discount > subtotal) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Discount cannot exceed the subtotal.',
+                  statusMessage: 'Discount cannot exceed the subtotal.'.tr,
                 ),
               );
             }
@@ -907,7 +905,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (total < 0) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Invoice total cannot be negative.',
+                  statusMessage: 'Invoice total cannot be negative.'.tr,
                 ),
               );
             }
@@ -915,7 +913,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (parameters.notes.trim().length > 1000) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Notes cannot exceed 1000 characters.',
+                  statusMessage: 'Notes cannot exceed 1000 characters.'.tr,
                 ),
               );
             }
@@ -931,7 +929,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         );
 
         await AppToasts.showMessage(
-          'Draft invoice updated successfully',
+          'Draft invoice updated successfully'.tr,
         );
         log('DISCOUNT1: ${updated.discountAmount}');
         return updated;
@@ -954,7 +952,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
         final updated = await _change(
           parameters.invoiceId,
-          description: 'Invoice payment recorded: ${parameters.amount}',
+          description: 'Invoice payment recorded: {0}'.trArgs([parameters.amount]),
           actor: parameters.collectedBy,
           edit: (invoice, visit, ledger) {
             if (invoice.issueDate == null ||
@@ -963,7 +961,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
-                      'Only an issued, collectible invoice can be paid.',
+                      'Only an issued, collectible invoice can be paid.'.tr,
                 ),
               );
             }
@@ -972,7 +970,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 visit.status == VisitStatus.cancel) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'This visit cannot accept payments.',
+                  statusMessage: 'This visit cannot accept payments.'.tr,
                 ),
               );
             }
@@ -989,7 +987,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (cents > remaining) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Payment exceeds the remaining balance.',
+                  statusMessage: 'Payment exceeds the remaining balance.'.tr,
                 ),
               );
             }
@@ -1000,7 +998,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 reference.isEmpty) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Transaction reference is required.',
+                  statusMessage: 'Transaction reference is required.'.tr,
                 ),
               );
             }
@@ -1009,7 +1007,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 (parameters.notes ?? '').length > 1000) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Reference or notes are too long.',
+                  statusMessage: 'Reference or notes are too long.'.tr,
                 ),
               );
             }
@@ -1018,7 +1016,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 (parameters.notes ?? '').trim().isEmpty) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Explain the selected payment method.',
+                  statusMessage: 'Explain the selected payment method.'.tr,
                 ),
               );
             }
@@ -1036,7 +1034,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
-                      'This transaction reference was already recorded.',
+                      'This transaction reference was already recorded.'.tr,
                 ),
               );
             }
@@ -1072,7 +1070,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         );
 
         await AppToasts.showMessage(
-          'Payment recorded successfully',
+          'Payment recorded successfully'.tr,
         );
 
         return updated;
@@ -1095,7 +1093,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
         final updated = await _change(
           parameters.invoiceId,
-          description: 'Invoice payment refunded: ${parameters.amount}',
+          description: 'Invoice payment refunded: {0}'.trArgs([parameters.amount]),
           reason: parameters.reason.trim(),
           actor: parameters.actor,
           edit: (invoice, visit, ledger) {
@@ -1104,7 +1102,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                     invoice.paymentStatus != PaymentStatus.paid)) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Invoice has no refundable payment status.',
+                  statusMessage: 'Invoice has no refundable payment status.'.tr,
                 ),
               );
             }
@@ -1114,7 +1112,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (reason.length < 8 || reason.length > 1000) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Refund reason must be 8–1000 characters.',
+                  statusMessage: 'Refund reason must be 8–1000 characters.'.tr,
                 ),
               );
             }
@@ -1131,7 +1129,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             if (cents > paid) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Refund exceeds net paid amount.',
+                  statusMessage: 'Refund exceeds net paid amount.'.tr,
                 ),
               );
             }
@@ -1156,8 +1154,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
-                      'Payment history does not support this refund. '
-                      'Only locally recorded, unrefunded payments can be refunded.',
+                      'Payment history does not support this refund. Only locally recorded, unrefunded payments can be refunded.'.tr,
                 ),
               );
             }
@@ -1193,7 +1190,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         );
 
         await AppToasts.showMessage(
-          'Refund recorded successfully',
+          'Refund recorded successfully'.tr,
         );
 
         return updated;

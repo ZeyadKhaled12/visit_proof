@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -86,7 +87,7 @@ class GWidgetPhoneField extends StatelessWidget {
         searchFieldInputDecoration: InputDecoration(
           fillColor: AppTheme.locationChipBg,
           filled: true,
-          hintText: 'Search country...',
+          hintText: 'Search country...'.tr,
           hintStyle: AppTheme.font(
             color: AppTheme.textLightHint,
             fontSize: AppTheme.textBodyLarge,

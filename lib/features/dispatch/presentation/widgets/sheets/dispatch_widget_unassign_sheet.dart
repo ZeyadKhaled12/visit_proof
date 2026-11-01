@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,14 +36,14 @@ class _DispatchWidgetUnassignSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Unassign technician',
+      title: 'Unassign technician'.tr,
       requestState: (state) => state.unassignRequestState,
       builder: (context, state, loading) {
         final visit = state.visitById(widget.visitID);
         if (visit == null) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.search_off_rounded,
-              text: 'This visit is no longer available');
+              text: 'This visit is no longer available'.tr);
         }
 
         return Form(
@@ -51,15 +52,13 @@ class _DispatchWidgetUnassignSheetState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               VisitDetailNotice(
-                text: '${visit.visitNumber ?? 'The visit'} goes back to the '
-                    'queue and ${visit.technicianModel?.name ?? 'the technician'} '
-                    'is free at ${VisitDetailHelpers.time(visit.startDate)}.',
+                text: '{0} goes back to the queue and {1} is free at {2}.'.trArgs([visit.visitNumber ?? 'The visit'.tr, visit.technicianModel?.name ?? 'the technician'.tr, VisitDetailHelpers.time(visit.startDate)]),
                 color: AppTheme.pending,
               ),
               const SizedBox(height: 14),
               GWidgetTextField(
                 controller: _reason,
-                labelText: 'Reason (optional)',
+                labelText: 'Reason (optional)'.tr,
                 maxLines: 2,
                 maxLength: VisitRules.maxReasonLength,
                 validator: (v) =>
@@ -67,7 +66,7 @@ class _DispatchWidgetUnassignSheetState
               ),
               const SizedBox(height: 12),
               GWidgetButton(
-                text: 'Unassign',
+                text: 'Unassign'.tr,
                 fontSize: AppTheme.textSubtitle,
                 raduis: 14,
                 backgroundColor: AppTheme.statOrange,

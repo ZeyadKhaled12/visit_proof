@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../configs/app_theme.dart';
@@ -13,7 +14,7 @@ class TechDetailWidgetCategories extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClientDetailWidgetTitle(
-          title: 'Categories',
+          title: 'Categories'.tr,
           icon: Icons.category,
           addLoading: false,
         ),

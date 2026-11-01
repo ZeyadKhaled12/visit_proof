@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _AddTechBodyState extends State<AddTechBody> {
   Widget build(BuildContext context) {
     log('Password: ${widget.technicianDetailModel?.password}');
     return GWidgetNaviBody(
-      title: 'Add Technician',
+      title: 'Add Technician'.tr,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -88,8 +89,8 @@ class _AddTechBodyState extends State<AddTechBody> {
             children: [
               GWidgetTextField(
                 controller: _nameController,
-                labelText: 'Full Name *',
-                hintText: 'e.g. Zeyad Khaled',
+                labelText: 'Full Name *'.tr,
+                hintText: 'e.g. Zeyad Khaled'.tr,
                 maxLength: 100,
                 errorMsg: _nameErrorMsg,
                 prefixIcon:
@@ -100,8 +101,8 @@ class _AddTechBodyState extends State<AddTechBody> {
               GWidgetPhoneField(
                 initialCountryCode: _phoneNumber?.countryISOCode ?? 'SA',
                 controller: _phoneController,
-                labelText: 'Phone Number *',
-                hintText: 'XXX XXXX XXXX',
+                labelText: 'Phone Number *'.tr,
+                hintText: 'XXX XXXX XXXX'.tr,
                 errorMsg: _phoneErrorMsg,
                 onChanged: (phoneNumber) {
                   setState(() {
@@ -117,8 +118,8 @@ class _AddTechBodyState extends State<AddTechBody> {
               const SizedBox(height: 20),
               GWidgetTextField(
                 controller: _emailController,
-                labelText: 'Email Address *',
-                hintText: 'technician@example.com',
+                labelText: 'Email Address *'.tr,
+                hintText: 'technician@example.com'.tr,
                 errorMsg: _emailErrorMsg,
                 maxLength: 254,
                 keyboardType: TextInputType.emailAddress,
@@ -129,7 +130,7 @@ class _AddTechBodyState extends State<AddTechBody> {
               const SizedBox(height: 20),
               GWidgetTextField(
                 controller: _passwordController,
-                labelText: 'Password *',
+                labelText: 'Password *'.tr,
                 hintText: '••••••••••••',
                 errorMsg: _passwordErrorMsg,
                 obscureText: _isPasswordVisible,
@@ -191,7 +192,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                       _phoneController.text.isEmpty &&
                       _passwordController.text.isEmpty) {
                     AppToasts.showMessage(
-                        'Please fill in all fields marked with an asterisk (*).',
+                        'Please fill in all fields marked with an asterisk (*).'.tr,
                         isError: true);
                     setState(() {
                       _nameErrorMsg = '';
@@ -205,7 +206,7 @@ class _AddTechBodyState extends State<AddTechBody> {
 
                   if (_nameController.text.length < 2) {
                     AppToasts.showMessage(
-                        'Name must be at least 2 characters long',
+                        'Name must be at least 2 characters long'.tr,
                         isError: true);
                     setState(() {
                       _nameErrorMsg = '';
@@ -214,7 +215,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                   }
 
                   if (!GFunValid.isValidPhoneNumber(_phoneNumber)) {
-                    AppToasts.showMessage('Invalid phone number',
+                    AppToasts.showMessage('Invalid phone number'.tr,
                         isError: true);
                     setState(() {
                       _phoneErrorMsg = '';
@@ -223,7 +224,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                   }
 
                   if (!GFunValid.isValidEmail(_emailController.text)) {
-                    AppToasts.showMessage('Please enter a valid email address',
+                    AppToasts.showMessage('Please enter a valid email address'.tr,
                         isError: true);
                     setState(() {
                       _emailErrorMsg = '';
@@ -235,7 +236,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                       (widget.technicianDetailModel?.id == null)) {
                     if (!GFunValid.isStrongPassword(_passwordController.text)) {
                       AppToasts.showMessage(
-                          'Your password is not strong enough. Use 8+ characters with uppercase, lowercase, number & symbol.',
+                          'Your password is not strong enough. Use 8+ characters with uppercase, lowercase, number & symbol.'.tr,
                           isError: true);
                       setState(() {
                         _passwordErrorMsg = '';
@@ -245,7 +246,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                   }
 
                   if (_selectedCategories.isEmpty) {
-                    AppToasts.showMessage('Please enter at least one category',
+                    AppToasts.showMessage('Please enter at least one category'.tr,
                         isError: true);
                     setState(() {
                       _categoriesError = true;
@@ -275,8 +276,8 @@ class _AddTechBodyState extends State<AddTechBody> {
                           categories: _selectedCategories.toList())));
                 },
                 text: widget.technicianDetailModel?.id != null
-                    ? 'Update Technician'
-                    : 'Create Technician',
+                    ? 'Update Technician'.tr
+                    : 'Create Technician'.tr,
                 height: 60,
                 // isLoading: widget.loading,
                 boxShadow: [

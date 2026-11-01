@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -57,13 +58,13 @@ class _VisitDetailWidgetInfoSheetState
     final canChangeProof = VisitRules.canChangeProofRequirements(widget.visit);
 
     return VisitDetailWidgetActionSheet(
-      title: 'Edit job notes',
+      title: 'Edit job notes'.tr,
       requestState: (state) => state.updateInfoRequestState,
       builder: (context, state, loading) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           GWidgetDropDown<Priority>(
-            labelText: 'Priority',
+            labelText: 'Priority'.tr,
             value: _priority,
             onChanged: (priority) {
               if (priority != null) setState(() => _priority = priority);
@@ -82,40 +83,39 @@ class _VisitDetailWidgetInfoSheetState
           const SizedBox(height: 14),
           GWidgetTextField(
             controller: _problem,
-            labelText: 'Problem',
-            hintText: 'What does the client report?',
+            labelText: 'Problem'.tr,
+            hintText: 'What does the client report?'.tr,
             maxLines: 4,
             maxLength: VisitRules.maxProblemLength,
           ),
           const SizedBox(height: 14),
           GWidgetTextField(
             controller: _notes,
-            labelText: 'Notes for the technician',
-            hintText: 'e.g., Gate code, call before arrival...',
+            labelText: 'Notes for the technician'.tr,
+            hintText: 'e.g., Gate code, call before arrival...'.tr,
             maxLines: 3,
             maxLength: VisitRules.maxNotesLength,
           ),
           const SizedBox(height: 10),
           if (canChangeProof) ...[
             GWidgetSwitcher(
-                title: 'Require before-work photos',
-                subtitle: 'Technician supplies proof during the visit',
+                title: 'Require before-work photos'.tr,
+                subtitle: 'Technician supplies proof during the visit'.tr,
                 value: _beforePhotos,
                 onChanged: (value) => setState(() => _beforePhotos = value)),
             GWidgetSwitcher(
-                title: 'Require after-work photos',
-                subtitle: 'Technician supplies proof during the visit',
+                title: 'Require after-work photos'.tr,
+                subtitle: 'Technician supplies proof during the visit'.tr,
                 value: _afterPhotos,
                 onChanged: (value) => setState(() => _afterPhotos = value)),
           ] else
             VisitDetailNotice(
-                text: 'Photo requirements are locked once the technician '
-                    'is on the way.',
+                text: 'Photo requirements are locked once the technician is on the way.'.tr,
                 color: AppTheme.iconGrey,
                 icon: Icons.lock_rounded),
           const SizedBox(height: 16),
           GWidgetButton(
-            text: 'Save changes',
+            text: 'Save changes'.tr,
             fontSize: AppTheme.textSubtitle,
             raduis: 14,
             backgroundColor: AppTheme.statOrange,

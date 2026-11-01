@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_site.dart';
@@ -44,7 +45,7 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
   @override
   Widget build(BuildContext context) {
     return GWidgetBottomSheet(
-        title: widget.site == null ? 'Add new site' : 'Update Site',
+        title: widget.site == null ? 'Add new site'.tr : 'Update Site'.tr,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +53,7 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
               GWidgetDropDown<GModelCatg>(
                 value: _selectedCity,
                 enableSearch: true,
-                labelText: 'Select City *',
+                labelText: 'Select City *'.tr,
                 errorMsg: _cityErrorMsg,
                 prefixIcon:
                     Icon(Icons.location_city, color: AppTheme.primary),
@@ -71,7 +72,7 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Address Configuration',
+                'Address Configuration'.tr,
                 style: AppTheme.font(
                   color: AppTheme.textPrimary.withValues(alpha: 0.8),
                   fontSize: AppTheme.textBodyLarge,
@@ -96,17 +97,17 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
                     _cityErrorMsg = null;
                     _addressErrorMsg = null;
                     if (_selectedCity == null) {
-                      _cityErrorMsg = 'City is required';
+                      _cityErrorMsg = 'City is required'.tr;
                     }
                     if (_location == null && _addressController.text.isEmpty) {
                       _addressErrorMsg =
-                          'Please provide an address detail or pick a location from the map.';
+                          'Please provide an address detail or pick a location from the map.'.tr;
                     }
                     if (_location == null &&
                         (_addressController.text.length < 10 &&
                             _addressController.text.isNotEmpty)) {
                       _addressErrorMsg =
-                          'Detailed address must be at least 10 characters long';
+                          'Detailed address must be at least 10 characters long'.tr;
                     }
                   });
                   if (_cityErrorMsg != null || _addressErrorMsg != null) return;
@@ -117,7 +118,7 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
                       addressDetail: _addressController.text);
                   Navigator.pop(context, site);
                 },
-                text: widget.site == null ? 'Add new Site' : 'Update Site',
+                text: widget.site == null ? 'Add new Site'.tr : 'Update Site'.tr,
               )
             ],
           ),

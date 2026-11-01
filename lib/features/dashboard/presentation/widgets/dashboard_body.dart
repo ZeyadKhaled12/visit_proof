@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +31,7 @@ class DashboardBody extends StatelessWidget {
   const DashboardBody({super.key, required this.state});
   final DashboardState state;
 
-  static const List<String> _trail = ['Overview'];
+  static List<String> _trail = ['Overview'.tr];
   static const double _wideBreakpoint = 900;
 
   void _reload(BuildContext context) => context
@@ -78,13 +79,13 @@ class DashboardBody extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const GWidgetEmpty(
+          GWidgetEmpty(
             icon: Icons.cloud_off_rounded,
-            title: 'The dashboard could not load',
-            subtitle: 'Your data is safe. Try again in a moment.',
+            title: 'The dashboard could not load'.tr,
+            subtitle: 'Your data is safe. Try again in a moment.'.tr,
           ),
           GWidgetButton(
-              text: 'Try again',
+              text: 'Try again'.tr,
               fontSize: AppTheme.textSubtitle,
               width: 160,
               raduis: 12,
@@ -105,10 +106,9 @@ class DashboardBody extends StatelessWidget {
           _Header(state: state, onRefresh: () => _reload(context)),
           GWidgetEmpty(
             icon: Icons.insights_rounded,
-            title: 'Your dashboard starts with a visit',
-            subtitle: 'Create visits and assign technicians to see your '
-                'operations, completion and revenue here.',
-            actionText: 'Create first visit',
+            title: 'Your dashboard starts with a visit'.tr,
+            subtitle: 'Create visits and assign technicians to see your operations, completion and revenue here.'.tr,
+            actionText: 'Create first visit'.tr,
             onAction: () async {
               await Navigator.pushNamed(context, AddVisitScr.route);
               if (context.mounted) _reload(context);
@@ -139,23 +139,23 @@ class DashboardBody extends StatelessWidget {
 
     final kpis = [
       DashboardWidgetKpiCard(
-        label: 'Visits',
+        label: 'Visits'.tr,
         value: '${current.length}',
         icon: Icons.event_note_rounded,
         color: AppTheme.primary,
-        caption: '${dueNow.length} due so far',
+        caption: '{0} due so far'.trArgs([dueNow.length]),
         footer: DashboardDelta(
             change: DashboardMetrics.change(current.length, previous.length)),
         onTap: () => _openInsight(context, DashboardInsight.visits),
       ),
       DashboardWidgetKpiCard(
-        label: 'Completion',
+        label: 'Completion'.tr,
         value: DashboardFormat.percent(rate),
         icon: Icons.task_alt_rounded,
         color: AppTheme.statGreen,
         caption: rate == null
-            ? 'Nothing due yet'
-            : '${DashboardMetrics.completedCount(dueNow)} of ${dueNow.length} done',
+            ? 'Nothing due yet'.tr
+            : '{0} of {1} done'.trArgs([DashboardMetrics.completedCount(dueNow), dueNow.length]),
         footer: DashboardDelta(
             change: rate == null || previousRate == null
                 ? null
@@ -164,21 +164,21 @@ class DashboardBody extends StatelessWidget {
         onTap: () => _openInsight(context, DashboardInsight.completion),
       ),
       DashboardWidgetKpiCard(
-        label: 'Collected',
+        label: 'Collected'.tr,
         value: DashboardFormat.money(collected),
         icon: Icons.payments_rounded,
         color: AppTheme.secondary,
-        caption: '${DashboardFormat.money(outstanding)} outstanding',
+        caption: '{0} outstanding'.trArgs([DashboardFormat.money(outstanding)]),
         footer: DashboardDelta(
             change: DashboardMetrics.change(collected, previousCollected)),
         onTap: () => _openInsight(context, DashboardInsight.revenue),
       ),
       DashboardWidgetKpiCard(
-        label: 'Needs attention',
+        label: 'Needs attention'.tr,
         value: '${attention.total}',
         icon: Icons.notification_important_rounded,
         color: attention.total > 0 ? AppTheme.statOrange : AppTheme.statGreen,
-        caption: attention.total > 0 ? 'Items to handle now' : 'All on track',
+        caption: attention.total > 0 ? 'Items to handle now'.tr : 'All on track'.tr,
         alert: attention.total > 0,
         onTap: () => _openInsight(context, DashboardInsight.attention),
       ),
@@ -194,9 +194,9 @@ class DashboardBody extends StatelessWidget {
           fixedPeriod: DashboardPeriod.of(DashboardRange.today, now: now)),
     );
     final trendPanel = DashboardSection(
-      title: 'Visits trend',
-      subtitle: '${period.label} · tap a bar to see those visits',
-      actionText: 'Details',
+      title: 'Visits trend'.tr,
+      subtitle: '{0} · tap a bar to see those visits'.trArgs([period.label]),
+      actionText: 'Details'.tr,
       onAction: () => _openInsight(context, DashboardInsight.visits),
       child: DashboardWidgetTrendChart(
         buckets: buckets,
@@ -286,9 +286,9 @@ class _Header extends StatelessWidget {
 
   String get _greeting {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return 'Good morning'.tr;
+    if (hour < 17) return 'Good afternoon'.tr;
+    return 'Good evening'.tr;
   }
 
   @override
@@ -310,7 +310,7 @@ class _Header extends StatelessWidget {
                         fontSize: AppTheme.textBody,
                         fontWeight: FontWeight.w600)),
                 const SizedBox(height: 2),
-                Text('Operations overview',
+                Text('Operations overview'.tr,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
@@ -329,7 +329,7 @@ class _Header extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: 'Refresh'.tr,
             onPressed: onRefresh,
             icon: Icon(Icons.refresh_rounded, color: AppTheme.primary),
           ),

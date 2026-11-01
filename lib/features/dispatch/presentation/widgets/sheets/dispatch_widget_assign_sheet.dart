@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -60,15 +61,15 @@ class _DispatchWidgetAssignSheetState extends State<DispatchWidgetAssignSheet> {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Assign visit',
-      subtitle: 'To ${widget.technician.name ?? 'technician'}',
+      title: 'Assign visit'.tr,
+      subtitle: 'To {0}'.trArgs([widget.technician.name ?? 'technician'.tr]),
       requestState: (state) => state.assignRequestState,
       builder: (context, state, loading) {
         final visit = state.visitById(widget.visitID);
         if (visit == null) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.search_off_rounded,
-              text: 'This visit is no longer available');
+              text: 'This visit is no longer available'.tr);
         }
 
         final violations = DispatchRules.evaluate(
@@ -104,7 +105,7 @@ class _DispatchWidgetAssignSheetState extends State<DispatchWidgetAssignSheet> {
                 const SizedBox(height: 12),
                 GWidgetTextField(
                   controller: _reason,
-                  labelText: 'Reason to continue anyway',
+                  labelText: 'Reason to continue anyway'.tr,
                   maxLines: 2,
                   maxLength: VisitRules.maxReasonLength,
                   validator: (v) =>
@@ -113,7 +114,7 @@ class _DispatchWidgetAssignSheetState extends State<DispatchWidgetAssignSheet> {
               ],
               const SizedBox(height: 14),
               GWidgetButton(
-                text: warned ? 'Assign anyway' : 'Assign',
+                text: warned ? 'Assign anyway'.tr : 'Assign'.tr,
                 fontSize: AppTheme.textSubtitle,
                 raduis: 14,
                 isEnable: !blocked,
@@ -166,12 +167,12 @@ class _Route extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(visitNumber ?? 'Visit',
+                Text(visitNumber ?? 'Visit'.tr,
                     style: AppTheme.font(
                         color: AppTheme.textPrimary,
                         fontSize: AppTheme.textBody,
                         fontWeight: FontWeight.w800)),
-                Text(service ?? 'No service',
+                Text(service ?? 'No service'.tr,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
@@ -190,7 +191,7 @@ class _Route extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Flexible(
-            child: Text(technician ?? 'Technician',
+            child: Text(technician ?? 'Technician'.tr,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTheme.font(

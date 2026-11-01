@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -75,7 +76,7 @@ class DispatchWidgetDateStrip extends StatelessWidget {
               if (day != today)
                 TextButton(
                   onPressed: () => onChanged(today),
-                  child: Text('Today',
+                  child: Text('Today'.tr,
                       style: AppTheme.font(
                           color: AppTheme.primary,
                           fontSize: AppTheme.textBody,

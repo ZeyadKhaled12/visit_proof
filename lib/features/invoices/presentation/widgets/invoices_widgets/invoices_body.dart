@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,7 +71,7 @@ class _InvoicesBodyState extends State<InvoicesBody> {
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
-      appBar: GWidgetAppbar(title: 'Invoices', icon: Icons.receipt_long_outlined)
+      appBar: GWidgetAppbar(title: 'Invoices'.tr, icon: Icons.receipt_long_outlined)
           .appbar(),
       body: GWidgetLoading(
         isLoading: widget.loading,
@@ -115,18 +116,18 @@ class _InvoicesBodyState extends State<InvoicesBody> {
     if (widget.loading) return const SizedBox.shrink();
 
     if (widget.invoices.isEmpty) {
-      return const GWidgetEmpty(
+      return GWidgetEmpty(
         icon: Icons.receipt_long_rounded,
-        title: 'No invoices yet',
-        subtitle: 'An invoice is created automatically with every new visit.',
+        title: 'No invoices yet'.tr,
+        subtitle: 'An invoice is created automatically with every new visit.'.tr,
       );
     }
 
     return GWidgetEmpty(
       icon: Icons.search_off_rounded,
-      title: 'No matching invoices',
-      subtitle: 'Try another search or clear the filters.',
-      actionText: 'Clear search & filters',
+      title: 'No matching invoices'.tr,
+      subtitle: 'Try another search or clear the filters.'.tr,
+      actionText: 'Clear search & filters'.tr,
       onAction: _clearSearchAndFilters,
     );
   }

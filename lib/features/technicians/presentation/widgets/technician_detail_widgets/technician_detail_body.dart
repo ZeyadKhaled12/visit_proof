@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,7 +31,7 @@ class TechnicianDetailBody extends StatelessWidget {
       bottom: true,
       child: Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
-        appBar: GWidgetNaviAppbar.appBar(context, 'Technician Detail'),
+        appBar: GWidgetNaviAppbar.appBar(context, 'Technician Detail'.tr),
         bottomNavigationBar: loading
             ? null
             : TechDetailWidgetBottomBtns(
@@ -67,7 +68,7 @@ class TechnicianDetailBody extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 12.0),
                       child: ClientDetailWidgetTitle(
-                          title: 'Visit History', icon: Icons.history),
+                          title: 'Visit History'.tr, icon: Icons.history),
                     ),
                     height: 60),
               ),

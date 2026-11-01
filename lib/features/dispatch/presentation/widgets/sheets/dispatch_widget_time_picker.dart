@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../configs/app_theme.dart';
@@ -48,7 +49,7 @@ class DispatchWidgetTimePicker extends StatelessWidget {
             onTap: () => _pickDate(context),
             child: VisitDetailStatTile(
                 icon: Icons.calendar_month_rounded,
-                label: 'Date · tap to change',
+                label: 'Date · tap to change'.tr,
                 value: VisitDetailHelpers.date(value),
                 color: AppTheme.primary),
           ),
@@ -59,7 +60,7 @@ class DispatchWidgetTimePicker extends StatelessWidget {
             onTap: () => _pickTime(context),
             child: VisitDetailStatTile(
                 icon: Icons.schedule_rounded,
-                label: 'Until ${VisitDetailHelpers.time(end)}',
+                label: 'Until {0}'.trArgs([VisitDetailHelpers.time(end)]),
                 value: VisitDetailHelpers.time(value),
                 color: AppTheme.secondary),
           ),

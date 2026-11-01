@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
 import 'package:visit_proof/core/utils/enums/technician_status_enum.dart';
@@ -74,8 +75,8 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
       await LocalPref.sharedPreferences.setStringList('technicians',
           technicians.map((e) => jsonEncode(e.toJson())).toList());
       AppToasts.showMessage(parameters.id != null
-          ? 'Technician updated successfuly'
-          : 'Technician added successfuly');
+          ? 'Technician updated successfuly'.tr
+          : 'Technician added successfuly'.tr);
       return technician;
     }).checkLogicErrors();
   }
@@ -132,15 +133,13 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
           .length;
       if (activeVisits > 0) {
         throw ServerException(ErrorMessageModel(
-            statusMessage: 'This technician has $activeVisits active '
-                'visit${activeVisits == 1 ? '' : 's'}. Unassign or finish '
-                '${activeVisits == 1 ? 'it' : 'them'} before deleting.'));
+            statusMessage: 'This technician has {0} active visit{1}. Unassign or finish {2} before deleting.'.trArgs([activeVisits, activeVisits == 1 ? '' : 's', activeVisits == 1 ? 'it' : 'them'])));
       }
 
       technicians.removeWhere((element) => element.id == parameters.techID);
       await LocalPref.sharedPreferences.setStringList('technicians',
           technicians.map((e) => jsonEncode(e.toJson())).toList());
-      AppToasts.showMessage('Technician removed successfuly');
+      AppToasts.showMessage('Technician removed successfuly'.tr);
       return;
     }).checkLogicErrors();
   }

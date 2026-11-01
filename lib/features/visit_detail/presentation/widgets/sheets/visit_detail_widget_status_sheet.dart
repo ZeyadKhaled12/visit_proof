@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -98,22 +99,21 @@ class _VisitDetailWidgetStatusSheetState
             ],
             if (target == VisitStatus.cancel && widget.invoice != null) ...[
               VisitDetailNotice(
-                  text: 'The linked invoice will be marked as cancelled.',
+                  text: 'The linked invoice will be marked as cancelled.'.tr,
                   color: AppTheme.pending),
               const SizedBox(height: 12),
             ],
             if (_from == VisitStatus.cancel) ...[
               VisitDetailNotice(
-                  text: 'The technician is released and the invoice '
-                      'becomes collectible again.',
+                  text: 'The technician is released and the invoice becomes collectible again.'.tr,
                   color: AppTheme.secondary),
               const SizedBox(height: 12),
             ],
             if (needsReason) ...[
               GWidgetTextField(
                 controller: _reason,
-                labelText: 'Reason',
-                hintText: 'Why is this change needed?',
+                labelText: 'Reason'.tr,
+                hintText: 'Why is this change needed?'.tr,
                 maxLines: 3,
                 maxLength: VisitRules.maxReasonLength,
                 validator: (v) =>
@@ -123,7 +123,7 @@ class _VisitDetailWidgetStatusSheetState
             ],
             const SizedBox(height: 8),
             GWidgetButton(
-              text: 'Confirm',
+              text: 'Confirm'.tr,
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               backgroundColor: color,

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
@@ -32,7 +33,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClientDetailWidgetTitle(
-            title: 'Equipments',
+            title: 'Equipments'.tr,
             icon: Icons.precision_manufacturing,
             addLoading: addEquipmentLoading,
             onAdd: () async {
@@ -58,7 +59,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'No equipments assigned to this client yet.',
+                    'No equipments assigned to this client yet.'.tr,
                     style:
                         AppTheme.font(color: AppTheme.textLightHint, fontSize: AppTheme.textBody),
                   ),
@@ -105,7 +106,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  eq.name ?? 'Unknown',
+                                  eq.name ?? 'Unknown'.tr,
                                   style: AppTheme.font(
                                       color: AppTheme.textPrimary,
                                       fontSize: AppTheme.textBodyLarge,
@@ -119,7 +120,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                                   final data =
                                       await AppToasts.showDeleteConfirmation(
                                           title:
-                                              'Are you sure you want delete this equipment?');
+                                              'Are you sure you want delete this equipment?'.tr);
                                   if (data is bool) {
                                     if (data) {
                                       if (eq.id == null) return;
@@ -155,10 +156,10 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                           ),
                           const Spacer(),
                           _EqDetailRowModel(
-                              label: 'Brand:', value: eq.brand ?? "N/A"),
+                              label: 'Brand:'.tr, value: eq.brand ?? "N/A"),
                           const SizedBox(height: 4),
                           _EqDetailRowModel(
-                              label: 'Model:', value: eq.model ?? "N/A"),
+                              label: 'Model:'.tr, value: eq.model ?? "N/A"),
                           const SizedBox(height: 4),
                           _EqDetailRowModel(
                               label: 'SN:',
@@ -232,7 +233,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
       backgroundColor: AppTheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
-        'Add New Equipment',
+        'Add New Equipment'.tr,
         style: AppTheme.font(
           color: AppTheme.textPrimary,
           fontSize: AppTheme.textHeadline,
@@ -244,7 +245,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
           children: [
             GWidgetTextField(
                 controller: _name,
-                hintText: 'Equipment Name',
+                hintText: 'Equipment Name'.tr,
                 errorMsg: _nameErrorMsg,
                 prefixIcon: Icon(
                   Icons.build_circle,
@@ -254,7 +255,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
             const SizedBox(height: 12),
             GWidgetTextField(
                 controller: _brand,
-                hintText: 'Brand',
+                hintText: 'Brand'.tr,
                 prefixIcon: Icon(
                   Icons.branding_watermark,
                   size: 20,
@@ -263,7 +264,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
             const SizedBox(height: 12),
             GWidgetTextField(
                 controller: _model,
-                hintText: 'Model',
+                hintText: 'Model'.tr,
                 prefixIcon: Icon(
                   Icons.category,
                   size: 20,
@@ -272,7 +273,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
             const SizedBox(height: 12),
             GWidgetTextField(
                 controller: _serialNumber,
-                hintText: 'Serial Number',
+                hintText: 'Serial Number'.tr,
                 prefixIcon: Icon(
                   Icons.qr_code,
                   size: 20,
@@ -286,7 +287,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
-            'Cancel',
+            'Cancel'.tr,
             style: AppTheme.font(
                 color: AppTheme.textSecondary,
                 fontWeight: FontWeight.bold,
@@ -294,7 +295,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
           ),
         ),
         GWidgetButton(
-          text: 'Save',
+          text: 'Save'.tr,
           width: 90,
           height: 40,
           paddingTopBottom: 0,
@@ -306,7 +307,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
             });
             if (_name.text.isEmpty) {
               setState(() {
-                _nameErrorMsg = 'Equipment name is required';
+                _nameErrorMsg = 'Equipment name is required'.tr;
               });
             } else {
               Navigator.pop(

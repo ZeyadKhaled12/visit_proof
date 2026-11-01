@@ -1,5 +1,9 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/configs/app_theme.dart';
@@ -31,11 +35,21 @@ void main() async {
   AppTheme.darkMode.value = AppTheme.darkModeEnabled &&
       (LocalPref.sharedPreferences.getBool(darkModeKey) ??
           AppTheme.darkModeByDefault);
+  AppLanguage.arabic.value = AppLanguage.languageSwitchEnabled &&
+      (LocalPref.sharedPreferences.getBool(arabicKey) ??
+          AppLanguage.arabicByDefault);
+  await initializeDateFormatting();
+  // Arabic month and day names, but the same 0-9 digits as the rest of the app.
+  DateFormat.useNativeDigitsByDefaultFor('ar', false);
+  Intl.defaultLocale = AppLanguage.locale.languageCode;
   runApp(const MyApp());
 }
 
 /// Saved dark mode choice.
 const String darkModeKey = 'dark_mode';
+
+/// Saved language choice.
+const String arabicKey = 'app_arabic';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -50,12 +64,22 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     AppTheme.darkMode.addListener(_onThemeChanged);
+    AppLanguage.arabic.addListener(_onLanguageChanged);
   }
 
   @override
   void dispose() {
     AppTheme.darkMode.removeListener(_onThemeChanged);
+    AppLanguage.arabic.removeListener(_onLanguageChanged);
     super.dispose();
+  }
+
+  /// Saves the language, updates dates and redraws every screen in the new
+  /// language and direction.
+  void _onLanguageChanged() {
+    LocalPref.sharedPreferences.setBool(arabicKey, AppLanguage.isArabic);
+    Intl.defaultLocale = AppLanguage.locale.languageCode;
+    _rebuildAll();
   }
 
   /// Saves the choice and restyles every screen in place. Colors are read
@@ -63,6 +87,10 @@ class MyAppState extends State<MyApp> {
   /// navigation and data stay as they are.
   void _onThemeChanged() {
     LocalPref.sharedPreferences.setBool(darkModeKey, AppTheme.isDark);
+    _rebuildAll();
+  }
+
+  void _rebuildAll() {
     setState(() {});
     void rebuild(Element element) {
       element.markNeedsBuild();
@@ -75,10 +103,18 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Visit Proof',
+        title: 'Visit Proof'.tr,
         navigatorKey: App.navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.materialTheme,
+        // Arabic switches Flutter's own widgets and the layout to RTL.
+        locale: AppLanguage.locale,
+        supportedLocales: AppLanguage.supportedLocales,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         // Status bar and navigation bar follow the active theme.
         builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
               value: AppTheme.systemOverlay,

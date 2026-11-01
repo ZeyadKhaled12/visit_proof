@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -74,7 +75,7 @@ class _DispatchWidgetUnassignedTrayState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Waiting for a technician',
+                          Text('Waiting for a technician'.tr,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: AppTheme.font(
@@ -84,8 +85,8 @@ class _DispatchWidgetUnassignedTrayState
                           if (expanded)
                             Text(
                                 visits.isEmpty
-                                    ? 'All visits have a technician 🎉'
-                                    : 'Long-press a card and drop it on a technician',
+                                    ? 'All visits have a technician 🎉'.tr
+                                    : 'Long-press a card and drop it on a technician'.tr,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTheme.font(

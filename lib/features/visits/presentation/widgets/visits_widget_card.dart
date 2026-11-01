@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:visit_proof/features/visit_detail/presentation/screens/visit_detail_scr.dart';
@@ -94,7 +95,7 @@ class VisitsWidgetCard extends StatelessWidget {
                           Expanded(
                             child: _buildCompactInfo(
                               icon: Icons.person_outline,
-                              text: visit.client?.name ?? 'no client',
+                              text: visit.client?.name ?? 'no client'.tr,
                               textColor: AppTheme.textPrimary,
                             ),
                           ),
@@ -102,7 +103,7 @@ class VisitsWidgetCard extends StatelessWidget {
                           Expanded(
                             child: _buildCompactInfo(
                               icon: Icons.build_circle_outlined,
-                              text: visit.category?.name ?? 'no category',
+                              text: visit.category?.name ?? 'no category'.tr,
                               textColor: AppTheme.textSecondary,
                             ),
                           ),
@@ -112,7 +113,7 @@ class VisitsWidgetCard extends StatelessWidget {
                       _buildCompactInfo(
                         icon: Icons.engineering_outlined,
                         text: visit.technicianModel?.name ??
-                            'no technician assigned',
+                            'no technician assigned'.tr,
                         textColor: AppTheme.textPrimary,
                       ),
                       const SizedBox(height: 6),
@@ -225,7 +226,7 @@ class VisitsWidgetCard extends StatelessWidget {
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) return 'No date';
+    if (date == null) return 'No date'.tr;
     return DateFormat('dd MMM yyyy · hh:mm a').format(date);
   }
 }

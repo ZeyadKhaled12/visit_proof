@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import '../../../../../configs/app_theme.dart';
 import '../../../../../core/utils/general_widgets/g_widget_location_picker_scr.dart';
@@ -47,8 +48,8 @@ class AddClientWidgetLocation extends StatelessWidget {
           SizedBox(height: 10),
           GWidgetTextField(
               controller: addressController,
-              labelText: 'Detailed Address',
-              hintText: 'Building, Street, Area...',
+              labelText: 'Detailed Address'.tr,
+              hintText: 'Building, Street, Area...'.tr,
               maxLength: 500,
               prefixIcon: Icon(Icons.home_work_outlined,
                   color: AppTheme.primary),

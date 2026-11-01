@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,22 +51,22 @@ class _DispatchWidgetRescheduleSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Reschedule visit',
+      title: 'Reschedule visit'.tr,
       requestState: (state) => state.rescheduleRequestState,
       builder: (context, state, loading) {
         final visit = state.visitById(widget.visitID);
         if (visit == null) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.search_off_rounded,
-              text: 'This visit is no longer available');
+              text: 'This visit is no longer available'.tr);
         }
 
         final technician = visit.technicianModel;
         final violations = technician == null
             ? [
                 if (_start.isBefore(DateTime.now()))
-                  const DispatchViolation.block(
-                      'The start time has already passed.')
+                  DispatchViolation.block(
+                      'The start time has already passed.'.tr)
               ]
             : DispatchRules.evaluate(
                 visit: visit,
@@ -87,9 +88,8 @@ class _DispatchWidgetRescheduleSheetState
             children: [
               VisitDetailNotice(
                 text: technician == null
-                    ? 'Currently ${VisitDetailHelpers.dateTime(visit.startDate)}'
-                    : 'Currently ${VisitDetailHelpers.dateTime(visit.startDate)} '
-                        'with ${technician.name ?? 'the technician'}',
+                    ? 'Currently {0}'.trArgs([VisitDetailHelpers.dateTime(visit.startDate)])
+                    : 'Currently {0} with {1}'.trArgs([VisitDetailHelpers.dateTime(visit.startDate), technician.name ?? 'the technician'.tr]),
                 color: AppTheme.secondary,
                 icon: Icons.event_rounded,
               ),
@@ -105,7 +105,7 @@ class _DispatchWidgetRescheduleSheetState
               GWidgetTextField(
                 controller: _reason,
                 labelText:
-                    warned ? 'Reason to continue anyway' : 'Reason (optional)',
+                    warned ? 'Reason to continue anyway'.tr : 'Reason (optional)'.tr,
                 maxLines: 2,
                 maxLength: VisitRules.maxReasonLength,
                 validator: (v) =>
@@ -113,7 +113,7 @@ class _DispatchWidgetRescheduleSheetState
               ),
               const SizedBox(height: 12),
               GWidgetButton(
-                text: warned ? 'Move anyway' : 'Save new time',
+                text: warned ? 'Move anyway'.tr : 'Save new time'.tr,
                 fontSize: AppTheme.textSubtitle,
                 raduis: 14,
                 isEnable: !blocked,

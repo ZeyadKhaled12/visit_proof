@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 
@@ -88,8 +89,8 @@ class _DashboardWidgetTrendChartState extends State<DashboardWidgetTrendChart> {
               : Center(
                   child: Text(
                       widget.money
-                          ? 'No payments in this period'
-                          : 'No visits in this period',
+                          ? 'No payments in this period'.tr
+                          : 'No visits in this period'.tr,
                       style: AppTheme.font(
                           color: AppTheme.textSecondary, fontSize: AppTheme.textBody)),
                 ),
@@ -98,9 +99,9 @@ class _DashboardWidgetTrendChartState extends State<DashboardWidgetTrendChart> {
           const SizedBox(height: 10),
           Row(
             children: [
-              _Legend(color: DashboardWidgetTrendChart.completedColor, label: 'Completed'),
+              _Legend(color: DashboardWidgetTrendChart.completedColor, label: 'Completed'.tr),
               SizedBox(width: 16),
-              _Legend(color: DashboardWidgetTrendChart.openColor, label: 'Not completed'),
+              _Legend(color: DashboardWidgetTrendChart.openColor, label: 'Not completed'.tr),
             ],
           ),
         ],
@@ -122,7 +123,7 @@ class _Readout extends StatelessWidget {
     final bucket = index == null || index >= buckets.length ? null : buckets[index];
     final days = bucket == null ? 0 : bucket.to.difference(bucket.from).inDays;
     final title = bucket == null
-        ? 'Tap a bar for details'
+        ? 'Tap a bar for details'.tr
         : days > 1
             ? 'Week of ${DateFormat('dd MMM').format(bucket.from)}'
             : DateFormat('EEE, dd MMM').format(bucket.from);
@@ -130,11 +131,10 @@ class _Readout extends StatelessWidget {
     final value = bucket == null
         ? (money
             ? DashboardFormat.money(buckets.fold<num>(0, (s, b) => s + b.amount))
-            : '${buckets.fold<int>(0, (s, b) => s + b.total)} visits')
+            : '{0} visits'.trArgs([buckets.fold<int>(0, (s, b) => s + b.total)]))
         : money
             ? DashboardFormat.money(bucket.amount)
-            : '${bucket.total} visit${bucket.total == 1 ? '' : 's'} · '
-                '${bucket.completed} completed';
+            : '{0} visit{1} · {2} completed'.trArgs([bucket.total, bucket.total == 1 ? '' : 's', bucket.completed]);
 
     return Row(
       children: [

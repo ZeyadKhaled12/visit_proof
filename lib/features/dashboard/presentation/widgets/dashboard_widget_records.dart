@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,7 +46,7 @@ class DashboardWidgetVisitList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (visits.isEmpty) return _Empty(text: emptyText ?? 'No visits to show');
+    if (visits.isEmpty) return _Empty(text: emptyText ?? 'No visits to show'.tr);
     final shown = limit == null ? visits : visits.take(limit!).toList();
 
     return Column(
@@ -58,7 +59,7 @@ class DashboardWidgetVisitList extends StatelessWidget {
         if (limit != null && visits.length > limit!)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text('+ ${visits.length - limit!} more',
+            child: Text('+ {0} more'.trArgs([visits.length - limit!]),
                 style: AppTheme.font(color: AppTheme.textSecondary, fontSize: AppTheme.textSmall)),
           ),
       ],
@@ -137,7 +138,7 @@ class DashboardWidgetInvoiceList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (invoices.isEmpty) {
-      return _Empty(text: emptyText ?? 'No invoices to show');
+      return _Empty(text: emptyText ?? 'No invoices to show'.tr);
     }
     final shown = limit == null ? invoices : invoices.take(limit!).toList();
 
@@ -192,8 +193,7 @@ class _InvoiceRow extends StatelessWidget {
                   Text(
                       invoice.dueDate == null
                           ? status.getText()
-                          : '${status.getText()} · due '
-                              '${VisitDetailHelpers.date(invoice.dueDate)}',
+                          : '{0} · due {1}'.trArgs([status.getText(), VisitDetailHelpers.date(invoice.dueDate)]),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTheme.font(
@@ -229,7 +229,7 @@ class DashboardWidgetPaymentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (payments.isEmpty) {
-      return const _Empty(text: 'No payments in this period');
+      return _Empty(text: 'No payments in this period'.tr);
     }
     final invoiceOf = {for (final i in invoices) i.id: i};
 

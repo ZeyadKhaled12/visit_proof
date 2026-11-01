@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,15 +50,15 @@ class _DispatchWidgetSuggestSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Suggested technicians',
-      subtitle: 'Best match first: specialty, free time, distance and status',
+      title: 'Suggested technicians'.tr,
+      subtitle: 'Best match first: specialty, free time, distance and status'.tr,
       requestState: (state) => state.assignRequestState,
       builder: (context, state, loading) {
         final visit = state.visitById(widget.visitID);
         if (visit == null) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.search_off_rounded,
-              text: 'This visit is no longer available');
+              text: 'This visit is no longer available'.tr);
         }
 
         final suggestions = DispatchRules.suggest(
@@ -95,9 +96,9 @@ class _DispatchWidgetSuggestSheetState
             ),
             const SizedBox(height: 12),
             if (suggestions.isEmpty)
-              const VisitDetailEmpty(
+              VisitDetailEmpty(
                   icon: Icons.engineering_outlined,
-                  text: 'No other technicians to suggest')
+                  text: 'No other technicians to suggest'.tr)
             else
               for (var i = 0; i < suggestions.length; i++)
                 _SuggestionTile(
@@ -175,14 +176,14 @@ class _SuggestionTile extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(technician.name ?? 'Technician',
+                          Text(technician.name ?? 'Technician'.tr,
                               style: AppTheme.font(
                                   color: AppTheme.textPrimary,
                                   fontSize: AppTheme.textBodyLarge,
                                   fontWeight: FontWeight.w800)),
                           Text(
                               eligible
-                                  ? 'Free at ${VisitDetailHelpers.time(suggestion.start)}'
+                                  ? 'Free at {0}'.trArgs([VisitDetailHelpers.time(suggestion.start)])
                                   : suggestion.violations.first.message,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -197,7 +198,7 @@ class _SuggestionTile extends StatelessWidget {
                     ),
                     if (best)
                       VisitDetailPill(
-                          text: 'Best match',
+                          text: 'Best match'.tr,
                           color: AppTheme.statGreen,
                           icon: Icons.auto_awesome_rounded)
                     else if (eligible)
@@ -215,7 +216,7 @@ class _SuggestionTile extends StatelessWidget {
                         VisitDetailPill(text: reason, color: AppTheme.primary),
                       if (warnings > 0)
                         VisitDetailPill(
-                            text: '$warnings warning${warnings == 1 ? '' : 's'}',
+                            text: '{0} warning{1}'.trArgs([warnings, warnings == 1 ? '' : 's']),
                             color: AppTheme.pending,
                             icon: Icons.warning_amber_rounded),
                     ],

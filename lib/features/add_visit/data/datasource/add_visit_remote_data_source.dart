@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -146,21 +147,20 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
               status != VisitStatus.scheduled &&
               status != VisitStatus.assigned) {
             _error(
-              'A new visit can only be Draft, '
-              'Scheduled, or Assigned.',
+              'A new visit can only be Draft, Scheduled, or Assigned.'.tr,
             );
           }
 
           // This function creates new visits only.
           if ((visit.id ?? '').trim().isNotEmpty) {
             _error(
-              'The new visit must not already have an ID.',
+              'The new visit must not already have an ID.'.tr,
             );
           }
 
           if ((visit.invoiceID ?? '').trim().isNotEmpty) {
             _error(
-              'A new visit cannot already have an invoice.',
+              'A new visit cannot already have an invoice.'.tr,
             );
           }
 
@@ -170,38 +170,37 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
             if (visit.client?.id == null ||
                 (visit.client?.id ?? '').trim().isEmpty) {
               _error(
-                'Please select a client before scheduling '
-                'or assigning the visit.',
+                'Please select a client before scheduling or assigning the visit.'.tr,
               );
             }
 
             if (visit.site == null) {
               _error(
-                'Visit location is required.',
+                'Visit location is required.'.tr,
               );
             }
 
             if ((visit.serviceName ?? '').trim().isEmpty) {
               _error(
-                'Please select a service.',
+                'Please select a service.'.tr,
               );
             }
 
             if (visit.startDate == null) {
               _error(
-                'Visit start date is required.',
+                'Visit start date is required.'.tr,
               );
             }
 
             if (visit.durationInMin == null || visit.durationInMin! <= 0) {
               _error(
-                'Visit duration must be greater than zero.',
+                'Visit duration must be greater than zero.'.tr,
               );
             }
 
             if (visit.price == null) {
               _error(
-                'Visit price is required.',
+                'Visit price is required.'.tr,
               );
             }
           }
@@ -209,8 +208,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
           // Assigned must have a technician.
           if (status == VisitStatus.assigned && visit.technicianModel == null) {
             _error(
-              'Please assign a technician before creating '
-              'an Assigned visit.',
+              'Please assign a technician before creating an Assigned visit.'.tr,
             );
           }
 
@@ -218,16 +216,14 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
           if (status == VisitStatus.scheduled &&
               visit.technicianModel != null) {
             _error(
-              'A visit with an assigned technician '
-              'must use Assigned status.',
+              'A visit with an assigned technician must use Assigned status.'.tr,
             );
           }
 
           // Draft visits should not already have a technician.
           if (status == VisitStatus.draft && visit.technicianModel != null) {
             _error(
-              'Remove the technician or create '
-              'the visit as Assigned.',
+              'Remove the technician or create the visit as Assigned.'.tr,
             );
           }
 
@@ -236,7 +232,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
 
           if (!price.isFinite || price < 0) {
             _error(
-              'Visit price must be a valid non-negative amount.',
+              'Visit price must be a valid non-negative amount.'.tr,
             );
           }
 
@@ -246,7 +242,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
               priceInCents > 9000000000000000 ||
               (priceInCents - priceInCents.round()).abs() > 0.000001) {
             _error(
-              'Visit price must have at most 2 decimal places.',
+              'Visit price must have at most 2 decimal places.'.tr,
             );
           }
 
@@ -286,7 +282,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
 
           final VisitHistoryActorModel admin = VisitHistoryActorModel(
             id: GFunToken.generateRandomId(),
-            role: 'Admin',
+            role: 'Admin'.tr,
           );
 
           final List<VisitHistoryModel> history = [
@@ -295,8 +291,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
               visitId: visitID,
               recordedAt: now,
               actor: admin,
-              description: 'Admin created this visit at '
-                  '${DateFormat('dd MMM yyyy').format(now)}',
+              description: 'Admin created this visit at {0}'.trArgs([DateFormat('dd MMM yyyy').format(now)]),
             ),
           ];
 
@@ -308,9 +303,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
                 visitId: visitID,
                 recordedAt: now,
                 actor: admin,
-                description: 'Admin created this visit with status '
-                    '${VisitStatusSwitch(visitStatusEnum: status).getText()} '
-                    'at ${DateFormat('dd MMM yyyy').format(now)}',
+                description: 'Admin created this visit with status {0} at {1}'.trArgs([VisitStatusSwitch(visitStatusEnum: status).getText(), DateFormat('dd MMM yyyy').format(now)]),
               ),
             );
           }
@@ -374,7 +367,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
                 element.visitId == visit.id || element.id == invoice.id,
           )) {
             _error(
-              'This visit already has an invoice.',
+              'This visit already has an invoice.'.tr,
             );
           }
 
@@ -385,7 +378,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
                 (element.invoiceID != null && element.invoiceID == invoice.id),
           )) {
             _error(
-              'Duplicate visit or invoice relationship.',
+              'Duplicate visit or invoice relationship.'.tr,
             );
           }
 
@@ -422,7 +415,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
 
             if (!invoiceSaved) {
               _error(
-                'Failed to save invoice locally.',
+                'Failed to save invoice locally.'.tr,
               );
             }
 
@@ -433,7 +426,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
 
             if (!visitSaved) {
               _error(
-                'Failed to save visit locally.',
+                'Failed to save visit locally.'.tr,
               );
             }
           } catch (e) {
@@ -470,7 +463,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
           // ==================================================
 
           await AppToasts.showMessage(
-            'Visit and invoice added successfully',
+            'Visit and invoice added successfully'.tr,
           );
 
           // Return VisitDetailModel with the linked invoiceID.

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../../app/app.dart';
@@ -33,7 +34,7 @@ class ClientDetailWidgetVisits extends StatelessWidget {
               Icon(Icons.event_busy_rounded,
                   size: 32, color: AppTheme.iconLightGrey),
               const SizedBox(height: 8),
-              Text('No visits recorded yet',
+              Text('No visits recorded yet'.tr,
                   style: AppTheme.font(
                       color: AppTheme.textSecondary,
                       fontSize: AppTheme.textBodyLarge,
@@ -101,7 +102,7 @@ class _VisitCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(visit.visitNumber ?? 'Visit',
+                          Text(visit.visitNumber ?? 'Visit'.tr,
                               style: AppTheme.font(
                                   color: AppTheme.textPrimary,
                                   fontSize: AppTheme.textBody,
@@ -113,7 +114,7 @@ class _VisitCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                                 visit.visitDate == null
-                                    ? 'No date'
+                                    ? 'No date'.tr
                                     : DateFormat('dd MMM yyyy · hh:mm a')
                                         .format(visit.visitDate!),
                                 maxLines: 1,
@@ -129,7 +130,7 @@ class _VisitCard extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: Text(visit.serviceName ?? 'No service',
+                            child: Text(visit.serviceName ?? 'No service'.tr,
                                 style: AppTheme.font(
                                     color: AppTheme.textPrimary,
                                     fontSize: AppTheme.textSubtitle,
@@ -160,7 +161,7 @@ class _VisitCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                                visit.technicianName ?? 'No technician',
+                                visit.technicianName ?? 'No technician'.tr,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTheme.font(

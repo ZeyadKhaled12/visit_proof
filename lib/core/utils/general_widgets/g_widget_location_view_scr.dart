@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
@@ -152,9 +153,9 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                     ),
                   ],
                 ),
-                const RichAttributionWidget(
+                RichAttributionWidget(
                   attributions: [
-                    TextSourceAttribution('OpenStreetMap contributors'),
+                    TextSourceAttribution('OpenStreetMap contributors'.tr),
                   ],
                 ),
               ],
@@ -190,7 +191,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                 elevation: 3,
                 shape: const CircleBorder(),
                 child: IconButton(
-                  tooltip: 'Recenter map',
+                  tooltip: 'Recenter map'.tr,
                   icon: Icon(
                     Icons.center_focus_strong,
                     color: AppTheme.primary,
@@ -223,7 +224,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Location',
+                      'Location'.tr,
                       style: AppTheme.font(
                         fontSize: AppTheme.textSmall,
                         color: AppTheme.textSecondary,

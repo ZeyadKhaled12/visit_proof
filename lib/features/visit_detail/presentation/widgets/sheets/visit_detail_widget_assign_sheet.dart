@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,10 +83,10 @@ class _VisitDetailWidgetAssignSheetState
     final draft = VisitRules.statusOf(widget.visit) == VisitStatus.draft;
 
     return VisitDetailWidgetActionSheet(
-      title: current == null ? 'Assign technician' : 'Reassign technician',
+      title: current == null ? 'Assign technician'.tr : 'Reassign technician'.tr,
       subtitle: current == null
-          ? 'Technicians busy at this time are rejected automatically.'
-          : 'Currently ${current.name ?? 'assigned'}',
+          ? 'Technicians busy at this time are rejected automatically.'.tr
+          : 'Currently {0}'.trArgs([current.name ?? 'assigned'.tr]),
       requestState: (state) => state.assignTechnicianRequestState,
       builder: (context, state, loading) {
         final choices = _choices(state.technicians);
@@ -99,14 +100,13 @@ class _VisitDetailWidgetAssignSheetState
               const SizedBox(height: 14),
             ] else if (draft) ...[
               VisitDetailNotice(
-                  text: 'This draft is complete, so assigning a technician '
-                      'moves it straight to Assigned.',
+                  text: 'This draft is complete, so assigning a technician moves it straight to Assigned.'.tr,
                   color: AppTheme.primary),
               const SizedBox(height: 14),
             ],
             GWidgetDropDown<TechnicianModel>(
-              labelText: 'Technician',
-              searchHintText: 'Search for a technician',
+              labelText: 'Technician'.tr,
+              searchHintText: 'Search for a technician'.tr,
               enableSearch: true,
               loading: state.getTechniciansRequestState == RequestState.loading,
               value: _selected,
@@ -124,7 +124,7 @@ class _VisitDetailWidgetAssignSheetState
             Align(
               alignment: Alignment.centerRight,
               child: GWidgetAddBtn(
-                  text: 'Add New Technician', onTap: _addTechnician),
+                  text: 'Add New Technician'.tr, onTap: _addTechnician),
             ),
             if (_selected != null) ...[
               const SizedBox(height: 12),
@@ -135,7 +135,7 @@ class _VisitDetailWidgetAssignSheetState
             ],
             const SizedBox(height: 16),
             GWidgetButton(
-              text: 'Assign',
+              text: 'Assign'.tr,
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               isEnable: _selected != null && error == null,
@@ -187,7 +187,7 @@ class _SelectedTechnician extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(technician.name ?? 'Technician',
+                Text(technician.name ?? 'Technician'.tr,
                     style: AppTheme.font(
                         color: AppTheme.textPrimary,
                         fontSize: AppTheme.textBodyLarge,
@@ -200,11 +200,11 @@ class _SelectedTechnician extends StatelessWidget {
                     VisitDetailPill(
                         text: status.getText(), color: status.getColor()),
                     VisitDetailPill(
-                        text: '${technician.openJobs ?? 0} open jobs',
+                        text: '{0} open jobs'.trArgs([technician.openJobs ?? 0]),
                         color: AppTheme.iconGrey),
                     if (matchesCategory)
                       VisitDetailPill(
-                          text: 'Category match',
+                          text: 'Category match'.tr,
                           color: AppTheme.secondary,
                           icon: Icons.star_rounded),
                   ],

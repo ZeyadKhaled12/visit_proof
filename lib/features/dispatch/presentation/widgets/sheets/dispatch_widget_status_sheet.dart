@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,14 +39,14 @@ class _DispatchWidgetStatusSheetState extends State<DispatchWidgetStatusSheet> {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Update status',
+      title: 'Update status'.tr,
       requestState: (state) => state.changeStatusRequestState,
       builder: (context, state, loading) {
         final visit = state.visitById(widget.visitID);
         if (visit == null) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.search_off_rounded,
-              text: 'This visit is no longer available');
+              text: 'This visit is no longer available'.tr);
         }
 
         final from = VisitRules.statusOf(visit);
@@ -59,7 +60,7 @@ class _DispatchWidgetStatusSheetState extends State<DispatchWidgetStatusSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Currently ${VisitDetailHelpers.statusText(from)}',
+              Text('Currently {0}'.trArgs([VisitDetailHelpers.statusText(from)]),
                   style: AppTheme.font(
                       color: VisitDetailHelpers.statusColor(from),
                       fontSize: AppTheme.textBodyLarge,
@@ -80,7 +81,7 @@ class _DispatchWidgetStatusSheetState extends State<DispatchWidgetStatusSheet> {
                 const SizedBox(height: 4),
                 GWidgetTextField(
                   controller: _reason,
-                  labelText: 'Reason',
+                  labelText: 'Reason'.tr,
                   maxLines: 2,
                   maxLength: VisitRules.maxReasonLength,
                   validator: (v) =>
@@ -89,7 +90,7 @@ class _DispatchWidgetStatusSheetState extends State<DispatchWidgetStatusSheet> {
               ],
               const SizedBox(height: 12),
               GWidgetButton(
-                text: 'Confirm',
+                text: 'Confirm'.tr,
                 fontSize: AppTheme.textSubtitle,
                 raduis: 14,
                 isEnable: target != null &&

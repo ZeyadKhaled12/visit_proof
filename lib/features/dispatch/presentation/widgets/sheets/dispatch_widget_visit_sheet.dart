@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,13 +47,13 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Visit',
+      title: 'Visit'.tr,
       builder: (context, state, loading) {
         final visit = state.visitById(visitID);
         if (visit == null) {
-          return const VisitDetailEmpty(
+          return VisitDetailEmpty(
               icon: Icons.search_off_rounded,
-              text: 'This visit is no longer available');
+              text: 'This visit is no longer available'.tr);
         }
 
         final technician = visit.technicianModel;
@@ -68,7 +69,7 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(visit.visitNumber ?? 'Visit',
+                  child: Text(visit.visitNumber ?? 'Visit'.tr,
                       style: AppTheme.font(
                           color: AppTheme.textPrimary,
                           fontSize: AppTheme.textTitle,
@@ -84,10 +85,10 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
             const SizedBox(height: 10),
             _Line(
                 icon: Icons.build_circle_rounded,
-                text: visit.serviceName ?? 'No service'),
+                text: visit.serviceName ?? 'No service'.tr),
             _Line(
                 icon: Icons.person_rounded,
-                text: visit.client?.name ?? 'No client'),
+                text: visit.client?.name ?? 'No client'.tr),
             _Line(
                 icon: Icons.location_on_rounded,
                 text: VisitDetailHelpers.site(visit.site)),
@@ -97,11 +98,11 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
                     '${VisitDetailHelpers.duration(visit.durationInMin)}'),
             _Line(
                 icon: Icons.engineering_rounded,
-                text: technician?.name ?? 'Waiting for a technician',
+                text: technician?.name ?? 'Waiting for a technician'.tr,
                 color: technician == null ? AppTheme.pending : null),
             if (VisitRules.canEditInfo(visit)) ...[
               const SizedBox(height: 12),
-              Text('Priority',
+              Text('Priority'.tr,
                   style: AppTheme.font(
                       color: AppTheme.textPrimary,
                       fontSize: AppTheme.textBody,
@@ -135,7 +136,7 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
               children: [
                 if (VisitRules.canAssignTechnician(visit))
                   VisitDetailActionChip(
-                    label: technician == null ? 'Assign' : 'Reassign',
+                    label: technician == null ? 'Assign'.tr : 'Reassign'.tr,
                     icon: Icons.auto_awesome_rounded,
                     color: AppTheme.primary,
                     onTap: () =>
@@ -143,7 +144,7 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
                   ),
                 if (VisitRules.canUnassignTechnician(visit))
                   VisitDetailActionChip(
-                    label: 'Unassign',
+                    label: 'Unassign'.tr,
                     icon: Icons.person_remove_rounded,
                     color: AppTheme.statOrange,
                     onTap: () =>
@@ -151,7 +152,7 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
                   ),
                 if (VisitRules.canReschedule(visit))
                   VisitDetailActionChip(
-                    label: 'Reschedule',
+                    label: 'Reschedule'.tr,
                     icon: Icons.edit_calendar_rounded,
                     color: AppTheme.pending,
                     onTap: () =>
@@ -159,14 +160,14 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
                   ),
                 if (VisitRules.nextStatuses(status).isNotEmpty)
                   VisitDetailActionChip(
-                    label: 'Update status',
+                    label: 'Update status'.tr,
                     icon: Icons.route_rounded,
                     color: AppTheme.secondary,
                     onTap: () =>
                         open(DispatchWidgetStatusSheet(visitID: visit.id)),
                   ),
                 VisitDetailActionChip(
-                  label: 'Full details',
+                  label: 'Full details'.tr,
                   icon: Icons.open_in_new_rounded,
                   color: AppTheme.iconGrey,
                   onTap: () => _openDetails(context, visit.id!),

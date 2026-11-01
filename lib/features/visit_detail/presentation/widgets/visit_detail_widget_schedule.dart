@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -23,10 +24,10 @@ class VisitDetailWidgetSchedule extends StatelessWidget {
     final end = start?.add(Duration(minutes: visit.durationInMin ?? 0));
 
     return VisitDetailSection(
-      title: 'Schedule & Technician',
+      title: 'Schedule & Technician'.tr,
       icon: Icons.event_available_rounded,
       color: AppTheme.pending,
-      actionText: 'Reschedule',
+      actionText: 'Reschedule'.tr,
       actionIcon: Icons.edit_calendar_rounded,
       onAction: VisitRules.canReschedule(visit)
           ? () => VisitDetailWidgetActionSheet.show(
@@ -40,7 +41,7 @@ class VisitDetailWidgetSchedule extends StatelessWidget {
               Expanded(
                 child: VisitDetailStatTile(
                     icon: Icons.calendar_month_rounded,
-                    label: 'Date',
+                    label: 'Date'.tr,
                     value: VisitDetailHelpers.date(start),
                     color: AppTheme.primary),
               ),
@@ -48,7 +49,7 @@ class VisitDetailWidgetSchedule extends StatelessWidget {
               Expanded(
                 child: VisitDetailStatTile(
                     icon: Icons.schedule_rounded,
-                    label: 'Starts',
+                    label: 'Starts'.tr,
                     value: VisitDetailHelpers.time(start),
                     color: AppTheme.secondary),
               ),
@@ -56,7 +57,7 @@ class VisitDetailWidgetSchedule extends StatelessWidget {
               Expanded(
                 child: VisitDetailStatTile(
                     icon: Icons.timelapse_rounded,
-                    label: 'Duration',
+                    label: 'Duration'.tr,
                     value: VisitDetailHelpers.duration(visit.durationInMin),
                     color: AppTheme.statOrange),
               ),
@@ -69,7 +70,7 @@ class VisitDetailWidgetSchedule extends StatelessWidget {
                 Icon(Icons.flag_rounded,
                     size: 16, color: AppTheme.statGreen),
                 const SizedBox(width: 6),
-                Text('Expected to finish around ${VisitDetailHelpers.time(end)}',
+                Text('Expected to finish around {0}'.trArgs([VisitDetailHelpers.time(end)]),
                     style: AppTheme.font(
                         color: AppTheme.textDarkHint,
                         fontSize: AppTheme.textSmall,
@@ -122,12 +123,12 @@ class _TechnicianCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(technician.name ?? 'Technician',
+                    Text(technician.name ?? 'Technician'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textSubtitle,
                             fontWeight: FontWeight.w800)),
-                    Text('${technician.openJobs ?? 0} open jobs',
+                    Text('{0} open jobs'.trArgs([technician.openJobs ?? 0]),
                         style: AppTheme.font(
                             color: AppTheme.textSecondary, fontSize: AppTheme.textSmall)),
                   ],
@@ -144,14 +145,14 @@ class _TechnicianCard extends StatelessWidget {
             children: [
               if (phone.isNotEmpty)
                 VisitDetailActionChip(
-                  label: 'Call',
+                  label: 'Call'.tr,
                   icon: Icons.phone_rounded,
                   color: AppTheme.primary,
                   onTap: () => GFunLaunch.makePhoneCall(phone),
                 ),
               if (VisitRules.canAssignTechnician(visit))
                 VisitDetailActionChip(
-                  label: 'Reassign',
+                  label: 'Reassign'.tr,
                   icon: Icons.swap_horiz_rounded,
                   color: AppTheme.secondary,
                   onTap: () => VisitDetailWidgetActionSheet.show(
@@ -159,7 +160,7 @@ class _TechnicianCard extends StatelessWidget {
                 ),
               if (VisitRules.canUnassignTechnician(visit))
                 VisitDetailActionChip(
-                  label: 'Unassign',
+                  label: 'Unassign'.tr,
                   icon: Icons.person_remove_rounded,
                   color: AppTheme.statOrange,
                   onTap: () => VisitDetailWidgetActionSheet.show(context,
@@ -180,22 +181,22 @@ class _NoTechnician extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!VisitRules.canAssignTechnician(visit)) {
-      return const VisitDetailEmpty(
+      return VisitDetailEmpty(
         icon: Icons.engineering_outlined,
-        text: 'No technician was assigned to this visit.',
+        text: 'No technician was assigned to this visit.'.tr,
       );
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const VisitDetailEmpty(
+        VisitDetailEmpty(
             icon: Icons.engineering_outlined,
-            text: 'No technician assigned yet'),
+            text: 'No technician assigned yet'.tr),
         const SizedBox(height: 10),
         Center(
           child: VisitDetailActionChip(
-            label: 'Assign technician',
+            label: 'Assign technician'.tr,
             icon: Icons.person_add_alt_1_rounded,
             color: AppTheme.primary,
             onTap: () => VisitDetailWidgetActionSheet.show(

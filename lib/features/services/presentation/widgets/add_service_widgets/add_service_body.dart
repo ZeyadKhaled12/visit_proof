@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,7 +98,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
       DropdownMenuItem<GModelCatg>(
         value: GModelCatg(name: 'CREATE_NEW'),
         child: Text(
-          '+ Create New Category',
+          '+ Create New Category'.tr,
           style: AppTheme.font(
             color: AppTheme.primary,
             fontWeight: FontWeight.bold,
@@ -143,8 +144,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                 children: [
                   Text(
                     widget.serviceModel?.id != null
-                        ? 'Update Service'
-                        : 'Create New Service',
+                        ? 'Update Service'.tr
+                        : 'Create New Service'.tr,
                     style: AppTheme.font(
                       color: AppTheme.textPrimary,
                       fontSize: AppTheme.textHeadline,
@@ -153,7 +154,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                   ),
                   SizedBox(height: 2),
                   Text(
-                    'Fill in the details below to add a service',
+                    'Fill in the details below to add a service'.tr,
                     style: AppTheme.font(
                       color: AppTheme.textSecondary,
                       fontSize: AppTheme.textBody,
@@ -168,7 +169,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                 items: dropdownItems,
                 value: _selectedCategory,
                 loading: widget.getCategoriesLoading,
-                labelText: 'Category *',
+                labelText: 'Category *'.tr,
                 errorMsg: _categoryErrorMsg,
                 prefixIcon: Icon(Icons.category_outlined,
                     color: AppTheme.primary),
@@ -194,8 +195,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                         padding: const EdgeInsets.only(top: 16),
                         child: GWidgetTextField(
                           controller: _newCategoryController,
-                          labelText: 'New Category Name *',
-                          hintText: 'e.g., HVAC',
+                          labelText: 'New Category Name *'.tr,
+                          hintText: 'e.g., HVAC'.tr,
                           errorMsg: _categoryNameErrorMsg,
                           prefixIcon: Icon(
                               Icons.drive_file_rename_outline,
@@ -209,8 +210,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
               // 2. Service Name
               GWidgetTextField(
                 controller: _serviceNameController,
-                labelText: 'Service Name *',
-                hintText: 'e.g., Standard AC Tune-Up',
+                labelText: 'Service Name *'.tr,
+                hintText: 'e.g., Standard AC Tune-Up'.tr,
                 errorMsg: _serviceNameError,
                 prefixIcon: Icon(Icons.miscellaneous_services_outlined,
                     color: AppTheme.primary),
@@ -220,7 +221,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
               // 3. Price
               GWidgetTextField(
                   controller: _priceController,
-                  labelText: 'Price *',
+                  labelText: 'Price *'.tr,
                   hintText: '0.00',
                   errorMsg: _priceErrorMsg,
                   keyboardType:
@@ -240,7 +241,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
               // 3. Price
               GWidgetTextField(
                   controller: _durationController,
-                  labelText: 'Duration *',
+                  labelText: 'Duration *'.tr,
                   hintText: '60',
                   errorMsg: _durationErrorMsg,
                   inputFormatters: [
@@ -251,7 +252,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       width: 50,
                       height: 50,
                       child: Center(
-                        child: Text('Min',
+                        child: Text('Min'.tr,
                             style: AppTheme.font(
                                 fontSize: AppTheme.textSmall,
                                 fontWeight: FontWeight.bold,
@@ -261,7 +262,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
 
               // 4. Checklist (Optional)
               Text(
-                'Service Checklist (Optional)',
+                'Service Checklist (Optional)'.tr,
                 style: AppTheme.font(
                   color: AppTheme.textPrimary,
                   fontSize: AppTheme.textBodyLarge,
@@ -276,7 +277,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                   Expanded(
                     child: GWidgetTextField(
                       controller: _checklistInputController,
-                      hintText: 'Add task (e.g., Wash hair)',
+                      hintText: 'Add task (e.g., Wash hair)'.tr,
                       prefixIcon: Icon(Icons.check_box_outlined,
                           color: AppTheme.secondary),
                       onFieldSubmitted: (_) => _addChecklistItem(),
@@ -295,7 +296,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       ),
                       child: Center(
                         child: Text(
-                          'Add',
+                          'Add'.tr,
                           style: AppTheme.font(
                             color: AppTheme.secondary,
                             fontWeight: FontWeight.bold,
@@ -369,37 +370,37 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       _durationErrorMsg = null;
                       if (_isCreatingNewCategory) {
                         if (_newCategoryController.text.isEmpty) {
-                          _categoryNameErrorMsg = 'Category name is required';
+                          _categoryNameErrorMsg = 'Category name is required'.tr;
                         } else if (_newCategoryController.text.length < 2) {
                           _categoryNameErrorMsg =
-                              'Category name must be at least 2 characters long';
+                              'Category name must be at least 2 characters long'.tr;
                         }
                       } else {
                         if (_selectedCategory == null) {
-                          _categoryErrorMsg = 'Category is required';
+                          _categoryErrorMsg = 'Category is required'.tr;
                         }
                       }
                       if (_serviceNameController.text.isEmpty) {
-                        _serviceNameError = 'Service name is required';
+                        _serviceNameError = 'Service name is required'.tr;
                       } else if (_serviceNameController.text.length < 2) {
                         _serviceNameError =
-                            'Service name must be at least 2 characters long';
+                            'Service name must be at least 2 characters long'.tr;
                       }
                       try {
                         if (double.parse(_priceController.text) < 0) {
-                          _priceErrorMsg = 'Price must be grater than 0';
+                          _priceErrorMsg = 'Price must be grater than 0'.tr;
                         }
                       } catch (e) {
-                        _priceErrorMsg = 'Price must be grater than 0';
+                        _priceErrorMsg = 'Price must be grater than 0'.tr;
                       }
                       try {
                         if (int.parse(_durationController.text) < 0) {
                           _durationErrorMsg =
-                              'Duration must be grater than 0 minutes';
+                              'Duration must be grater than 0 minutes'.tr;
                         }
                       } catch (e) {
                         _durationErrorMsg =
-                            'Duration must be grater than 0 minutes';
+                            'Duration must be grater than 0 minutes'.tr;
                       }
                     });
                     if (_categoryNameErrorMsg != null ||
@@ -434,8 +435,8 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                     ),
                   ],
                   text: widget.serviceModel?.id != null
-                      ? 'Update Service'
-                      : 'Save Service')
+                      ? 'Update Service'.tr
+                      : 'Save Service'.tr)
             ],
           ),
         ),

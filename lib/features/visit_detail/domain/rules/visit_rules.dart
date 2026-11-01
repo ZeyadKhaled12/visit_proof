@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import '../../../../core/utils/enums/visit_status_enum.dart';
 import '../../../invoices/data/models/invoice_detail_model.dart';
 import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
@@ -80,7 +81,7 @@ class VisitRules {
     final from = statusOf(visit);
 
     if (!nextStatuses(from).contains(to)) {
-      return 'A ${_text(from)} visit cannot move to ${_text(to)}.';
+      return 'A {0} visit cannot move to {1}.'.trArgs([_text(from), _text(to)]);
     }
 
     if (to == VisitStatus.scheduled) {
@@ -92,11 +93,11 @@ class VisitRules {
         to == VisitStatus.inProgress ||
         to == VisitStatus.completed;
     if (needsTechnician && visit.technicianModel == null) {
-      return 'Assign a technician first.';
+      return 'Assign a technician first.'.tr;
     }
 
     if (to == VisitStatus.cancel && hasCollectedMoney(invoice)) {
-      return 'Refund all payments from the invoice before cancelling.';
+      return 'Refund all payments from the invoice before cancelling.'.tr;
     }
 
     return null;
@@ -106,10 +107,10 @@ class VisitRules {
   static String? planningError(VisitDetailModel visit) {
     final missing = missingForPlanning(visit);
     if (missing.isNotEmpty) {
-      return 'Complete these first: ${missing.join(', ')}.';
+      return 'Complete these first: {0}.'.trArgs([missing.join(', ')]);
     }
     if (visit.startDate!.isBefore(DateTime.now())) {
-      return 'The start time has already passed. Reschedule the visit first.';
+      return 'The start time has already passed. Reschedule the visit first.'.tr;
     }
     return null;
   }
@@ -120,7 +121,7 @@ class VisitRules {
         if ((visit.serviceName ?? '').trim().isEmpty) 'service',
         if (visit.price == null) 'price',
         if ((visit.durationInMin ?? 0) <= 0) 'duration',
-        if (visit.startDate == null) 'start date',
+        if (visit.startDate == null) 'start date'.tr,
       ];
 
   // ==========================================================
@@ -147,7 +148,7 @@ class VisitRules {
   /// Why a technician cannot be assigned right now, or null.
   static String? assignError(VisitDetailModel visit) {
     if (!canAssignTechnician(visit)) {
-      return 'Technicians can only be assigned before the visit starts.';
+      return 'Technicians can only be assigned before the visit starts.'.tr;
     }
     return statusOf(visit) == VisitStatus.draft ? planningError(visit) : null;
   }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -36,7 +37,7 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
     final invoice = this.invoice;
 
     return VisitDetailSection(
-      title: 'Invoice',
+      title: 'Invoice'.tr,
       icon: Icons.receipt_long_rounded,
       color: AppTheme.statGreen,
       child: invoice == null
@@ -50,9 +51,9 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
                           width: 26,
                           height: 26)),
                 )
-              : const VisitDetailEmpty(
+              : VisitDetailEmpty(
                   icon: Icons.receipt_outlined,
-                  text: 'No invoice is linked to this visit'))
+                  text: 'No invoice is linked to this visit'.tr))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -66,7 +67,7 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
                 if (invoice.id != null) ...[
                   const SizedBox(height: 14),
                   GWidgetButton(
-                    text: 'Open invoice',
+                    text: 'Open invoice'.tr,
                     fontSize: AppTheme.textSubtitle,
                     raduis: 14,
                     height: 48,
@@ -82,7 +83,7 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
                     onPressed: () => _openInvoice(context, invoice.id!),
                   ),
                   const SizedBox(height: 6),
-                  Text('Issue, edit, payments and refunds are managed there.',
+                  Text('Issue, edit, payments and refunds are managed there.'.tr,
                       textAlign: TextAlign.center,
                       style: AppTheme.font(
                           color: AppTheme.textLightHint, fontSize: AppTheme.textCaption)),
@@ -105,7 +106,7 @@ class _InvoiceHeader extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(invoice.invoiceNumber ?? 'Invoice',
+          child: Text(invoice.invoiceNumber ?? 'Invoice'.tr,
               style: AppTheme.font(
                   color: AppTheme.textPrimary,
                   fontSize: AppTheme.textSubtitle,
@@ -113,8 +114,8 @@ class _InvoiceHeader extends StatelessWidget {
         ),
         VisitDetailPill(
             text: issued
-                ? 'Issued ${VisitDetailHelpers.date(invoice.issueDate)}'
-                : 'Draft',
+                ? 'Issued {0}'.trArgs([VisitDetailHelpers.date(invoice.issueDate)])
+                : 'Draft'.tr,
             color: issued ? AppTheme.secondary : AppTheme.iconGrey),
         const SizedBox(width: 6),
         VisitDetailPill(
@@ -139,8 +140,8 @@ class _DueDate extends StatelessWidget {
 
     return VisitDetailNotice(
       text: overdue
-          ? 'Overdue since ${VisitDetailHelpers.date(invoice.dueDate)}'
-          : 'Due by ${VisitDetailHelpers.date(invoice.dueDate)}',
+          ? 'Overdue since {0}'.trArgs([VisitDetailHelpers.date(invoice.dueDate)])
+          : 'Due by {0}'.trArgs([VisitDetailHelpers.date(invoice.dueDate)]),
       color: overdue ? AppTheme.statOrange : AppTheme.secondary,
       icon: overdue ? Icons.warning_amber_rounded : Icons.event_rounded,
     );
@@ -170,7 +171,7 @@ class _BalanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(fullyPaid ? 'Amount paid' : 'Remaining balance',
+          Text(fullyPaid ? 'Amount paid'.tr : 'Remaining balance'.tr,
               style: AppTheme.font(
                   color: AppTheme.onPrimary.withValues(alpha: .9),
                   fontSize: AppTheme.textSmall,
@@ -198,9 +199,9 @@ class _BalanceCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Paid ${VisitDetailHelpers.money(paid, invoice.currency)}',
+              Text('Paid {0}'.trArgs([VisitDetailHelpers.money(paid, invoice.currency)]),
                   style: AppTheme.font(color: AppTheme.onPrimary, fontSize: AppTheme.textSmall)),
-              Text('Total ${VisitDetailHelpers.money(total, invoice.currency)}',
+              Text('Total {0}'.trArgs([VisitDetailHelpers.money(total, invoice.currency)]),
                   style: AppTheme.font(color: AppTheme.onPrimary, fontSize: AppTheme.textSmall)),
             ],
           ),

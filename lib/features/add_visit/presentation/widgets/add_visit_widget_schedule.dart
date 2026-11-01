@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 import '../../../../core/utils/enums/priority_enum.dart';
@@ -48,13 +49,13 @@ class AddVisitWidgetSchedule extends StatelessWidget {
   Widget build(BuildContext context) {
     return GWidgetCardTitle(
         icon: Icons.assignment,
-        title: 'Scheduling & Assignment',
+        title: 'Scheduling & Assignment'.tr,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             GWidgetDropDown<TechnicianModel>(
-              labelText: 'Technician',
-              searchHintText: 'Search for an technician',
+              labelText: 'Technician'.tr,
+              searchHintText: 'Search for an technician'.tr,
               loading: techniciansLoading,
               enableSearch: true,
               value: selectedTechnician,
@@ -69,7 +70,7 @@ class AddVisitWidgetSchedule extends StatelessWidget {
             ),
             SizedBox(height: 10),
             GWidgetAddBtn(
-                text: 'Add New Technician',
+                text: 'Add New Technician'.tr,
                 onTap: () async {
                   final data =
                       await Navigator.pushNamed(context, AddTechScr.route);
@@ -80,7 +81,7 @@ class AddVisitWidgetSchedule extends StatelessWidget {
                 }),
             SizedBox(height: 16),
             GWidgetDropDown<Priority>(
-              labelText: 'Priority',
+              labelText: 'Priority'.tr,
               value: selectedPriority,
               onChanged: onPriorityChanged,
               items: Priority.values.map((priority) {
@@ -105,7 +106,7 @@ class AddVisitWidgetSchedule extends StatelessWidget {
               },
               child: GWidgetTextField(
                 enabled: false,
-                labelText: 'Start Date',
+                labelText: 'Start Date'.tr,
                 hintText: 'dd MMM yyy', //,'00:00 AM/PM',
                 errorMsg: startDateErrorMsg,
                 controller: startDate == null
@@ -132,8 +133,8 @@ class AddVisitWidgetSchedule extends StatelessWidget {
               },
               child: GWidgetTextField(
                 enabled: false,
-                labelText: 'Start Time',
-                hintText: '00:00 AM/PM',
+                labelText: 'Start Time'.tr,
+                hintText: '00:00 AM/PM'.tr,
                 errorMsg: startTimeErrorMsg,
                 controller: startTime == null
                     ? null
@@ -150,18 +151,18 @@ class AddVisitWidgetSchedule extends StatelessWidget {
             SizedBox(height: 16),
             GWidgetTextField(
               controller: problem,
-              labelText: 'Problem',
+              labelText: 'Problem'.tr,
               hintText:
-                  'e.g., AC unit in the master bedroom is blowing warm air. The outdoor compressor is making a loud buzzing noise....',
+                  'e.g., AC unit in the master bedroom is blowing warm air. The outdoor compressor is making a loud buzzing noise....'.tr,
               maxLines: 5,
               maxLength: 1000,
             ),
             SizedBox(height: 16),
             GWidgetTextField(
               controller: notes,
-              labelText: 'Notes',
+              labelText: 'Notes'.tr,
               hintText:
-                  'e.g., Gate code is 1234, call 10 mins before arrival...',
+                  'e.g., Gate code is 1234, call 10 mins before arrival...'.tr,
               maxLines: 4,
               maxLength: 250,
             ),

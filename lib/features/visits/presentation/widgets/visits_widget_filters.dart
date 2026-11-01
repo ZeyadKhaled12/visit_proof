@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/general_widgets/g_widget_filter_btn.dart';
@@ -23,7 +24,7 @@ class VisitsWidgetFilters extends StatelessWidget {
       children: [
         Expanded(
             child: GWidgetSearch(
-                hint: 'Search visit number, client, service...',
+                hint: 'Search visit number, client, service...'.tr,
                 searchController: searchController,
                 onChanged: (value) => onSearch(value ?? ''),
                 onClear: () {

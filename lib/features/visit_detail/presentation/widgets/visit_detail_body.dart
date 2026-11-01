@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,8 +35,8 @@ class VisitDetailBody extends StatelessWidget {
 
   Future<void> _delete(BuildContext context) async {
     final confirmed = await AppToasts.showDeleteConfirmation(
-        headTitle: 'Delete visit?',
-        title: 'This permanently removes the visit and its draft invoice.');
+        headTitle: 'Delete visit?'.tr,
+        title: 'This permanently removes the visit and its draft invoice.'.tr);
     if (confirmed != true || !context.mounted) return;
     context.read<VisitDetailBloc>().add(DeleteVisitEvent(
         deleteVisitParameters: DeleteVisitParameters(visitID: visitID)));
@@ -44,7 +45,7 @@ class VisitDetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GWidgetNaviBody(
-      title: 'Visit Details',
+      title: 'Visit Details'.tr,
       body: state.hasVisit ? _content(context) : _placeholder(context),
     );
   }
@@ -72,14 +73,14 @@ class VisitDetailBody extends StatelessWidget {
                   color: AppTheme.statOrange, size: 38),
             ),
             const SizedBox(height: 16),
-            Text('We could not load this visit',
+            Text('We could not load this visit'.tr,
                 style: AppTheme.font(
                     color: AppTheme.textPrimary,
                     fontSize: AppTheme.textTitle,
                     fontWeight: FontWeight.w800)),
             const SizedBox(height: 20),
             GWidgetButton(
-              text: 'Try again',
+              text: 'Try again'.tr,
               fontSize: AppTheme.textSubtitle,
               width: 160,
               raduis: 12,
@@ -128,7 +129,7 @@ class VisitDetailBody extends StatelessWidget {
             if (VisitRules.canDelete(visit, invoice)) ...[
               const SizedBox(height: 24),
               GWidgetButton(
-                text: 'Delete visit',
+                text: 'Delete visit'.tr,
                 fontSize: AppTheme.textSubtitle,
                 raduis: 14,
                 height: 50,

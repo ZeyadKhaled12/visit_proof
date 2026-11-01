@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import 'package:visit_proof/configs/app_theme.dart';
@@ -38,23 +39,23 @@ class InvoicesWidgetCard extends StatelessWidget {
   }
 
   String get _statusText {
-    if (_isDraft) return 'Draft';
+    if (_isDraft) return 'Draft'.tr;
 
     switch (invoice.paymentStatus) {
       case PaymentStatus.unpaid:
-        return 'Unpaid';
+        return 'Unpaid'.tr;
       case PaymentStatus.pending:
-        return 'Pending';
+        return 'Pending'.tr;
       case PaymentStatus.partiallyPaid:
-        return 'Partially Paid';
+        return 'Partially Paid'.tr;
       case PaymentStatus.paid:
-        return 'Paid';
+        return 'Paid'.tr;
       case PaymentStatus.cancelled:
-        return 'Cancelled';
+        return 'Cancelled'.tr;
       case PaymentStatus.refunded:
-        return 'Refunded';
+        return 'Refunded'.tr;
       case null:
-        return 'Unknown';
+        return 'Unknown'.tr;
     }
   }
 
@@ -93,7 +94,7 @@ class InvoicesWidgetCard extends StatelessWidget {
   }
 
   String _date(DateTime? date) {
-    if (date == null) return 'Not set';
+    if (date == null) return 'Not set'.tr;
 
     return '${date.day.toString().padLeft(2, '0')}/'
         '${date.month.toString().padLeft(2, '0')}/'
@@ -206,7 +207,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            invoice.invoiceNumber ?? 'Invoice',
+                            invoice.invoiceNumber ?? 'Invoice'.tr,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppTheme.font(
@@ -217,7 +218,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            invoice.visitNumber ?? 'No visit number',
+                            invoice.visitNumber ?? 'No visit number'.tr,
                             style: AppTheme.font(
                               color: AppTheme.textSecondary,
                               fontSize: AppTheme.textCaption,
@@ -263,7 +264,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                     const SizedBox(width: 7),
                     Expanded(
                       child: Text(
-                        invoice.client?.name ?? 'Customer not selected',
+                        invoice.client?.name ?? 'Customer not selected'.tr,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTheme.font(
@@ -292,7 +293,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _amountInfo(
-                        label: 'Invoice total',
+                        label: 'Invoice total'.tr,
                         value: _money(invoice.totalAmount),
                         color: AppTheme.textPrimary,
                       ),
@@ -300,7 +301,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: _amountInfo(
-                        label: 'Remaining',
+                        label: 'Remaining'.tr,
                         value: _money(invoice.remainingAmount),
                         color: (invoice.remainingAmount ?? 0) > 0
                             ? AppTheme.primary
@@ -331,7 +332,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 Text(
-                  'Paid ${_money(invoice.paidAmount)}',
+                  'Paid {0}'.trArgs([_money(invoice.paidAmount)]),
                   style: AppTheme.font(
                     color: AppTheme.textSecondary,
                     fontSize: AppTheme.textCaption,
@@ -360,10 +361,10 @@ class InvoicesWidgetCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         _isOverdue
-                            ? 'Overdue · ${_date(invoice.dueDate)}'
+                            ? 'Overdue · {0}'.trArgs([_date(invoice.dueDate)])
                             : _isDraft
-                                ? 'Created ${_date(invoice.createdAt)}'
-                                : 'Due ${_date(invoice.dueDate)}',
+                                ? 'Created {0}'.trArgs([_date(invoice.createdAt)])
+                                : 'Due {0}'.trArgs([_date(invoice.dueDate)]),
                         style: AppTheme.font(
                           color: _isOverdue
                               ? AppTheme.statOrange
@@ -375,7 +376,7 @@ class InvoicesWidgetCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Details',
+                      'Details'.tr,
                       style: AppTheme.font(
                         color: AppTheme.primary,
                         fontSize: AppTheme.textSmall,

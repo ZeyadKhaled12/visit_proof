@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,7 +32,7 @@ class DashboardTechnicianScr extends StatefulWidget {
             ?.where((t) => t.id == technicianID)
             .firstOrNull
             ?.name ??
-        'Technician';
+        'Technician'.tr;
     return Navigator.push(
       context,
       MaterialPageRoute(
@@ -66,12 +67,12 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
         .firstOrNull;
 
     return GWidgetNaviBody(
-      title: stat?.technician.name ?? 'Technician',
+      title: stat?.technician.name ?? 'Technician'.tr,
       body: stat == null
-          ? const Center(
+          ? Center(
               child: VisitDetailEmpty(
                   icon: Icons.person_off_rounded,
-                  text: 'This technician no longer exists'))
+                  text: 'This technician no longer exists'.tr))
           : _body(stat, period),
     );
   }
@@ -121,7 +122,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(technician.name ?? 'Technician',
+                        Text(technician.name ?? 'Technician'.tr,
                             style: AppTheme.font(
                                 color: AppTheme.textPrimary,
                                 fontSize: AppTheme.textTitle,
@@ -135,7 +136,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                                 text: status.getText(), color: status.getColor()),
                             if (stat.activeNow > 0)
                               VisitDetailPill(
-                                  text: '${stat.activeNow} active now',
+                                  text: '{0} active now'.trArgs([stat.activeNow]),
                                   color: AppTheme.secondary,
                                   icon: Icons.bolt_rounded),
                           ],
@@ -149,7 +150,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                         arguments: TechnicianDetailArgu(
                                 techID: technician.id ?? '')
                             .toArgu()),
-                    child: Text('Profile',
+                    child: Text('Profile'.tr,
                         style: AppTheme.font(
                             color: AppTheme.primary,
                             fontSize: AppTheme.textBody,
@@ -159,19 +160,19 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
               ),
               const SizedBox(height: 14),
               DashboardGrid(columns: 4, spacing: 8, children: [
-                DashboardMiniStat(label: 'Visits', value: '${stat.visits.length}'),
-                DashboardMiniStat(label: 'Completed', value: '${stat.completed}'),
+                DashboardMiniStat(label: 'Visits'.tr, value: '${stat.visits.length}'),
+                DashboardMiniStat(label: 'Completed'.tr, value: '${stat.completed}'),
                 DashboardMiniStat(
-                    label: 'Completion',
+                    label: 'Completion'.tr,
                     value: DashboardFormat.percent(stat.completionRate)),
                 DashboardMiniStat(
-                    label: 'Collected',
+                    label: 'Collected'.tr,
                     value: DashboardFormat.money(stat.collected)),
               ]),
               const SizedBox(height: 14),
               DashboardSection(
-                title: 'Workload over time',
-                subtitle: 'Tap a bar to list those visits',
+                title: 'Workload over time'.tr,
+                subtitle: 'Tap a bar to list those visits'.tr,
                 child: DashboardWidgetTrendChart(
                   buckets: buckets,
                   selectedIndex: _bucket,
@@ -180,9 +181,9 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
               ),
               const SizedBox(height: 14),
               DashboardSection(
-                title: 'By status',
+                title: 'By status'.tr,
                 child: statusList.isEmpty
-                    ? Text('No visits in this period',
+                    ? Text('No visits in this period'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textSecondary, fontSize: AppTheme.textBody))
                     : DashboardWidgetBarList(
@@ -204,9 +205,9 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
               ),
               const SizedBox(height: 14),
               DashboardSection(
-                title: '${filtered.length} visit${filtered.length == 1 ? '' : 's'}',
-                subtitle: hasFilter ? 'Filtered selection' : 'All in this period',
-                actionText: hasFilter ? 'Clear filter' : null,
+                title: '{0} visit{1}'.trArgs([filtered.length, filtered.length == 1 ? '' : 's']),
+                subtitle: hasFilter ? 'Filtered selection'.tr : 'All in this period'.tr,
+                actionText: hasFilter ? 'Clear filter'.tr : null,
                 onAction: hasFilter
                     ? () => setState(() {
                           _status = null;
@@ -215,7 +216,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                     : null,
                 child: DashboardWidgetVisitList(
                     visits: filtered,
-                    emptyText: 'No visits match this selection'),
+                    emptyText: 'No visits match this selection'.tr),
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../configs/app_theme.dart';
@@ -55,10 +56,8 @@ class _PlanRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                     plan.ok
-                        ? '${plan.technician!.name ?? 'Technician'} at '
-                            '${VisitDetailHelpers.time(plan.start)}'
-                            '${plan.warnings.isEmpty ? '' : ' · ${plan.warnings.first.message}'}'
-                        : plan.problem ?? 'No technician is available.',
+                        ? '{0} at {1}{2}'.trArgs([plan.technician!.name ?? 'Technician'.tr, VisitDetailHelpers.time(plan.start), plan.warnings.isEmpty ? '' : ' · ${plan.warnings.first.message}'])
+                        : plan.problem ?? 'No technician is available.'.tr,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(

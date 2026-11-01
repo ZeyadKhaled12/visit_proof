@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,13 +42,13 @@ class _DispatchWidgetSettingsSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
-      title: 'Dispatch rules',
-      subtitle: 'Applied to every assignment on the board',
+      title: 'Dispatch rules'.tr,
+      subtitle: 'Applied to every assignment on the board'.tr,
       requestState: (state) => state.saveSettingsRequestState,
       builder: (context, state, loading) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Title('Working hours'),
+          _Title('Working hours'.tr),
           Row(
             children: [
               Expanded(
@@ -58,7 +59,7 @@ class _DispatchWidgetSettingsSheetState
                           _settings.copyWith(workStartMinutes: value))),
                   child: VisitDetailStatTile(
                       icon: Icons.wb_sunny_rounded,
-                      label: 'Day starts',
+                      label: 'Day starts'.tr,
                       value: _clock(_settings.workStart),
                       color: AppTheme.pending),
                 ),
@@ -72,7 +73,7 @@ class _DispatchWidgetSettingsSheetState
                           _settings = _settings.copyWith(workEndMinutes: value))),
                   child: VisitDetailStatTile(
                       icon: Icons.nights_stay_rounded,
-                      label: 'Day ends',
+                      label: 'Day ends'.tr,
                       value: _clock(_settings.workEnd),
                       color: AppTheme.primary),
                 ),
@@ -80,7 +81,7 @@ class _DispatchWidgetSettingsSheetState
             ],
           ),
           const SizedBox(height: 18),
-          _Title('Visits per technician per day'),
+          _Title('Visits per technician per day'.tr),
           Row(
             children: [
               _StepButton(
@@ -108,14 +109,14 @@ class _DispatchWidgetSettingsSheetState
             ],
           ),
           const SizedBox(height: 18),
-          _Title('Travel time between visits'),
+          _Title('Travel time between visits'.tr),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
               for (final minutes in _bufferOptions)
                 GWidgetChoiceChip(
-                  label: minutes == 0 ? 'None' : '$minutes min',
+                  label: minutes == 0 ? 'None'.tr : '{0} min'.trArgs([minutes]),
                   color: AppTheme.secondary,
                   selected: _settings.travelBuffer == minutes,
                   onTap: () => setState(() => _settings =
@@ -125,22 +126,21 @@ class _DispatchWidgetSettingsSheetState
           ),
           const SizedBox(height: 18),
           GWidgetSwitcher(
-            title: 'Require matching specialty',
-            subtitle: 'Off: a mismatch is only a warning',
+            title: 'Require matching specialty'.tr,
+            subtitle: 'Off: a mismatch is only a warning'.tr,
             value: _settings.strictSkills,
             onChanged: (value) => setState(
                 () => _settings = _settings.copyWith(strictSkillMatch: value)),
           ),
           const SizedBox(height: 18),
           VisitDetailNotice(
-            text: 'Always enforced: no double booking, no visits on a day '
-                'off, and visits must be complete before they are planned.',
+            text: 'Always enforced: no double booking, no visits on a day off, and visits must be complete before they are planned.'.tr,
             color: AppTheme.primary,
             icon: Icons.shield_rounded,
           ),
           const SizedBox(height: 16),
           GWidgetButton(
-            text: 'Save rules',
+            text: 'Save rules'.tr,
             fontSize: AppTheme.textSubtitle,
             raduis: 14,
             isLoading: loading,

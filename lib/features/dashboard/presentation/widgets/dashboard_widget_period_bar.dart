@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,11 +13,11 @@ class DashboardWidgetPeriodBar extends StatelessWidget {
   const DashboardWidgetPeriodBar({super.key, required this.period});
   final DashboardPeriod period;
 
-  static const _presets = [
-    (DashboardRange.today, 'Today'),
-    (DashboardRange.last7Days, '7 days'),
-    (DashboardRange.last30Days, '30 days'),
-    (DashboardRange.thisMonth, 'This month'),
+  static List<(DashboardRange, String)> get _presets => [
+    (DashboardRange.today, 'Today'.tr),
+    (DashboardRange.last7Days, '7 days'.tr),
+    (DashboardRange.last30Days, '30 days'.tr),
+    (DashboardRange.thisMonth, 'This month'.tr),
   ];
 
   void _select(BuildContext context, DashboardPeriod value) =>
@@ -69,7 +70,7 @@ class DashboardWidgetPeriodBar extends StatelessWidget {
           GWidgetChoiceChip(
             label: period.range == DashboardRange.custom
                 ? period.dateLabel
-                : 'Custom…',
+                : 'Custom…'.tr,
             color: AppTheme.primary,
             selected: period.range == DashboardRange.custom,
             onTap: () => _pickRange(context),

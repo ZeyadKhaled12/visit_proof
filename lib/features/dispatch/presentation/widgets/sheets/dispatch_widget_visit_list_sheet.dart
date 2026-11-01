@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../visit_detail/presentation/widgets/visit_detail_widget_parts.dart';
@@ -22,8 +23,8 @@ class DispatchWidgetVisitListSheet extends StatelessWidget {
         ].whereType<VisitDetailModel>().toList();
 
         if (visits.isEmpty) {
-          return const VisitDetailEmpty(
-              icon: Icons.task_alt_rounded, text: 'Nothing here right now');
+          return VisitDetailEmpty(
+              icon: Icons.task_alt_rounded, text: 'Nothing here right now'.tr);
         }
 
         return Column(

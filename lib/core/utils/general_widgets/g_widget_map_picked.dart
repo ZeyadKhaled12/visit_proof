@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -55,7 +56,7 @@ class GWidgetMapPicked extends StatelessWidget {
           ),
           SizedBox(width: 12),
           Text(
-            "Pick from map",
+            "Pick from map".tr,
             style: AppTheme.font(
               color: AppTheme.primary,
               fontWeight: FontWeight.w600,
@@ -124,7 +125,7 @@ class GWidgetMapPicked extends StatelessWidget {
                 Icon(Icons.edit, size: 14, color: AppTheme.textPrimary),
                 SizedBox(width: 4),
                 Text(
-                  "Edit",
+                  "Edit".tr,
                   style: AppTheme.font(
                     fontSize: AppTheme.textBodyLarge,
                     color: AppTheme.textPrimary,

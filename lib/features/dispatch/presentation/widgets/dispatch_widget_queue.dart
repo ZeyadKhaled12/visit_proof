@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,7 +82,7 @@ class _DispatchWidgetQueueState extends State<DispatchWidgetQueue> {
             children: [
               Expanded(
                 child: GWidgetSearch(
-                  hint: 'Search waiting visits...',
+                  hint: 'Search waiting visits...'.tr,
                   searchController: _search,
                   onChanged: (value) => setState(() => _query = value ?? ''),
                   onClear: () {
@@ -96,7 +97,7 @@ class _DispatchWidgetQueueState extends State<DispatchWidgetQueue> {
                   _selecting = !_selecting;
                   _selected.clear();
                 }),
-                child: Text(_selecting ? 'Done' : 'Select',
+                child: Text(_selecting ? 'Done'.tr : 'Select'.tr,
                     style: AppTheme.font(
                         color: AppTheme.primary,
                         fontSize: AppTheme.textBody,
@@ -115,11 +116,11 @@ class _DispatchWidgetQueueState extends State<DispatchWidgetQueue> {
                         ? Icons.task_alt_rounded
                         : Icons.search_off_rounded,
                     title: widget.visits.isEmpty
-                        ? 'Every visit has a technician'
-                        : 'No matching visits',
+                        ? 'Every visit has a technician'.tr
+                        : 'No matching visits'.tr,
                     subtitle: widget.visits.isEmpty
-                        ? 'New visits without a technician will wait here.'
-                        : 'Try another search.',
+                        ? 'New visits without a technician will wait here.'.tr
+                        : 'Try another search.'.tr,
                   ),
                 )
               : ListView.separated(
@@ -148,8 +149,7 @@ class _DispatchWidgetQueueState extends State<DispatchWidgetQueue> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: GWidgetButton(
-                text: 'Assign ${_selected.length} '
-                    'visit${_selected.length == 1 ? '' : 's'}',
+                text: 'Assign {0} visit{1}'.trArgs([_selected.length, _selected.length == 1 ? '' : 's']),
                 fontSize: AppTheme.textSubtitle,
                 height: 50,
                 raduis: 14,
@@ -205,7 +205,7 @@ class _QueueRow extends StatelessWidget {
                     Expanded(
                       child: Text(
                           VisitRules.assignError(visit) ??
-                              'Not ready to assign',
+                              'Not ready to assign'.tr,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTheme.font(
@@ -221,7 +221,7 @@ class _QueueRow extends StatelessWidget {
                           DispatchWidgetSuggestSheet(visitID: visit.id)),
                       icon: Icon(Icons.auto_awesome_rounded,
                           size: 16, color: AppTheme.primary),
-                      label: Text('Suggest technician',
+                      label: Text('Suggest technician'.tr,
                           style: AppTheme.font(
                               color: AppTheme.primary,
                               fontSize: AppTheme.textSmall,

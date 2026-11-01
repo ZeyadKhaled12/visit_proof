@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
@@ -63,7 +64,7 @@ class _TechniciansBodyState extends State<TechniciansBody> {
 
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
-        appBar: GWidgetAppbar(title: 'Technicians', icon: Icons.handyman)
+        appBar: GWidgetAppbar(title: 'Technicians'.tr, icon: Icons.handyman)
             .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,
@@ -74,7 +75,7 @@ class _TechniciansBodyState extends State<TechniciansBody> {
                 const SizedBox(height: 5),
                 GWidgetSearch(
                   searchController: _searchController,
-                  hint: 'Search name, phone, specialty...',
+                  hint: 'Search name, phone, specialty...'.tr,
                   onChanged: (value) => setState(() => _query = value ?? ''),
                   onClear: _clearSearch,
                 ),
@@ -97,24 +98,24 @@ class _TechniciansBodyState extends State<TechniciansBody> {
           ),
         ),
         floatingActionButton: GWidgetFloatingBtn(
-            text: "Add new technician", onPressed: _addTechnician));
+            text: "Add new technician".tr, onPressed: _addTechnician));
   }
 
   Widget _emptyState() {
     if (widget.technicians.isEmpty) {
       return GWidgetEmpty(
         icon: Icons.engineering_rounded,
-        title: 'No technicians yet',
-        subtitle: 'Add technicians so you can assign them to visits.',
-        actionText: 'Add first technician',
+        title: 'No technicians yet'.tr,
+        subtitle: 'Add technicians so you can assign them to visits.'.tr,
+        actionText: 'Add first technician'.tr,
         onAction: _addTechnician,
       );
     }
     return GWidgetEmpty(
       icon: Icons.search_off_rounded,
-      title: 'No matching technicians',
-      subtitle: 'Try a different name, phone or specialty.',
-      actionText: 'Clear search',
+      title: 'No matching technicians'.tr,
+      subtitle: 'Try a different name, phone or specialty.'.tr,
+      actionText: 'Clear search'.tr,
       onAction: _clearSearch,
     );
   }

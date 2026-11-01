@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../configs/app_toasts.dart';
@@ -25,10 +26,10 @@ class GFunLaunch {
       );
 
       if (!launched) {
-        throw Exception('Could not open Google Maps');
+        throw Exception('Could not open Google Maps'.tr);
       }
     } catch (e) {
-      throw Exception('Navigation failed: $e');
+      throw Exception('Navigation failed: {0}'.trArgs([e]));
     }
   }
 
@@ -39,11 +40,11 @@ class GFunLaunch {
       if (await canLaunchUrl(whatsappUri)) {
         await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
       } else {
-        AppToasts.showMessage('Could not launch WhatsApp for $cleanNumber',
+        AppToasts.showMessage('Could not launch WhatsApp for {0}'.trArgs([cleanNumber]),
             isError: true);
       }
     } catch (e) {
-      AppToasts.showMessage('Error launching WhatsApp: $e', isError: true);
+      AppToasts.showMessage('Error launching WhatsApp: {0}'.trArgs([e]), isError: true);
     }
   }
 
@@ -55,7 +56,7 @@ class GFunLaunch {
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
     } else {
-      AppToasts.showMessage('Could not launch $launchUri', isError: true);
+      AppToasts.showMessage('Could not launch {0}'.trArgs([launchUri]), isError: true);
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
@@ -77,7 +78,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
-            title: 'Edit draft invoice',
+            title: 'Edit draft invoice'.tr,
             subtitle: widget.subtitle,
             body: Form(
               key: form,
@@ -86,7 +87,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
                 children: [
                   GWidgetTextField(
                       controller: _discount,
-                      labelText: 'Discount',
+                      labelText: 'Discount'.tr,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
@@ -94,7 +95,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
                   const SizedBox(height: 13),
                   GWidgetTextField(
                       controller: _tax,
-                      labelText: 'Tax amount',
+                      labelText: 'Tax amount'.tr,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
@@ -102,12 +103,12 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
                   const SizedBox(height: 13),
                   GWidgetTextField(
                     controller: _notes,
-                    labelText: 'Invoice notes',
+                    labelText: 'Invoice notes'.tr,
                     maxLines: 3,
                   ),
                   const SizedBox(height: 20),
                   GWidgetButton(
-                    text: 'Save changes',
+                    text: 'Save changes'.tr,
                     fontSize: AppTheme.textSubtitle,
                     isLoading:
                         state.invoiceDetailRequestState == RequestState.loading,
@@ -124,7 +125,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
                           newTotal <
                               (widget.invoice.paidAmount?.toDouble() ?? 0)) {
                         AppToasts.showMessage(
-                            'New total cannot be negative or below paid amount.',
+                            'New total cannot be negative or below paid amount.'.tr,
                             color: AppTheme.primary);
                         return;
                       }

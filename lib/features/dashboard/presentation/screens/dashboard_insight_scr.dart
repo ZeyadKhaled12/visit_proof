@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,13 +43,13 @@ class DashboardInsightScr extends StatefulWidget {
   static String titleOf(DashboardInsight insight) {
     switch (insight) {
       case DashboardInsight.visits:
-        return 'Visits';
+        return 'Visits'.tr;
       case DashboardInsight.completion:
-        return 'Completion';
+        return 'Completion'.tr;
       case DashboardInsight.revenue:
-        return 'Revenue';
+        return 'Revenue'.tr;
       case DashboardInsight.attention:
-        return 'Needs attention';
+        return 'Needs attention'.tr;
     }
   }
 
@@ -164,21 +165,21 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
     return _Stack(children: [
       DashboardGrid(columns: 3, children: [
         DashboardMiniStat(
-          label: 'Visits',
+          label: 'Visits'.tr,
           value: '${active.length}',
           delta: DashboardDelta(
               change: DashboardMetrics.change(active.length, previous.length)),
         ),
         DashboardMiniStat(
-            label: 'Cancelled',
+            label: 'Cancelled'.tr,
             value: '${withCancelled.length - active.length}'),
         DashboardMiniStat(
-            label: 'Per day',
+            label: 'Per day'.tr,
             value: (active.length / period.days).toStringAsFixed(1)),
       ]),
       DashboardSection(
-        title: 'Visits over time',
-        subtitle: 'Tap a bar to list that ${period.days > 31 ? 'week' : 'day'}',
+        title: 'Visits over time'.tr,
+        subtitle: 'Tap a bar to list that {0}'.trArgs([period.days > 31 ? 'week'.tr : 'day']),
         child: DashboardWidgetTrendChart(
           buckets: buckets,
           selectedIndex: _bucket,
@@ -186,10 +187,10 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         ),
       ),
       DashboardSection(
-        title: 'By status',
-        subtitle: 'Tap a status to filter the list',
+        title: 'By status'.tr,
+        subtitle: 'Tap a status to filter the list'.tr,
         child: statusList.isEmpty
-            ? const _Note('No visits in this period')
+            ? _Note('No visits in this period'.tr)
             : DashboardWidgetBarList(
                 items: [
                   for (final status in statusList)
@@ -209,7 +210,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
       ),
       if (categories.isNotEmpty)
         DashboardSection(
-          title: 'By service category',
+          title: 'By service category'.tr,
           child: DashboardWidgetBarList(
             items: [
               for (final entry in categories)
@@ -256,7 +257,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
     return _Stack(children: [
       DashboardGrid(columns: 3, children: [
         DashboardMiniStat(
-          label: 'Completion',
+          label: 'Completion'.tr,
           value: DashboardFormat.percent(rate),
           delta: DashboardDelta(
               change: rate == null || previousRate == null
@@ -264,15 +265,14 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
                   : rate - previousRate,
               asPoints: true),
         ),
-        DashboardMiniStat(label: 'Completed', value: '$completed'),
+        DashboardMiniStat(label: 'Completed'.tr, value: '$completed'),
         DashboardMiniStat(
-            label: 'Not done yet', value: '${dueVisits.length - completed}'),
+            label: 'Not done yet'.tr, value: '${dueVisits.length - completed}'),
       ]),
-      const _Note('Completion = completed ÷ visits whose start time has '
-          'passed. Cancelled visits are not counted.'),
+      _Note('Completion = completed ÷ visits whose start time has passed. Cancelled visits are not counted.'.tr),
       DashboardSection(
-        title: 'Completed vs not completed',
-        subtitle: 'Tap a bar to list that ${period.days > 31 ? 'week' : 'day'}',
+        title: 'Completed vs not completed'.tr,
+        subtitle: 'Tap a bar to list that {0}'.trArgs([period.days > 31 ? 'week'.tr : 'day']),
         child: DashboardWidgetTrendChart(
           buckets: buckets,
           selectedIndex: _bucket,
@@ -280,16 +280,16 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         ),
       ),
       DashboardSection(
-        title: 'By technician',
-        subtitle: 'Tap a technician for their full results',
+        title: 'By technician'.tr,
+        subtitle: 'Tap a technician for their full results'.tr,
         child: technicians.isEmpty
-            ? const _Note('No assigned visits in this period')
+            ? _Note('No assigned visits in this period'.tr)
             : DashboardWidgetBarList(
                 maxValue: 1,
                 items: [
                   for (final stat in technicians)
                     DashboardBarItem(
-                      label: stat.technician.name ?? 'Technician',
+                      label: stat.technician.name ?? 'Technician'.tr,
                       value: stat.completionRate ?? 0,
                       valueLabel: DashboardFormat.percent(stat.completionRate),
                       note: '${stat.completed}/${stat.due}',
@@ -302,18 +302,18 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
               ),
       ),
       DashboardSection(
-        title: _showCompleted ? 'Completed visits' : 'Not completed yet',
+        title: _showCompleted ? 'Completed visits'.tr : 'Not completed yet'.tr,
         subtitle: _filterLabel(buckets),
-        actionText: _hasFilter ? 'Clear filter' : null,
+        actionText: _hasFilter ? 'Clear filter'.tr : null,
         onAction: _hasFilter ? _clearFilters : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SegmentedButton<bool>(
               showSelectedIcon: false,
-              segments: const [
-                ButtonSegment(value: false, label: Text('Not completed')),
-                ButtonSegment(value: true, label: Text('Completed')),
+              segments: [
+                ButtonSegment(value: false, label: Text('Not completed'.tr)),
+                ButtonSegment(value: true, label: Text('Completed'.tr)),
               ],
               selected: {_showCompleted},
               onSelectionChanged: (value) =>
@@ -328,8 +328,8 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
             DashboardWidgetVisitList(
                 visits: list,
                 emptyText: _showCompleted
-                    ? 'No completed visits here'
-                    : 'Everything due is completed'),
+                    ? 'No completed visits here'.tr
+                    : 'Everything due is completed'.tr),
           ],
         ),
       ),
@@ -360,24 +360,23 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
     return _Stack(children: [
       DashboardGrid(columns: 3, children: [
         DashboardMiniStat(
-          label: 'Collected',
+          label: 'Collected'.tr,
           value: DashboardFormat.money(collected),
           delta: DashboardDelta(
               change: DashboardMetrics.change(collected, previous)),
         ),
         DashboardMiniStat(
-            label: 'Invoiced',
+            label: 'Invoiced'.tr,
             value: DashboardFormat.money(
                 DashboardMetrics.invoiced(invoices, period))),
         DashboardMiniStat(
-            label: 'Outstanding',
+            label: 'Outstanding'.tr,
             value: DashboardFormat.money(DashboardMetrics.outstanding(invoices))),
       ]),
-      const _Note('Collected = payments minus refunds, by payment date. '
-          'Outstanding is what customers owe today on issued invoices.'),
+      _Note('Collected = payments minus refunds, by payment date. Outstanding is what customers owe today on issued invoices.'.tr),
       DashboardSection(
-        title: 'Money collected',
-        subtitle: 'Tap a bar to list its payments',
+        title: 'Money collected'.tr,
+        subtitle: 'Tap a bar to list its payments'.tr,
         child: DashboardWidgetTrendChart(
           buckets: buckets,
           money: true,
@@ -386,19 +385,19 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         ),
       ),
       DashboardSection(
-        title: 'Payments',
+        title: 'Payments'.tr,
         subtitle: _filterLabel(buckets),
-        actionText: _bucket != null ? 'Clear filter' : null,
+        actionText: _bucket != null ? 'Clear filter'.tr : null,
         onAction: _bucket != null ? _clearFilters : null,
         child: DashboardWidgetPaymentList(
             payments: shownPayments, invoices: invoices),
       ),
       DashboardSection(
-        title: 'Overdue invoices',
-        subtitle: 'Owed after the due date',
+        title: 'Overdue invoices'.tr,
+        subtitle: 'Owed after the due date'.tr,
         child: DashboardWidgetInvoiceList(
             invoices: attention.overdueInvoices,
-            emptyText: 'No overdue invoices'),
+            emptyText: 'No overdue invoices'.tr),
       ),
     ]);
   }
@@ -412,35 +411,35 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
 
     return _Stack(children: [
       DashboardSection(
-        title: 'Late visits',
-        subtitle: 'Start time passed, work not started',
-        actionText: attention.late.isEmpty ? null : 'Open Dispatch',
+        title: 'Late visits'.tr,
+        subtitle: 'Start time passed, work not started'.tr,
+        actionText: attention.late.isEmpty ? null : 'Open Dispatch'.tr,
         onAction: () => Navigator.pushNamed(context, DispatchScr.route),
         child: DashboardWidgetVisitList(
-            visits: attention.late, emptyText: 'Nothing is late'),
+            visits: attention.late, emptyText: 'Nothing is late'.tr),
       ),
       DashboardSection(
-        title: 'Waiting for a technician',
-        subtitle: 'Scheduled visits without anyone assigned',
-        actionText: attention.needsTechnician.isEmpty ? null : 'Assign in Dispatch',
+        title: 'Waiting for a technician'.tr,
+        subtitle: 'Scheduled visits without anyone assigned'.tr,
+        actionText: attention.needsTechnician.isEmpty ? null : 'Assign in Dispatch'.tr,
         onAction: () => Navigator.pushNamed(context, DispatchScr.route),
         child: DashboardWidgetVisitList(
             visits: attention.needsTechnician,
-            emptyText: 'Every scheduled visit has a technician'),
+            emptyText: 'Every scheduled visit has a technician'.tr),
       ),
       DashboardSection(
-        title: 'Ready to invoice',
-        subtitle: 'Completed visits with an unissued invoice',
+        title: 'Ready to invoice'.tr,
+        subtitle: 'Completed visits with an unissued invoice'.tr,
         child: DashboardWidgetVisitList(
             visits: attention.readyToInvoice,
-            emptyText: 'All completed work is invoiced'),
+            emptyText: 'All completed work is invoiced'.tr),
       ),
       DashboardSection(
-        title: 'Overdue invoices',
-        subtitle: 'Money still owed after the due date',
+        title: 'Overdue invoices'.tr,
+        subtitle: 'Money still owed after the due date'.tr,
         child: DashboardWidgetInvoiceList(
             invoices: attention.overdueInvoices,
-            emptyText: 'No overdue invoices'),
+            emptyText: 'No overdue invoices'.tr),
       ),
     ]);
   }
@@ -458,7 +457,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         return false;
       }
       if (_category != null &&
-          (v.category?.name ?? 'Uncategorized') != _category) {
+          (v.category?.name ?? 'Uncategorized'.tr) != _category) {
         return false;
       }
       if (bucket != null &&
@@ -477,18 +476,18 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
       if (_bucket != null && _bucket! < buckets.length)
         VisitDetailHelpers.date(buckets[_bucket!].from),
     ];
-    return parts.isEmpty ? 'All in this period' : 'Filtered: ${parts.join(' · ')}';
+    return parts.isEmpty ? 'All in this period'.tr : 'Filtered: {0}'.trArgs([parts.join(' · ')]);
   }
 
   Widget _recordsSection(
       List<VisitDetailModel> visits, List<DashboardBucket> buckets) {
     return DashboardSection(
-      title: '${visits.length} visit${visits.length == 1 ? '' : 's'}',
+      title: '{0} visit{1}'.trArgs([visits.length, visits.length == 1 ? '' : 's']),
       subtitle: _filterLabel(buckets),
-      actionText: _hasFilter ? 'Clear filter' : null,
+      actionText: _hasFilter ? 'Clear filter'.tr : null,
       onAction: _hasFilter ? _clearFilters : null,
       child: DashboardWidgetVisitList(
-          visits: visits, emptyText: 'No visits match this selection'),
+          visits: visits, emptyText: 'No visits match this selection'.tr),
     );
   }
 }

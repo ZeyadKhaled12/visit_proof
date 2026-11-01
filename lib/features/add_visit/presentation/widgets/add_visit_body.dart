@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,7 +154,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
   @override
   Widget build(BuildContext context) {
     return GWidgetNaviBody(
-        title: 'Add Visit',
+        title: 'Add Visit'.tr,
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: [
@@ -288,7 +289,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                           children: [
                             Expanded(
                                 child: GWidgetButton(
-                              text: 'Save Draft',
+                              text: 'Save Draft'.tr,
                               fontSize: AppTheme.textBodyLarge,
                               height: 45,
                               isLoading: _status == VisitStatus.draft &&
@@ -308,8 +309,8 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                             Expanded(
                                 child: GWidgetButton(
                               text: _selectedTechnician != null
-                                  ? 'Assigned'
-                                  : 'Schedule',
+                                  ? 'Assigned'.tr
+                                  : 'Schedule'.tr,
                               fontSize: AppTheme.textBodyLarge,
                               raduis: 10,
                               height: 45,
@@ -327,28 +328,28 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                                   _startTimeErrorMsg = null;
                                   if (_selectedClient == null) {
                                     _clientErrorMsg =
-                                        'This field is required to ${_selectedTechnician != null ? 'Assigned' : 'Schedule'}';
+                                        'This field is required to {0}'.trArgs([_selectedTechnician != null ? 'Assigned'.tr : 'Schedule'.tr]);
                                   }
                                   if (_selectedSite == null) {
                                     _siteErrorMsg =
-                                        'This field is required to ${_selectedTechnician != null ? 'Assigned' : 'Schedule'}';
+                                        'This field is required to {0}'.trArgs([_selectedTechnician != null ? 'Assigned'.tr : 'Schedule'.tr]);
                                   }
                                   if (_selectedService == null) {
                                     _serviceErrorMsg =
-                                        'This field is required to ${_selectedTechnician != null ? 'Assigned' : 'Schedule'}';
+                                        'This field is required to {0}'.trArgs([_selectedTechnician != null ? 'Assigned'.tr : 'Schedule'.tr]);
                                   }
                                   if (_startDate == null) {
                                     _startDateErrorMsg =
-                                        'This field is required to ${_selectedTechnician != null ? 'Assigned' : 'Schedule'}';
+                                        'This field is required to {0}'.trArgs([_selectedTechnician != null ? 'Assigned'.tr : 'Schedule'.tr]);
                                   }
                                   if (_startTime == null) {
                                     _startTimeErrorMsg =
-                                        'This field is required to ${_selectedTechnician != null ? 'Assigned' : 'Schedule'}';
+                                        'This field is required to {0}'.trArgs([_selectedTechnician != null ? 'Assigned'.tr : 'Schedule'.tr]);
                                   } else if (_startDateTime != null &&
                                       _startDateTime!
                                           .isBefore(DateTime.now())) {
                                     _startTimeErrorMsg =
-                                        'Start time must be in the future';
+                                        'Start time must be in the future'.tr;
                                   }
                                 });
                                 if (_clientErrorMsg != null ||
@@ -375,7 +376,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                         if (_selectedTechnician != null) ...[
                           SizedBox(height: 6),
                           Text(
-                            'Tip: Since you\'ve already chosen a technician, the \'Schedule\' button has updated to \'Assigned\'',
+                            'Tip: Since you\'ve already chosen a technician, the \'Schedule\' button has updated to \'Assigned\''.tr,
                             style: AppTheme.font(
                                 color: AppTheme.textPrimary,
                                 fontWeight: FontWeight.bold,

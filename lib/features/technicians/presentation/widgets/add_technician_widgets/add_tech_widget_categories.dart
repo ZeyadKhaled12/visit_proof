@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/core/utils/general_models/g_model_catg.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
@@ -30,7 +31,7 @@ class AddTechWidgetCategories extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
           child: Text(
-            'Categories',
+            'Categories'.tr,
             style: AppTheme.font(
               color: AppTheme.textPrimary,
               fontSize: AppTheme.textBodyLarge,

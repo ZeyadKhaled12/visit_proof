@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -27,12 +28,12 @@ class DashboardWidgetTechnicians extends StatelessWidget {
     final working = stats.where((s) => s.visits.isNotEmpty).toList();
 
     return DashboardSection(
-      title: 'Technicians',
-      subtitle: 'Completed visits in this period',
-      actionText: working.isEmpty ? null : 'Compare',
+      title: 'Technicians'.tr,
+      subtitle: 'Completed visits in this period'.tr,
+      actionText: working.isEmpty ? null : 'Compare'.tr,
       onAction: onSeeAll,
       child: working.isEmpty
-          ? Text('No assigned visits in this period',
+          ? Text('No assigned visits in this period'.tr,
               style: AppTheme.font(color: AppTheme.textSecondary, fontSize: AppTheme.textBody))
           : Column(
               children: [
@@ -72,7 +73,7 @@ class _Row extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(technician.name ?? 'Technician',
+                  Text(technician.name ?? 'Technician'.tr,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTheme.font(

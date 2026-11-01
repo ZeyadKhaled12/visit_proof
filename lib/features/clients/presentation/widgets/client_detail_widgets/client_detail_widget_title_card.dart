@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../configs/app_theme.dart';
@@ -44,7 +45,7 @@ class ClientDetailWidgetTitle extends StatelessWidget {
             ),
             if (onAdd != null)
               GWidgetButton(
-                  text: '+ Add',
+                  text: '+ Add'.tr,
                   isLoading: addLoading,
                   loadingSize: 13,
                   fontSize: AppTheme.textBody,

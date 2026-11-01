@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/configs/app_theme.dart';
@@ -59,13 +60,13 @@ class AppToasts {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
+            child: Text('Cancel'.tr,
                 style: AppTheme.font(
                     color: AppTheme.textSecondary,
                     fontWeight: FontWeight.bold)),
           ),
           GWidgetButton(
-            text: 'Delete',
+            text: 'Delete'.tr,
             width: 90,
             height: 38,
             paddingTopBottom: 0,

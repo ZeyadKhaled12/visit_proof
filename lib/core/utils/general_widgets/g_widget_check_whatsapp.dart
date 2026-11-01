@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
@@ -47,7 +48,7 @@ class GWidgetCheckWhatsapp extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                'Number includes WhatsApp',
+                'Number includes WhatsApp'.tr,
                 style: AppTheme.font(
                   color: hasWhatsapp
                       ? AppTheme.whatsappGreen

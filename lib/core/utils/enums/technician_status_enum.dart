@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 
@@ -56,22 +57,22 @@ class TechnicianStatusSwitch {
 
   String getText() {
     if (technicianStatusID == 1) {
-      return 'Available';
+      return 'Available'.tr;
     } else if (technicianStatusID == 2) {
-      return 'Busy';
+      return 'Busy'.tr;
     } else if (technicianStatusID == 3) {
-      return 'Offline';
+      return 'Offline'.tr;
     }
 
     switch (technicianStatusEnum) {
       case null:
-        return 'Offline';
+        return 'Offline'.tr;
       case TechnicianStatus.available:
-        return 'Available';
+        return 'Available'.tr;
       case TechnicianStatus.busy:
-        return 'Busy';
+        return 'Busy'.tr;
       case TechnicianStatus.offline:
-        return 'Offline';
+        return 'Offline'.tr;
     }
   }
 }

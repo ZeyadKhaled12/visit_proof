@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +59,7 @@ class _InvDetailWidgetRecordPaymentSheetState
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
-            title: 'Record a payment',
+            title: 'Record a payment'.tr,
             subtitle: widget.subtitle,
             body: Form(
               key: _form,
@@ -67,7 +68,7 @@ class _InvDetailWidgetRecordPaymentSheetState
                 children: [
                   GWidgetTextField(
                       controller: _amount,
-                      labelText: 'Amount',
+                      labelText: 'Amount'.tr,
                       hintText: '0.00',
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -75,7 +76,7 @@ class _InvDetailWidgetRecordPaymentSheetState
                       validator: widget.validator),
                   const SizedBox(height: 13),
                   GWidgetDropDown<PaymentMethod>(
-                    labelText: 'Payment method',
+                    labelText: 'Payment method'.tr,
                     value: _method,
                     items: PaymentMethod.values.map((m) {
                       return DropdownMenuItem(
@@ -98,28 +99,28 @@ class _InvDetailWidgetRecordPaymentSheetState
                   const SizedBox(height: 13),
                   GWidgetTextField(
                     controller: _reference,
-                    labelText: 'Transaction reference',
+                    labelText: 'Transaction reference'.tr,
                     hintText: _method == PaymentMethod.cash
-                        ? 'Optional for cash'
-                        : 'Required',
+                        ? 'Optional for cash'.tr
+                        : 'Required'.tr,
                     validator: (v) => _method != PaymentMethod.cash &&
                             (v?.trim().isEmpty ?? true)
-                        ? 'Reference is required'
+                        ? 'Reference is required'.tr
                         : null,
                   ),
                   const SizedBox(height: 13),
                   GWidgetTextField(
                     controller: _notes,
-                    labelText: 'Notes',
+                    labelText: 'Notes'.tr,
                     maxLines: 2,
                     validator: (v) => _method == PaymentMethod.other &&
                             (v?.trim().isEmpty ?? true)
-                        ? 'Explain other payment method'
+                        ? 'Explain other payment method'.tr
                         : null,
                   ),
                   const SizedBox(height: 20),
                   GWidgetButton(
-                    text: 'Save payment',
+                    text: 'Save payment'.tr,
                     isLoading:
                         state.invoiceDetailRequestState == RequestState.loading,
                     fontSize: AppTheme.textSubtitle,

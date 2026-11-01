@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_loading.dart';
@@ -36,7 +37,7 @@ class ClientDetailBody extends StatelessWidget {
       bottom: true,
       child: Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
-        appBar: GWidgetNaviAppbar.appBar(context, 'Client Details'),
+        appBar: GWidgetNaviAppbar.appBar(context, 'Client Details'.tr),
         bottomNavigationBar: laoding
             ? null
             : ClientDetailWidgetBottomBtns(
@@ -72,7 +73,7 @@ class ClientDetailBody extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 12.0),
                       child: ClientDetailWidgetTitle(
-                          title: 'Visit History', icon: Icons.history),
+                          title: 'Visit History'.tr, icon: Icons.history),
                     ),
                     height: 60),
               ),

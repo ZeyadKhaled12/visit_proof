@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
 import '../../../../configs/app_toasts.dart';
@@ -46,18 +47,18 @@ class DispatchRemoteDataSource extends BaseDispatchRemoteDataSource {
       final settings = parameters.settings;
 
       if (settings.workEnd <= settings.workStart) {
-        _fail('The working day must end after it starts.');
+        _fail('The working day must end after it starts.'.tr);
       }
       if (settings.maxVisits < 1 || settings.maxVisits > 30) {
-        _fail('Daily visits must be between 1 and 30.');
+        _fail('Daily visits must be between 1 and 30.'.tr);
       }
       if (settings.travelBuffer < 0 || settings.travelBuffer > 240) {
-        _fail('Travel time must be between 0 and 240 minutes.');
+        _fail('Travel time must be between 0 and 240 minutes.'.tr);
       }
 
       await LocalPref.sharedPreferences
           .setString(_settingsKey, jsonEncode(settings.toJson()));
-      AppToasts.showMessage('Dispatch rules saved');
+      AppToasts.showMessage('Dispatch rules saved'.tr);
       return settings;
     }).checkLogicErrors();
   }
@@ -89,8 +90,8 @@ class DispatchRemoteDataSource extends BaseDispatchRemoteDataSource {
       await LocalPref.sharedPreferences.setStringList(
           _daysOffKey, daysOff.map((e) => jsonEncode(e.toJson())).toList());
       AppToasts.showMessage(parameters.isOff
-          ? 'Technician marked as off for this day'
-          : 'Technician is available again');
+          ? 'Technician marked as off for this day'.tr
+          : 'Technician is available again'.tr);
       return daysOff;
     }).checkLogicErrors();
   }

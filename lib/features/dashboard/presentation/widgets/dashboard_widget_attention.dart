@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -15,24 +16,24 @@ class DashboardWidgetAttention extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = [
-      (Icons.timer_off_rounded, 'Late visits', 'Start passed, not started',
+      (Icons.timer_off_rounded, 'Late visits'.tr, 'Start passed, not started'.tr,
           attention.late.length, AppTheme.statOrange),
-      (Icons.person_search_rounded, 'Waiting for a technician',
-          'Scheduled, nobody assigned', attention.needsTechnician.length,
+      (Icons.person_search_rounded, 'Waiting for a technician'.tr,
+          'Scheduled, nobody assigned'.tr, attention.needsTechnician.length,
           AppTheme.pending),
-      (Icons.receipt_long_rounded, 'Ready to invoice',
-          'Completed, invoice not issued', attention.readyToInvoice.length,
+      (Icons.receipt_long_rounded, 'Ready to invoice'.tr,
+          'Completed, invoice not issued'.tr, attention.readyToInvoice.length,
           AppTheme.primary),
-      (Icons.request_quote_rounded, 'Overdue invoices', 'Owed after due date',
+      (Icons.request_quote_rounded, 'Overdue invoices'.tr, 'Owed after due date'.tr,
           attention.overdueInvoices.length, AppTheme.statOrange),
     ];
 
     return DashboardSection(
-      title: 'Needs attention',
+      title: 'Needs attention'.tr,
       subtitle: attention.total == 0
-          ? 'Everything is on track'
-          : '${attention.total} item${attention.total == 1 ? '' : 's'} to handle',
-      actionText: 'Review',
+          ? 'Everything is on track'.tr
+          : '{0} item{1} to handle'.trArgs([attention.total, attention.total == 1 ? '' : 's']),
+      actionText: 'Review'.tr,
       onAction: onOpen,
       child: attention.total == 0
           ? Row(
@@ -41,8 +42,7 @@ class DashboardWidgetAttention extends StatelessWidget {
                     color: AppTheme.statGreen, size: 22),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text('No late visits, unassigned work or overdue '
-                      'invoices right now.',
+                  child: Text('No late visits, unassigned work or overdue invoices right now.'.tr,
                       style: AppTheme.font(
                           color: AppTheme.textSecondary, fontSize: AppTheme.textBody)),
                 ),

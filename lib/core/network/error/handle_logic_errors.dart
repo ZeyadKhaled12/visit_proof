@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'error_message_model.dart';
 import 'exception.dart';
 
@@ -14,7 +15,7 @@ class HandleLogicErrors<T> {
         rethrow;
       }
       throw ServerException(ErrorMessageModel(
-          statusMessage: 'Oops a problem occurred, please try again later!'));
+          statusMessage: 'Oops a problem occurred, please try again later!'.tr));
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
@@ -291,7 +292,7 @@ class VisitDetailTextBlock extends StatelessWidget {
               style: AppTheme.font(
                   color: color, fontSize: AppTheme.textSmall, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text(hasText ? text!.trim() : 'Nothing added yet',
+          Text(hasText ? text!.trim() : 'Nothing added yet'.tr,
               style: AppTheme.font(
                   color: hasText ? AppTheme.textDarkHint : AppTheme.textNotes,
                   fontSize: AppTheme.textBody,

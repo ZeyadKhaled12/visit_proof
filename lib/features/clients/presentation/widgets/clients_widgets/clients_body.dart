@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
@@ -61,7 +62,7 @@ class _ClientsBodyState extends State<ClientsBody> {
 
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
-        appBar: GWidgetAppbar(title: 'Clients', icon: Icons.people_alt_outlined)
+        appBar: GWidgetAppbar(title: 'Clients'.tr, icon: Icons.people_alt_outlined)
             .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,
@@ -72,7 +73,7 @@ class _ClientsBodyState extends State<ClientsBody> {
                 const SizedBox(height: 5),
                 GWidgetSearch(
                   searchController: _searchController,
-                  hint: 'Search name, phone, email, city...',
+                  hint: 'Search name, phone, email, city...'.tr,
                   onChanged: (value) => setState(() => _query = value ?? ''),
                   onClear: _clearSearch,
                 ),
@@ -94,24 +95,24 @@ class _ClientsBodyState extends State<ClientsBody> {
           ),
         ),
         floatingActionButton:
-            GWidgetFloatingBtn(text: "Add new client", onPressed: _addClient));
+            GWidgetFloatingBtn(text: "Add new client".tr, onPressed: _addClient));
   }
 
   Widget _emptyState() {
     if (widget.clients.isEmpty) {
       return GWidgetEmpty(
         icon: Icons.people_alt_rounded,
-        title: 'No clients yet',
-        subtitle: 'Add your first client to start booking visits.',
-        actionText: 'Add first client',
+        title: 'No clients yet'.tr,
+        subtitle: 'Add your first client to start booking visits.'.tr,
+        actionText: 'Add first client'.tr,
         onAction: _addClient,
       );
     }
     return GWidgetEmpty(
       icon: Icons.search_off_rounded,
-      title: 'No matching clients',
-      subtitle: 'Try a different name, phone or city.',
-      actionText: 'Clear search',
+      title: 'No matching clients'.tr,
+      subtitle: 'Try a different name, phone or city.'.tr,
+      actionText: 'Clear search'.tr,
       onAction: _clearSearch,
     );
   }

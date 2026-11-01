@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../configs/app_theme.dart';
@@ -13,7 +14,7 @@ class DispatchWidgetViolations extends StatelessWidget {
   Widget build(BuildContext context) {
     if (violations.isEmpty) {
       return VisitDetailNotice(
-          text: 'All dispatch rules are met.',
+          text: 'All dispatch rules are met.'.tr,
           color: AppTheme.statGreen,
           icon: Icons.check_circle_rounded);
     }

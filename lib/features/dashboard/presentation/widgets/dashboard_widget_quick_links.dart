@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,24 +33,24 @@ class DashboardWidgetQuickLinks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final links = [
-      (Icons.add_circle_rounded, 'New visit', AppTheme.primary,
+      (Icons.add_circle_rounded, 'New visit'.tr, AppTheme.primary,
           () => _newVisit(context)),
-      (Icons.hub_rounded, 'Dispatch', AppTheme.secondary,
+      (Icons.hub_rounded, 'Dispatch'.tr, AppTheme.secondary,
           () => _go(context, MainMenuTab.dispatch)),
-      (Icons.fact_check_rounded, 'Visits', AppTheme.primary,
+      (Icons.fact_check_rounded, 'Visits'.tr, AppTheme.primary,
           () => _go(context, MainMenuTab.visits)),
-      (Icons.people_alt_rounded, 'Clients', AppTheme.statGreen,
+      (Icons.people_alt_rounded, 'Clients'.tr, AppTheme.statGreen,
           () => _go(context, MainMenuTab.clients)),
-      (Icons.engineering_rounded, 'Technicians', AppTheme.pending,
+      (Icons.engineering_rounded, 'Technicians'.tr, AppTheme.pending,
           () => _go(context, MainMenuTab.technicians)),
-      (Icons.build_circle_rounded, 'Services', AppTheme.cardAccent,
+      (Icons.build_circle_rounded, 'Services'.tr, AppTheme.cardAccent,
           () => _go(context, MainMenuTab.services)),
-      (Icons.receipt_long_rounded, 'Invoices', AppTheme.statOrange,
+      (Icons.receipt_long_rounded, 'Invoices'.tr, AppTheme.statOrange,
           () => _go(context, MainMenuTab.invoices)),
     ];
 
     return DashboardSection(
-      title: 'Go to',
+      title: 'Go to'.tr,
       child: LayoutBuilder(builder: (context, constraints) {
         final columns = constraints.maxWidth >= 520 ? 7 : 4;
         return DashboardGrid(
