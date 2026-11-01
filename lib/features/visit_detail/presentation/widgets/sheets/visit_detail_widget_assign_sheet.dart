@@ -122,7 +122,7 @@ class _VisitDetailWidgetAssignSheetState
             ),
             const SizedBox(height: 10),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: GWidgetAddBtn(
                   text: 'Add New Technician'.tr, onTap: _addTechnician),
             ),

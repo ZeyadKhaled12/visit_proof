@@ -112,8 +112,8 @@ class DispatchWidgetDateStrip extends StatelessWidget {
                       gradient: selected
                           ? LinearGradient(
                               colors: [AppTheme.primary, AppTheme.secondary],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight)
+                              begin: AlignmentDirectional.topStart,
+                              end: AlignmentDirectional.bottomEnd)
                           : null,
                       color: selected
                           ? null

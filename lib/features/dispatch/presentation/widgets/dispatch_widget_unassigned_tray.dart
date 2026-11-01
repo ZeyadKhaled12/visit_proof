@@ -54,7 +54,7 @@ class _DispatchWidgetUnassignedTrayState
             InkWell(
               onTap: () => setState(() => _expanded = !expanded),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 6, 8, 6),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 6, 8, 6),
                 child: Row(
                   children: [
                     Container(

@@ -72,7 +72,7 @@ class _VisitDetailWidgetSiteSheetState
           ),
           const SizedBox(height: 10),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: GWidgetAddBtn(text: 'Add new site'.tr, onTap: _addSite),
           ),
           const SizedBox(height: 10),

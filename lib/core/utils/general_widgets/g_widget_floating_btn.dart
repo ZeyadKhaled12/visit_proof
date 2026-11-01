@@ -35,8 +35,8 @@ class GWidgetFloatingBtn extends StatelessWidget {
                   AppTheme.primary.withValues(alpha: .5),
                   AppTheme.secondary.withValues(alpha: .5),
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: AlignmentDirectional.topStart,
+                end: AlignmentDirectional.bottomEnd,
               ),
             ),
             child: FloatingActionButton.extended(

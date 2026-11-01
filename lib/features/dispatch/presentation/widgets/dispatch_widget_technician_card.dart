@@ -355,8 +355,8 @@ class _Workload extends StatelessWidget {
             child: Stack(
               children: [
                 for (final visit in dayVisits)
-                  Positioned(
-                    left: x(visit.startDate!),
+                  PositionedDirectional(
+                    start: x(visit.startDate!),
                     width: (x(DispatchRules.endOf(visit)) - x(visit.startDate!))
                         .clamp(4, width)
                         .toDouble(),

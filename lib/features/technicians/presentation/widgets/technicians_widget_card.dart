@@ -63,7 +63,7 @@ class TechnicianWidgetCard extends StatelessWidget {
             ],
           ),
           child: Stack(
-            alignment: Alignment.bottomRight,
+            alignment: AlignmentDirectional.bottomEnd,
             children: [
               Padding(
                 padding: const EdgeInsets.all(12),

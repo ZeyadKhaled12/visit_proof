@@ -29,7 +29,7 @@ class AddTechWidgetCategories extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
+          padding: const EdgeInsetsDirectional.only(bottom: 8.0, start: 4.0),
           child: Text(
             'Categories'.tr,
             style: AppTheme.font(

@@ -36,7 +36,7 @@ class _PlanRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: .07),
         borderRadius: BorderRadius.circular(14),
-        border: Border(left: BorderSide(color: color, width: 4)),
+        border: BorderDirectional(start: BorderSide(color: color, width: 4)),
       ),
       child: Row(
         children: [

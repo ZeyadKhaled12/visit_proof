@@ -48,8 +48,8 @@ class ClientsWidgetCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
             borderRadius: BorderRadius.circular(16),
-            border: Border(
-                left: BorderSide(color: AppTheme.primary, width: 5)),
+            border: BorderDirectional(
+                start: BorderSide(color: AppTheme.primary, width: 5)),
             boxShadow: [
               BoxShadow(
                 color: AppTheme.cardShadowColor.withValues(alpha: .03),

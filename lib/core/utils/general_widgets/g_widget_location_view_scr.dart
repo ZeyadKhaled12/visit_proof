@@ -183,9 +183,9 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
             ),
 
             // Moves only the CAMERA back to the marker, not the marker itself.
-            Positioned(
+            PositionedDirectional(
               bottom: 220,
-              right: 16,
+              end: 16,
               child: Material(
                 color: AppTheme.surface,
                 elevation: 3,

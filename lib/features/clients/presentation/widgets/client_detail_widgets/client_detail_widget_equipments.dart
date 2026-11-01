@@ -76,7 +76,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                     return Container(
                       width: 220,
                       margin:
-                          const EdgeInsets.only(right: 12, bottom: 4, top: 4),
+                          const EdgeInsetsDirectional.only(end: 12, bottom: 4, top: 4),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: AppTheme.cardColor,
@@ -282,7 +282,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
           ],
         ),
       ),
-      actionsPadding: const EdgeInsets.only(right: 16, bottom: 16),
+      actionsPadding: const EdgeInsetsDirectional.only(end: 16, bottom: 16),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),

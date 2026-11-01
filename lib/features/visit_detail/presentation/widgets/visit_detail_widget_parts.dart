@@ -283,7 +283,7 @@ class VisitDetailTextBlock extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(14),
-        border: Border(left: BorderSide(color: color, width: 3)),
+        border: BorderDirectional(start: BorderSide(color: color, width: 3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,8 +366,8 @@ class VisitDetailAvatar extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: LinearGradient(
             colors: colors,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd),
       ),
       child: Text(letter,
           style: AppTheme.font(

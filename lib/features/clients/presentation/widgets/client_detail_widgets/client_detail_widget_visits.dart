@@ -91,9 +91,9 @@ class _VisitCard extends StatelessWidget {
           onTap: visit.id == null ? null : () => _open(context),
           child: Container(
             decoration: BoxDecoration(
-              border: Border(left: BorderSide(color: accent, width: 5)),
+              border: BorderDirectional(start: BorderSide(color: accent, width: 5)),
             ),
-            padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+            padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 10, 12),
             child: Row(
               children: [
                 Expanded(

@@ -104,9 +104,9 @@ class _Card extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-              border: Border(left: BorderSide(color: priorityColor, width: 5)),
+              border: BorderDirectional(start: BorderSide(color: priorityColor, width: 5)),
             ),
-            padding: const EdgeInsets.fromLTRB(12, 10, 10, 10),
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 10, 10, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,

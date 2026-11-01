@@ -23,7 +23,7 @@ class GWidgetMenuButton extends StatelessWidget {
     if (scaffold == null) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsetsDirectional.only(end: 10),
       child: Material(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(14),

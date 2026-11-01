@@ -127,7 +127,7 @@ class VisitsWidgetCard extends StatelessWidget {
                           visit.problemDescription!.isNotEmpty) ...[
                         const SizedBox(height: 6),
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsetsDirectional.only(start: 20.0),
                           child: Text(
                             visit.problemDescription!,
                             maxLines: 1,

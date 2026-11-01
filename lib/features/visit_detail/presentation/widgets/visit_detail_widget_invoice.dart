@@ -76,7 +76,7 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
                     border: Border.all(
                         color: AppTheme.statGreen.withValues(alpha: .6)),
                     widget: Padding(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: EdgeInsetsDirectional.only(start: 8),
                       child: Icon(Icons.arrow_forward_rounded,
                           color: AppTheme.statGreen, size: 20),
                     ),
@@ -164,8 +164,8 @@ class _BalanceCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
             colors: [AppTheme.statGreen, AppTheme.secondary],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(

@@ -156,7 +156,7 @@ class _MoveButton extends StatelessWidget {
             ]
           : null,
       widget: Padding(
-        padding: const EdgeInsets.only(left: 8),
+        padding: const EdgeInsetsDirectional.only(start: 8),
         child: Icon(icon, color: foreground, size: 20),
       ),
       onPressed: onPressed,

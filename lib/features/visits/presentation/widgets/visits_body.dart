@@ -95,7 +95,7 @@ class _VisitsBodyState extends State<VisitsBody> {
           icon: Icons.fact_check_outlined,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsetsDirectional.only(end: 12),
               child: GWidgetButton(
                 text: 'Dispatch'.tr,
                 fontSize: AppTheme.textBody,
@@ -106,7 +106,7 @@ class _VisitsBodyState extends State<VisitsBody> {
                 gradient: LinearGradient(
                     colors: [AppTheme.primary, AppTheme.secondary]),
                 widget: Padding(
-                  padding: EdgeInsets.only(left: 6),
+                  padding: EdgeInsetsDirectional.only(start: 6),
                   child: Icon(Icons.hub_rounded,
                       size: 16, color: AppTheme.onPrimary),
                 ),

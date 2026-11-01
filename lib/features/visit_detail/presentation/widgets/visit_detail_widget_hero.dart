@@ -27,8 +27,8 @@ class VisitDetailWidgetHero extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
             colors: colors,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd),
         borderRadius: BorderRadius.circular(26),
         boxShadow: [
           BoxShadow(

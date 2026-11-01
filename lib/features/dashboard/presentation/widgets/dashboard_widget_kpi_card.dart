@@ -78,7 +78,7 @@ class DashboardWidgetKpiCard extends StatelessWidget {
               const SizedBox(height: 12),
               FittedBox(
                 fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Text(value,
                     style: AppTheme.font(
                         color: AppTheme.textPrimary,

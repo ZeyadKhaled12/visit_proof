@@ -34,9 +34,9 @@ class GWidgetFilterBtn extends StatelessWidget {
                 color: AppTheme.onPrimary, size: 24),
           ),
           if (activeCount > 0)
-            Positioned(
+            PositionedDirectional(
               top: -5,
-              right: -5,
+              end: -5,
               child: Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(

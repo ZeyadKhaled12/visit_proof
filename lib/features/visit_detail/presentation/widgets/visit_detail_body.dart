@@ -142,7 +142,7 @@ class VisitDetailBody extends StatelessWidget {
                 isLoading:
                     state.deleteVisitRequestState == RequestState.loading,
                 widget: Padding(
-                  padding: EdgeInsets.only(left: 8),
+                  padding: EdgeInsetsDirectional.only(start: 8),
                   child: Icon(Icons.delete_outline_rounded,
                       color: AppTheme.statOrange, size: 20),
                 ),

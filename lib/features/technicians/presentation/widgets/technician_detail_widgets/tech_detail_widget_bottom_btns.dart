@@ -44,7 +44,7 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
               fontSize: AppTheme.textBodyLarge,
               fontWeight: FontWeight.bold,
               widget: Padding(
-                padding: EdgeInsets.only(left: 6.0),
+                padding: EdgeInsetsDirectional.only(start: 6.0),
                 child: Icon(Icons.edit_square, color: AppTheme.onPrimary, size: 16),
               ),
               onPressed: () async {
@@ -80,7 +80,7 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
               loadingColor: AppTheme.statOrange,
               fontWeight: FontWeight.bold,
               widget: Padding(
-                padding: EdgeInsets.only(left: 6.0),
+                padding: EdgeInsetsDirectional.only(start: 6.0),
                 child: Icon(Icons.delete_outline,
                     color: AppTheme.statOrange, size: 16),
               ),

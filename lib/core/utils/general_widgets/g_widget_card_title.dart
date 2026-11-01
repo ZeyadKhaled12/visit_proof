@@ -17,7 +17,7 @@ class GWidgetCardTitle extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 12),
+          padding: const EdgeInsetsDirectional.only(start: 4, bottom: 12),
           child: Row(
             children: [
               Icon(icon, color: AppTheme.secondary, size: 22),

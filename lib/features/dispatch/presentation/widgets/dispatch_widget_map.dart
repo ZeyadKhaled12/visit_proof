@@ -78,9 +78,9 @@ class DispatchWidgetMap extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
+            PositionedDirectional(
               top: 12,
-              left: 12,
+              start: 12,
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

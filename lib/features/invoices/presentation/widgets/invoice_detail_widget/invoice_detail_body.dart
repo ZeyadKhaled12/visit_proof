@@ -290,8 +290,8 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           AppTheme.primary,
                           AppTheme.secondary,
                         ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        begin: AlignmentDirectional.topStart,
+                        end: AlignmentDirectional.bottomEnd,
                       ),
                       borderRadius: BorderRadius.circular(24),
                     ),
@@ -496,7 +496,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                     GWidgetButton(
                         text: 'Record payment'.tr,
                         widget: Padding(
-                          padding: EdgeInsets.only(left: 8),
+                          padding: EdgeInsetsDirectional.only(start: 8),
                           child: Icon(
                             Icons.add_card_rounded,
                             color: AppTheme.onPrimary,

@@ -296,7 +296,7 @@ class _Header extends StatelessWidget {
     final loadedAt = state.snapshot.loadedAt;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 12, 14),
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 12, 14),
       child: Row(
         children: [
           const GWidgetMenuButton(),

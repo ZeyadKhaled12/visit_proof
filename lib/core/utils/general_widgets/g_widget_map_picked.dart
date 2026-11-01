@@ -104,8 +104,8 @@ class GWidgetMapPicked extends StatelessWidget {
         ),
 
         // Optional touch: A small edit badge to indicate it's tappable
-        Positioned(
-          right: 8,
+        PositionedDirectional(
+          end: 8,
           bottom: 8,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
