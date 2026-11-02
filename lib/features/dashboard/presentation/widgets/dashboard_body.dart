@@ -321,7 +321,7 @@ class _Header extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                     '${state.period.dateLabel} · ${state.period.comparisonLabel}'
-                    '${loadedAt == null ? '' : ' · updated ${DateFormat('hh:mm a').format(loadedAt)}'}',
+                    '${loadedAt == null ? '' : ' · ${'updated {0}'.trArgs([DateFormat('hh:mm a').format(loadedAt)])}'}',
                     maxLines: 2,
                     style: AppTheme.font(
                         color: AppTheme.textLightHint, fontSize: AppTheme.textCaption)),

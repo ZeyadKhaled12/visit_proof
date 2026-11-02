@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
@@ -24,7 +25,7 @@ abstract class BaseAuthRemoteDataSource {
 /// admin gave them; the admin needs no account. The session is saved under
 /// [AppSession.storageKey] so the app reopens as the same user.
 class AuthRemoteDataSource extends BaseAuthRemoteDataSource {
-  static const Duration _latency = Duration(milliseconds: 600);
+  static const Duration _latency = AppLatency.local;
 
   @override
   Future<AppSessionModel> loginTechnician(

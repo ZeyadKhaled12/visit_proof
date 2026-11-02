@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -22,6 +23,9 @@ class LocalPhotos {
       {required String tempPath,
       required String visitID,
       required String photoID}) async {
+    // The browser has no documents folder; the picker's link lasts as long
+    // as the page, like the demo's data.
+    if (kIsWeb) return tempPath;
     final source = File(tempPath);
     if (!await source.exists()) {
       throw const FileSystemException('The photo file is missing.');
@@ -36,6 +40,7 @@ class LocalPhotos {
 
   /// Best-effort clean-up of photo files, e.g. after a failed save.
   static Future<void> remove(Iterable<String> paths) async {
+    if (kIsWeb) return;
     for (final path in paths) {
       try {
         final file = File(path);
@@ -46,6 +51,7 @@ class LocalPhotos {
 
   /// Removes every photo of a deleted visit.
   static Future<void> removeVisit(String visitID) async {
+    if (kIsWeb) return;
     try {
       final folder = await _visitFolder(visitID);
       await folder.delete(recursive: true);

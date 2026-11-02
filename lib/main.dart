@@ -1,31 +1,19 @@
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:visit_proof/app/app.dart';
+import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_theme.dart';
+import 'app/visit_proof_app.dart';
+import 'core/demo/demo_mode.dart';
+import 'core/demo/demo_seed.dart';
 import 'core/local/local_pref.dart';
 import 'core/services/services_locator.dart';
 import 'core/usecase/base_use_case.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
-import 'features/auth/presentation/screens/app_gate_scr.dart';
-import 'features/auth/presentation/screens/role_select_scr.dart';
-import 'features/auth/presentation/screens/tech_login_scr.dart';
-import 'features/clients/presentation/screens/add_client_scr.dart';
-import 'features/clients/presentation/screens/client_detail_scr.dart';
-import 'features/clients/presentation/screens/clients_scr.dart';
-import 'features/invoices/presentation/screens/invoice_detail_scr.dart';
-import 'features/technicians/presentation/screens/add_tech_scr.dart';
-import 'features/technicians/presentation/screens/technician_detail_scr.dart';
-import 'features/add_visit/presentation/screens/add_visit_scr.dart';
-import 'features/dashboard/presentation/screens/dashboard_scr.dart';
-import 'features/dispatch/presentation/screens/dispatch_scr.dart';
-import 'features/main_menu/presentation/screens/main_menu_scr.dart';
-import 'features/technician_home/presentation/screens/tech_home_scr.dart';
-import 'features/visit_detail/presentation/screens/visit_detail_scr.dart';
+import 'features/website/presentation/screens/website_scr.dart';
 
 /*
 1- add option to move to full screen of picks
@@ -35,15 +23,30 @@ import 'features/visit_detail/presentation/screens/visit_detail_scr.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // A customer's build carries their design (see AppBrand.fromEnvironment).
+  AppBrand.update(AppBrand.fromEnvironment());
   ServicesLocator().init();
   LocalPref.sharedPreferences = await SharedPreferences.getInstance();
-  // LocalPref.sharedPreferences.clear();
-  AppTheme.darkMode.value = AppTheme.darkModeEnabled &&
-      (LocalPref.sharedPreferences.getBool(darkModeKey) ??
-          AppTheme.darkModeByDefault);
+  final prefs = LocalPref.sharedPreferences;
+
+  // The website always opens in Arabic and light mode; the app keeps the
+  // user's choices.
+  final savedDark = DemoMode.isOn ? null : prefs.getBool(darkModeKey);
+  final savedArabic = DemoMode.isOn ? null : prefs.getBool(arabicKey);
+  AppTheme.darkMode.value =
+      AppTheme.darkModeEnabled && (savedDark ?? AppTheme.darkModeByDefault);
   AppLanguage.arabic.value = AppLanguage.languageSwitchEnabled &&
-      (LocalPref.sharedPreferences.getBool(arabicKey) ??
-          AppLanguage.arabicByDefault);
+      (savedArabic ?? (DemoMode.isOn || AppLanguage.arabicByDefault));
+
+  if (DemoMode.testData) {
+    // Every start begins again from the large test company (in its
+    // language), so there is always plenty to try. A customer's build keeps
+    // its data.
+    await prefs.clear();
+    if (savedDark != null) await prefs.setBool(darkModeKey, savedDark);
+    if (savedArabic != null) await prefs.setBool(arabicKey, savedArabic);
+    await DemoSeed.run();
+  }
   await initializeDateFormatting();
   // Arabic month and day names, but the same 0-9 digits as the rest of the app.
   DateFormat.useNativeDigitsByDefaultFor('ar', false);
@@ -73,12 +76,14 @@ class MyAppState extends State<MyApp> {
     super.initState();
     AppTheme.darkMode.addListener(_onThemeChanged);
     AppLanguage.arabic.addListener(_onLanguageChanged);
+    AppBrand.current.addListener(_rebuildAll);
   }
 
   @override
   void dispose() {
     AppTheme.darkMode.removeListener(_onThemeChanged);
     AppLanguage.arabic.removeListener(_onLanguageChanged);
+    AppBrand.current.removeListener(_rebuildAll);
     super.dispose();
   }
 
@@ -98,53 +103,31 @@ class MyAppState extends State<MyApp> {
     _rebuildAll();
   }
 
+  bool _rebuildScheduled = false;
+
+  /// Redraws every widget, at most once per frame: dragging a color in the
+  /// design studio sends many changes a frame, and walking the whole tree
+  /// for each of them made the motion stutter.
   void _rebuildAll() {
-    setState(() {});
-    void rebuild(Element element) {
-      element.markNeedsBuild();
-      element.visitChildren(rebuild);
-    }
+    if (_rebuildScheduled) return;
+    _rebuildScheduled = true;
+    SchedulerBinding.instance.scheduleFrameCallback((_) {
+      _rebuildScheduled = false;
+      if (!mounted) return;
+      setState(() {});
+      void rebuild(Element element) {
+        element.markNeedsBuild();
+        element.visitChildren(rebuild);
+      }
 
-    (context as Element).visitChildren(rebuild);
+      (context as Element).visitChildren(rebuild);
+    });
+    SchedulerBinding.instance.ensureVisualUpdate();
   }
 
+  /// The browser build is the sales website, with the app inside it as a
+  /// live demo; phones run the app itself.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Visit Proof'.tr,
-        navigatorKey: App.navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.materialTheme,
-        // Arabic switches Flutter's own widgets and the layout to RTL.
-        locale: AppLanguage.locale,
-        supportedLocales: AppLanguage.supportedLocales,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        // Status bar and navigation bar follow the active theme.
-        builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
-              value: AppTheme.systemOverlay,
-              child: child!,
-            ),
-        routes: {
-          // Role selection, admin app or technician app, by session.
-          '/': (context) => const AppGateScr(),
-          RoleSelectScr.route: (context) => const RoleSelectScr(),
-          TechLoginScr.route: (context) => const TechLoginScr(),
-          TechHomeScr.route: (context) => const TechHomeScr(),
-          ClientDetailScr.route: (context) => ClientDetailScr(),
-          ClientsScr.route: (context) => ClientsScr(),
-          AddClientScr.route: (context) => AddClientScr(),
-          AddTechScr.route: (context) => AddTechScr(),
-          TechnicianDetailScr.route: (context) => TechnicianDetailScr(),
-          AddVisitScr.route: (context) => AddVisitScr(),
-          InvoiceDetailScr.route: (context) => InvoiceDetailScr(),
-          VisitDetailScr.route: (context) => VisitDetailScr(),
-          DispatchScr.route: (context) => DispatchScr(),
-          DashboardScr.route: (context) => const DashboardScr(),
-          MainMenuScr.route: (context) => const MainMenuScr(),
-        });
-  }
+  Widget build(BuildContext context) =>
+      DemoMode.isOn ? const WebsiteApp() : const VisitProofApp();
 }

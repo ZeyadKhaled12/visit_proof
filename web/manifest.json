@@ -1,12 +1,12 @@
 {
-    "name": "visit_proof",
-    "short_name": "visit_proof",
+    "name": "Visit Proof",
+    "short_name": "Visit Proof",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#F4F6F9",
+    "theme_color": "#6C5CE7",
+    "description": "Field visits with proof of work: live location, photos and a full activity log for small service teams.",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

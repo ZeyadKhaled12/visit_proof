@@ -10,7 +10,7 @@ One app serves two roles, chosen on the first screen and switchable from either 
 - **Admin** — no account; the full admin app (`MainMenuScr`).
 - **Technician** — signs in with the email/password the admin set on the technician; sees only their own visits (`TechHomeScr`) and moves them forward (start trip → start work → complete) with their live GPS location and camera proof photos.
 
-**There is no backend yet.** Every `*RemoteDataSource` is a local prototype that persists JSON in `SharedPreferences` and simulates latency with `Future.delayed`. The layering is built so a real API can replace the data sources later without touching domain/presentation code.
+**There is no backend yet.** Every `*RemoteDataSource` is a local prototype that persists JSON in `SharedPreferences` and simulates latency with `Future.delayed(AppLatency.local)` (`core/network/app_latency.dart`, 60 ms; use it for any new data source). The layering is built so a real API can replace the data sources later without touching domain/presentation code.
 
 - Flutter 3.27.x, Dart SDK `^3.6.2`
 - Package name: `visit_proof` (use `package:visit_proof/...` imports)
@@ -42,7 +42,7 @@ presentation/
   widgets/<screen>_widgets/<screen>_body.dart, <screen>_widget_<part>.dart
 ```
 
-Features: `visits` (home list), `add_visit`, `visit_detail`, `clients`, `technicians`, `services`, `invoices`, `dispatch`, `dashboard`, `main_menu` (admin shell), `auth` (role selection, technician sign in, session), `technician_home` (presentation only; reuses `VisitsBloc`).
+Features: `website` (sales website + design studio, presentation only; web builds only), `visits` (home list), `add_visit`, `visit_detail`, `clients`, `technicians`, `services`, `invoices`, `dispatch`, `dashboard`, `main_menu` (admin shell), `auth` (role selection, technician sign in, session), `technician_home` (presentation only; reuses `VisitsBloc`).
 
 Notes:
 - `invoices` uses `data/data_sources/` (plural, underscore) — keep it as-is.
@@ -65,6 +65,7 @@ Notes:
 
 ### Configs (`lib/configs/`)
 - `AppTheme` (`configs/app_theme.dart`) — the only theme file: light and dark palettes (`AppTheme.light` / `AppTheme.dark`), Google font family, text size tokens (`AppTheme.textBody`, …) and `fontScale`. Use `AppTheme.<color>` for colors, `AppTheme.font(...)` for text styles and size tokens for `fontSize`; never hard-code colors or sizes. Colors are runtime getters (dark mode), so they can't be used inside `const` expressions. `surface` = backgrounds, `onPrimary` = text/icons on brand colors.
+- Performance: `AppTheme.palette`, `materialTheme` and the base Google Font styles in `AppTheme.font` are cached (rebuilt only when mode/brand/language change); `MyApp._rebuildAll` runs at most once per frame. Keep long lists lazy (`ListView.builder`/`.separated`).
 - `AppToasts` — `showMessage` (SnackBar via global navigator key), `showBottomSheet`, `showDeleteConfirmation`. Data sources call `AppToasts.showMessage` on success.
 
 ### App / navigation
@@ -75,6 +76,20 @@ Notes:
 - `AddServiceScr` is opened as a bottom sheet via `AddServiceScr.show(context, ...)`, not a route.
 - `ClientsScr`, `TechniciansScr`, `ServicesScr`, `InvoicesScr` exist but there is currently no navigation into them from the home screen (and `TechniciansScr`/`ServicesScr`/`InvoicesScr` are not in `routes`).
 - `flutter_riverpod`'s `ProviderScope` wraps the app but Riverpod is not used anywhere; state management is BLoC.
+
+## Website (web build)
+
+`flutter build web` / `flutter run -d chrome` shows the sales website, not the bare app (`DemoMode.isOn` = `kIsWeb && !CUSTOMER_APP`). Guide for the owner: `docs/Website_Guide_AR.md`.
+- **Test data on every start** (`DemoMode.testData`, all builds except `CUSTOMER_APP`): `main()` wipes SharedPreferences (keeping the app's language/dark choices; the website always opens Arabic + light) and runs `DemoSeed.run()` (`core/demo/demo_seed.dart`): 8 technicians, 24 clients, 12 services, ~200 visits from 30 days ago to 14 days ahead in every status, invoices paid/partly paid/pending field collection/unpaid with a consistent ledger (see `test/demo_seed_test.dart`). Its texts follow the start-up language. Demo technician `ahmed@demo.com` / `123456`.
+- `MyApp` → `WebsiteApp` (`features/website/presentation/screens/website_scr.dart`): landing, `WebsiteStudioScr` (design panel + the real `VisitProofApp` from `lib/app/visit_proof_app.dart` inside a phone frame with an overridden `MediaQuery`), `WebsiteRequestScr`. Links: `?demo`, `?demo=admin`, `?demo=technician`, `?request`.
+- Requests: `WebsiteRequestModel` (`features/website/data/models/`) → `WebsiteRequestRemoteDataSource.submitRequest` — a stub until a backend exists (send `toJson()` there).
+- `configs/app_offer.dart` — the single plan's prices/limits (`AppOffer.summary`); the website reads every number from here.
+- `configs/app_brand.dart` — `AppBrand.current`: any color per `AppBrandColor` slot (primary, secondary, background, card, text, success, warning, danger; background/card/text change light mode only), Arabic/English Google Font, `fontScale`, app name, icon key, logo bytes. Applied in `AppTheme.palette` / `activeFontFamily` / `activeFontScale` (`onPrimary` is picked for contrast); `MyApp` rebuilds on change. `AppBrand.fromEnvironment()` reads a `BRAND` JSON dart-define for a customer build. The studio uses `flutter_colorpicker`. `GWidgetBrandMark` shows logo/icon.
+- `DemoMode.simulateOnSite` makes the field-proof panel use the visit's site location instead of GPS (test builds only).
+- Web-safe photos: `LocalPhotos` keeps the picker path on web; show local photos with `GWidgetLocalImage` (never `Image.file`).
+- `--dart-define=CUSTOMER_APP=true` builds a customer's app: no website, no reset, real GPS. All data is still device-local; a shared backend is needed before real customers.
+- The website has its own fixed black-and-white theme, `WebTheme` (`features/website/presentation/website_theme.dart`, Apple-like, always light, Inter / IBM Plex Sans Arabic). Website widgets use `WebTheme`, never `AppTheme`, so the visitor's colors, dark mode, fonts and text size only restyle the app in the phone frame. Exceptions: studio controls that read/change the app's design and the brand preview on the request page.
+- Arabic translations are formal Arabic (فصحى); keep new entries formal.
 
 ## Local storage (current "backend")
 

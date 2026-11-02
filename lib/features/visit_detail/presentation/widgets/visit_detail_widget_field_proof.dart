@@ -1,5 +1,5 @@
-import 'dart:io';
-
+import 'package:visit_proof/core/utils/general_widgets/g_widget_local_image.dart';
+import 'package:visit_proof/core/demo/demo_mode.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
@@ -95,7 +95,10 @@ class VisitDetailWidgetFieldProofState
       _error = null;
     });
     try {
-      final location = await GFunLocation.current();
+      // The website demo can pretend the visitor stands at the site.
+      final location = DemoMode.simulating
+          ? DemoMode.locationFor(widget.visit)
+          : await GFunLocation.current();
       if (!mounted) return;
       final site = widget.visit.site;
       _update(VisitFieldProofValue(
@@ -144,6 +147,14 @@ class VisitDetailWidgetFieldProofState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (DemoMode.simulating) ...[
+          VisitDetailNotice(
+            text: 'Demo: your location is simulated at the site.'.tr,
+            color: AppTheme.secondary,
+            icon: Icons.science_outlined,
+          ),
+          const SizedBox(height: 10),
+        ],
         _locationCard(),
         if (widget.photoKind != null) ...[
           const SizedBox(height: 16),
@@ -368,7 +379,8 @@ class _Thumb extends StatelessWidget {
               onTap: onOpen,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
-                child: Image.file(File(path),
+                child: GWidgetLocalImage(
+                    path: path,
                     fit: BoxFit.cover,
                     cacheWidth: 228,
                     errorBuilder: (context, error, stack) => Container(

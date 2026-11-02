@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -91,7 +92,7 @@ class VisitDetailRemoteDataSource
   static const String _paymentsKey = 'invoice_payments';
   static const String _techniciansKey = 'technicians';
 
-  static const Duration _latency = Duration(milliseconds: 450);
+  static const Duration _latency = AppLatency.local;
 
   // Serialises writes inside this isolate so two edits never
   // read the same snapshot and overwrite each other.

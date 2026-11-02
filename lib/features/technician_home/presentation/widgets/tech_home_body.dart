@@ -80,6 +80,56 @@ class _TechHomeBodyState extends State<TechHomeBody> {
   int _count(TechVisitsFilter filter) =>
       widget.visits.where(filter.matches).length;
 
+  /// The header, then the visit cards, built only as they scroll into view.
+  Widget _list(List<VisitDetailModel> active, List<VisitDetailModel> visits) {
+    final header = <Widget>[
+      _Greeting(openCount: _count(TechVisitsFilter.open)),
+      if (active.isNotEmpty) ...[
+        const SizedBox(height: 14),
+        _ActiveJob(visit: active.first, onTap: () => _open(active.first)),
+      ],
+      const SizedBox(height: 16),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final filter in TechVisitsFilter.values)
+            GWidgetChoiceChip(
+              label: '{0} ({1})'.trArgs([filter.label, _count(filter)]),
+              color: AppTheme.primary,
+              selected: filter == _filter,
+              onTap: () => setState(() => _filter = filter),
+            ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      if (visits.isEmpty && !widget.loading)
+        GWidgetEmpty(
+          icon: Icons.event_available_rounded,
+          title: widget.visits.isEmpty
+              ? 'No visits assigned to you yet'.tr
+              : 'Nothing in this list'.tr,
+          subtitle: widget.visits.isEmpty
+              ? 'Your admin assigns visits to you. Pull down to refresh.'.tr
+              : 'Try another filter.'.tr,
+        ),
+    ];
+
+    return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
+      itemCount: header.length + visits.length,
+      itemBuilder: (context, index) {
+        if (index < header.length) return header[index];
+        final visit = visits[index - header.length];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: VisitsWidgetCard(visit: visit, onReturn: _refresh),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final visits = widget.visits.where(_filter.matches).toList()
@@ -100,46 +150,7 @@ class _TechHomeBodyState extends State<TechHomeBody> {
         body: RefreshIndicator(
           color: AppTheme.primary,
           onRefresh: () async => _refresh(),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
-            children: [
-              _Greeting(openCount: _count(TechVisitsFilter.open)),
-              if (active.isNotEmpty) ...[
-                const SizedBox(height: 14),
-                _ActiveJob(visit: active.first, onTap: () => _open(active.first)),
-              ],
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final filter in TechVisitsFilter.values)
-                    GWidgetChoiceChip(
-                      label: '{0} ({1})'.trArgs([filter.label, _count(filter)]),
-                      color: AppTheme.primary,
-                      selected: filter == _filter,
-                      onTap: () => setState(() => _filter = filter),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              if (visits.isEmpty && !widget.loading)
-                GWidgetEmpty(
-                  icon: Icons.event_available_rounded,
-                  title: widget.visits.isEmpty
-                      ? 'No visits assigned to you yet'.tr
-                      : 'Nothing in this list'.tr,
-                  subtitle: widget.visits.isEmpty
-                      ? 'Your admin assigns visits to you. Pull down to refresh.'.tr
-                      : 'Try another filter.'.tr,
-                ),
-              for (final visit in visits) ...[
-                VisitsWidgetCard(visit: visit, onReturn: _refresh),
-                const SizedBox(height: 8),
-              ],
-            ],
-          ),
+          child: _list(active, visits),
         ),
       ),
     );

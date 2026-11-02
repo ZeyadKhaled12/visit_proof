@@ -1,3 +1,5 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_brand_mark.dart';
+import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
@@ -108,15 +110,16 @@ class _Header extends StatelessWidget {
               color: AppTheme.onPrimary.withValues(alpha: .2),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(Icons.verified_rounded,
-                color: AppTheme.onPrimary, size: 26),
+            child: GWidgetBrandMark(color: AppTheme.onPrimary, size: 26),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Visit Proof'.tr,
+                Text(AppBrand.appName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
                         color: AppTheme.onPrimary,
                         fontSize: AppTheme.textHeadline,

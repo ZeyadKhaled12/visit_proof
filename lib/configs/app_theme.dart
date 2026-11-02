@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'app_brand.dart';
 import 'app_language.dart';
 
 /// One full set of colors. The app has two: [AppTheme.light] and
@@ -136,6 +137,58 @@ class AppPalette {
 
   /// Glow under the floating "Add" buttons.
   final Color fabShadowColor;
+
+  AppPalette copyWith({
+    Color? primary,
+    Color? secondary,
+    Color? cardAccent,
+    Color? onPrimary,
+    Color? scaffoldBackground,
+    Color? surface,
+    Color? cardColor,
+    Color? searchFieldBg,
+    Color? locationChipBg,
+    Color? textPrimary,
+    Color? textSecondary,
+    Color? textDarkHint,
+    Color? textLightHint,
+    Color? textNotes,
+    Color? iconGrey,
+    Color? iconLightGrey,
+    Color? statGreen,
+    Color? pending,
+    Color? statOrange,
+    Color? whatsappGreen,
+    Color? shadowColor,
+    Color? cardShadowColor,
+    Color? fabShadowColor,
+  }) {
+    return AppPalette(
+      primary: primary ?? this.primary,
+      secondary: secondary ?? this.secondary,
+      cardAccent: cardAccent ?? this.cardAccent,
+      onPrimary: onPrimary ?? this.onPrimary,
+      scaffoldBackground: scaffoldBackground ?? this.scaffoldBackground,
+      surface: surface ?? this.surface,
+      cardColor: cardColor ?? this.cardColor,
+      searchFieldBg: searchFieldBg ?? this.searchFieldBg,
+      locationChipBg: locationChipBg ?? this.locationChipBg,
+      textPrimary: textPrimary ?? this.textPrimary,
+      textSecondary: textSecondary ?? this.textSecondary,
+      textDarkHint: textDarkHint ?? this.textDarkHint,
+      textLightHint: textLightHint ?? this.textLightHint,
+      textNotes: textNotes ?? this.textNotes,
+      iconGrey: iconGrey ?? this.iconGrey,
+      iconLightGrey: iconLightGrey ?? this.iconLightGrey,
+      statGreen: statGreen ?? this.statGreen,
+      pending: pending ?? this.pending,
+      statOrange: statOrange ?? this.statOrange,
+      whatsappGreen: whatsappGreen ?? this.whatsappGreen,
+      shadowColor: shadowColor ?? this.shadowColor,
+      cardShadowColor: cardShadowColor ?? this.cardShadowColor,
+      fabShadowColor: fabShadowColor ?? this.fabShadowColor,
+    );
+  }
 }
 
 class AppTheme {
@@ -269,11 +322,82 @@ class AppTheme {
   static bool get isDark => darkMode.value;
 
   /// The font for the current language.
-  static String get activeFontFamily =>
-      AppLanguage.isArabic ? fontFamilyArabic : fontFamily;
+  static String get activeFontFamily => AppLanguage.isArabic
+      ? (AppBrand.value.fontArabic ?? fontFamilyArabic)
+      : (AppBrand.value.fontEnglish ?? fontFamily);
 
-  /// The palette in use right now.
-  static AppPalette get palette => isDark ? dark : light;
+  /// [fontScale] times the customer's text size.
+  static double get activeFontScale => fontScale * AppBrand.value.fontScale;
+
+  /// The palette in use right now, with the customer's colors from
+  /// [AppBrand]. Brand and status colors are made a little lighter in dark
+  /// mode; background, card and text colors only change the light mode.
+  static AppPalette get palette {
+    final brand = AppBrand.value;
+    final dark = isDark;
+    if (_palette != null &&
+        identical(brand, _paletteBrand) &&
+        dark == _paletteDark) {
+      return _palette!;
+    }
+    _paletteBrand = brand;
+    _paletteDark = dark;
+    return _palette = _buildPalette();
+  }
+
+  // Every color getter reads the palette, often thousands of times a frame,
+  // so it is built once and reused until the mode or the brand changes.
+  static AppPalette? _palette;
+  static AppBrandModel? _paletteBrand;
+  static bool? _paletteDark;
+
+  static AppPalette _buildPalette() {
+    final base = isDark ? dark : light;
+    final colors = AppBrand.value.colors;
+    if (colors.isEmpty) return base;
+
+    Color? pick(AppBrandColor slot) {
+      final color = colors[slot];
+      if (color == null) return null;
+      if (!isDark) return color;
+      if (slot.lightModeOnly) return null;
+      return Color.lerp(color, const Color(0xFFFFFFFF), .18);
+    }
+
+    final primary = pick(AppBrandColor.primary);
+    final background = pick(AppBrandColor.background);
+    final card = pick(AppBrandColor.card);
+    final text = pick(AppBrandColor.text);
+    return base.copyWith(
+      primary: primary,
+      cardAccent: primary,
+      onPrimary: primary == null ? null : readableOn(primary),
+      cardShadowColor: primary?.withValues(alpha: .08),
+      fabShadowColor: primary?.withValues(alpha: .4),
+      secondary: pick(AppBrandColor.secondary),
+      scaffoldBackground: background,
+      locationChipBg: background == null
+          ? null
+          : Color.lerp(background, base.textPrimary, .05),
+      surface: card,
+      cardColor: card,
+      searchFieldBg: card,
+      textPrimary: text,
+      textDarkHint: text == null
+          ? null
+          : Color.lerp(text, background ?? base.scaffoldBackground, .25),
+      statGreen: pick(AppBrandColor.success),
+      whatsappGreen: pick(AppBrandColor.success),
+      pending: pick(AppBrandColor.warning),
+      statOrange: pick(AppBrandColor.danger),
+    );
+  }
+
+  /// White on dark colors, near-black on light ones.
+  static Color readableOn(Color color) =>
+      ThemeData.estimateBrightnessForColor(color) == Brightness.dark
+          ? const Color(0xFFFFFFFF)
+          : const Color(0xFF1E2230);
 
   static Color get primary => palette.primary;
   static Color get secondary => palette.secondary;
@@ -314,12 +438,9 @@ class AppTheme {
     List<Shadow>? shadows,
     List<FontFeature>? fontFeatures,
   }) {
-    return GoogleFonts.getFont(
-      activeFontFamily,
-      fontSize: fontSize == null ? null : fontSize * fontScale,
+    return _baseFont(activeFontFamily, fontWeight, fontStyle).copyWith(
+      fontSize: fontSize == null ? null : fontSize * activeFontScale,
       color: color,
-      fontWeight: fontWeight,
-      fontStyle: fontStyle,
       letterSpacing: letterSpacing,
       wordSpacing: wordSpacing,
       height: height,
@@ -329,6 +450,16 @@ class AppTheme {
       shadows: shadows,
       fontFeatures: fontFeatures,
     );
+  }
+
+  // Looking a Google Font up is slow next to copying a TextStyle, and every
+  // Text asks for one, so each family/weight/style is looked up only once.
+  static final Map<String, TextStyle> _fonts = {};
+
+  static TextStyle _baseFont(
+      String family, FontWeight? weight, FontStyle? style) {
+    return _fonts.putIfAbsent('$family|$weight|$style',
+        () => GoogleFonts.getFont(family, fontWeight: weight, fontStyle: style));
   }
 
   /// Phone status bar (top) and navigation bar (bottom) for the active mode:
@@ -352,6 +483,22 @@ class AppTheme {
   /// Flutter's built-in widgets (dialogs, pickers, text fields, snack bars)
   /// styled from the active palette.
   static ThemeData get materialTheme {
+    final key = '$isDark|${AppLanguage.isArabic}';
+    if (_theme != null &&
+        key == _themeKey &&
+        identical(AppBrand.value, _themeBrand)) {
+      return _theme!;
+    }
+    _themeKey = key;
+    _themeBrand = AppBrand.value;
+    return _theme = _buildMaterialTheme();
+  }
+
+  static ThemeData? _theme;
+  static String? _themeKey;
+  static AppBrandModel? _themeBrand;
+
+  static ThemeData _buildMaterialTheme() {
     final brightness = isDark ? Brightness.dark : Brightness.light;
     return ThemeData(
       useMaterial3: true,
@@ -378,6 +525,16 @@ class AppTheme {
       dialogTheme: DialogThemeData(backgroundColor: surface),
       bottomSheetTheme: BottomSheetThemeData(backgroundColor: surface),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: primary),
+      pageTransitionsTheme: const PageTransitionsTheme(builders: {
+        // A light fade-up instead of the heavier zoom; iPhone keeps its
+        // slide and swipe-back.
+        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: FadeUpwardsPageTransitionsBuilder(),
+      }),
     );
   }
 }

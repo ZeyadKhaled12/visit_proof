@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
@@ -25,7 +26,7 @@ abstract class BaseDispatchRemoteDataSource {
 class DispatchRemoteDataSource extends BaseDispatchRemoteDataSource {
   static const String _settingsKey = 'dispatch_settings';
   static const String _daysOffKey = 'technician_days_off';
-  static const Duration _latency = Duration(milliseconds: 300);
+  static const Duration _latency = AppLatency.local;
 
   @override
   Future<DispatchSettingsModel> getDispatchSettings(

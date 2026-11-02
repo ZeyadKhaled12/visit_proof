@@ -14,9 +14,11 @@ class GWidgetAppbar {
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       toolbarHeight: 60,
+      // The menu button below doubles as the back button.
+      automaticallyImplyLeading: false,
       title: Row(
         children: [
-          // Opens the app menu when the screen sits inside it.
+          // Opens the app menu, or goes back on a screen opened on top.
           const GWidgetMenuButton(),
           Container(
             padding: const EdgeInsets.all(12),

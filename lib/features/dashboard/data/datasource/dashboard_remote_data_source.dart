@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'dart:convert';
 
 import '../../../../core/local/local_pref.dart';
@@ -14,7 +15,7 @@ abstract class BaseDashboardRemoteDataSource {
 }
 
 class DashboardRemoteDataSource extends BaseDashboardRemoteDataSource {
-  static const Duration _latency = Duration(milliseconds: 400);
+  static const Duration _latency = AppLatency.local;
 
   @override
   Future<DashboardSnapshotModel> getDashboardSnapshot(

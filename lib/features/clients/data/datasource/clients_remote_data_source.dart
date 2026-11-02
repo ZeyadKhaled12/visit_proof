@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 import 'package:visit_proof/configs/app_toasts.dart';
@@ -35,7 +36,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   @override
   Future<List<ClientDetailModel>> getClients(NoParameters parameters) async {
     return await HandleLogicErrors<List<ClientDetailModel>>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
@@ -50,7 +51,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   @override
   Future<ClientDetailModel> addClient(AddClientParameters parameters) async {
     return await HandleLogicErrors<ClientDetailModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       List<ClientDetailModel> clients = [];
       ClientDetailModel? client;
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
@@ -110,7 +111,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   Future<ClientDetailModel> getClientDetail(
       GetClientDetailParameters parameters) async {
     return await HandleLogicErrors<ClientDetailModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
@@ -123,7 +124,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   @override
   Future<void> removeClient(RemoveClientParameters parameters) async {
     return await HandleLogicErrors<void>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list = LocalPref.sharedPreferences.getStringList('clients') ?? [];
       final clients =
           list.map((e) => ClientDetailModel.fromJson(jsonDecode(e))).toList();
@@ -152,7 +153,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   Future<ClientDetailModel> addEquipment(
       AddEquipmentParameters parameters) async {
     return await HandleLogicErrors<ClientDetailModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final clients =
           (LocalPref.sharedPreferences.getStringList('clients') ?? [])
               .map((e) => ClientDetailModel.fromJson(jsonDecode(e)))
@@ -178,7 +179,7 @@ class ClientsRemoteDataSource extends BaseClientsRemoteDataSource {
   Future<ClientDetailModel> removeEquipment(
       RemoveEquipmentParameters parameters) async {
     return await HandleLogicErrors<ClientDetailModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final clients =
           (LocalPref.sharedPreferences.getStringList('clients') ?? [])
               .map((e) => ClientDetailModel.fromJson(jsonDecode(e)))

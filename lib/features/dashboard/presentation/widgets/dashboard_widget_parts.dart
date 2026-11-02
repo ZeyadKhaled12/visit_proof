@@ -160,7 +160,11 @@ class DashboardDelta extends StatelessWidget {
         const SizedBox(width: 2),
         Flexible(
           child: Text(
-              flat ? 'No change'.tr : '$amount${asPoints ? ' pts' : '%'}',
+              flat
+                  ? 'No change'.tr
+                  : asPoints
+                      ? '{0} pts'.trArgs([amount])
+                      : '$amount%',
               overflow: TextOverflow.ellipsis,
               style: AppTheme.font(
                   color: color, fontSize: AppTheme.textCaption, fontWeight: FontWeight.w800)),

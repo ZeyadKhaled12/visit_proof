@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:visit_proof/core/utils/general_widgets/g_widget_local_image.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
@@ -282,8 +281,8 @@ class _Photos extends StatelessWidget {
               initialIndex: index),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.file(
-              File(paths[index]),
+            child: GWidgetLocalImage(
+              path: paths[index],
               width: 64,
               height: 64,
               fit: BoxFit.cover,

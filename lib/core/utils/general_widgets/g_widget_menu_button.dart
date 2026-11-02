@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
 
-/// Opens the app drawer from a screen's top bar. Screens have their own
-/// Scaffold, so this looks up past it for the nearest Scaffold that has a
-/// drawer. Outside the app menu (e.g. a pushed screen) it shows nothing.
+/// The leading button of a screen's top bar: opens the app drawer when the
+/// screen sits inside the app menu, or goes back when the screen was opened
+/// on top of another one. Screens have their own Scaffold, so this looks up
+/// past it for the nearest Scaffold that has a drawer.
 class GWidgetMenuButton extends StatelessWidget {
   const GWidgetMenuButton({super.key});
 
@@ -20,15 +21,27 @@ class GWidgetMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scaffold = _drawerScaffold(context);
-    if (scaffold == null) return const SizedBox.shrink();
+    final canGoBack = ModalRoute.of(context)?.canPop ?? false;
 
+    // A pushed screen goes back; a menu screen opens the drawer.
+    if (canGoBack && scaffold == null) {
+      return _button(
+        icon: Icons.arrow_back_ios_new_rounded,
+        onTap: () => Navigator.maybePop(context),
+      );
+    }
+    if (scaffold == null) return const SizedBox.shrink();
+    return _button(icon: Icons.menu_rounded, onTap: scaffold.openDrawer);
+  }
+
+  Widget _button({required IconData icon, required VoidCallback onTap}) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(end: 10),
       child: Material(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
-          onTap: scaffold.openDrawer,
+          onTap: onTap,
           borderRadius: BorderRadius.circular(14),
           child: Container(
             padding: const EdgeInsets.all(10),
@@ -37,8 +50,7 @@ class GWidgetMenuButton extends StatelessWidget {
               border: Border.all(
                   color: AppTheme.iconLightGrey.withValues(alpha: .4)),
             ),
-            child: Icon(Icons.menu_rounded,
-                color: AppTheme.textPrimary, size: 22),
+            child: Icon(icon, color: AppTheme.textPrimary, size: 22),
           ),
         ),
       ),

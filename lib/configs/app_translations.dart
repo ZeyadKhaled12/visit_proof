@@ -1159,4 +1159,276 @@ const Map<String, String> arabicTranslations = {
   'Abu Arish': 'أبو عريش',
   'Samtah': 'صامطة',
   'Sharurah': 'شرورة',
+
+  // --- Website: landing page -------------------------------------------------
+  '{0} — field visits with proof': '{0} — زيارات ميدانية موثقة',
+  'Features': 'المزايا',
+  'Pricing': 'الأسعار',
+  'FAQ': 'الأسئلة الشائعة',
+  'Demo': 'تجربة',
+  'Light mode': 'الوضع الفاتح',
+  'Free for the first {0} months': 'مجانًا لأول {0} أشهر',
+  'Stop managing field visits on WhatsApp.':
+      'توقّف عن إدارة الزيارات الميدانية عبر واتساب.',
+  'Every technician visit is scheduled, proven with live location and photos, and closed with a clear record — in an app with your colors, your fonts and your logo.':
+      'تُجدوَل كل زيارة للفني، وتُوثَّق بالموقع المباشر والصور، وتُغلق بسجل واضح — في تطبيق بألوانك وخطوطك وشعارك.',
+  'Try it and design your app': 'جرّبه وصمّم تطبيقك',
+  'See the price': 'اطّلع على السعر',
+  'No sign-up and no card. The demo resets every time you open it.':
+      'دون تسجيل ودون بطاقة دفع. تبدأ التجربة من جديد في كل مرة تفتحها.',
+  'VIS-000124 · AC periodic maintenance': 'VIS-000124 · صيانة دورية للمكيف',
+  'Al Noor Pharmacy · Riyadh': 'صيدلية النور · الرياض',
+  'Trip started 09:12': 'بدأت الرحلة 09:12',
+  'Arrived · 18 m from the site': 'الوصول · على بُعد 18 م من الموقع',
+  '3 photos before and after': '3 صور قبل العمل وبعده',
+  'Checklist done · 4 of 4': 'اكتملت قائمة التحقق · 4 من 4',
+  'Payment collected · receipt photo': 'تم تحصيل الدفعة · صورة الإيصال',
+  'What it does': 'ما الذي يقدمه',
+  'Everything a small field team needs, nothing it does not':
+      'كل ما يحتاجه فريق ميداني صغير، دون أي تعقيد',
+  'One app for the office and one for the technicians, connected live.':
+      'تطبيق للمكتب وآخر للفنيين، مترابطان لحظة بلحظة.',
+  'Plan and assign visits': 'تخطيط الزيارات وإسنادها',
+  'Create a visit in seconds, pick the technician and see the whole day on one dispatch board.':
+      'أنشئ زيارة خلال ثوانٍ، واختر الفني، واطّلع على اليوم كاملًا في لوحة توزيع واحدة.',
+  'Proof of presence': 'إثبات الحضور',
+  'Starting work needs the technician\'s live location near the site. Every step is logged with where it happened.':
+      'يتطلب بدء العمل وجود الفني بالقرب من الموقع وفق موقعه المباشر، وتُسجَّل كل خطوة مع مكان حدوثها.',
+  'Before and after photos': 'صور قبل العمل وبعده',
+  'Camera photos taken on the spot, attached to the visit and shown to you in one place.':
+      'صور تُلتقط بالكاميرا في الموقع نفسه، وتُرفق بالزيارة وتُعرض لك في مكان واحد.',
+  'A full activity log': 'سجل نشاط كامل',
+  'Who did what and when: status changes, notes, payments and locations, all in one timeline.':
+      'من فعل ماذا ومتى: تغييرات الحالة والملاحظات والمدفوعات والمواقع، في خط زمني واحد.',
+  'Payments collected on site': 'تحصيل المدفوعات في الموقع',
+  'The technician records the payment with a receipt photo; you confirm it when you have time.':
+      'يسجّل الفني الدفعة مع صورة الإيصال، وتؤكدها أنت في الوقت المناسب لك.',
+  'Invoices for every visit': 'فاتورة لكل زيارة',
+  'Each visit has its invoice, issued automatically when the work is done.':
+      'لكل زيارة فاتورتها، وتصدر تلقائيًا عند انتهاء العمل.',
+  'Clients, sites and equipment': 'العملاء والمواقع والمعدات',
+  'Your customers, their locations and their machines, ready for the next visit.':
+      'عملاؤك ومواقعهم وأجهزتهم، جاهزة للزيارة القادمة.',
+  'A real right-to-left Arabic app; each user picks their language.':
+      'تطبيق عربي حقيقي من اليمين إلى اليسار، ويختار كل مستخدم لغته.',
+  'How it works': 'آلية العمل',
+  'From demo to your own app in four steps':
+      'من التجربة إلى تطبيقك الخاص في أربع خطوات',
+  'Try the live demo': 'جرّب النسخة التجريبية',
+  'Use the real app as the admin and as a technician, with a sample company.':
+      'استخدم التطبيق الفعلي بصفتك مسؤولًا وبصفتك فنيًا، مع شركة تجريبية.',
+  'Design your version': 'صمّم نسختك',
+  'Pick any colors, fonts, text size, icon or logo, and the app name. You see every change instantly.':
+      'اختر أي ألوان وخطوط وحجم نص وأيقونة أو شعار واسمًا للتطبيق، وشاهد كل تغيير فورًا.',
+  'Send your request': 'أرسل طلبك',
+  'One tap sends us your design and your notes.':
+      'ضغطة واحدة ترسل إلينا تصميمك وملاحظاتك.',
+  'Get your private link': 'استلم رابطك الخاص',
+  'We prepare your company\'s app and send you its link. Your team opens it and adds it to the home screen.':
+      'نُعدّ تطبيق شركتك ونرسل إليك رابطه، فيفتحه فريقك ويضيفه إلى الشاشة الرئيسية.',
+  'Start with step 1': 'ابدأ بالخطوة الأولى',
+  'Simple, small and clear': 'بسيط وواضح ومناسب للشركات الصغيرة',
+  'We are built for companies at the start of their journey. When you grow past {0} users, you have outgrown us — and that is the goal.':
+      'صُمّمنا للشركات في بداية مسيرتها. وعندما يتجاوز فريقك {0} مستخدمين تكون قد كبرت — وهذا هو الهدف.',
+  'One plan for every small team': 'باقة واحدة لكل فريق صغير',
+  'Free for {0} months': 'مجانًا لمدة {0} أشهر',
+  'then {0}': 'ثم {0}',
+  'every {0} months': 'كل {0} أشهر',
+  'About {0} a month for the whole company, not per user.':
+      'نحو {0} شهريًا للشركة كاملة، لا لكل مستخدم.',
+  'Up to {0} users: admins and technicians':
+      'حتى {0} مستخدمين: مسؤولون وفنيون',
+  'Unlimited visits, clients and sites': 'زيارات وعملاء ومواقع بلا حدود',
+  '{0} GB for photos (compressed automatically)':
+      '{0} غيغابايت للصور (تُضغط تلقائيًا)',
+  'Your colors, fonts, icon or logo and your app name':
+      'ألوانك وخطوطك وأيقونتك أو شعارك واسم تطبيقك',
+  'Hosting, daily backups and updates':
+      'الاستضافة والنسخ الاحتياطي اليومي والتحديثات',
+  'Support on WhatsApp and email': 'دعم عبر واتساب والبريد الإلكتروني',
+  'Arabic and English': 'العربية والإنجليزية',
+  'Your data is yours: we export it for you whenever you ask':
+      'بياناتك ملك لك: نصدّرها لك متى طلبت ذلك',
+  'Request my version': 'اطلب نسختي',
+  'Nothing to pay today.': 'لا يلزمك الدفع اليوم.',
+  'Exactly what you pay': 'ما تدفعه بالتحديد',
+  'Months 1 to {0}': 'من الشهر 1 إلى الشهر {0}',
+  'Free': 'مجانًا',
+  'Every {0} months after that': 'كل {0} أشهر بعد ذلك',
+  'Setup, colors and logo': 'الإعداد والألوان والشعار',
+  'Extra fees per user': 'رسوم إضافية لكل مستخدم',
+  'Changes made only for you': 'تعديلات خاصة بك',
+  'If a period is not renewed, your app stays readable for {0} days so you can take your data, then it is deleted after a reminder.':
+      'إذا لم تُجدَّد الفترة، يبقى تطبيقك متاحًا للقراءة مدة {0} يومًا لتحتفظ ببياناتك، ثم يُحذف بعد إشعارك.',
+  'How you receive it': 'طريقة الاستلام',
+  'Your app arrives as a link, not a download':
+      'يصلك تطبيقك رابطًا لا ملفًا للتنزيل',
+  'We deliver it as a PWA (progressive web app): a web app that installs on the phone like a normal app.':
+      'نسلّمه بصيغة PWA (تطبيق ويب تقدمي): تطبيق ويب يُثبَّت على الجوال كأي تطبيق عادي.',
+  'A private link for your company': 'رابط خاص بشركتك',
+  'Your app lives on its own web link. Only your team signs in to it.':
+      'يعمل تطبيقك على رابط مستقل، ولا يسجّل الدخول إليه إلا فريقك.',
+  'Installs like an app': 'يُثبَّت كتطبيق',
+  'Open the link on any phone and choose "Add to Home Screen". It gets your icon and opens full screen.':
+      'افتح الرابط على أي جوال واختر "إضافة إلى الشاشة الرئيسية"، فيظهر بأيقونتك ويفتح بملء الشاشة.',
+  'iPhone, Android and computers': 'آيفون وأندرويد والحواسيب',
+  'No App Store or Google Play needed. The office can use it on a laptop.':
+      'لا حاجة إلى App Store أو Google Play، ويمكن للمكتب استخدامه على الحاسوب المحمول.',
+  'Always up to date': 'محدّث دائمًا',
+  'Updates arrive by themselves. Nobody has to download anything.':
+      'تصل التحديثات تلقائيًا، ولا يحتاج أحد إلى تنزيل أي شيء.',
+  'Questions': 'أسئلة',
+  'Frequently asked questions': 'الأسئلة الشائعة',
+  'Do I pay anything now?': 'هل أدفع شيئًا الآن؟',
+  'No. Your first {0} months are free. We only ask for payment when they end.':
+      'لا. أول {0} أشهر مجانية، ولا نطلب الدفع إلا بعد انتهائها.',
+  'What do I pay after the free months?': 'كم أدفع بعد الأشهر المجانية؟',
+  '{0} every {1} months for your whole company, up to {2} users. There is no fee per user and no setup fee.':
+      '{0} كل {1} أشهر لشركتك كاملة، حتى {2} مستخدمين. لا توجد رسوم لكل مستخدم ولا رسوم إعداد.',
+  'Is there a contract?': 'هل يوجد عقد؟',
+  'No. You renew every {0} months. If you stop, you keep reading access for {1} days to take your data.':
+      'لا. تجدّد كل {0} أشهر، وإذا توقفت يبقى لديك حق الاطلاع مدة {1} يومًا لتحتفظ ببياناتك.',
+  'What if I need more than {0} users?': 'ماذا لو احتجت إلى أكثر من {0} مستخدمين؟',
+  'That means your company has grown — congratulations. We help you export your data so you can move to a bigger system.':
+      'هذا يعني أن شركتك قد نمت — تهانينا. نساعدك على تصدير بياناتك للانتقال إلى نظام أكبر.',
+  'Can I change the colors or logo later?': 'هل يمكنني تغيير الألوان أو الشعار لاحقًا؟',
+  'Yes, at no cost. Colors, fonts, text size, icon, logo and app name are part of the plan.':
+      'نعم، دون أي تكلفة. الألوان والخطوط وحجم النص والأيقونة والشعار واسم التطبيق جزء من الباقة.',
+  'What counts as a custom change?': 'ما الذي يُعدّ تعديلًا خاصًا؟',
+  'How do my technicians get the app?': 'كيف يحصل الفنيون على التطبيق؟',
+  'You send them your app\'s link. They open it on their phone, add it to the home screen and sign in with the email and password you give them.':
+      'ترسل إليهم رابط تطبيقك، فيفتحونه على جوالاتهم ويضيفونه إلى الشاشة الرئيسية، ثم يسجّلون الدخول بالبريد الإلكتروني وكلمة المرور اللذين تمنحهم إياهما.',
+  'Is my data private?': 'هل بياناتي خاصة؟',
+  'Each company has its own separate space. Other companies cannot see your clients, visits or photos.':
+      'لكل شركة مساحة مستقلة، ولا يمكن لأي شركة أخرى الاطلاع على عملائك أو زياراتك أو صورك.',
+  'Is the demo saving what I type?': 'هل تحفظ التجربة ما أكتبه؟',
+  'No. The demo runs only in your browser and starts again from the beginning every time you open the page. Nothing is sent until you press send on your request.':
+      'لا. تعمل التجربة في متصفحك فقط، وتبدأ من جديد في كل مرة تفتح فيها الصفحة، ولا يُرسل شيء حتى تضغط زر إرسال الطلب.',
+  'Every company passes through its first steps.':
+      'كل شركة تمر بخطواتها الأولى.',
+  'Let us organize yours while you grow.': 'دعنا ننظّم خطواتك بينما تنمو.',
+  'Design my app now': 'صمّم تطبيقي الآن',
+  'Prices in US dollars. This website is a demo: it saves nothing.':
+      'الأسعار بالدولار الأمريكي. هذا الموقع تجريبي ولا يحفظ أي بيانات.',
+
+  // --- Website: design studio ------------------------------------------------
+  'Live demo': 'تجربة مباشرة',
+  'Request': 'اطلب',
+  'Request this version': 'اطلب هذه النسخة',
+  'This is the real app with a sample company. Tap around.':
+      'هذا هو التطبيق الفعلي مع شركة تجريبية، تصفّحه بحرية.',
+  'Design your app': 'صمّم تطبيقك',
+  'Every change shows in the app right away.':
+      'يظهر كل تغيير في التطبيق فورًا.',
+  'Quick color themes': 'مجموعات ألوان جاهزة',
+  'Colors': 'الألوان',
+  'Tap a color to choose any shade or type its code.':
+      'اضغط على أي لون لاختيار الدرجة التي تريدها أو كتابة رمزه.',
+  'Main color': 'اللون الأساسي',
+  'Buttons, links and headers': 'الأزرار والروابط والعناوين',
+  'Second color': 'اللون الثانوي',
+  'Gradients and section icons': 'التدرجات وأيقونات الأقسام',
+  'Background': 'الخلفية',
+  'Behind every screen (light mode)': 'خلف كل الشاشات (الوضع الفاتح)',
+  'Cards and bars': 'البطاقات والأشرطة',
+  'Cards, sheets and app bars (light mode)':
+      'البطاقات والنوافذ وأشرطة التطبيق (الوضع الفاتح)',
+  'Text': 'النص',
+  'Titles and main text (light mode)': 'العناوين والنص الرئيسي (الوضع الفاتح)',
+  'Success': 'النجاح',
+  'Completed and paid': 'المكتمل والمدفوع',
+  'Scheduled, pending and in progress': 'المجدول والمعلّق وقيد التنفيذ',
+  'Cancelled, overdue and errors': 'الملغى والمتأخر والأخطاء',
+  'Back to default': 'استعادة الافتراضي',
+  'Mode': 'الوضع',
+  'Light': 'فاتح',
+  'Dark': 'داكن',
+  'Fonts': 'الخطوط',
+  'Arabic font': 'الخط العربي',
+  'English font': 'الخط الإنجليزي',
+  'Text size': 'حجم النص',
+  'App name': 'اسم التطبيق',
+  'e.g. Cool Air Services': 'مثال: خدمات الهواء البارد',
+  'App icon': 'أيقونة التطبيق',
+  'Upload your logo': 'ارفع شعارك',
+  'Change logo': 'تغيير الشعار',
+  'Remove logo': 'إزالة الشعار',
+  'Try the demo': 'جرّب التطبيق',
+  'A sample HVAC company with visits in every step.':
+      'شركة تكييف تجريبية لديها زيارات في جميع المراحل.',
+  'Technician sign-in: {0} / {1}': 'دخول الفني: {0} / {1}',
+  'Pretend I am at the site': 'افترض أنني في الموقع',
+  'Turn off to use your real location, as your technicians will.':
+      'أوقف هذا الخيار لاستخدام موقعك الفعلي كما سيفعل الفنيون.',
+  'Restart the demo data': 'إعادة بيانات التجربة',
+  'Demo: your location is simulated at the site.':
+      'تجربة: يُفترض أن موقعك داخل موقع العميل.',
+  'Violet': 'بنفسجي',
+  'Ocean': 'محيطي',
+  'Emerald': 'زمردي',
+  'Sunset': 'غروب',
+  'Ruby': 'ياقوتي',
+  'Graphite': 'رمادي',
+  'Royal': 'ملكي',
+  'Sky': 'سماوي',
+  'Proof badge': 'شارة الإثبات',
+  'Air conditioning': 'التكييف',
+  'Maintenance': 'الصيانة',
+  'Cleaning': 'التنظيف',
+  'Pest control': 'مكافحة الحشرات',
+  'Solar': 'الطاقة الشمسية',
+  'Security & cameras': 'الأمن والكاميرات',
+  'Engineering': 'الهندسة',
+  'Home services': 'الخدمات المنزلية',
+  'Inspection': 'الفحص',
+
+  // --- Website: request ------------------------------------------------------
+  'Request your version': 'اطلب نسختك',
+  'Send us your design. We will contact you to confirm, then prepare your app and send you its private link.':
+      'أرسل إلينا تصميمك، وسنتواصل معك للتأكيد، ثم نُعدّ تطبيقك ونرسل إليك رابطه الخاص.',
+  'Your details': 'بياناتك',
+  'Your name': 'الاسم',
+  'Company name': 'اسم الشركة',
+  'Phone / WhatsApp': 'الجوال / واتساب',
+  'Email (optional)': 'البريد الإلكتروني (اختياري)',
+  'Which version do you want?': 'ما النسخة التي تريدها؟',
+  'Standard version with my design': 'النسخة القياسية بتصميمي',
+  'Everything in the demo with your colors, fonts, icon and name. Included in the plan.':
+      'كل ما في التجربة بألوانك وخطوطك وأيقونتك واسمك، وهي مشمولة في الباقة.',
+  'I also need custom changes': 'أحتاج أيضًا إلى تعديلات خاصة',
+  'Describe the changes you need': 'صف التعديلات التي تحتاجها',
+  'Notes (optional)': 'ملاحظات (اختياري)',
+  'e.g. add a field for the AC model, add my VAT number on the invoice…':
+      'مثال: إضافة حقل لطراز المكيف، أو إضافة الرقم الضريبي إلى الفاتورة…',
+  'Anything you want us to know': 'أي معلومات تود إطلاعنا عليها',
+  'Tell us what to change (at least 10 characters).':
+      'أخبرنا بما تريد تغييره (10 أحرف على الأقل).',
+  'Your design': 'تصميمك',
+  'Change the design': 'تعديل التصميم',
+  'What you will pay': 'ما ستدفعه',
+  'I have read the price and the terms.': 'اطّلعت على السعر والشروط.',
+  'Please confirm you have read the price.': 'يرجى تأكيد اطلاعك على السعر.',
+  'Send my request': 'إرسال الطلب',
+  'Sending…': 'جارٍ الإرسال…',
+  'Your request has been sent': 'تم إرسال طلبك',
+  'We will contact you on {0} to confirm your request, then send you the private link to your app.':
+      'سنتواصل معك على الرقم {0} لتأكيد طلبك، ثم نرسل إليك الرابط الخاص بتطبيقك.',
+  'Back to the website': 'العودة إلى الموقع',
+
+  // --- Demo data -------------------------------------------------------------
+  'updated {0}': 'آخر تحديث {0}',
+  '{0} pts': '{0} نقطة',
+  'Visit created': 'تم إنشاء الزيارة',
+  'Technician assigned: {0}': 'تم إسناد الفني: {0}',
+  // --- Website: one price, special requests priced per request ------------
+  'Special requests': 'الطلبات الخاصة',
+  'Priced per request': 'يُحدَّد سعرها حسب الطلب',
+  'Need something the app does not have? Write it in your request. Each special request is priced on its own, depending on what it needs, after we discuss it with you. Nothing is built before you agree.':
+      'هل تحتاج إلى ما لا يوفره التطبيق؟ اكتبه في طلبك. يُسعَّر كل طلب خاص على حدة بحسب ما يتطلبه، بعد مناقشته معك، ولا يُنفَّذ شيء قبل موافقتك.',
+  'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. We discuss your request with you, agree on its price, and only then start.':
+      'كل ما لا يقدمه التطبيق حاليًا: حقل جديد أو تقرير جديد أو شاشة جديدة أو ربط بنظام آخر. نناقش طلبك معك ونتفق على سعره، ثم نبدأ التنفيذ.',
+  'Their price depends on what you ask for. We discuss your request with you and agree on the price before any work starts.':
+      'يعتمد سعرها على ما تطلبه، ونناقش طلبك معك ونتفق على السعر قبل بدء أي عمل.',
+  'First {0} months free, then {1} every {2} months for the whole company. Up to {3} users and {4} GB of photos. Delivered as a PWA on a private link. Special requests are priced separately, after we discuss them with you.':
+      'أول {0} أشهر مجانًا، ثم {1} كل {2} أشهر للشركة كاملة، حتى {3} مستخدمين ومساحة {4} غيغابايت للصور. يُسلَّم بصيغة PWA على رابط خاص. تُسعَّر الطلبات الخاصة بشكل مستقل بعد مناقشتها معك.',
 };

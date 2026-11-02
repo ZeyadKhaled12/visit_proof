@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:visit_proof/core/utils/general_widgets/g_widget_local_image.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
@@ -73,8 +72,8 @@ class _GWidgetPhotoViewerState extends State<GWidgetPhotoViewer> {
                 minScale: 1,
                 maxScale: 5,
                 child: Center(
-                  child: Image.file(
-                    File(widget.photos[index].path),
+                  child: GWidgetLocalImage(
+                    path: widget.photos[index].path,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stack) => Column(
                       mainAxisSize: MainAxisSize.min,

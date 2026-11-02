@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -501,9 +502,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
   ) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
         _requireAdmin();
 
         return await _exclusive(() async {
@@ -614,9 +613,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
   ) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
 
         return await _exclusive(() async {
           if (parameters.invoiceId.trim().isEmpty) {
@@ -898,9 +895,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
   ) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
 
         _requireAdmin();
 
@@ -999,9 +994,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
   ) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
 
         _requireAdmin();
 
@@ -1106,9 +1099,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       RecordPaymentParameters parameters) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
 
         final field = AppSession.isTechnician;
 
@@ -1280,9 +1271,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       RefundPaymentParameters parameters) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
 
         _requireAdmin();
 
@@ -1396,9 +1385,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       ReviewPaymentParameters parameters) async {
     return await HandleLogicErrors<InvoiceDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
         _requireAdmin();
 
         final note = (parameters.note ?? '').trim();
@@ -1482,9 +1469,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
       GetPaymentsParameters parameters) async {
     return await HandleLogicErrors<List<InvoicePaymentHistoryModel>>(
       fun: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future.delayed(AppLatency.local);
 
         // A technician sees only the money they collected.
         final technicianId = AppSession.technicianId;
@@ -1514,9 +1499,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     return await HandleLogicErrors<List<InvoiceDetailModel>>(
       fun: () async {
         _requireAdmin();
-        await Future.delayed(
-          const Duration(seconds: 1),
-        );
+        await Future.delayed(AppLatency.local);
 
         final list =
             LocalPref.sharedPreferences.getStringList('invoices') ?? [];
@@ -1553,9 +1536,7 @@ Future<List<InvoiceDetailModel>> getInvoices(
     NoParameters parameters) async {
   return await HandleLogicErrors<List<InvoiceDetailModel>>(
     fun: () async {
-      await Future.delayed(
-        const Duration(milliseconds: 350),
-      );
+      await Future.delayed(AppLatency.local);
 
       final list =
           LocalPref.sharedPreferences.getStringList('invoices') ?? [];

@@ -1,3 +1,5 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_brand_mark.dart';
+import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,11 +89,11 @@ class _Brand extends StatelessWidget {
                   offset: const Offset(0, 8)),
             ],
           ),
-          child:
-              Icon(Icons.verified_rounded, color: AppTheme.onPrimary, size: 44),
+          child: GWidgetBrandMark(color: AppTheme.onPrimary, size: 44),
         ),
         const SizedBox(height: 16),
-        Text('Visit Proof'.tr,
+        Text(AppBrand.appName,
+            textAlign: TextAlign.center,
             style: AppTheme.font(
                 color: AppTheme.textPrimary,
                 fontSize: AppTheme.textHeadline,

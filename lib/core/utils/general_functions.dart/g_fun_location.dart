@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -66,6 +67,8 @@ class GFunLocation {
 
   /// Opens the system page where the user can fix [issue].
   static Future<void> openSettings(GFunLocationIssue issue) async {
+    // Browsers have no settings page to open; the site permission is used.
+    if (kIsWeb) return;
     if (issue == GFunLocationIssue.serviceOff) {
       await Geolocator.openLocationSettings();
     } else {

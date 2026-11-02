@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -94,9 +95,7 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
   ) async {
     return await HandleLogicErrors<VisitDetailModel>(
       fun: () async {
-        await Future.delayed(
-          const Duration(seconds: 1),
-        );
+        await Future.delayed(AppLatency.local);
 
         // Planning visits is admin work.
         if (AppSession.isTechnician) {

@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
@@ -32,7 +33,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
   @override
   Future<TechnicianDetailModel> addTech(AddTechParameters parameters) async {
     return await HandleLogicErrors<TechnicianDetailModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       List<TechnicianDetailModel> technicians = [];
       TechnicianDetailModel? technician;
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
@@ -100,7 +101,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
   Future<TechnicianDetailModel> getTechDetail(
       GetTechDetailParameters parameters) async {
     return await HandleLogicErrors<TechnicianDetailModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list =
           LocalPref.sharedPreferences.getStringList('technicians') ?? [];
       final technicians = list
@@ -115,7 +116,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
   @override
   Future<List<TechnicianModel>> getTechnicians(NoParameters parameters) async {
     return await HandleLogicErrors<List<TechnicianModel>>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list =
           LocalPref.sharedPreferences.getStringList('technicians') ?? [];
       final technicians = list
@@ -133,7 +134,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
   @override
   Future<void> removeTechnician(RemoveTechnicianParameters parameters) async {
     return await HandleLogicErrors<void>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list =
           LocalPref.sharedPreferences.getStringList('technicians') ?? [];
       final technicians = list

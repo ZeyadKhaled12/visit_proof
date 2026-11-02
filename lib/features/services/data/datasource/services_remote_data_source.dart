@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/network/app_latency.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:convert';
 
@@ -23,7 +24,7 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
   @override
   Future<List<ServiceModel>> getServices(NoParameters parameters) async {
     return await HandleLogicErrors<List<ServiceModel>>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list = LocalPref.sharedPreferences.getStringList('services') ?? [];
       final services =
           list.map((e) => ServiceModel.fromJson(jsonDecode(e))).toList();
@@ -43,7 +44,7 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
     ];
 
     return await HandleLogicErrors<List<GModelCatg>>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list =
           LocalPref.sharedPreferences.getStringList('categories') ?? [];
       if (list.isEmpty) {
@@ -73,7 +74,7 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
   @override
   Future<ServiceModel> addService(AddServiceParameters parameters) async {
     return await HandleLogicErrors<ServiceModel>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       List<ServiceModel> services = [];
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
       GModelCatg? category;
@@ -124,7 +125,7 @@ class ServicesRemoteDataSource extends BaseServicesRemoteDataSource {
   Future<List<ServiceModel>> removeService(
       RemoveServiceParameters parameters) async {
     return await HandleLogicErrors<List<ServiceModel>>(fun: () async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(AppLatency.local);
       final list = LocalPref.sharedPreferences.getStringList('services') ?? [];
       final services =
           list.map((e) => ServiceModel.fromJson(jsonDecode(e))).toList();

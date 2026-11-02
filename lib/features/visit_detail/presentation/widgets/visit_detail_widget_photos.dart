@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:visit_proof/core/utils/general_widgets/g_widget_local_image.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
@@ -130,8 +129,8 @@ class _Group extends StatelessWidget {
                           border: Border.all(color: color.withValues(alpha: .5)),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Image.file(
-                          File(photo.path ?? ''),
+                        child: GWidgetLocalImage(
+                          path: photo.path ?? '',
                           fit: BoxFit.cover,
                           cacheWidth: 216,
                           errorBuilder: (context, error, stack) => Container(

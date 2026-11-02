@@ -1,0 +1,824 @@
+import 'package:visit_proof/configs/app_language.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../configs/app_offer.dart';
+import 'website_widget_parts.dart';
+import '../website_theme.dart';
+
+String _usd(num amount) => AppOffer.usd(amount);
+
+// =============================================================================
+// HERO
+// =============================================================================
+
+class WebsiteHero extends StatelessWidget {
+  const WebsiteHero(
+      {super.key, required this.onTryDemo, required this.onPricing});
+  final VoidCallback onTryDemo;
+  final VoidCallback onPricing;
+
+  @override
+  Widget build(BuildContext context) {
+    final wide = WebsiteLayout.isWide(context);
+    final text = Column(
+      crossAxisAlignment:
+          wide ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: WebTheme.statGreen.withValues(alpha: .12),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Text(
+              'Free for the first {0} months'.trArgs([AppOffer.freeMonths]),
+              style: WebTheme.font(
+                  color: WebTheme.statGreen,
+                  fontSize: WebTheme.textSmall,
+                  fontWeight: FontWeight.w800)),
+        ),
+        const SizedBox(height: 18),
+        Text('Stop managing field visits on WhatsApp.'.tr,
+            textAlign: wide ? TextAlign.start : TextAlign.center,
+            style: WebTheme.font(
+                color: WebTheme.textPrimary,
+                fontSize: wide ? 46 : 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15)),
+        const SizedBox(height: 16),
+        Text(
+            'Every technician visit is scheduled, proven with live location and photos, and closed with a clear record — in an app with your colors, your fonts and your logo.'
+                .tr,
+            textAlign: wide ? TextAlign.start : TextAlign.center,
+            style: WebTheme.font(
+                color: WebTheme.textSecondary,
+                fontSize: WebTheme.textTitleLarge,
+                height: 1.6)),
+        const SizedBox(height: 28),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          alignment: wide ? WrapAlignment.start : WrapAlignment.center,
+          children: [
+            WebsiteButton(
+                text: 'Try it and design your app'.tr,
+                icon: Icons.palette_rounded,
+                onPressed: onTryDemo),
+            WebsiteButton(
+                text: 'See the price'.tr,
+                icon: Icons.sell_outlined,
+                outlined: true,
+                onPressed: onPricing),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Text(
+            'No sign-up and no card. The demo resets every time you open it.'
+                .tr,
+            textAlign: wide ? TextAlign.start : TextAlign.center,
+            style: WebTheme.font(
+                color: WebTheme.textLightHint, fontSize: WebTheme.textSmall)),
+      ],
+    );
+
+    return WebsiteSection(
+      vertical: wide ? 72 : 40,
+      child: wide
+          ? Row(
+              children: [
+                Expanded(flex: 6, child: text),
+                const SizedBox(width: 48),
+                const Expanded(flex: 5, child: _HeroPreview()),
+              ],
+            )
+          : Column(children: [
+              text,
+              const SizedBox(height: 36),
+              const _HeroPreview(),
+            ]),
+    );
+  }
+}
+
+/// A mock visit card: what the customer receives at the end of a visit.
+class _HeroPreview extends StatelessWidget {
+  const _HeroPreview();
+
+  @override
+  Widget build(BuildContext context) {
+    Widget step(IconData icon, String text, Color color) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: Row(children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: color.withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Icon(icon, color: color, size: 18),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(text,
+                  style: WebTheme.font(
+                      color: WebTheme.textPrimary,
+                      fontSize: WebTheme.textBodyLarge,
+                      fontWeight: FontWeight.w600)),
+            ),
+            Icon(Icons.check_rounded, color: WebTheme.statGreen, size: 18),
+          ]),
+        );
+
+    return WebsiteCard(
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Expanded(
+              child: Text('VIS-000124 · AC periodic maintenance'.tr,
+                  style: WebTheme.font(
+                      color: WebTheme.textPrimary,
+                      fontSize: WebTheme.textTitle,
+                      fontWeight: FontWeight.w800)),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                  color: WebTheme.statGreen.withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(100)),
+              child: Text('Completed'.tr,
+                  style: WebTheme.font(
+                      color: WebTheme.statGreen,
+                      fontSize: WebTheme.textCaption,
+                      fontWeight: FontWeight.w800)),
+            ),
+          ]),
+          const SizedBox(height: 4),
+          Text('Al Noor Pharmacy · Riyadh'.tr,
+              style: WebTheme.font(
+                  color: WebTheme.textSecondary, fontSize: WebTheme.textSmall)),
+          const SizedBox(height: 14),
+          step(Icons.directions_car_rounded, 'Trip started 09:12'.tr,
+              WebTheme.pending),
+          step(Icons.location_on_rounded, 'Arrived · 18 m from the site'.tr,
+              WebTheme.secondary),
+          step(Icons.photo_camera_rounded, '3 photos before and after'.tr,
+              WebTheme.primary),
+          step(Icons.task_alt_rounded, 'Checklist done · 4 of 4'.tr,
+              WebTheme.statGreen),
+          step(Icons.payments_rounded, 'Payment collected · receipt photo'.tr,
+              WebTheme.statGreen),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// FEATURES
+// =============================================================================
+
+class WebsiteFeatures extends StatelessWidget {
+  const WebsiteFeatures({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      (
+        Icons.event_available_rounded,
+        'Plan and assign visits',
+        'Create a visit in seconds, pick the technician and see the whole day on one dispatch board.'
+      ),
+      (
+        Icons.my_location_rounded,
+        'Proof of presence',
+        'Starting work needs the technician\'s live location near the site. Every step is logged with where it happened.'
+      ),
+      (
+        Icons.photo_library_rounded,
+        'Before and after photos',
+        'Camera photos taken on the spot, attached to the visit and shown to you in one place.'
+      ),
+      (
+        Icons.history_rounded,
+        'A full activity log',
+        'Who did what and when: status changes, notes, payments and locations, all in one timeline.'
+      ),
+      (
+        Icons.payments_rounded,
+        'Payments collected on site',
+        'The technician records the payment with a receipt photo; you confirm it when you have time.'
+      ),
+      (
+        Icons.receipt_long_rounded,
+        'Invoices for every visit',
+        'Each visit has its invoice, issued automatically when the work is done.'
+      ),
+      (
+        Icons.people_alt_rounded,
+        'Clients, sites and equipment',
+        'Your customers, their locations and their machines, ready for the next visit.'
+      ),
+      (
+        Icons.translate_rounded,
+        'Arabic and English',
+        'A real right-to-left Arabic app; each user picks their language.'
+      ),
+    ];
+
+    return WebsiteSection(
+      color: WebTheme.surface,
+      child: Column(
+        children: [
+          WebsiteHeading(
+            eyebrow: 'What it does'.tr,
+            title: 'Everything a small field team needs, nothing it does not'
+                .tr,
+            subtitle:
+                'One app for the office and one for the technicians, connected live.'
+                    .tr,
+          ),
+          const SizedBox(height: 36),
+          WebsiteGrid(
+            minWidth: 250,
+            children: [
+              for (final item in items)
+                WebsiteCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: WebTheme.primary.withValues(alpha: .1),
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Icon(item.$1, color: WebTheme.primary, size: 24),
+                      ),
+                      const SizedBox(height: 14),
+                      Text(item.$2.tr,
+                          style: WebTheme.font(
+                              color: WebTheme.textPrimary,
+                              fontSize: WebTheme.textTitle,
+                              fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 6),
+                      Text(item.$3.tr,
+                          style: WebTheme.font(
+                              color: WebTheme.textSecondary,
+                              fontSize: WebTheme.textBody,
+                              height: 1.55)),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// HOW IT WORKS
+// =============================================================================
+
+class WebsiteSteps extends StatelessWidget {
+  const WebsiteSteps({super.key, required this.onTryDemo});
+  final VoidCallback onTryDemo;
+
+  @override
+  Widget build(BuildContext context) {
+    final steps = [
+      (
+        Icons.touch_app_rounded,
+        'Try the live demo',
+        'Use the real app as the admin and as a technician, with a sample company.'
+      ),
+      (
+        Icons.palette_rounded,
+        'Design your version',
+        'Pick any colors, fonts, text size, icon or logo, and the app name. You see every change instantly.'
+      ),
+      (
+        Icons.send_rounded,
+        'Send your request',
+        'One tap sends us your design and your notes.'
+      ),
+      (
+        Icons.link_rounded,
+        'Get your private link',
+        'We prepare your company\'s app and send you its link. Your team opens it and adds it to the home screen.'
+      ),
+    ];
+
+    return WebsiteSection(
+      child: Column(
+        children: [
+          WebsiteHeading(
+            eyebrow: 'How it works'.tr,
+            title: 'From demo to your own app in four steps'.tr,
+          ),
+          const SizedBox(height: 36),
+          WebsiteGrid(
+            minWidth: 240,
+            children: [
+              for (var i = 0; i < steps.length; i++)
+                WebsiteCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: WebTheme.primary,
+                          child: Text('${i + 1}',
+                              style: WebTheme.font(
+                                  color: WebTheme.onPrimary,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                        const Spacer(),
+                        Icon(steps[i].$1, color: WebTheme.secondary, size: 26),
+                      ]),
+                      const SizedBox(height: 14),
+                      Text(steps[i].$2.tr,
+                          style: WebTheme.font(
+                              color: WebTheme.textPrimary,
+                              fontSize: WebTheme.textTitle,
+                              fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 6),
+                      Text(steps[i].$3.tr,
+                          style: WebTheme.font(
+                              color: WebTheme.textSecondary,
+                              fontSize: WebTheme.textBody,
+                              height: 1.55)),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 28),
+          WebsiteButton(
+              text: 'Start with step 1'.tr,
+              icon: Icons.play_arrow_rounded,
+              onPressed: onTryDemo),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// PRICING
+// =============================================================================
+
+class WebsitePricing extends StatelessWidget {
+  const WebsitePricing({super.key, required this.onRequest});
+  final VoidCallback onRequest;
+
+  @override
+  Widget build(BuildContext context) {
+    final wide = WebsiteLayout.isWide(context);
+
+    final plan = WebsiteCard(
+      borderColor: WebTheme.primary,
+      padding: const EdgeInsets.all(28),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('One plan for every small team'.tr,
+              style: WebTheme.font(
+                  color: WebTheme.primary,
+                  fontSize: WebTheme.textSubtitle,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 14),
+          Text('Free for {0} months'.trArgs([AppOffer.freeMonths]),
+              style: WebTheme.font(
+                  color: WebTheme.textPrimary,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 6),
+          Text.rich(TextSpan(children: [
+            TextSpan(
+                text: 'then {0}'.trArgs([_usd(AppOffer.pricePerPeriod)]),
+                style: WebTheme.font(
+                    color: WebTheme.textPrimary,
+                    fontSize: WebTheme.textHeadline,
+                    fontWeight: FontWeight.w800)),
+            TextSpan(
+                text: ' ${'every {0} months'.trArgs([AppOffer.periodMonths])}',
+                style: WebTheme.font(
+                    color: WebTheme.textSecondary,
+                    fontSize: WebTheme.textTitle)),
+          ])),
+          const SizedBox(height: 4),
+          Text(
+              'About {0} a month for the whole company, not per user.'
+                  .trArgs([AppOffer.monthlyEquivalent]),
+              style: WebTheme.font(
+                  color: WebTheme.textSecondary, fontSize: WebTheme.textBody)),
+          const SizedBox(height: 18),
+          Divider(color: WebTheme.iconLightGrey.withValues(alpha: .5)),
+          const SizedBox(height: 10),
+          WebsiteCheckLine(
+              text: 'Up to {0} users: admins and technicians'
+                  .trArgs([AppOffer.maxUsers])),
+          WebsiteCheckLine(text: 'Unlimited visits, clients and sites'.tr),
+          WebsiteCheckLine(
+              text: '{0} GB for photos (compressed automatically)'
+                  .trArgs([AppOffer.photoStorageGb])),
+          WebsiteCheckLine(
+              text: 'Your colors, fonts, icon or logo and your app name'.tr),
+          WebsiteCheckLine(text: 'Hosting, daily backups and updates'.tr),
+          WebsiteCheckLine(text: 'Support on WhatsApp and email'.tr),
+          WebsiteCheckLine(text: 'Arabic and English'.tr),
+          WebsiteCheckLine(
+              text: 'Your data is yours: we export it for you whenever you ask'
+                  .tr),
+          const SizedBox(height: 22),
+          WebsiteButton(
+              text: 'Request my version'.tr,
+              icon: Icons.send_rounded,
+              expand: true,
+              onPressed: onRequest),
+          const SizedBox(height: 10),
+          Text('Nothing to pay today.'.tr,
+              style: WebTheme.font(
+                  color: WebTheme.textLightHint, fontSize: WebTheme.textSmall)),
+        ],
+      ),
+    );
+
+    final billing = WebsiteCard(
+      padding: const EdgeInsets.all(28),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Exactly what you pay'.tr,
+              style: WebTheme.font(
+                  color: WebTheme.textPrimary,
+                  fontSize: WebTheme.textTitleLarge,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 16),
+          _PriceRow(
+              label: 'Months 1 to {0}'.trArgs([AppOffer.freeMonths]),
+              value: 'Free'.tr),
+          _PriceRow(
+              label: 'Every {0} months after that'
+                  .trArgs([AppOffer.periodMonths]),
+              value: _usd(AppOffer.pricePerPeriod)),
+          _PriceRow(label: 'Setup, colors and logo'.tr, value: 'Free'.tr),
+          _PriceRow(label: 'Extra fees per user'.tr, value: 'None'.tr),
+          const SizedBox(height: 16),
+          Text('Changes made only for you'.tr,
+              style: WebTheme.font(
+                  color: WebTheme.textPrimary,
+                  fontSize: WebTheme.textTitle,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(
+              'Need something the app does not have? Write it in your request. Each special request is priced on its own, depending on what it needs, after we discuss it with you. Nothing is built before you agree.'
+                  .tr,
+              style: WebTheme.font(
+                  color: WebTheme.textSecondary,
+                  fontSize: WebTheme.textBody,
+                  height: 1.55)),
+          const SizedBox(height: 10),
+          _PriceRow(
+              label: 'Special requests'.tr,
+              value: 'Priced per request'.tr),
+          const SizedBox(height: 14),
+          Text(
+              'If a period is not renewed, your app stays readable for {0} days so you can take your data, then it is deleted after a reminder.'
+                  .trArgs([AppOffer.readOnlyDays]),
+              style: WebTheme.font(
+                  color: WebTheme.textLightHint,
+                  fontSize: WebTheme.textSmall,
+                  height: 1.5)),
+        ],
+      ),
+    );
+
+    return WebsiteSection(
+      color: WebTheme.surface,
+      child: Column(
+        children: [
+          WebsiteHeading(
+            eyebrow: 'Pricing'.tr,
+            title: 'Simple, small and clear'.tr,
+            subtitle:
+                'We are built for companies at the start of their journey. When you grow past {0} users, you have outgrown us — and that is the goal.'
+                    .trArgs([AppOffer.maxUsers]),
+          ),
+          const SizedBox(height: 36),
+          wide
+              ? IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: plan),
+                      const SizedBox(width: 18),
+                      Expanded(child: billing),
+                    ],
+                  ),
+                )
+              : Column(children: [plan, const SizedBox(height: 18), billing]),
+        ],
+      ),
+    );
+  }
+}
+
+class _PriceRow extends StatelessWidget {
+  const _PriceRow({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(label,
+                style: WebTheme.font(
+                    color: WebTheme.textSecondary,
+                    fontSize: WebTheme.textBodyLarge)),
+          ),
+          const SizedBox(width: 12),
+          Text(value,
+              style: WebTheme.font(
+                  color: WebTheme.textPrimary,
+                  fontSize: WebTheme.textBodyLarge,
+                  fontWeight: FontWeight.w800)),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// DELIVERY (PWA)
+// =============================================================================
+
+class WebsiteDelivery extends StatelessWidget {
+  const WebsiteDelivery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final points = [
+      (
+        Icons.link_rounded,
+        'A private link for your company',
+        'Your app lives on its own web link. Only your team signs in to it.'
+      ),
+      (
+        Icons.add_to_home_screen_rounded,
+        'Installs like an app',
+        'Open the link on any phone and choose "Add to Home Screen". It gets your icon and opens full screen.'
+      ),
+      (
+        Icons.phone_iphone_rounded,
+        'iPhone, Android and computers',
+        'No App Store or Google Play needed. The office can use it on a laptop.'
+      ),
+      (
+        Icons.system_update_alt_rounded,
+        'Always up to date',
+        'Updates arrive by themselves. Nobody has to download anything.'
+      ),
+    ];
+
+    return WebsiteSection(
+      child: Column(
+        children: [
+          WebsiteHeading(
+            eyebrow: 'How you receive it'.tr,
+            title: 'Your app arrives as a link, not a download'.tr,
+            subtitle:
+                'We deliver it as a PWA (progressive web app): a web app that installs on the phone like a normal app.'
+                    .tr,
+          ),
+          const SizedBox(height: 36),
+          WebsiteGrid(
+            minWidth: 240,
+            children: [
+              for (final point in points)
+                WebsiteCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(point.$1, color: WebTheme.secondary, size: 28),
+                      const SizedBox(height: 12),
+                      Text(point.$2.tr,
+                          style: WebTheme.font(
+                              color: WebTheme.textPrimary,
+                              fontSize: WebTheme.textTitle,
+                              fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 6),
+                      Text(point.$3.tr,
+                          style: WebTheme.font(
+                              color: WebTheme.textSecondary,
+                              fontSize: WebTheme.textBody,
+                              height: 1.55)),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// FAQ
+// =============================================================================
+
+class WebsiteFaq extends StatelessWidget {
+  const WebsiteFaq({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final questions = [
+      (
+        'Do I pay anything now?',
+        'No. Your first {0} months are free. We only ask for payment when they end.'
+            .trArgs([AppOffer.freeMonths])
+      ),
+      (
+        'What do I pay after the free months?',
+        '{0} every {1} months for your whole company, up to {2} users. There is no fee per user and no setup fee.'
+            .trArgs([
+          _usd(AppOffer.pricePerPeriod),
+          AppOffer.periodMonths,
+          AppOffer.maxUsers
+        ])
+      ),
+      (
+        'Is there a contract?',
+        'No. You renew every {0} months. If you stop, you keep reading access for {1} days to take your data.'
+            .trArgs([AppOffer.periodMonths, AppOffer.readOnlyDays])
+      ),
+      (
+        'What if I need more than {0} users?'.trArgs([AppOffer.maxUsers]),
+        'That means your company has grown — congratulations. We help you export your data so you can move to a bigger system.'
+            .tr
+      ),
+      (
+        'Can I change the colors or logo later?',
+        'Yes, at no cost. Colors, fonts, text size, icon, logo and app name are part of the plan.'
+            .tr
+      ),
+      (
+        'What counts as a custom change?',
+        'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. We discuss your request with you, agree on its price, and only then start.'
+            .tr
+      ),
+      (
+        'How do my technicians get the app?',
+        'You send them your app\'s link. They open it on their phone, add it to the home screen and sign in with the email and password you give them.'
+            .tr
+      ),
+      (
+        'Is my data private?',
+        'Each company has its own separate space. Other companies cannot see your clients, visits or photos.'
+            .tr
+      ),
+      (
+        'Is the demo saving what I type?',
+        'No. The demo runs only in your browser and starts again from the beginning every time you open the page. Nothing is sent until you press send on your request.'
+            .tr
+      ),
+    ];
+
+    return WebsiteSection(
+      color: WebTheme.surface,
+      child: Column(
+        children: [
+          WebsiteHeading(
+              eyebrow: 'Questions'.tr, title: 'Frequently asked questions'.tr),
+          const SizedBox(height: 28),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 820),
+            child: Column(
+              children: [
+                for (final q in questions)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: WebsiteCard(
+                      padding: EdgeInsets.zero,
+                      child: Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          tilePadding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 4),
+                          childrenPadding:
+                              const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 18),
+                          iconColor: WebTheme.primary,
+                          collapsedIconColor: WebTheme.textSecondary,
+                          title: Text(q.$1.tr,
+                              style: WebTheme.font(
+                                  color: WebTheme.textPrimary,
+                                  fontSize: WebTheme.textSubtitle,
+                                  fontWeight: FontWeight.w700)),
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(q.$2,
+                                  style: WebTheme.font(
+                                      color: WebTheme.textSecondary,
+                                      fontSize: WebTheme.textBodyLarge,
+                                      height: 1.6)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// CLOSING CALL TO ACTION AND FOOTER
+// =============================================================================
+
+class WebsiteClosing extends StatelessWidget {
+  const WebsiteClosing({super.key, required this.onTryDemo});
+  final VoidCallback onTryDemo;
+
+  @override
+  Widget build(BuildContext context) {
+    return WebsiteSection(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 44),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [WebTheme.primary, WebTheme.secondary],
+              begin: AlignmentDirectional.topStart,
+              end: AlignmentDirectional.bottomEnd),
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Column(
+          children: [
+            Text('Every company passes through its first steps.'.tr,
+                textAlign: TextAlign.center,
+                style: WebTheme.font(
+                    color: WebTheme.onPrimary,
+                    fontSize: WebsiteLayout.isWide(context) ? 30 : 22,
+                    fontWeight: FontWeight.w800)),
+            const SizedBox(height: 10),
+            Text('Let us organize yours while you grow.'.tr,
+                textAlign: TextAlign.center,
+                style: WebTheme.font(
+                    color: WebTheme.onPrimary.withValues(alpha: .9),
+                    fontSize: WebTheme.textTitle)),
+            const SizedBox(height: 24),
+            WebsiteButton(
+              text: 'Design my app now'.tr,
+              icon: Icons.palette_rounded,
+              color: WebTheme.onPrimary,
+              outlined: true,
+              onPressed: onTryDemo,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WebsiteFooter extends StatelessWidget {
+  const WebsiteFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WebsiteSection(
+      vertical: 28,
+      color: WebTheme.surface,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 16,
+        runSpacing: 12,
+        children: [
+          const WebsiteLogo(),
+          Text(
+              'Prices in US dollars. This website is a demo: it saves nothing.'
+                  .tr,
+              style: WebTheme.font(
+                  color: WebTheme.textLightHint, fontSize: WebTheme.textSmall)),
+        ],
+      ),
+    );
+  }
+}
