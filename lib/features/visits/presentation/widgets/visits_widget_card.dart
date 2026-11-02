@@ -103,7 +103,7 @@ class VisitsWidgetCard extends StatelessWidget {
                           Expanded(
                             child: _buildCompactInfo(
                               icon: Icons.build_circle_outlined,
-                              text: visit.category?.name ?? 'no category'.tr,
+                              text: visit.category?.name?.tr ?? 'no category'.tr,
                               textColor: AppTheme.textSecondary,
                             ),
                           ),
@@ -120,7 +120,7 @@ class VisitsWidgetCard extends StatelessWidget {
                       _buildCompactInfo(
                         icon: Icons.location_on_outlined,
                         text:
-                            '${visit.site?.city?.name ?? 'Unknown'} - ${visit.site?.addressDetail ?? ''}',
+                            '${visit.site?.city?.name?.tr ?? 'Unknown'.tr} - ${visit.site?.addressDetail ?? ''}',
                         textColor: AppTheme.textSecondary,
                       ),
                       if (visit.problemDescription != null &&

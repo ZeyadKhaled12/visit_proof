@@ -9,11 +9,13 @@ import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../invoices/data/models/invoice_detail_model.dart';
 import '../../../invoices/domain/usecases/get_invoice_detail_uc.dart';
+import '../../../invoices/domain/usecases/record_payment_uc.dart';
 import '../../../services/data/models/service_model.dart';
 import '../../../services/domain/usecases/get_services_uc.dart';
 import '../../../technicians/data/models/technician_model.dart';
 import '../../../technicians/domain/usecases/get_technicians_uc.dart';
 import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
+import '../../domain/rules/visit_rules.dart';
 import '../../domain/usecases/add_visit_comment_uc.dart';
 import '../../domain/usecases/assign_technician_uc.dart';
 import '../../domain/usecases/change_visit_service_uc.dart';
@@ -44,6 +46,7 @@ class VisitDetailBloc extends Bloc<VisitDetailEvent, VisitDetailState> {
   final GetTechniciansUc getTechniciansUc;
   final GetServicesUc getServicesUc;
   final GetInvoiceDetailUc getInvoiceDetailUc;
+  final RecordPaymentUc recordPaymentUc;
 
   VisitDetailBloc(
       this.getVisitDetailUc,
@@ -58,7 +61,8 @@ class VisitDetailBloc extends Bloc<VisitDetailEvent, VisitDetailState> {
       this.deleteVisitUc,
       this.getTechniciansUc,
       this.getServicesUc,
-      this.getInvoiceDetailUc)
+      this.getInvoiceDetailUc,
+      this.recordPaymentUc)
       : super(const VisitDetailState()) {
     on<GetVisitDetailEvent>(_getVisitDetail);
     on<GetVisitTechniciansEvent>(_getVisitTechnicians);
@@ -72,6 +76,7 @@ class VisitDetailBloc extends Bloc<VisitDetailEvent, VisitDetailState> {
     on<ChangeVisitSiteEvent>(_changeVisitSite);
     on<AddVisitCommentEvent>(_addVisitComment);
     on<DeleteVisitEvent>(_deleteVisit);
+    on<CollectPaymentEvent>(_collectPayment);
   }
 
   // ==========================================================
@@ -115,6 +120,7 @@ class VisitDetailBloc extends Bloc<VisitDetailEvent, VisitDetailState> {
 
   /// Loads the linked invoice for the summary card.
   Future<void> _loadInvoice(Emitter<VisitDetailState> emit) async {
+    if (!VisitRules.canSeeInvoice(state.visit)) return;
     final invoiceID = state.visit.invoiceID;
     if (invoiceID == null || invoiceID.isEmpty) return;
 
@@ -189,6 +195,24 @@ class VisitDetailBloc extends Bloc<VisitDetailEvent, VisitDetailState> {
         (l) => emit(state.copyWith(deleteVisitRequestState: RequestState.error)),
         (r) =>
             emit(state.copyWith(deleteVisitRequestState: RequestState.loaded)));
+  }
+
+  /// A technician's field collection. The visit is reloaded too, since the
+  /// collection is logged in its history with the receipt photos.
+  FutureOr<void> _collectPayment(
+      CollectPaymentEvent event, Emitter<VisitDetailState> emit) async {
+    emit(state.copyWith(collectPaymentRequestState: RequestState.loading));
+    final result = await recordPaymentUc.call(event.recordPaymentParameters);
+    if (result.isLeft) {
+      emit(state.copyWith(collectPaymentRequestState: RequestState.error));
+      return;
+    }
+    final visit = await getVisitDetailUc
+        .call(GetVisitDetailParameters(visitID: state.visit.id!));
+    emit(state.copyWith(
+        collectPaymentRequestState: RequestState.loaded,
+        invoice: result.right,
+        visit: visit.isRight ? visit.right : null));
   }
 
   /// Visit edits can touch the invoice (cancel, reprice, site), so the

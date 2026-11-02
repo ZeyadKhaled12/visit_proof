@@ -12,6 +12,7 @@ import 'package:visit_proof/core/network/error/handle_logic_errors.dart';
 import 'package:visit_proof/core/network/error/error_message_model.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/core/utils/general_functions.dart/g_fun_token.dart';
+import 'package:visit_proof/core/utils/enums/payment_entry_status_enum.dart';
 import 'package:visit_proof/core/utils/enums/payment_method_enum.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
 import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
@@ -21,12 +22,21 @@ import 'package:visit_proof/features/invoices/data/models/invoice_payment_histor
 import 'package:visit_proof/features/invoices/domain/usecases/get_create_invoice_uc.dart';
 import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_history_model.dart';
 
+import '../../../../core/local/local_photos.dart';
+import '../../../../core/session/app_session.dart';
+import '../../../../core/utils/enums/photo_kind_enum.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_location.dart';
+import '../../../../core/utils/general_models/g_model_geo_point.dart';
+import '../../../visit_detail/domain/rules/visit_rules.dart';
+import '../../../visits/data/models/visit_detail_models/visit_photo_model.dart';
 import '../../../../core/network/error/exception.dart';
 import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../../domain/usecases/get_invoice_detail_uc.dart';
+import '../../domain/usecases/get_payments_uc.dart';
 import '../../domain/usecases/issue_invoice_uc.dart';
 import '../../domain/usecases/record_payment_uc.dart';
 import '../../domain/usecases/refund_payment_uc.dart';
+import '../../domain/usecases/review_payment_uc.dart';
 import '../../domain/usecases/update_draft_invoice_uc.dart';
 
 // ============================================================
@@ -50,6 +60,11 @@ abstract class BaseInvoicesRemoteDataSource {
   Future<InvoiceDetailModel> recordPayment(RecordPaymentParameters parameters);
 
   Future<InvoiceDetailModel> refundPayment(RefundPaymentParameters parameters);
+
+  Future<InvoiceDetailModel> reviewPayment(ReviewPaymentParameters parameters);
+
+  Future<List<InvoicePaymentHistoryModel>> getPayments(
+      GetPaymentsParameters parameters);
 }
 
 // ============================================================
@@ -65,11 +80,8 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
   // SharedPreferences is for local testing, not ACID transactions.
   static Future<void> _writeQueue = Future<void>.value();
 
-  static final VisitHistoryActorModel _demoActor = VisitHistoryActorModel(
-    id: 'local-admin',
-    name: 'Local Admin'.tr,
-    role: 'admin',
-  );
+  /// Who is credited in invoice history and payments.
+  static VisitHistoryActorModel get _demoActor => AppSession.actor;
 
   // ==========================================================
   // LOCAL STORAGE HELPERS
@@ -352,7 +364,9 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     final paid = _cents(invoice.paidAmount);
     final remaining = _cents(invoice.remainingAmount);
 
-    if (paid > total || remaining != total - paid) {
+    final pending = _cents(invoice.pendingAmount ?? 0);
+
+    if (paid > total || remaining != total - paid || pending > remaining) {
       throw ServerException(
         ErrorMessageModel(
           statusMessage: 'Invoice totals are inconsistent.'.tr,
@@ -433,6 +447,38 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     return PaymentStatus.partiallyPaid;
   }
 
+  /// The status after a payment change: a cancelled invoice stays
+  /// cancelled, and money waiting for the admin keeps it pending.
+  PaymentStatus _statusAfter(
+    InvoiceDetailModel invoice, {
+    required int paid,
+    required int pending,
+    bool hadRefund = false,
+  }) {
+    if (invoice.paymentStatus == PaymentStatus.cancelled) {
+      return PaymentStatus.cancelled;
+    }
+
+    if (pending > 0) return PaymentStatus.pending;
+
+    return _paymentStatus(
+      paid,
+      _cents(invoice.totalAmount),
+      hadRefund: hadRefund,
+    );
+  }
+
+  Never _fail(String message) =>
+      throw ServerException(ErrorMessageModel(statusMessage: message));
+
+  void _requireAdmin() {
+    if (AppSession.isTechnician) _fail('Only the admin can do this.'.tr);
+  }
+
+  bool _isOwnVisit(VisitDetailModel visit) =>
+      AppSession.technicianId != null &&
+      visit.technicianModel?.id == AppSession.technicianId;
+
   DateTime _day(DateTime value) {
     return DateTime(
       value.year,
@@ -458,6 +504,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         await Future.delayed(
           const Duration(milliseconds: 350),
         );
+        _requireAdmin();
 
         return await _exclusive(() async {
           final invoice = parameters.invoice;
@@ -580,14 +627,20 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             );
           }
 
-          final invoices = _readInvoices(
-            LocalPref.sharedPreferences,
-          );
-
-          return _findInvoice(
-            invoices,
+          final preferences = LocalPref.sharedPreferences;
+          final invoice = _findInvoice(
+            _readInvoices(preferences),
             parameters.invoiceId,
           );
+
+          if (AppSession.isTechnician &&
+              !_readVisits(preferences).any(
+                (e) => e.id == invoice.visitId && _isOwnVisit(e),
+              )) {
+            _fail('This visit is not assigned to you.'.tr);
+          }
+
+          return invoice;
         });
       },
     ).checkLogicErrors();
@@ -602,6 +655,9 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     required String description,
     String? reason,
     VisitHistoryActorModel? actor,
+    String Function()? describe,
+    GModelGeoPoint? location,
+    Future<List<VisitPhotoModel>> Function(VisitDetailModel visit)? keepPhotos,
     required InvoiceDetailModel Function(
       InvoiceDetailModel invoice,
       VisitDetailModel visit,
@@ -629,17 +685,11 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
       final ledger = payments.where((e) => e.invoiceId == invoiceId).toList();
 
-      final ledgerPaid = ledger.fold<int>(
-        0,
-        (sum, payment) =>
-            sum +
-            _cents(
-              payment.paymentAmount,
-              allowNegative: true,
-            ),
-      );
+      final ledgerPaid = _ledgerSum(ledger.where((e) => e.countsAsPaid));
+      final ledgerPending = _ledgerSum(ledger.where((e) => e.isPending));
 
-      if (ledgerPaid != _cents(current.paidAmount)) {
+      if (ledgerPaid != _cents(current.paidAmount) ||
+          ledgerPending != _cents(current.pendingAmount ?? 0)) {
         throw ServerException(
           ErrorMessageModel(
             statusMessage: 'Payment history and paid balance are inconsistent.'.tr,
@@ -673,20 +723,30 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         );
       }
 
-      // Append new payment entries only.
-      final existingIds = payments.map((e) => e.id).toSet();
+      if (ledger.any((e) => e.id == null)) {
+        throw ServerException(
+          ErrorMessageModel(
+            statusMessage: 'Payment entry is missing its identifier.'.tr,
+          ),
+        );
+      }
 
+      // Copied only once the change is valid; removed again if saving fails.
+      final photos = keepPhotos == null
+          ? const <VisitPhotoModel>[]
+          : await keepPhotos(visit);
+      final photoPaths = photos.map((e) => e.path!).toList();
+
+      // Append new payment entries (with this change's photos);
+      // a reviewed entry replaces its old copy.
       for (final payment in ledger) {
-        if (payment.id == null) {
-          throw ServerException(
-            ErrorMessageModel(
-              statusMessage: 'Payment entry is missing its identifier.'.tr,
-            ),
-          );
-        }
-
-        if (!existingIds.contains(payment.id)) {
-          payments.add(payment);
+        final index = payments.indexWhere((e) => e.id == payment.id);
+        if (index == -1) {
+          payments.add(photoPaths.isEmpty
+              ? payment
+              : payment.copyWith(photos: photoPaths));
+        } else {
+          payments[index] = payment;
         }
       }
 
@@ -711,8 +771,10 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
           visitId: visit.id,
           recordedAt: DateTime.now(),
           actor: actor ?? _demoActor,
-          description: description,
+          description: describe?.call() ?? description,
           reason: reason,
+          location: location,
+          distanceFromSite: _distanceFromSite(visit, location),
         ),
       );
 
@@ -720,16 +782,110 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         invoiceID: updated.id,
         paymentStatus: updated.paymentStatus,
         history: history,
+        photos: photos.isEmpty ? null : [...?visit.photos, ...photos],
       );
 
-      await _save(
-        invoices: invoices,
-        visits: visits,
-        payments: payments,
-      );
+      try {
+        await _save(
+          invoices: invoices,
+          visits: visits,
+          payments: payments,
+        );
+      } catch (_) {
+        await LocalPhotos.remove(photoPaths);
+        rethrow;
+      }
 
       return updated;
     });
+  }
+
+  int _ledgerSum(Iterable<InvoicePaymentHistoryModel> entries) =>
+      entries.fold<int>(
+        0,
+        (sum, payment) =>
+            sum +
+            _cents(
+              payment.paymentAmount,
+              allowNegative: true,
+            ),
+      );
+
+  double? _distanceFromSite(
+    VisitDetailModel visit,
+    GModelGeoPoint? location,
+  ) {
+    final site = visit.site;
+    if (location == null ||
+        !location.isValid ||
+        site?.latitude == null ||
+        site?.longitude == null) {
+      return null;
+    }
+    return GFunLocation.distance(location, site!.latitude!, site.longitude!);
+  }
+
+  /// A technician collects only on their own visit, once the work has
+  /// started, from where they really are, with at least one receipt photo.
+  void _checkFieldCollection(
+    VisitDetailModel visit,
+    RecordPaymentParameters parameters,
+  ) {
+    if (!_isOwnVisit(visit)) {
+      _fail('This visit is not assigned to you.'.tr);
+    }
+
+    if (visit.status != VisitStatus.inProgress &&
+        visit.status != VisitStatus.completed) {
+      _fail('You can collect payment once the work has started.'.tr);
+    }
+
+    final location = parameters.location;
+    if (location == null || !location.isValid) {
+      _fail('Your current location is required for this action.'.tr);
+    }
+
+    final capturedAt = location.capturedAt;
+    if (capturedAt == null ||
+        DateTime.now().difference(capturedAt) > VisitRules.maxLocationAge) {
+      _fail('Your location is out of date. Refresh it and try again.'.tr);
+    }
+
+    if (parameters.photoPaths.isEmpty) {
+      _fail('Take at least one photo of the receipt or the payment.'.tr);
+    }
+
+    if (parameters.photoPaths.length > VisitRules.maxPhotosPerAction) {
+      _fail('You can add up to {0} photos at a time.'
+          .trArgs([VisitRules.maxPhotosPerAction]));
+    }
+  }
+
+  /// Copies the receipt photos next to the visit's other photos.
+  Future<List<VisitPhotoModel>> _keepReceipts(
+    VisitDetailModel visit,
+    List<String> paths,
+    GModelGeoPoint? location,
+  ) async {
+    final kept = <VisitPhotoModel>[];
+    try {
+      for (final path in paths) {
+        final id = GFunToken.generateRandomId();
+        kept.add(VisitPhotoModel(
+          id: id,
+          path: await LocalPhotos.keep(
+              tempPath: path, visitID: visit.id!, photoID: id),
+          kind: PhotoKind.receipt,
+          takenAt: DateTime.now(),
+          takenBy: AppSession.actor,
+          location: location,
+        ));
+      }
+    } catch (_) {
+      await LocalPhotos.remove(kept.map((e) => e.path!));
+      _fail('Could not save the photos on this device.'.tr);
+    }
+    return kept;
   }
 
   // ==========================================================
@@ -745,6 +901,8 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         await Future.delayed(
           const Duration(milliseconds: 350),
         );
+
+        _requireAdmin();
 
         final updated = await _change(
           parameters.invoiceId,
@@ -844,6 +1002,8 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         await Future.delayed(
           const Duration(milliseconds: 350),
         );
+
+        _requireAdmin();
 
         final updated = await _change(
           parameters.invoiceId,
@@ -950,14 +1110,31 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
           const Duration(milliseconds: 350),
         );
 
+        final field = AppSession.isTechnician;
+
+        if (!field && parameters.photoPaths.isNotEmpty) {
+          _fail('Only technicians can add visit photos.'.tr);
+        }
+
         final updated = await _change(
           parameters.invoiceId,
-          description: 'Invoice payment recorded: {0}'.trArgs([parameters.amount]),
-          actor: parameters.collectedBy,
+          description: field
+              ? 'Technician collected {0} · awaiting admin confirmation'
+                  .trArgs([parameters.amount])
+              : 'Invoice payment recorded: {0}'.trArgs([parameters.amount]),
+          actor: field ? AppSession.actor : parameters.collectedBy,
+          location: field ? parameters.location : null,
+          keepPhotos: field
+              ? (visit) => _keepReceipts(
+                  visit, parameters.photoPaths, parameters.location)
+              : null,
           edit: (invoice, visit, ledger) {
+            if (field) _checkFieldCollection(visit, parameters);
+
             if (invoice.issueDate == null ||
                 (invoice.paymentStatus != PaymentStatus.unpaid &&
-                    invoice.paymentStatus != PaymentStatus.partiallyPaid)) {
+                    invoice.paymentStatus != PaymentStatus.partiallyPaid &&
+                    invoice.paymentStatus != PaymentStatus.pending)) {
               throw ServerException(
                 ErrorMessageModel(
                   statusMessage:
@@ -980,14 +1157,18 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               allowZero: false,
             );
 
-            final remaining = _cents(
-              invoice.remainingAmount,
-            );
+            final pending = _cents(invoice.pendingAmount ?? 0);
+
+            // Money already waiting for confirmation cannot be collected twice.
+            final remaining = _cents(invoice.remainingAmount) - pending;
 
             if (cents > remaining) {
               throw ServerException(
                 ErrorMessageModel(
-                  statusMessage: 'Payment exceeds the remaining balance.'.tr,
+                  statusMessage: pending > 0
+                      ? 'Payment exceeds the remaining balance. {0} is already awaiting confirmation.'
+                          .trArgs([pending / 100])
+                      : 'Payment exceeds the remaining balance.'.tr,
                 ),
               );
             }
@@ -1039,7 +1220,9 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
               );
             }
 
-            final paid = _cents(invoice.paidAmount) + cents;
+            // A field collection waits for the admin; it is not paid yet.
+            final paid = _cents(invoice.paidAmount) + (field ? 0 : cents);
+            final newPending = pending + (field ? cents : 0);
 
             final total = _cents(
               invoice.totalAmount,
@@ -1052,25 +1235,35 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
                 paymentDate: DateTime.now(),
                 paymentAmount: cents / 100,
                 paymentMethod: parameters.paymentMethod,
-                collectedBy: parameters.collectedBy ?? _demoActor,
+                collectedBy: field
+                    ? AppSession.actor
+                    : (parameters.collectedBy ?? _demoActor),
                 referenceNumber: reference.isEmpty ? null : reference,
                 notes: (parameters.notes ?? '').trim(),
+                status: field
+                    ? PaymentEntryStatus.pending
+                    : PaymentEntryStatus.confirmed,
+                location: field ? parameters.location : null,
               ),
             );
 
             return invoice.copyWith(
               paidAmount: paid / 100,
               remainingAmount: (total - paid) / 100,
-              paymentStatus: _paymentStatus(
-                paid,
-                total,
+              pendingAmount: newPending / 100,
+              paymentStatus: _statusAfter(
+                invoice,
+                paid: paid,
+                pending: newPending,
               ),
             );
           },
         );
 
         await AppToasts.showMessage(
-          'Payment recorded successfully'.tr,
+          field
+              ? 'Collection sent to the admin for confirmation'.tr
+              : 'Payment recorded successfully'.tr,
         );
 
         return updated;
@@ -1090,6 +1283,8 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
         await Future.delayed(
           const Duration(milliseconds: 350),
         );
+
+        _requireAdmin();
 
         final updated = await _change(
           parameters.invoiceId,
@@ -1141,14 +1336,8 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             // The existing InvoicePaymentHistoryModel
             // does not have a transaction status.
 
-            var ledgerBalance = 0;
-
-            for (final entry in ledger) {
-              ledgerBalance += _cents(
-                entry.paymentAmount,
-                allowNegative: true,
-              );
-            }
+            final ledgerBalance =
+                _ledgerSum(ledger.where((e) => e.countsAsPaid));
 
             if (ledgerBalance <= 0 || cents > ledgerBalance) {
               throw ServerException(
@@ -1198,10 +1387,133 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
     ).checkLogicErrors();
   }
 
+  // ==========================================================
+  // REVIEW A FIELD COLLECTION
+  // ==========================================================
+
+  @override
+  Future<InvoiceDetailModel> reviewPayment(
+      ReviewPaymentParameters parameters) async {
+    return await HandleLogicErrors<InvoiceDetailModel>(
+      fun: () async {
+        await Future.delayed(
+          const Duration(milliseconds: 350),
+        );
+        _requireAdmin();
+
+        final note = (parameters.note ?? '').trim();
+
+        if (!parameters.approve && note.length < VisitRules.minReasonLength) {
+          _fail('Please give a reason of at least {0} characters.'
+              .trArgs([VisitRules.minReasonLength]));
+        }
+
+        if (note.length > 1000) {
+          _fail('Notes cannot exceed 1000 characters.'.tr);
+        }
+
+        var amount = '';
+
+        final updated = await _change(
+          parameters.invoiceId,
+          description: '',
+          reason: note.isEmpty ? null : note,
+          describe: () => parameters.approve
+              ? 'Field collection of {0} confirmed'.trArgs([amount])
+              : 'Field collection of {0} rejected'.trArgs([amount]),
+          edit: (invoice, visit, ledger) {
+            final index =
+                ledger.indexWhere((e) => e.id == parameters.paymentId);
+
+            if (index == -1) {
+              _fail('Payment entry not found.'.tr);
+            }
+
+            final entry = ledger[index];
+
+            if (!entry.isPending) {
+              _fail('This collection was already reviewed.'.tr);
+            }
+
+            final cents = _cents(entry.paymentAmount, allowZero: false);
+            amount = '${cents / 100}';
+
+            ledger[index] = entry.copyWith(
+              status: parameters.approve
+                  ? PaymentEntryStatus.confirmed
+                  : PaymentEntryStatus.rejected,
+              reviewedBy: AppSession.actor,
+              reviewedAt: DateTime.now(),
+              reviewNote: note.isEmpty ? null : note,
+            );
+
+            final paid =
+                _cents(invoice.paidAmount) + (parameters.approve ? cents : 0);
+            final pending = _cents(invoice.pendingAmount ?? 0) - cents;
+            final total = _cents(invoice.totalAmount);
+
+            return invoice.copyWith(
+              paidAmount: paid / 100,
+              remainingAmount: (total - paid) / 100,
+              pendingAmount: pending / 100,
+              paymentStatus: _statusAfter(
+                invoice,
+                paid: paid,
+                pending: pending,
+                hadRefund: ledger.any((e) => (e.paymentAmount ?? 0) < 0),
+              ),
+            );
+          },
+        );
+
+        await AppToasts.showMessage(
+          parameters.approve
+              ? 'Collection confirmed'.tr
+              : 'Collection rejected'.tr,
+        );
+
+        return updated;
+      },
+    ).checkLogicErrors();
+  }
+
+  @override
+  Future<List<InvoicePaymentHistoryModel>> getPayments(
+      GetPaymentsParameters parameters) async {
+    return await HandleLogicErrors<List<InvoicePaymentHistoryModel>>(
+      fun: () async {
+        await Future.delayed(
+          const Duration(milliseconds: 350),
+        );
+
+        // A technician sees only the money they collected.
+        final technicianId = AppSession.technicianId;
+
+        final payments = _readPayments(LocalPref.sharedPreferences)
+            .where((e) =>
+                (parameters.invoiceId == null ||
+                    e.invoiceId == parameters.invoiceId) &&
+                (!parameters.pendingOnly || e.isPending) &&
+                (technicianId == null || e.collectedBy?.id == technicianId))
+            .toList();
+
+        payments.sort((a, b) {
+          final aDate = a.paymentDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+          final bDate = b.paymentDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+
+          return bDate.compareTo(aDate);
+        });
+
+        return payments;
+      },
+    ).checkLogicErrors();
+  }
+
   @override
   Future<List<InvoiceDetailModel>> getInvoices(NoParameters parameters) async {
     return await HandleLogicErrors<List<InvoiceDetailModel>>(
       fun: () async {
+        _requireAdmin();
         await Future.delayed(
           const Duration(seconds: 1),
         );

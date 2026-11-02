@@ -31,6 +31,10 @@ class InvoiceDetailModel extends Equatable {
   final num? paidAmount;
   final num? remainingAmount;
 
+  /// Collected by a technician, waiting for the admin to confirm.
+  /// Not part of [paidAmount] until confirmed.
+  final num? pendingAmount;
+
   final String? currency;
   final String? notes;
 
@@ -51,6 +55,7 @@ class InvoiceDetailModel extends Equatable {
     this.totalAmount,
     this.paidAmount,
     this.remainingAmount,
+    this.pendingAmount,
     this.currency,
     this.notes,
   });
@@ -85,6 +90,7 @@ class InvoiceDetailModel extends Equatable {
       totalAmount: _parseAmount(json['totalAmount']),
       paidAmount: _parseAmount(json['paidAmount']),
       remainingAmount: _parseAmount(json['remainingAmount']),
+      pendingAmount: _parseAmount(json['pendingAmount']),
       currency: json['currency'] as String?,
       notes: json['notes'] as String?,
     );
@@ -107,6 +113,7 @@ class InvoiceDetailModel extends Equatable {
     num? totalAmount,
     num? paidAmount,
     num? remainingAmount,
+    num? pendingAmount,
     String? currency,
     String? notes,
   }) {
@@ -127,6 +134,7 @@ class InvoiceDetailModel extends Equatable {
       totalAmount: totalAmount ?? this.totalAmount,
       paidAmount: paidAmount ?? this.paidAmount,
       remainingAmount: remainingAmount ?? this.remainingAmount,
+      pendingAmount: pendingAmount ?? this.pendingAmount,
       currency: currency ?? this.currency,
       notes: notes ?? this.notes,
     );
@@ -153,6 +161,7 @@ class InvoiceDetailModel extends Equatable {
         'totalAmount': totalAmount,
         'paidAmount': paidAmount,
         'remainingAmount': remainingAmount,
+        'pendingAmount': pendingAmount,
         'currency': currency,
         'notes': notes,
       };
@@ -186,6 +195,7 @@ class InvoiceDetailModel extends Equatable {
         totalAmount,
         paidAmount,
         remainingAmount,
+        pendingAmount,
         currency,
         notes,
       ];

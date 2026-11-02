@@ -9,6 +9,11 @@ import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 import 'core/local/local_pref.dart';
 import 'core/services/services_locator.dart';
+import 'core/usecase/base_use_case.dart';
+import 'features/auth/domain/usecases/restore_session_uc.dart';
+import 'features/auth/presentation/screens/app_gate_scr.dart';
+import 'features/auth/presentation/screens/role_select_scr.dart';
+import 'features/auth/presentation/screens/tech_login_scr.dart';
 import 'features/clients/presentation/screens/add_client_scr.dart';
 import 'features/clients/presentation/screens/client_detail_scr.dart';
 import 'features/clients/presentation/screens/clients_scr.dart';
@@ -19,6 +24,7 @@ import 'features/add_visit/presentation/screens/add_visit_scr.dart';
 import 'features/dashboard/presentation/screens/dashboard_scr.dart';
 import 'features/dispatch/presentation/screens/dispatch_scr.dart';
 import 'features/main_menu/presentation/screens/main_menu_scr.dart';
+import 'features/technician_home/presentation/screens/tech_home_scr.dart';
 import 'features/visit_detail/presentation/screens/visit_detail_scr.dart';
 
 /*
@@ -42,6 +48,8 @@ void main() async {
   // Arabic month and day names, but the same 0-9 digits as the rest of the app.
   DateFormat.useNativeDigitsByDefaultFor('ar', false);
   Intl.defaultLocale = AppLanguage.locale.languageCode;
+  // Reopens as the admin or the technician who used the app last.
+  await sl<RestoreSessionUc>().call(const NoParameters());
   runApp(const MyApp());
 }
 
@@ -121,7 +129,11 @@ class MyAppState extends State<MyApp> {
               child: child!,
             ),
         routes: {
-          '/': (context) => const MainMenuScr(),
+          // Role selection, admin app or technician app, by session.
+          '/': (context) => const AppGateScr(),
+          RoleSelectScr.route: (context) => const RoleSelectScr(),
+          TechLoginScr.route: (context) => const TechLoginScr(),
+          TechHomeScr.route: (context) => const TechHomeScr(),
           ClientDetailScr.route: (context) => ClientDetailScr(),
           ClientsScr.route: (context) => ClientsScr(),
           AddClientScr.route: (context) => AddClientScr(),

@@ -158,7 +158,7 @@ class _SiteBox extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(site?.city?.name ?? 'No site selected'.tr,
+                    Text(site?.city?.name?.tr ?? 'No site selected'.tr,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
                             fontSize: AppTheme.textBodyLarge,

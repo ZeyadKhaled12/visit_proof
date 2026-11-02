@@ -56,6 +56,9 @@ class GWidgetPhoneField extends StatelessWidget {
         onSaved: onSaved,
         onSubmitted: onSubmitted,
         autovalidateMode: AutovalidateMode.disabled,
+        // Country names and the error follow the app language.
+        languageCode: AppLanguage.locale.languageCode,
+        invalidNumberMessage: 'Invalid phone number'.tr,
         // disableLengthCheck: true,
         // --- Relaxed & Creative Country Picker Dialog ---
         inputFormatters: [

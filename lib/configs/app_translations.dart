@@ -911,4 +911,252 @@ const Map<String, String> arabicTranslations = {
   '{0} warning{1}': '{0} تنبيهات',
   '{0} · due {1}': '{0} · مستحقة {1}',
   '{0} · tap a bar to see those visits': '{0} · اضغط على عمود لعرض الزيارات',
+
+  // --- Roles, sign in & technician app ---------------------------------------
+  'A mock location app is active. Turn it off to continue.':
+      'تطبيق موقع وهمي مفعّل. أوقفه للمتابعة.',
+  'After work': 'بعد العمل',
+  'Another technician already signs in with this email.':
+      'يوجد فني آخر يسجّل الدخول بهذا البريد الإلكتروني.',
+  'Before work': 'قبل العمل',
+  'Could not get your GPS location. Move to an open area and try again.':
+      'تعذّر تحديد موقعك. انتقل إلى مكان مفتوح وحاول مرة أخرى.',
+  'Could not open the camera. Check the camera permission.':
+      'تعذّر فتح الكاميرا. تحقق من إذن الكاميرا.',
+  'Could not save the photos on this device.':
+      'تعذّر حفظ الصور على هذا الجهاز.',
+  'Could not save the session on this device.':
+      'تعذّر حفظ الجلسة على هذا الجهاز.',
+  'Current job · {0}': 'المهمة الحالية · {0}',
+  'Email Address': 'البريد الإلكتروني',
+  'Every action you take records your current location for the admin.':
+      'كل إجراء تقوم به يسجّل موقعك الحالي ليراه المسؤول.',
+  'Field visits with proof of work': 'زيارات ميدانية مع إثبات العمل',
+  'Finish the work, take the after photos and complete the visit.':
+      'أنهِ العمل والتقط صور ما بعد العمل ثم أكمل الزيارة.',
+  'Forgot your password? Ask your admin to set a new one.':
+      'نسيت كلمة المرور؟ اطلب من المسؤول تعيين كلمة جديدة.',
+  'Getting your location…': 'جارٍ تحديد موقعك…',
+  'Hi, {0}': 'مرحبًا، {0}',
+  'How do you want to continue?': 'كيف تريد المتابعة؟',
+  'I confirm this is my current location and agree to share it with the admin.':
+      'أؤكد أن هذا موقعي الحالي وأوافق على مشاركته مع المسؤول.',
+  'Location access is blocked. Allow it from the app settings.':
+      'الوصول إلى الموقع محظور. اسمح به من إعدادات التطبيق.',
+  'Location access is required to record this action.':
+      'يلزم الوصول إلى الموقع لتسجيل هذا الإجراء.',
+  'My Visits': 'زياراتي',
+  'No visits assigned to you yet': 'لا توجد زيارات مسندة إليك بعد',
+  'Not taken yet': 'لم تُلتقط بعد',
+  'Notes can only be added to your open visits.':
+      'يمكن إضافة الملاحظات إلى زياراتك المفتوحة فقط.',
+  'Nothing in this list': 'لا يوجد شيء في هذه القائمة',
+  'Only technicians can add visit photos.':
+      'يمكن للفنيين فقط إضافة صور الزيارة.',
+  'Only the admin can do this.': 'هذا الإجراء متاح للمسؤول فقط.',
+  'Open settings': 'فتح الإعدادات',
+  'Optional': 'اختياري',
+  'Password': 'كلمة المرور',
+  'Photos cannot be added at this step.':
+      'لا يمكن إضافة صور في هذه الخطوة.',
+  'Plan visits, dispatch technicians and follow invoices.':
+      'خطط الزيارات ووزّع الفنيين وتابع الفواتير.',
+  'Please enter your password': 'يرجى إدخال كلمة المرور',
+  'Proof Photos': 'صور الإثبات',
+  'See your visits, check in on site and add proof photos.':
+      'اطّلع على زياراتك وسجّل وصولك للموقع وأضف صور الإثبات.',
+  'Sign in': 'تسجيل الدخول',
+  'Start the trip when you leave for the site.':
+      'ابدأ الرحلة عند انطلاقك إلى الموقع.',
+  'Start work once you arrive. You must be within {0} of the site.':
+      'ابدأ العمل عند وصولك. يجب أن تكون على بُعد {0} من الموقع أو أقل.',
+  'Switch to admin': 'التبديل إلى المسؤول',
+  'Switch to technician': 'التبديل إلى فني',
+  'Take before and after photos when the visit asks for them.':
+      'التقط صور ما قبل العمل وما بعده عندما تطلبها الزيارة.',
+  'Technician added a note': 'أضاف الفني ملاحظة',
+  'Technician location · site has no map pin':
+      'موقع الفني · الموقع بلا إحداثيات على الخريطة',
+  'Technician location · {0} from site': 'موقع الفني · على بُعد {0} من الموقع',
+  'Technician sign in': 'تسجيل دخول الفني',
+  'The admin cancelled this visit.': 'ألغى المسؤول هذه الزيارة.',
+  'The admin is still planning this visit.':
+      'لا يزال المسؤول يخطط لهذه الزيارة.',
+  'This photo is no longer on this device':
+      'هذه الصورة لم تعد موجودة على هذا الجهاز',
+  'This site has no map location, so your current location is sent to the admin instead.':
+      'لا يوجد لهذا الموقع إحداثيات على الخريطة، لذا يُرسل موقعك الحالي إلى المسؤول بدلًا منها.',
+  'This visit is not assigned to you.': 'هذه الزيارة غير مسندة إليك.',
+  'This visit needs at least one {0} photo.':
+      'تتطلب هذه الزيارة صورة واحدة على الأقل ({0}).',
+  'Try another filter.': 'جرّب عامل تصفية آخر.',
+  'Turn on location services to continue.':
+      'شغّل خدمات الموقع للمتابعة.',
+  'Use the email and password your admin created for you.':
+      'استخدم البريد الإلكتروني وكلمة المرور اللذين أنشأهما لك المسؤول.',
+  'View on map': 'عرض على الخريطة',
+  'Welcome back': 'مرحبًا بعودتك',
+  'Welcome, {0}': 'أهلًا، {0}',
+  'Well done. This visit is complete.': 'أحسنت. اكتملت هذه الزيارة.',
+  'With a note': 'مع ملاحظة',
+  'Wrong email or password.': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+  'You are {0} from the site. Move within {1} to start work.':
+      'أنت على بُعد {0} من الموقع. اقترب إلى {1} أو أقل لبدء العمل.',
+  'You can add up to {0} photos at a time.':
+      'يمكنك إضافة {0} صور كحد أقصى في المرة الواحدة.',
+  'You can switch roles later from the app menu.':
+      'يمكنك تغيير الدور لاحقًا من قائمة التطبيق.',
+  'Your admin assigns visits to you. Pull down to refresh.':
+      'يسند إليك المسؤول الزيارات. اسحب للأسفل للتحديث.',
+  'Your current location': 'موقعك الحالي',
+  'Your current location is required for this action.':
+      'يلزم موقعك الحالي لتنفيذ هذا الإجراء.',
+  'Your location is out of date. Refresh it and try again.':
+      'موقعك قديم. حدّثه وحاول مرة أخرى.',
+  'Your location was taken a while ago. Updating it, confirm again.':
+      'تم تحديد موقعك منذ فترة. جارٍ تحديثه، أكّد مرة أخرى.',
+  'open visits': 'زيارات مفتوحة',
+  '{0} ({1})': '{0} ({1})',
+  '{0} from the site': 'على بُعد {0} من الموقع',
+  '{0} km': '{0} كم',
+  '{0} m': '{0} م',
+  '{0} of {1}': '{0} من {1}',
+  '{0} photos': 'صور {0}',
+  '{0} · {1} photo{2}': '{0} · {1} صور',
+  '{0}, {1} · ±{2} · {3}': '{0}، {1} · ±{2} · {3}',
+
+  // --- Field collections -----------------------------------------------------
+  'Awaiting confirmation': 'بانتظار التأكيد',
+  'Awaiting your confirmation': 'بانتظار تأكيدك',
+  'Collect payment': 'تحصيل الدفعة',
+  'Collection confirmed': 'تم تأكيد التحصيل',
+  'Collection rejected': 'تم رفض التحصيل',
+  'Collection sent to the admin for confirmation':
+      'تم إرسال التحصيل إلى المسؤول لتأكيده',
+  'Collections': 'التحصيلات',
+  'Confirm this collection?': 'تأكيد هذا التحصيل؟',
+  'Confirmed': 'مؤكد',
+  'Field collection of {0} confirmed': 'تم تأكيد تحصيل ميداني بقيمة {0}',
+  'Field collection of {0} rejected': 'تم رفض تحصيل ميداني بقيمة {0}',
+  'Field payments to confirm': 'مدفوعات ميدانية بانتظار التأكيد',
+  'Invoice issued automatically': 'صدرت الفاتورة تلقائيًا',
+  'Left to collect: {0}': 'المتبقي للتحصيل: {0}',
+  'Nothing to confirm': 'لا يوجد ما يحتاج إلى تأكيد',
+  'Payment entry not found.': 'لم يتم العثور على قيد الدفع.',
+  'Payment exceeds the remaining balance. {0} is already awaiting confirmation.':
+      'الدفعة تتجاوز الرصيد المتبقي. يوجد {0} بانتظار التأكيد بالفعل.',
+  'Payment receipt': 'إيصال الدفع',
+  'Payments ({0} awaiting confirmation)': 'المدفوعات ({0} بانتظار التأكيد)',
+  'Payments technicians collect on site appear here until you confirm them.':
+      'تظهر هنا المدفوعات التي يحصّلها الفنيون في الموقع حتى تؤكدها.',
+  'Reason (at least {0} characters)': 'السبب ({0} أحرف على الأقل)',
+  'Reference: {0}': 'المرجع: {0}',
+  'Refund {0}': 'استرداد {0}',
+  'Reject': 'رفض',
+  'Reject this collection?': 'رفض هذا التحصيل؟',
+  'Rejected': 'مرفوض',
+  'Send to admin': 'إرسال إلى المسؤول',
+  'Take at least one photo of the receipt or the payment.':
+      'التقط صورة واحدة على الأقل للإيصال أو للدفعة.',
+  'Technician collected {0} · awaiting admin confirmation':
+      'حصّل الفني {0} · بانتظار تأكيد المسؤول',
+  'The admin confirms the payment before it counts as paid.':
+      'يؤكد المسؤول الدفعة قبل احتسابها مدفوعة.',
+  'The amount stays unpaid on the invoice. Tell the technician why.':
+      'يبقى المبلغ غير مدفوع في الفاتورة. وضّح للفني السبب.',
+  'The invoice is issued when the visit is completed. You can collect payment then.':
+      'تصدر الفاتورة عند اكتمال الزيارة، ويمكنك تحصيل الدفعة حينها.',
+  'This collection was already reviewed.': 'تمت مراجعة هذا التحصيل من قبل.',
+  'Visit done. The invoice is issued; confirm the collection or record the payment.':
+      'اكتملت الزيارة وصدرت الفاتورة؛ أكّد التحصيل أو سجّل الدفعة.',
+  'Well done. Collect the payment from the client if they pay now.':
+      'أحسنت. حصّل الدفعة من العميل إذا كان سيدفع الآن.',
+  'Where it was collected': 'مكان التحصيل',
+  'You can collect payment once the work has started.':
+      'يمكنك تحصيل الدفعة بعد بدء العمل.',
+  '{0} by {1}': '{0} بواسطة {1}',
+  '{0} collected by the technician is awaiting your confirmation':
+      '{0} حصّلها الفني بانتظار تأكيدك',
+  '{0} collected on site is awaiting admin confirmation':
+      '{0} محصّلة في الموقع بانتظار تأكيد المسؤول',
+  '{0} collections from technicians': '{0} تحصيلات من الفنيين',
+  '{0} will be added to the paid amount of the invoice.':
+      'ستتم إضافة {0} إلى المبلغ المدفوع في الفاتورة.',
+  '{0} · {1}': '{0} · {1}',
+
+  // --- App menu ----------------------------------------------------------------
+  'Assign and schedule technicians': 'إسناد الفنيين وجدولتهم',
+  'Billing, payments and refunds': 'الفواتير والمدفوعات والاستردادات',
+  'Customers, sites and equipment': 'العملاء والمواقع والمعدات',
+  'Dashboard': 'لوحة التحكم',
+  'Directory': 'الدليل',
+  'Every visit and its status': 'كل الزيارات وحالاتها',
+  'Finance': 'المالية',
+  'Open': 'مفتوحة',
+  'Operations': 'العمليات',
+  'Overview and what needs attention': 'نظرة عامة وما يحتاج إلى متابعة',
+  'Prices, durations and checklists': 'الأسعار والمدد وقوائم التحقق',
+  'Your field team': 'فريقك الميداني',
+
+  // --- Small labels -------------------------------------------------------------
+  ', ': '، ',
+  'N/A': 'غير متوفر',
+  'OpenStreetMap contributors': 'مساهمو OpenStreetMap',
+  'SN:': 'الرقم التسلسلي:',
+  'Week of {0}': 'أسبوع {0}',
+  '{0} h': '{0} س',
+  'client': 'العميل',
+  'duration': 'المدة',
+  'price': 'السعر',
+  'service': 'الخدمة',
+  'site': 'الموقع',
+
+  // --- Service categories (default list) --------------------------------------
+  'Carpentry': 'النجارة',
+  'Electrical': 'الكهرباء',
+  'Networking': 'الشبكات',
+  'Plumbing': 'السباكة',
+  'Smart Home': 'المنزل الذكي',
+
+  // --- Saudi cities -------------------------------------------------------------
+  'Riyadh': 'الرياض',
+  'Jeddah': 'جدة',
+  'Makkah': 'مكة المكرمة',
+  'Madinah': 'المدينة المنورة',
+  'Dammam': 'الدمام',
+  'Khobar': 'الخبر',
+  'Dhahran': 'الظهران',
+  'Taif': 'الطائف',
+  'Tabuk': 'تبوك',
+  'Buraydah': 'بريدة',
+  'Unaizah': 'عنيزة',
+  'Hail': 'حائل',
+  'Abha': 'أبها',
+  'Khamis Mushait': 'خميس مشيط',
+  'Jazan': 'جازان',
+  'Najran': 'نجران',
+  'Al Bahah': 'الباحة',
+  'Sakaka': 'سكاكا',
+  'Arar': 'عرعر',
+  'Jubail': 'الجبيل',
+  'Yanbu': 'ينبع',
+  'Al Ahsa': 'الأحساء',
+  'Al Hofuf': 'الهفوف',
+  'Qatif': 'القطيف',
+  'Hafar Al Batin': 'حفر الباطن',
+  'Al Kharj': 'الخرج',
+  'Diriyah': 'الدرعية',
+  'Al Majmaah': 'المجمعة',
+  'Al Zulfi': 'الزلفي',
+  'Al Duwadimi': 'الدوادمي',
+  'Wadi Al Dawasir': 'وادي الدواسر',
+  'Al Qurayyat': 'القريات',
+  'Rafha': 'رفحاء',
+  'Turaif': 'طريف',
+  'Bisha': 'بيشة',
+  'Muhayil Asir': 'محايل عسير',
+  'Sabya': 'صبيا',
+  'Abu Arish': 'أبو عريش',
+  'Samtah': 'صامطة',
+  'Sharurah': 'شرورة',
 };

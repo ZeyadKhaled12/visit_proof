@@ -10,6 +10,9 @@ import 'package:visit_proof/features/invoices/domain/usecases/refund_payment_uc.
 import 'package:visit_proof/features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 
 import '../../../../core/utils/enums.dart';
+import '../../data/models/invoice_payment_history_model.dart';
+import '../../domain/usecases/get_payments_uc.dart';
+import '../../domain/usecases/review_payment_uc.dart';
 import '../../domain/usecases/get_invoice_detail_uc.dart';
 import '../../domain/usecases/issue_invoice_uc.dart';
 
@@ -24,6 +27,11 @@ class InvoicesBloc extends Bloc<InvoicesEvent, InvoicesState> {
   final RecordPaymentUc recordPaymentUc;
   final RefundPaymentUc refundPaymentUc;
   final UpdateDraftInvoiceUc updateDraftInvoiceUc;
+  final ReviewPaymentUc reviewPaymentUc;
+  final GetPaymentsUc getPaymentsUc;
+
+  /// The last payments list asked for, reloaded after every review.
+  GetPaymentsParameters? _paymentsQuery;
 
   InvoicesBloc(
       this.getCreateInvoiceUc,
@@ -32,7 +40,9 @@ class InvoicesBloc extends Bloc<InvoicesEvent, InvoicesState> {
       this.recordPaymentUc,
       this.refundPaymentUc,
       this.updateDraftInvoiceUc,
-      this.getInvoicesUc)
+      this.getInvoicesUc,
+      this.reviewPaymentUc,
+      this.getPaymentsUc)
       : super(InvoicesState()) {
     on<GetInvoicesEvent>(_getInvoices);
     on<GetCreateInvoiceEvent>(_getCreateInvoice);
@@ -41,6 +51,46 @@ class InvoicesBloc extends Bloc<InvoicesEvent, InvoicesState> {
     on<RecordPaymentEvent>(_recordPayment);
     on<RefundPaymentEvent>(_refundPayment);
     on<UpdateDraftInvoiceEvent>(_updateDraftInvoice);
+    on<GetPaymentsEvent>(_getPayments);
+    on<ReviewPaymentEvent>(_reviewPayment);
+  }
+
+  FutureOr<void> _getPayments(
+      GetPaymentsEvent event, Emitter<InvoicesState> emit) async {
+    _paymentsQuery = event.getPaymentsParameters;
+    await _loadPayments(emit);
+  }
+
+  Future<void> _loadPayments(Emitter<InvoicesState> emit) async {
+    final query = _paymentsQuery;
+    if (query == null) return;
+    emit(state.copyWith(paymentsRequestState: RequestState.loading));
+    final result = await getPaymentsUc.call(query);
+    result.fold(
+        (l) => emit(state.copyWith(paymentsRequestState: RequestState.error)),
+        (r) => emit(state.copyWith(
+            paymentsRequestState: RequestState.loaded, payments: r)));
+  }
+
+  /// Confirms or rejects a field collection, then reloads the payments.
+  FutureOr<void> _reviewPayment(
+      ReviewPaymentEvent event, Emitter<InvoicesState> emit) async {
+    emit(state.copyWith(reviewPaymentRequestState: RequestState.loading));
+    final result = await reviewPaymentUc.call(event.reviewPaymentParameters);
+    if (result.isLeft) {
+      emit(state.copyWith(reviewPaymentRequestState: RequestState.error));
+      return;
+    }
+    final invoice = result.right;
+    emit(state.copyWith(
+      reviewPaymentRequestState: RequestState.loaded,
+      invoiceDetailModel:
+          state.invoiceDetailModel.id == invoice.id ? invoice : null,
+      invoices: [
+        for (final item in state.invoices) item.id == invoice.id ? invoice : item
+      ],
+    ));
+    await _loadPayments(emit);
   }
 
   FutureOr<void> _getInvoices(

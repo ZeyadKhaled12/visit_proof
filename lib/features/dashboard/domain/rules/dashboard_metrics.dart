@@ -134,7 +134,7 @@ class DashboardMetrics {
       List<VisitDetailModel> visits) {
     final counts = <String, int>{};
     for (final visit in visits) {
-      final name = visit.category?.name ?? 'Uncategorized'.tr;
+      final name = visit.category?.name?.tr ?? 'Uncategorized'.tr;
       counts[name] = (counts[name] ?? 0) + 1;
     }
     return counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));

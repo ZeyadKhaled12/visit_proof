@@ -85,7 +85,7 @@ class AddVisitWidgetClient extends StatelessWidget {
                         return DropdownMenuItem(
                           value: site,
                           child: Text(
-                              '${site.city?.name ?? ''} - ${site.addressDetail ?? ''}',
+                              '${(site.city?.name ?? '').tr} - ${site.addressDetail ?? ''}',
                               style: AppTheme.font(fontWeight: FontWeight.w500)),
                         );
                       }).toList(),

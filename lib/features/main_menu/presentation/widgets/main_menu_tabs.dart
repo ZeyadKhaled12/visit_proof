@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../clients/presentation/screens/clients_scr.dart';
 import '../../../dashboard/presentation/screens/dashboard_scr.dart';
 import '../../../dispatch/presentation/screens/dispatch_scr.dart';
+import '../../../invoices/presentation/screens/collections_scr.dart';
 import '../../../invoices/presentation/screens/invoices_scr.dart';
 import '../../../services/presentation/screens/services_scr.dart';
 import '../../../technicians/presentation/screens/technicians_scr.dart';
@@ -34,6 +35,8 @@ enum MainMenuTab {
   invoices('Invoices', 'Billing, payments and refunds',
       Icons.receipt_long_outlined, Icons.receipt_long_rounded,
       MainMenuGroup.finance),
+  collections('Collections', 'Field payments to confirm',
+      Icons.payments_outlined, Icons.payments_rounded, MainMenuGroup.finance),
   clients('Clients', 'Customers, sites and equipment',
       Icons.people_alt_outlined, Icons.people_alt_rounded,
       MainMenuGroup.directory),
@@ -67,6 +70,8 @@ enum MainMenuTab {
         return const VisitsScr();
       case MainMenuTab.invoices:
         return const InvoicesScr();
+      case MainMenuTab.collections:
+        return const CollectionsScr();
       case MainMenuTab.clients:
         return const ClientsScr();
       case MainMenuTab.technicians:

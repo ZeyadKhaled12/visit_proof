@@ -8,6 +8,10 @@ import 'package:visit_proof/features/invoices/domain/usecases/record_payment_uc.
 import 'package:visit_proof/features/invoices/domain/usecases/refund_payment_uc.dart';
 import 'package:visit_proof/features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 
+import '../../data/models/invoice_payment_history_model.dart';
+import '../usecases/get_payments_uc.dart';
+import '../usecases/review_payment_uc.dart';
+
 import '../../../../core/network/error/failure.dart';
 
 abstract class BaseInvoicesRepo {
@@ -25,4 +29,8 @@ abstract class BaseInvoicesRepo {
       UpdateDraftInvoiceParameters parameters);
   Future<Either<Failure, List<InvoiceDetailModel>>> getInvoices(
       NoParameters parameters);
+  Future<Either<Failure, InvoiceDetailModel>> reviewPayment(
+      ReviewPaymentParameters parameters);
+  Future<Either<Failure, List<InvoicePaymentHistoryModel>>> getPayments(
+      GetPaymentsParameters parameters);
 }

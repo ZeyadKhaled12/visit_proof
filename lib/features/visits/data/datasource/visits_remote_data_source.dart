@@ -5,6 +5,7 @@ import 'package:visit_proof/features/visits/data/models/visit_detail_models/visi
 
 import '../../../../core/local/local_pref.dart';
 import '../../../../core/network/error/handle_logic_errors.dart';
+import '../../../../core/session/app_session.dart';
 
 abstract class BaseVisitsRemoteDataSource {
   Future<List<VisitDetailModel>> getVisits(NoParameters parameters);
@@ -19,6 +20,14 @@ class VisitsRemoteDataSource extends BaseVisitsRemoteDataSource {
       visits = (LocalPref.sharedPreferences.getStringList('visits') ?? [])
           .map((e) => VisitDetailModel.fromJson(jsonDecode(e)))
           .toList();
+
+      // A technician only ever receives their own visits.
+      final technicianId = AppSession.technicianId;
+      if (technicianId != null) {
+        visits = visits
+            .where((visit) => visit.technicianModel?.id == technicianId)
+            .toList();
+      }
       return visits;
     }).checkLogicErrors();
   }

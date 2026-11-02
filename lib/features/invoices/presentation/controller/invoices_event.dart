@@ -55,3 +55,17 @@ class UpdateDraftInvoiceEvent extends InvoicesEvent {
   @override
   List<Object> get props => [updateDraftInvoiceParameters];
 }
+
+class GetPaymentsEvent extends InvoicesEvent {
+  final GetPaymentsParameters getPaymentsParameters;
+  const GetPaymentsEvent({required this.getPaymentsParameters});
+  @override
+  List<Object> get props => [getPaymentsParameters];
+}
+
+class ReviewPaymentEvent extends InvoicesEvent {
+  final ReviewPaymentParameters reviewPaymentParameters;
+  const ReviewPaymentEvent({required this.reviewPaymentParameters});
+  @override
+  List<Object> get props => [reviewPaymentParameters];
+}

@@ -48,7 +48,7 @@ class VisitDetailWidgetService extends StatelessWidget {
                             fontWeight: FontWeight.w800)),
                     const SizedBox(height: 6),
                     VisitDetailPill(
-                        text: visit.category?.name ?? 'Uncategorized'.tr,
+                        text: visit.category?.name?.tr ?? 'Uncategorized'.tr,
                         color: AppTheme.primary,
                         icon: Icons.category_rounded),
                   ],

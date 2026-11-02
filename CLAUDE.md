@@ -6,6 +6,10 @@ Guidance for Claude Code when working in this repository.
 
 **Visit Proof** is a Flutter app for managing field-service visits: clients (with sites and equipment), technicians, services/categories, visits (scheduling, assignment, status workflow, history), and invoices/payments. It targets Saudi Arabia (currency `SAR`, Saudi city list in `lib/core/utils/general_dummy_data.dart`).
 
+One app serves two roles, chosen on the first screen and switchable from either app's drawer:
+- **Admin** — no account; the full admin app (`MainMenuScr`).
+- **Technician** — signs in with the email/password the admin set on the technician; sees only their own visits (`TechHomeScr`) and moves them forward (start trip → start work → complete) with their live GPS location and camera proof photos.
+
 **There is no backend yet.** Every `*RemoteDataSource` is a local prototype that persists JSON in `SharedPreferences` and simulates latency with `Future.delayed`. The layering is built so a real API can replace the data sources later without touching domain/presentation code.
 
 - Flutter 3.27.x, Dart SDK `^3.6.2`
@@ -38,7 +42,7 @@ presentation/
   widgets/<screen>_widgets/<screen>_body.dart, <screen>_widget_<part>.dart
 ```
 
-Features: `visits` (home list), `add_visit`, `visit_detail`, `clients`, `technicians`, `services`, `invoices`.
+Features: `visits` (home list), `add_visit`, `visit_detail`, `clients`, `technicians`, `services`, `invoices`, `dispatch`, `dashboard`, `main_menu` (admin shell), `auth` (role selection, technician sign in, session), `technician_home` (presentation only; reuses `VisitsBloc`).
 
 Notes:
 - `invoices` uses `data/data_sources/` (plural, underscore) — keep it as-is.
@@ -46,6 +50,9 @@ Notes:
 - Models are shared across features by import (e.g. `VisitDetailModel` lives in `features/visits/data/models/visit_detail_models/`).
 
 ### Core (`lib/core/`)
+- `session/app_session.dart` — `AppSession.current` (`ValueNotifier<AppSessionModel?>`: role + technician id/name/email), `isAdmin` / `isTechnician` / `technicianId`, and `AppSession.actor` (who to credit in history). Only the `auth` data source writes it; it is restored in `main()` via `RestoreSessionUc` before `runApp`.
+- `local/local_photos.dart` — copies camera photos into the app documents folder (`visit_photos/<visitId>/`) and cleans them up.
+- `utils/general_functions.dart/g_fun_location.dart` (`GFunLocation.current()` live GPS, rejects mock locations, throws `GFunLocationException` with an issue) and `g_fun_photo.dart` (`GFunPhoto.takePhoto()`, camera only).
 - `services/services_locator.dart` — GetIt `sl`. Blocs = `registerFactory`; use cases, repos, data sources = `registerLazySingleton` (repos/data sources registered against their `Base…` type). **Every new bloc/use case/repo/data source must be registered here.**
 - `usecase/base_use_case.dart` — `BaseUseCase<T, Params>` with `call(params)` returning `Future<Either<Failure, T>>`; `NoParameters` for parameterless calls.
 - `network/error/` — data sources wrap bodies in `HandleLogicErrors(fun: ...).checkLogicErrors()`, which rethrows `ServerException` and converts anything else to a generic message. `ServerFailure.openFun(...)` shows an error toast automatically, so blocs don't show errors themselves.
@@ -62,7 +69,7 @@ Notes:
 
 ### App / navigation
 - `lib/app/app.dart` — `App.navigatorKey`, `App.lang = 'en'`, `App.currency = 'SAR'`.
-- `lib/main.dart` — `MaterialApp` with named `routes`; `'/'` is `VisitsScr`. Each screen has `static const route = '/<ScreenName>'`.
+- `lib/main.dart` — `MaterialApp` with named `routes`; `'/'` is `AppGateScr`, which follows `AppSession.current` and shows `RoleSelectScr`, `MainMenuScr` or `TechHomeScr`. Switching role or logging out only changes the session, then pops to the first route (`AuthWidgetAccountActions.backToHome()`). Each screen has `static const route = '/<ScreenName>'`.
 - Route arguments use a small `<Screen>Argu` class defined at the bottom of the screen file with `toArgu()` → `Map<String, dynamic>` and `fromJson(map)`; screens read `ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?`.
 - Screens return results via `Navigator.pop(context, value)`; callers `await Navigator.pushNamed(...)` and refresh if truthy.
 - `AddServiceScr` is opened as a bottom sheet via `AddServiceScr.show(context, ...)`, not a route.
@@ -72,7 +79,7 @@ Notes:
 ## Local storage (current "backend")
 
 SharedPreferences `StringList` keys, each item a `jsonEncode(model.toJson())`:
-`clients`, `technicians`, `services`, `categories`, `visits`, `invoices`.
+`clients`, `technicians`, `services`, `categories`, `visits`, `invoices`, `invoice_payments` (the payment ledger). The session is a JSON `String` under `session`. Visit photos are files on disk; `VisitDetailModel.photos` stores their paths.
 
 Clearing app data resets everything (there is a commented `LocalPref.sharedPreferences.clear()` in `main()`).
 
@@ -85,9 +92,15 @@ Most real logic lives in `visit_detail_remote_data_source.dart`, `invoices_remot
 - Money is validated/handled in **cents** (`_cents`) to avoid float errors.
 - Visit status (`VisitStatus`: draft, scheduled, assigned, onWay, inProgress, completed, cancel) follows an explicit transition map in `changeVisitStatus`. Assigned and later states require a technician; scheduled must have none; technicians are assigned/unassigned only via the dedicated actions, not via status change or edit. Some transitions need a reason of ≥ 8 characters.
 - Every visit change appends to `history` (`VisitHistoryModel`, actor defaults to a local admin).
-- Payment statuses: unpaid, pending, partiallyPaid, paid, cancelled, refunded.
+- Payment statuses: unpaid, pending, partiallyPaid, paid, cancelled, refunded. `pending` = a field collection is waiting for the admin.
+- **Field collection**: completing a visit auto-issues its untouched draft invoice (`_invoiceForStatus`). The technician can then record a payment on their own inProgress/completed visit (`VisitRules.canCollectPayment`) with a fresh location + at least one receipt photo (`PhotoKind.receipt`, also added to `visit.photos`). It is saved as a `PaymentEntryStatus.pending` ledger entry and adds to `invoice.pendingAmount`, not `paidAmount`. The admin confirms/rejects it (`reviewPayment`, reject needs a reason ≥ 8) from the invoice screen or the `Collections` menu tab. Ledger invariants checked in `_change`: confirmed entries sum = `paidAmount`, pending entries sum = `pendingAmount`; collectible = remaining − pending. All other invoice actions are admin-only.
+- **Roles** (`VisitRules` reads `AppSession`): admin-only actions (assign/unassign, reschedule, edit info/service/site, delete, invoices) return false for technicians and the data source refuses them (`adminOnly: true` / `_requireAdmin()`). A technician only gets `technicianNextStatuses` (assigned→onWay→inProgress→completed) and notes, on visits assigned to them; the visits list is filtered to their own visits in `VisitsRemoteDataSource`.
+- **Field proof**: every technician action must carry a fresh live location (`VisitRules.maxLocationAge`), which the technician confirms (cannot edit) and which is logged on the history entry (`location`, `distanceFromSite`). Starting work requires being within `VisitRules.maxStartDistanceMeters` (200 m) when the site has coordinates; without coordinates the location is only logged. Required before/after photos (`requireBefore/AfterWorkPhotos`) are enforced at inProgress/completed; notes may carry photos too.
+- Technician emails are unique (they are the sign-in name).
 
 ## Conventions
+
+- **Every user-visible text goes through `.tr` / `.trArgs` and needs an entry in `lib/configs/app_translations.dart`** (no duplicate keys, or the const map breaks the build). Seeded data shown to the user (city and default category names) is shown with `.tr` too; user-typed names are left as typed. History descriptions are stored in the language active when they were written.
 
 - File/class naming: screens `*_scr.dart` / `*Scr`, use cases `*_uc.dart` / `*Uc`, general items `g_widget_*`, `g_fun_*`, `g_model_*` / `GWidget…`, `GFun…`, `GModel…`.
 - Each use case has a matching `<Action>Parameters` class in the same file; events wrap the parameters (`AddClientEvent(addClientParameters: ...)`).

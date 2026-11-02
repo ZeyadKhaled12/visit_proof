@@ -12,6 +12,10 @@ import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../../../../core/utils/general_widgets/g_widget_navi_body.dart';
 import '../../../data/models/invoice_detail_model.dart';
+import '../../../data/models/invoice_payment_history_model.dart';
+import '../../../domain/usecases/get_payments_uc.dart';
+import '../payments_widgets/payments_widget_review.dart';
+import '../payments_widgets/payments_widget_tile.dart';
 import 'inv_detail_widget_edit_sheet.dart';
 import 'inv_detail_widget_record_payment_sheet.dart';
 import 'inv_detail_widget_refund_payment_sheet.dart';
@@ -19,9 +23,17 @@ import 'invoice_detail_parts.dart';
 
 class InvoiceDetailBody extends StatefulWidget {
   const InvoiceDetailBody(
-      {super.key, required this.invoice, required this.loading});
+      {super.key,
+      required this.invoice,
+      required this.loading,
+      this.payments = const [],
+      this.reviewing = false});
   final InvoiceDetailModel invoice;
   final bool loading;
+
+  /// The invoice's ledger, newest first.
+  final List<InvoicePaymentHistoryModel> payments;
+  final bool reviewing;
 
   @override
   State<InvoiceDetailBody> createState() => _InvoiceDetailBodyState();
@@ -75,9 +87,21 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
       widget.invoice.paymentStatus != PaymentStatus.cancelled &&
       widget.invoice.paymentStatus != PaymentStatus.refunded &&
       (widget.invoice.paymentStatus == PaymentStatus.unpaid ||
-          widget.invoice.paymentStatus == PaymentStatus.partiallyPaid) &&
+          widget.invoice.paymentStatus == PaymentStatus.partiallyPaid ||
+          widget.invoice.paymentStatus == PaymentStatus.pending) &&
       _hasCompleteAmounts &&
-      (widget.invoice.remainingAmount ?? 0) > 0;
+      _collectible > 0;
+
+  /// The balance minus field collections still waiting for confirmation.
+  double get _collectible {
+    final cents = (((widget.invoice.remainingAmount ?? 0) -
+                (widget.invoice.pendingAmount ?? 0)) *
+            100)
+        .round();
+    return cents <= 0 ? 0 : cents / 100;
+  }
+
+  num get _pending => widget.invoice.pendingAmount ?? 0;
 
   bool get _canRefund =>
       _hasId &&
@@ -211,9 +235,39 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
   void _getInvoiceDetail() {
     if (widget.invoice.id == null) return;
-    context.read<InvoicesBloc>().add(GetInvoiceDetailEvent(
-        getInvoiceDetailParameters:
-            GetInvoiceDetailParameters(invoiceId: widget.invoice.id!)));
+    context.read<InvoicesBloc>()
+      ..add(GetInvoiceDetailEvent(
+          getInvoiceDetailParameters:
+              GetInvoiceDetailParameters(invoiceId: widget.invoice.id!)))
+      ..add(GetPaymentsEvent(
+          getPaymentsParameters:
+              GetPaymentsParameters(invoiceId: widget.invoice.id!)));
+  }
+
+  Widget _payments() {
+    final pending = widget.payments.where((e) => e.isPending).length;
+    return InvDetailWidgetPanel(
+      title: pending > 0
+          ? 'Payments ({0} awaiting confirmation)'.trArgs([pending])
+          : 'Payments'.tr,
+      icon: Icons.payments_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final payment in widget.payments) ...[
+            PaymentsWidgetTile(
+              payment: payment,
+              currency: widget.invoice.currency,
+              reviewing: widget.reviewing,
+              onConfirm: () => PaymentsWidgetReview.confirm(context, payment,
+                  currency: widget.invoice.currency),
+              onReject: () => PaymentsWidgetReview.reject(context, payment),
+            ),
+            if (payment != widget.payments.last) const SizedBox(height: 10),
+          ],
+        ],
+      ),
+    );
   }
 
   // ======================================================
@@ -367,6 +421,15 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                     ),
                   ),
 
+                  if (_pending > 0) ...[
+                    const SizedBox(height: 10),
+                    InvDetailWidgetBadge(
+                      text: '{0} collected by the technician is awaiting your confirmation'
+                          .trArgs([_money(_pending)]),
+                      color: AppTheme.pending,
+                    ),
+                  ],
+
                   if (overdue) ...[
                     const SizedBox(height: 10),
                     InvDetailWidgetBadge(
@@ -485,6 +548,11 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                     ),
                   ],
 
+                  if (widget.payments.isNotEmpty) ...[
+                    const SizedBox(height: 14),
+                    _payments(),
+                  ],
+
                   const SizedBox(height: 17),
 
                   // -----------------------------------------
@@ -509,11 +577,10 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                               context,
                               InvDetailWidgetRecordPaymentSheet(
                                   invoiceID: widget.invoice.id!,
-                                  subtitle:
-                                      'Remaining balance: {0}'.trArgs([_money((widget.invoice.remainingAmount ?? 0).toDouble())]),
-                                  validator: (v) => _requiredMoney(v,
-                                      max: (widget.invoice.remainingAmount ?? 0)
-                                          .toDouble())));
+                                  subtitle: 'Remaining balance: {0}'
+                                      .trArgs([_money(_collectible)]),
+                                  validator: (v) =>
+                                      _requiredMoney(v, max: _collectible)));
                           if (data == true) {
                             _getInvoiceDetail();
                           }

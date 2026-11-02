@@ -60,7 +60,7 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
                 items: GeneralDummyData.getSaudiCities().map((city) {
                   return DropdownMenuItem(
                     value: city,
-                    child: Text(city.name ?? '',
+                    child: Text((city.name ?? '').tr,
                         style: AppTheme.font(fontWeight: FontWeight.w500)),
                   );
                 }).toList(),

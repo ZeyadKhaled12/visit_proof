@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../configs/app_theme.dart';
+import '../../../../../configs/app_toasts.dart';
+import '../../../../../core/session/app_session.dart';
 import '../../../../../core/utils/enums/visit_status_enum.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../../core/utils/general_widgets/g_widget_text_field.dart';
@@ -13,6 +15,7 @@ import '../../../domain/usecases/change_visit_status_uc.dart';
 import '../../controller/visit_detail_bloc.dart';
 import '../visit_detail_helpers.dart';
 import '../visit_detail_widget_action_sheet.dart';
+import '../visit_detail_widget_field_proof.dart';
 import '../visit_detail_widget_parts.dart';
 
 class VisitDetailWidgetStatusSheet extends StatefulWidget {
@@ -36,8 +39,23 @@ class _VisitDetailWidgetStatusSheetState
     extends State<VisitDetailWidgetStatusSheet> {
   final _form = GlobalKey<FormState>();
   final _reason = TextEditingController();
+  final _proofKey = GlobalKey<VisitDetailWidgetFieldProofState>();
+  VisitFieldProofValue _proof = const VisitFieldProofValue();
 
   VisitStatus get _from => VisitRules.statusOf(widget.visit);
+
+  /// Technicians send their live location (and photos) with every move.
+  bool get _fieldAction => AppSession.isTechnician;
+
+  bool get _proofReady {
+    if (!_fieldAction) return true;
+    final target = widget.target;
+    return _proof.location != null &&
+        _proof.consent &&
+        (!VisitRules.needsPresence(target) || _proof.isWithinSite) &&
+        (!VisitRules.photosRequired(widget.visit, target) ||
+            _proof.photoPaths.isNotEmpty);
+  }
 
   @override
   void dispose() {
@@ -47,11 +65,20 @@ class _VisitDetailWidgetStatusSheetState
 
   void _submit() {
     if (_form.currentState?.validate() != true) return;
+    if (_fieldAction && _proof.isStale) {
+      AppToasts.showMessage(
+          'Your location was taken a while ago. Updating it, confirm again.'.tr,
+          isError: true);
+      _proofKey.currentState?.refreshLocation();
+      return;
+    }
     context.read<VisitDetailBloc>().add(ChangeVisitStatusEvent(
         changeVisitStatusParameters: ChangeVisitStatusParameters(
             visitID: widget.visit.id!,
             status: widget.target,
-            reason: _reason.text.trim())));
+            reason: _reason.text.trim(),
+            location: _fieldAction ? _proof.location : null,
+            photoPaths: _fieldAction ? _proof.photoPaths : const [])));
   }
 
   @override
@@ -109,6 +136,17 @@ class _VisitDetailWidgetStatusSheetState
                   color: AppTheme.secondary),
               const SizedBox(height: 12),
             ],
+            if (_fieldAction && error == null) ...[
+              VisitDetailWidgetFieldProof(
+                key: _proofKey,
+                visit: widget.visit,
+                photoKind: VisitRules.photoKindFor(target),
+                photosRequired: VisitRules.photosRequired(widget.visit, target),
+                checkPresence: VisitRules.needsPresence(target),
+                onChanged: (value) => setState(() => _proof = value),
+              ),
+              const SizedBox(height: 12),
+            ],
             if (needsReason) ...[
               GWidgetTextField(
                 controller: _reason,
@@ -127,7 +165,7 @@ class _VisitDetailWidgetStatusSheetState
               fontSize: AppTheme.textSubtitle,
               raduis: 14,
               backgroundColor: color,
-              isEnable: error == null,
+              isEnable: error == null && _proofReady,
               isLoading: loading,
               loadingSize: 22,
               loadingStrokeWidth: 3,

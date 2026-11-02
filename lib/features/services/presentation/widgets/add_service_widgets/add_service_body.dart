@@ -89,7 +89,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
         widget.categories.map((cat) {
       return DropdownMenuItem<GModelCatg>(
         value: cat,
-        child: Text(cat.name ?? '', style: AppTheme.font()),
+        child: Text((cat.name ?? '').tr, style: AppTheme.font()),
       );
     }).toList();
 

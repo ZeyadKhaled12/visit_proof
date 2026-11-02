@@ -457,7 +457,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         return false;
       }
       if (_category != null &&
-          (v.category?.name ?? 'Uncategorized'.tr) != _category) {
+          (v.category?.name?.tr ?? 'Uncategorized'.tr) != _category) {
         return false;
       }
       if (bucket != null &&

@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../app/app.dart';
 import '../../../../configs/app_toasts.dart';
+import '../../../../core/session/app_session.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_location.dart';
 import '../../../../core/utils/enums/priority_enum.dart';
 import '../../../../core/utils/enums/visit_status_enum.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
@@ -35,11 +37,11 @@ class VisitDetailHelpers {
     final hours = minutes ~/ 60;
     final rest = minutes % 60;
     if (hours == 0) return '{0} min'.trArgs([rest]);
-    return rest == 0 ? '$hours h' : '{0} h {1} min'.trArgs([hours, rest]);
+    return rest == 0 ? '{0} h'.trArgs([hours]) : '{0} h {1} min'.trArgs([hours, rest]);
   }
 
   static String site(GModelSite? site) {
-    final parts = [site?.city?.name, site?.addressDetail]
+    final parts = [site?.city?.name?.tr, site?.addressDetail]
         .where((e) => (e ?? '').trim().isNotEmpty);
     return parts.isEmpty ? 'No site'.tr : parts.join(' - ');
   }
@@ -105,6 +107,7 @@ class VisitDetailHelpers {
   }
 
   static String statusHint(VisitStatus status) {
+    if (AppSession.isTechnician) return _technicianHint(status);
     switch (status) {
       case VisitStatus.draft:
         return 'Complete the visit info, then schedule it.'.tr;
@@ -117,9 +120,29 @@ class VisitDetailHelpers {
       case VisitStatus.inProgress:
         return 'Work is in progress at the site.'.tr;
       case VisitStatus.completed:
-        return 'Visit done. Issue the invoice and collect the payment.'.tr;
+        return 'Visit done. The invoice is issued; confirm the collection or record the payment.'.tr;
       case VisitStatus.cancel:
         return 'This visit is cancelled. Reopen it to plan it again.'.tr;
+    }
+  }
+
+  /// The same steps, told to the technician who does them.
+  static String _technicianHint(VisitStatus status) {
+    switch (status) {
+      case VisitStatus.draft:
+      case VisitStatus.scheduled:
+        return 'The admin is still planning this visit.'.tr;
+      case VisitStatus.assigned:
+        return 'Start the trip when you leave for the site.'.tr;
+      case VisitStatus.onWay:
+        return 'Start work once you arrive. You must be within {0} of the site.'
+            .trArgs([GFunLocation.distanceText(VisitRules.maxStartDistanceMeters)]);
+      case VisitStatus.inProgress:
+        return 'Finish the work, take the after photos and complete the visit.'.tr;
+      case VisitStatus.completed:
+        return 'Well done. Collect the payment from the client if they pay now.'.tr;
+      case VisitStatus.cancel:
+        return 'The admin cancelled this visit.'.tr;
     }
   }
 

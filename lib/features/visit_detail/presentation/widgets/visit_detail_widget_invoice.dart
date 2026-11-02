@@ -7,19 +7,26 @@ import '../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../../invoices/data/models/invoice_detail_model.dart';
 import '../../../invoices/presentation/screens/invoice_detail_scr.dart';
+import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
+import '../../domain/rules/visit_rules.dart';
+import 'sheets/visit_detail_widget_collect_sheet.dart';
+import 'visit_detail_widget_action_sheet.dart';
 import 'visit_detail_helpers.dart';
 import 'visit_detail_widget_parts.dart';
 
-/// Read-only invoice summary. Every invoice action (issue, edit,
-/// payments, refunds) lives on the invoice detail screen.
+/// Invoice summary. The admin manages the invoice (issue, edit, payments,
+/// confirmations, refunds) on the invoice detail screen; the technician
+/// sees what is owed and records what the client pays on site.
 class VisitDetailWidgetInvoice extends StatelessWidget {
   const VisitDetailWidgetInvoice({
     super.key,
+    required this.visit,
     required this.invoice,
     required this.loading,
     required this.onInvoiceClosed,
   });
 
+  final VisitDetailModel visit;
   final InvoiceDetailModel? invoice;
   final bool loading;
 
@@ -60,11 +67,49 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
                 _InvoiceHeader(invoice: invoice),
                 const SizedBox(height: 12),
                 _BalanceCard(invoice: invoice),
+                if ((invoice.pendingAmount ?? 0) > 0) ...[
+                  const SizedBox(height: 10),
+                  VisitDetailNotice(
+                    text: '{0} collected on site is awaiting admin confirmation'
+                        .trArgs([
+                      VisitDetailHelpers.money(
+                          invoice.pendingAmount, invoice.currency)
+                    ]),
+                    color: AppTheme.pending,
+                    icon: Icons.hourglass_top_rounded,
+                  ),
+                ],
                 if (invoice.dueDate != null) ...[
                   const SizedBox(height: 10),
                   _DueDate(invoice: invoice),
                 ],
-                if (invoice.id != null) ...[
+                if (VisitRules.canCollectPayment(visit, invoice)) ...[
+                  const SizedBox(height: 14),
+                  GWidgetButton(
+                    text: 'Collect payment'.tr,
+                    fontSize: AppTheme.textSubtitle,
+                    raduis: 14,
+                    height: 48,
+                    backgroundColor: AppTheme.statGreen,
+                    widget: Padding(
+                      padding: EdgeInsetsDirectional.only(start: 8),
+                      child: Icon(Icons.payments_rounded,
+                          color: AppTheme.onPrimary, size: 20),
+                    ),
+                    onPressed: () => VisitDetailWidgetActionSheet.show(
+                        context, const VisitDetailWidgetCollectSheet()),
+                  ),
+                ] else if (!VisitRules.canManageInvoice() &&
+                    invoice.issueDate == null) ...[
+                  const SizedBox(height: 10),
+                  VisitDetailNotice(
+                    text:
+                        'The invoice is issued when the visit is completed. You can collect payment then.'
+                            .tr,
+                    color: AppTheme.secondary,
+                  ),
+                ],
+                if (invoice.id != null && VisitRules.canManageInvoice()) ...[
                   const SizedBox(height: 14),
                   GWidgetButton(
                     text: 'Open invoice'.tr,

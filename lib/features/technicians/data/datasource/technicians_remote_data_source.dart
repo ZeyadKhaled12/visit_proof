@@ -36,6 +36,21 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
       List<TechnicianDetailModel> technicians = [];
       TechnicianDetailModel? technician;
       // throw ServerException(ErrorMessageModel(statusMessage: 'statusMessage'));
+
+      // The email is the technician's sign-in name, so it must be unique.
+      final email = parameters.email.trim().toLowerCase();
+      final emailTaken =
+          (LocalPref.sharedPreferences.getStringList('technicians') ?? [])
+              .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
+              .any((e) =>
+                  e.id != parameters.id &&
+                  (e.email ?? '').trim().toLowerCase() == email);
+      if (emailTaken) {
+        throw ServerException(ErrorMessageModel(
+            statusMessage:
+                'Another technician already signs in with this email.'.tr));
+      }
+
       if (parameters.id != null) {
         technicians =
             (LocalPref.sharedPreferences.getStringList('technicians') ?? [])
@@ -46,7 +61,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
         technician = technicians[index];
         technician = technician.copyWith(
             name: parameters.name,
-            email: parameters.email,
+            email: parameters.email.trim(),
             password: parameters.password,
             phone: parameters.phoneNumber,
             categories: parameters.categories);
@@ -55,7 +70,7 @@ class TechniciansRemoteDataSource extends BaseTechniciansRemoteDataSource {
         technician = TechnicianDetailModel(
           id: GFunToken.generateRandomId(),
           name: parameters.name,
-          email: parameters.email,
+          email: parameters.email.trim(),
           phone: parameters.phoneNumber,
           completedJobs: 0,
           completedPaid: 0,

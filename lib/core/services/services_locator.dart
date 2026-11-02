@@ -39,6 +39,14 @@ import 'package:visit_proof/features/visits/domain/repository/base_visits_repo.d
 import 'package:visit_proof/features/visits/presentation/controller/visits_bloc.dart';
 
 import '../../features/add_visit/data/repository/add_visit_repo.dart';
+import '../../features/auth/data/datasource/auth_remote_data_source.dart';
+import '../../features/auth/data/repository/auth_repo.dart';
+import '../../features/auth/domain/repository/base_auth_repo.dart';
+import '../../features/auth/domain/usecases/enter_as_admin_uc.dart';
+import '../../features/auth/domain/usecases/login_technician_uc.dart';
+import '../../features/auth/domain/usecases/logout_uc.dart';
+import '../../features/auth/domain/usecases/restore_session_uc.dart';
+import '../../features/auth/presentation/controller/auth_bloc.dart';
 import '../../features/dashboard/data/datasource/dashboard_remote_data_source.dart';
 import '../../features/dashboard/data/repository/dashboard_repo.dart';
 import '../../features/dashboard/domain/repository/base_dashboard_repo.dart';
@@ -55,9 +63,11 @@ import '../../features/dispatch/presentation/controller/dispatch_bloc.dart';
 import '../../features/invoices/domain/usecases/get_create_invoice_uc.dart';
 import '../../features/invoices/domain/usecases/get_invoice_detail_uc.dart';
 import '../../features/invoices/domain/usecases/get_invoices_uc.dart';
+import '../../features/invoices/domain/usecases/get_payments_uc.dart';
 import '../../features/invoices/domain/usecases/issue_invoice_uc.dart';
 import '../../features/invoices/domain/usecases/record_payment_uc.dart';
 import '../../features/invoices/domain/usecases/refund_payment_uc.dart';
+import '../../features/invoices/domain/usecases/review_payment_uc.dart';
 import '../../features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 import '../../features/services/data/repository/services_repo.dart';
 import '../../features/visit_detail/data/datasource/visit_detail_remote_data_source.dart';
@@ -86,14 +96,16 @@ class ServicesLocator {
     sl.registerFactory(() => AddVisitBloc(sl(), sl(), sl(), sl()));
     sl.registerFactory(() => VisitsBloc(sl()));
     sl.registerFactory(
-        () => InvoicesBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+        () => InvoicesBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory(() => VisitDetailBloc(sl(), sl(), sl(), sl(), sl(), sl(),
-        sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+        sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 
     sl.registerFactory(() => DispatchBloc(
         sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 
     sl.registerFactory(() => DashboardBloc(sl()));
+
+    sl.registerFactory(() => AuthBloc(sl(), sl(), sl()));
 
     //clients usecases
     sl.registerLazySingleton(() => GetClientsUc(sl()));
@@ -129,6 +141,8 @@ class ServicesLocator {
     sl.registerLazySingleton(() => RecordPaymentUc(sl()));
     sl.registerLazySingleton(() => RefundPaymentUc(sl()));
     sl.registerLazySingleton(() => UpdateDraftInvoiceUc(sl()));
+    sl.registerLazySingleton(() => ReviewPaymentUc(sl()));
+    sl.registerLazySingleton(() => GetPaymentsUc(sl()));
 
     //visit detail usecases
     sl.registerLazySingleton(() => GetVisitDetailUc(sl()));
@@ -144,6 +158,12 @@ class ServicesLocator {
 
     //dashboard usecases
     sl.registerLazySingleton(() => GetDashboardSnapshotUc(sl()));
+
+    //auth usecases
+    sl.registerLazySingleton(() => LoginTechnicianUc(sl()));
+    sl.registerLazySingleton(() => EnterAsAdminUc(sl()));
+    sl.registerLazySingleton(() => LogoutUc(sl()));
+    sl.registerLazySingleton(() => RestoreSessionUc(sl()));
 
     //dispatch usecases
     sl.registerLazySingleton(() => GetDispatchSettingsUc(sl()));
@@ -163,6 +183,7 @@ class ServicesLocator {
 
     sl.registerLazySingleton<BaseDispatchRepo>(() => DispatchRepo(sl()));
     sl.registerLazySingleton<BaseDashboardRepo>(() => DashboardRepo(sl()));
+    sl.registerLazySingleton<BaseAuthRepo>(() => AuthRepo(sl()));
 
     //Data Source
     sl.registerLazySingleton<BaseDispatchRemoteDataSource>(
@@ -183,5 +204,7 @@ class ServicesLocator {
         () => InvoicesRemoteDataSource());
     sl.registerLazySingleton<BaseVisitDetailRemoteDataSource>(
         () => VisitDetailRemoteDataSource());
+    sl.registerLazySingleton<BaseAuthRemoteDataSource>(
+        () => AuthRemoteDataSource());
   }
 }

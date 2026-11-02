@@ -190,7 +190,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                         items: _cities.map((city) {
                           return DropdownMenuItem(
                             value: city,
-                            child: Text(city.name ?? '',
+                            child: Text((city.name ?? '').tr,
                                 style: AppTheme.font(fontWeight: FontWeight.w500)),
                           );
                         }).toList(),

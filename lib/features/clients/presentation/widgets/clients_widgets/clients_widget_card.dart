@@ -112,7 +112,7 @@ class ClientsWidgetCard extends StatelessWidget {
                                     size: 12, color: AppTheme.primary),
                                 const SizedBox(width: 4),
                                 Text(
-                                  client.site?.city?.name ?? '',
+                                  (client.site?.city?.name ?? '').tr,
                                   style: AppTheme.font(
                                       fontSize: AppTheme.textCaption,
                                       color: AppTheme.textDarkHint,

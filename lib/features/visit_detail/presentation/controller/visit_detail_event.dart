@@ -90,3 +90,10 @@ class DeleteVisitEvent extends VisitDetailEvent {
   @override
   List<Object> get props => [deleteVisitParameters];
 }
+
+class CollectPaymentEvent extends VisitDetailEvent {
+  final RecordPaymentParameters recordPaymentParameters;
+  const CollectPaymentEvent({required this.recordPaymentParameters});
+  @override
+  List<Object> get props => [recordPaymentParameters];
+}

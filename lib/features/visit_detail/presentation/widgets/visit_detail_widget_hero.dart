@@ -71,7 +71,7 @@ class VisitDetailWidgetHero extends StatelessWidget {
                   size: 14,
                   color: AppTheme.onPrimary.withValues(alpha: .85)),
               const SizedBox(width: 5),
-              Text(visit.category?.name ?? 'Uncategorized'.tr,
+              Text(visit.category?.name?.tr ?? 'Uncategorized'.tr,
                   style: AppTheme.font(
                       color: AppTheme.onPrimary.withValues(alpha: .85),
                       fontSize: AppTheme.textBody,

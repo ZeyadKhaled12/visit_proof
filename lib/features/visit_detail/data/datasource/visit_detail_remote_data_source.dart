@@ -5,14 +5,20 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../app/app.dart';
 import '../../../../configs/app_toasts.dart';
+import '../../../../core/local/local_photos.dart';
 import '../../../../core/local/local_pref.dart';
 import '../../../../core/network/error/error_message_model.dart';
 import '../../../../core/network/error/exception.dart';
 import '../../../../core/network/error/handle_logic_errors.dart';
+import '../../../../core/session/app_session.dart';
 import '../../../../core/utils/enums/payment_status_enum.dart';
+import '../../../../core/utils/enums/photo_kind_enum.dart';
 import '../../../../core/utils/enums/visit_status_enum.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_location.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_token.dart';
+import '../../../../core/utils/general_models/g_model_geo_point.dart';
 import '../../../../core/utils/general_models/g_model_site.dart';
 import '../../../invoices/data/models/invoice_detail_model.dart';
 import '../../../invoices/data/models/invoice_payment_history_model.dart';
@@ -20,6 +26,7 @@ import '../../../technicians/data/models/technician_detail_model.dart';
 import '../../../technicians/data/models/technician_model.dart';
 import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../../../visits/data/models/visit_detail_models/visit_history_model.dart';
+import '../../../visits/data/models/visit_detail_models/visit_photo_model.dart';
 import '../../domain/rules/visit_rules.dart';
 import '../../domain/usecases/add_visit_comment_uc.dart';
 import '../../domain/usecases/assign_technician_uc.dart';
@@ -39,6 +46,14 @@ typedef _VisitEdit = ({
   InvoiceDetailModel? updatedInvoice,
   String log,
   String? reason,
+});
+
+/// What a technician sends with an action: where they are and the photos
+/// they took. Admin actions send none.
+typedef _FieldProof = ({
+  GModelGeoPoint? location,
+  List<String> photoPaths,
+  PhotoKind? photoKind,
 });
 
 typedef _VisitEditor = _VisitEdit Function(
@@ -78,12 +93,6 @@ class VisitDetailRemoteDataSource
 
   static const Duration _latency = Duration(milliseconds: 450);
 
-  static VisitHistoryActorModel _admin = VisitHistoryActorModel(
-    id: 'local-admin',
-    name: 'Local Admin'.tr,
-    role: 'admin',
-  );
-
   // Serialises writes inside this isolate so two edits never
   // read the same snapshot and overwrite each other.
   static Future<void> _writeQueue = Future<void>.value();
@@ -99,7 +108,11 @@ class VisitDetailRemoteDataSource
       GetVisitDetailParameters parameters) async {
     return await HandleLogicErrors<VisitDetailModel>(fun: () async {
       await Future.delayed(_latency);
-      return _findVisit(_readVisits(), parameters.visitID);
+      final visit = _findVisit(_readVisits(), parameters.visitID);
+      if (AppSession.isTechnician && !VisitRules.isOwnVisit(visit)) {
+        _fail('This visit is not assigned to you.'.tr);
+      }
+      return visit;
     }).checkLogicErrors();
   }
 
@@ -111,10 +124,16 @@ class VisitDetailRemoteDataSource
   Future<VisitDetailModel> changeVisitStatus(
       ChangeVisitStatusParameters parameters) {
     final to = parameters.status;
+    final photoKind = VisitRules.photoKindFor(to);
 
     return _updateVisit(
       parameters.visitID,
       successMessage: 'Visit moved to {0}'.trArgs([_statusText(to)]),
+      proof: (
+        location: parameters.location,
+        photoPaths: parameters.photoPaths,
+        photoKind: photoKind,
+      ),
       edit: (visit, invoice, allVisits) {
         final from = VisitRules.statusOf(visit);
 
@@ -124,16 +143,36 @@ class VisitDetailRemoteDataSource
         _checkReason(parameters.reason,
             required: VisitRules.needsReason(from, to));
 
+        if (AppSession.isTechnician) {
+          if (VisitRules.photosRequired(visit, to) &&
+              parameters.photoPaths.isEmpty) {
+            _fail('This visit needs at least one {0} photo.'.trArgs([
+              PhotoKindSwitch(photoKindEnum: photoKind).getText().toLowerCase()
+            ]));
+          }
+          if (VisitRules.needsPresence(to)) {
+            _checkOnSite(visit, parameters.location!);
+          }
+        }
+
         // Reopening starts the plan again, so the old technician is released.
         final reopened = from == VisitStatus.cancel;
         final updated = reopened
             ? _withoutTechnician(visit).copyWith(status: to)
             : visit.copyWith(status: to);
 
+        final updatedInvoice = _invoiceForStatus(invoice, to);
+        final log = 'Status changed from {0} to {1}'
+            .trArgs([_statusText(from), _statusText(to)]);
+        final autoIssued =
+            invoice?.issueDate == null && updatedInvoice?.issueDate != null;
+
         return (
           visit: updated,
-          updatedInvoice: _invoiceForStatus(invoice, to),
-          log: 'Status changed from {0} to {1}'.trArgs([_statusText(from), _statusText(to)]),
+          updatedInvoice: updatedInvoice,
+          log: autoIssued
+              ? '{0} · {1}'.trArgs([log, 'Invoice issued automatically'.tr])
+              : log,
           reason: parameters.reason,
         );
       },
@@ -141,11 +180,29 @@ class VisitDetailRemoteDataSource
   }
 
   /// A cancelled visit cancels its invoice; reopening makes it collectible.
+  /// Completing the visit issues its untouched draft invoice, so the
+  /// technician can collect on site without waiting for the admin.
   InvoiceDetailModel? _invoiceForStatus(
     InvoiceDetailModel? invoice,
     VisitStatus to,
   ) {
     if (invoice == null) return null;
+
+    if (to == VisitStatus.completed &&
+        invoice.issueDate == null &&
+        invoice.paymentStatus == PaymentStatus.unpaid &&
+        (invoice.paidAmount ?? 0) == 0 &&
+        (invoice.totalAmount ?? 0) > 0) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final due = invoice.dueDate;
+      return invoice.copyWith(
+        issueDate: now,
+        dueDate: due != null && !due.isBefore(today)
+            ? due
+            : today.add(Duration(days: App.invoicePaymentTermDays)),
+      );
+    }
 
     if (to == VisitStatus.cancel) {
       return invoice.copyWith(paymentStatus: PaymentStatus.cancelled);
@@ -167,6 +224,7 @@ class VisitDetailRemoteDataSource
       AssignTechnicianParameters parameters) {
     return _updateVisit(
       parameters.visitID,
+      adminOnly: true,
       successMessage: 'Technician assigned successfully'.tr,
       edit: (visit, invoice, allVisits) {
         // Dispatch can set the time in the same step as the technician.
@@ -227,6 +285,7 @@ class VisitDetailRemoteDataSource
       UnassignTechnicianParameters parameters) {
     return _updateVisit(
       parameters.visitID,
+      adminOnly: true,
       successMessage: 'Technician unassigned'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canUnassignTechnician(visit)) {
@@ -257,6 +316,7 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
+      adminOnly: true,
       successMessage: 'Visit rescheduled'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canReschedule(visit)) {
@@ -306,6 +366,7 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
+      adminOnly: true,
       successMessage: 'Visit details updated'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canEditInfo(visit)) {
@@ -359,6 +420,7 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
+      adminOnly: true,
       successMessage: 'Service changed and invoice repriced'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canChangeService(visit, invoice)) {
@@ -433,6 +495,7 @@ class VisitDetailRemoteDataSource
 
     return _updateVisit(
       parameters.visitID,
+      adminOnly: true,
       successMessage: 'Visit site updated'.tr,
       edit: (visit, invoice, allVisits) {
         if (!VisitRules.canChangeSite(visit)) {
@@ -473,7 +536,16 @@ class VisitDetailRemoteDataSource
     return _updateVisit(
       parameters.visitID,
       successMessage: 'Note added'.tr,
+      proof: (
+        location: parameters.location,
+        photoPaths: parameters.photoPaths,
+        photoKind: PhotoKind.note,
+      ),
       edit: (visit, invoice, allVisits) {
+        if (!VisitRules.canAddComment(visit)) {
+          _fail('Notes can only be added to your open visits.'.tr);
+        }
+
         if (comment.length < VisitRules.minCommentLength ||
             comment.length > VisitRules.maxCommentLength) {
           _fail('A note must be {0}–{1} characters.'.trArgs([VisitRules.minCommentLength, VisitRules.maxCommentLength]));
@@ -482,7 +554,9 @@ class VisitDetailRemoteDataSource
         return (
           visit: visit,
           updatedInvoice: null,
-          log: 'Admin added a note'.tr,
+          log: AppSession.isTechnician
+              ? 'Technician added a note'.tr
+              : 'Admin added a note'.tr,
           reason: comment,
         );
       },
@@ -493,6 +567,7 @@ class VisitDetailRemoteDataSource
   Future<void> deleteVisit(DeleteVisitParameters parameters) async {
     return await HandleLogicErrors<void>(fun: () async {
       await Future.delayed(_latency);
+      _requireAdmin();
 
       await _exclusive(() async {
         final visits = _readVisits();
@@ -511,6 +586,7 @@ class VisitDetailRemoteDataSource
         if (invoice != null) invoices.removeWhere((e) => e.id == invoice.id);
 
         await _save(visits: visits, invoices: invoices);
+        await LocalPhotos.removeVisit(visit.id!);
       });
 
       await AppToasts.showMessage('Visit and its invoice were deleted'.tr);
@@ -524,33 +600,59 @@ class VisitDetailRemoteDataSource
   /// Reads a fresh snapshot, applies [edit], appends history,
   /// keeps visit.paymentStatus in sync with the invoice and saves both.
   /// The caller reloads the invoice afterwards, since it may have changed.
+  ///
+  /// [adminOnly] actions are refused for technicians. For a technician,
+  /// [proof] must carry a fresh location; it is logged with the change and
+  /// its photos are stored with the visit.
   Future<VisitDetailModel> _updateVisit(
     String visitID, {
     required String successMessage,
     required _VisitEditor edit,
+    bool adminOnly = false,
+    _FieldProof? proof,
   }) async {
     return await HandleLogicErrors<VisitDetailModel>(fun: () async {
       await Future.delayed(_latency);
+      if (adminOnly) _requireAdmin();
 
       final updated = await _exclusive(() async {
         final visits = _readVisits();
         final invoices = _readInvoices();
 
         final current = _findVisit(visits, visitID);
+        final location = _checkFieldProof(current, proof);
         final change = edit(current, _findInvoice(invoices, current), visits);
 
         final invoice = change.updatedInvoice;
         final synced = invoice == null
             ? change.visit
             : change.visit.copyWith(paymentStatus: invoice.paymentStatus);
-        final visit = _withHistory(synced, change.log, change.reason);
+
+        final photos = await _keepPhotos(synced, proof, location);
+        final withPhotos = photos.isEmpty
+            ? synced
+            : synced.copyWith(photos: [...?synced.photos, ...photos]);
+        final visit = _withHistory(
+          withPhotos,
+          photos.isEmpty
+              ? change.log
+              : '{0} · {1} photo{2}'.trArgs(
+                  [change.log, photos.length, photos.length == 1 ? '' : 's']),
+          change.reason,
+          location: location,
+        );
 
         visits[visits.indexWhere((e) => e.id == visit.id)] = visit;
         if (invoice != null) {
           invoices[invoices.indexWhere((e) => e.id == invoice.id)] = invoice;
         }
 
-        await _save(visits: visits, invoices: invoices);
+        try {
+          await _save(visits: visits, invoices: invoices);
+        } catch (_) {
+          await LocalPhotos.remove(photos.map((e) => e.path!));
+          rethrow;
+        }
 
         return visit;
       });
@@ -563,8 +665,9 @@ class VisitDetailRemoteDataSource
   VisitDetailModel _withHistory(
     VisitDetailModel visit,
     String description,
-    String? reason,
-  ) {
+    String? reason, {
+    GModelGeoPoint? location,
+  }) {
     final note = reason?.trim() ?? '';
 
     return visit.copyWith(history: [
@@ -573,11 +676,45 @@ class VisitDetailRemoteDataSource
         id: GFunToken.generateRandomId(),
         visitId: visit.id,
         recordedAt: DateTime.now(),
-        actor: _admin,
+        actor: AppSession.actor,
         description: description,
         reason: note.isEmpty ? null : note,
+        location: location,
+        distanceFromSite:
+            location == null ? null : _distanceFromSite(visit, location),
       ),
     ]);
+  }
+
+  /// Copies the technician's photos next to the visit. Files already copied
+  /// are removed again if a later one fails.
+  Future<List<VisitPhotoModel>> _keepPhotos(
+    VisitDetailModel visit,
+    _FieldProof? proof,
+    GModelGeoPoint? location,
+  ) async {
+    final paths = proof?.photoPaths ?? const <String>[];
+    if (paths.isEmpty) return const [];
+
+    final kept = <VisitPhotoModel>[];
+    try {
+      for (final path in paths) {
+        final id = GFunToken.generateRandomId();
+        kept.add(VisitPhotoModel(
+          id: id,
+          path: await LocalPhotos.keep(
+              tempPath: path, visitID: visit.id!, photoID: id),
+          kind: proof!.photoKind,
+          takenAt: DateTime.now(),
+          takenBy: AppSession.actor,
+          location: location,
+        ));
+      }
+    } catch (_) {
+      await LocalPhotos.remove(kept.map((e) => e.path!));
+      _fail('Could not save the photos on this device.'.tr);
+    }
+    return kept;
   }
 
   /// copyWith cannot clear a field, so the visit is rebuilt without one.
@@ -603,6 +740,7 @@ class VisitDetailRemoteDataSource
       invoiceID: visit.invoiceID,
       requireBeforeWorkPhotos: visit.requireBeforeWorkPhotos,
       requireAfterWorkPhotos: visit.requireAfterWorkPhotos,
+      photos: visit.photos,
     );
   }
 
@@ -612,6 +750,69 @@ class VisitDetailRemoteDataSource
 
   Never _fail(String message) =>
       throw ServerException(ErrorMessageModel(statusMessage: message));
+
+  void _requireAdmin() {
+    if (AppSession.isTechnician) _fail('Only the admin can do this.'.tr);
+  }
+
+  /// Technicians act only on their own visits, from where they really are.
+  /// Returns the location to log, or null for the admin.
+  GModelGeoPoint? _checkFieldProof(
+      VisitDetailModel visit, _FieldProof? proof) {
+    final photos = proof?.photoPaths ?? const <String>[];
+
+    if (!AppSession.isTechnician) {
+      if (photos.isNotEmpty) _fail('Only technicians can add visit photos.'.tr);
+      return null;
+    }
+
+    if (!VisitRules.isOwnVisit(visit)) {
+      _fail('This visit is not assigned to you.'.tr);
+    }
+
+    final location = proof?.location;
+    if (location == null || !location.isValid) {
+      _fail('Your current location is required for this action.'.tr);
+    }
+
+    final capturedAt = location.capturedAt;
+    if (capturedAt == null ||
+        DateTime.now().difference(capturedAt) > VisitRules.maxLocationAge) {
+      _fail('Your location is out of date. Refresh it and try again.'.tr);
+    }
+
+    if (photos.isNotEmpty && proof?.photoKind == null) {
+      _fail('Photos cannot be added at this step.'.tr);
+    }
+    if (photos.length > VisitRules.maxPhotosPerAction) {
+      _fail('You can add up to {0} photos at a time.'
+          .trArgs([VisitRules.maxPhotosPerAction]));
+    }
+
+    return location;
+  }
+
+  double? _distanceFromSite(VisitDetailModel visit, GModelGeoPoint location) {
+    if (!VisitRules.siteHasCoordinates(visit) || !location.isValid) {
+      return null;
+    }
+    return GFunLocation.distance(
+        location, visit.site!.latitude!, visit.site!.longitude!);
+  }
+
+  /// Work can only start at the site. A site without coordinates cannot be
+  /// checked; the technician's location is still logged for the admin.
+  void _checkOnSite(VisitDetailModel visit, GModelGeoPoint location) {
+    final distance = _distanceFromSite(visit, location);
+    if (distance == null) return;
+
+    if (distance > VisitRules.maxStartDistanceMeters) {
+      _fail('You are {0} from the site. Move within {1} to start work.'.trArgs([
+        GFunLocation.distanceText(distance),
+        GFunLocation.distanceText(VisitRules.maxStartDistanceMeters),
+      ]));
+    }
+  }
 
   void _checkReason(String? reason, {required bool required}) {
     final length = reason?.trim().length ?? 0;
@@ -793,7 +994,7 @@ class VisitDetailRemoteDataSource
   String _dateTime(DateTime value) =>
       DateFormat('dd MMM yyyy, hh:mm a').format(value);
 
-  String _siteText(GModelSite site) => [site.city?.name, site.addressDetail]
+  String _siteText(GModelSite site) => [site.city?.name?.tr, site.addressDetail]
       .where((e) => (e ?? '').trim().isNotEmpty)
       .join(' - ');
 }

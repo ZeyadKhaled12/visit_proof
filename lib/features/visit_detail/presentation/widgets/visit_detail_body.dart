@@ -17,6 +17,7 @@ import 'visit_detail_widget_hero.dart';
 import 'visit_detail_widget_history.dart';
 import 'visit_detail_widget_info.dart';
 import 'visit_detail_widget_invoice.dart';
+import 'visit_detail_widget_photos.dart';
 import 'visit_detail_widget_schedule.dart';
 import 'visit_detail_widget_service.dart';
 import 'visit_detail_widget_workflow.dart';
@@ -118,14 +119,23 @@ class VisitDetailBody extends StatelessWidget {
             VisitDetailWidgetService(visit: visit, invoice: invoice),
             gap,
             VisitDetailWidgetInfo(visit: visit),
+            if (VisitDetailWidgetPhotos.shouldShow(visit)) ...[
+              gap,
+              VisitDetailWidgetPhotos(visit: visit),
+            ],
+            if (VisitRules.canSeeInvoice(visit)) ...[
+              gap,
+              VisitDetailWidgetInvoice(
+                visit: visit,
+                invoice: invoice,
+                loading: state.getInvoiceRequestState == RequestState.loading,
+                onInvoiceClosed: () => _refresh(context),
+              ),
+            ],
             gap,
-            VisitDetailWidgetInvoice(
-              invoice: invoice,
-              loading: state.getInvoiceRequestState == RequestState.loading,
-              onInvoiceClosed: () => _refresh(context),
-            ),
-            gap,
-            VisitDetailWidgetHistory(history: visit.history ?? const []),
+            VisitDetailWidgetHistory(
+                history: visit.history ?? const [],
+                canAddNote: VisitRules.canAddComment(visit)),
             if (VisitRules.canDelete(visit, invoice)) ...[
               const SizedBox(height: 24),
               GWidgetButton(

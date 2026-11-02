@@ -22,6 +22,7 @@ import 'package:visit_proof/features/visits/data/models/visit_detail_models/visi
 import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_history_model.dart';
 
 import '../../../../core/network/error/exception.dart';
+import '../../../../core/session/app_session.dart';
 import '../../domain/usecases/add_visit_uc.dart';
 
 
@@ -96,6 +97,12 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
         await Future.delayed(
           const Duration(seconds: 1),
         );
+
+        // Planning visits is admin work.
+        if (AppSession.isTechnician) {
+          throw ServerException(ErrorMessageModel(
+              statusMessage: 'Only the admin can do this.'.tr));
+        }
 
         return await _exclusive(() async {
           final preferences = LocalPref.sharedPreferences;

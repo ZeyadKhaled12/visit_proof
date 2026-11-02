@@ -54,7 +54,7 @@ class AddVisitWidgetService extends StatelessWidget {
                     children: [
                       Text(service.serviceName ?? '',
                           style: AppTheme.font(fontWeight: FontWeight.w500)),
-                      Text(service.category?.name ?? '',
+                      Text((service.category?.name ?? '').tr,
                           style: AppTheme.font(
                               fontWeight: FontWeight.w500,
                               color: AppTheme.iconGrey,
@@ -149,7 +149,7 @@ class _ServiceSummaryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  service.category?.name ?? 'Uncategorized'.tr,
+                  service.category?.name?.tr ?? 'Uncategorized'.tr,
                   style: AppTheme.font(
                     color: AppTheme.primary,
                     fontSize: AppTheme.textSmall,

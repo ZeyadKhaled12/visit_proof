@@ -87,7 +87,7 @@ class ServicesWidgetCard extends StatelessWidget {
                               size: 12, color: AppTheme.secondary),
                           const SizedBox(width: 4),
                           Text(
-                            service.category?.name ?? 'No Category'.tr,
+                            service.category?.name?.tr ?? 'No Category'.tr,
                             style: AppTheme.font(
                               color: AppTheme.secondary,
                               fontSize: AppTheme.textCaption,

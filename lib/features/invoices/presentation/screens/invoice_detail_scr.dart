@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/enums.dart';
@@ -8,6 +6,7 @@ import 'package:visit_proof/features/invoices/presentation/controller/invoices_b
 import 'package:visit_proof/features/invoices/presentation/widgets/invoice_detail_widget/invoice_detail_body.dart';
 
 import '../../../../core/services/services_locator.dart';
+import '../../domain/usecases/get_payments_uc.dart';
 
 class InvoiceDetailScr extends StatelessWidget {
   const InvoiceDetailScr({super.key});
@@ -26,12 +25,17 @@ class InvoiceDetailScr extends StatelessWidget {
         create: (context) => sl<InvoicesBloc>()
           ..add(GetInvoiceDetailEvent(
               getInvoiceDetailParameters:
-                  GetInvoiceDetailParameters(invoiceId: argu.invoiceID))),
+                  GetInvoiceDetailParameters(invoiceId: argu.invoiceID)))
+          ..add(GetPaymentsEvent(
+              getPaymentsParameters:
+                  GetPaymentsParameters(invoiceId: argu.invoiceID))),
         child: BlocBuilder<InvoicesBloc, InvoicesState>(
           builder: (context, state) {
-        log('DISCOUNT3: ${state.invoiceDetailModel.discountAmount}');
             return InvoiceDetailBody(
                 invoice: state.invoiceDetailModel,
+                payments: state.payments,
+                reviewing:
+                    state.reviewPaymentRequestState == RequestState.loading,
                 loading:
                     state.invoiceDetailRequestState == RequestState.loading);
           },

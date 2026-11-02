@@ -162,8 +162,8 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                               label: 'Model:'.tr, value: eq.model ?? "N/A"),
                           const SizedBox(height: 4),
                           _EqDetailRowModel(
-                              label: 'SN:',
-                              value: eq.serialNumber ?? "N/A",
+                              label: 'SN:'.tr,
+                              value: eq.serialNumber ?? 'N/A'.tr,
                               isSn: true),
                         ],
                       ),

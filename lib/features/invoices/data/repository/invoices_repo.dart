@@ -12,6 +12,9 @@ import 'package:visit_proof/features/invoices/domain/usecases/refund_payment_uc.
 import 'package:visit_proof/features/invoices/domain/usecases/update_draft_invoice_uc.dart';
 
 import '../../../../core/network/error/exception.dart';
+import '../../domain/usecases/get_payments_uc.dart';
+import '../../domain/usecases/review_payment_uc.dart';
+import '../models/invoice_payment_history_model.dart';
 
 class InvoicesRepo extends BaseInvoicesRepo {
   final BaseInvoicesRemoteDataSource baseInvoicesRemoteDataSource;
@@ -95,6 +98,29 @@ class InvoicesRepo extends BaseInvoicesRepo {
       NoParameters parameters) async {
     try {
       final result = await baseInvoicesRemoteDataSource.getInvoices(parameters);
+      return Right(result);
+    } on ServerException catch (failure) {
+      return Left(ServerFailure.openFun(failure.errorMessageModel));
+    }
+  }
+
+  @override
+  Future<Either<Failure, InvoiceDetailModel>> reviewPayment(
+      ReviewPaymentParameters parameters) async {
+    try {
+      final result =
+          await baseInvoicesRemoteDataSource.reviewPayment(parameters);
+      return Right(result);
+    } on ServerException catch (failure) {
+      return Left(ServerFailure.openFun(failure.errorMessageModel));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<InvoicePaymentHistoryModel>>> getPayments(
+      GetPaymentsParameters parameters) async {
+    try {
+      final result = await baseInvoicesRemoteDataSource.getPayments(parameters);
       return Right(result);
     } on ServerException catch (failure) {
       return Left(ServerFailure.openFun(failure.errorMessageModel));

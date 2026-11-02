@@ -125,7 +125,7 @@ class _Readout extends StatelessWidget {
     final title = bucket == null
         ? 'Tap a bar for details'.tr
         : days > 1
-            ? 'Week of ${DateFormat('dd MMM').format(bucket.from)}'
+            ? 'Week of {0}'.trArgs([DateFormat('dd MMM').format(bucket.from)])
             : DateFormat('EEE, dd MMM').format(bucket.from);
 
     final value = bucket == null

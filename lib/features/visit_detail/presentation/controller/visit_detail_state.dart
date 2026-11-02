@@ -18,6 +18,7 @@ class VisitDetailState extends Equatable {
   final RequestState changeSiteRequestState;
   final RequestState addCommentRequestState;
   final RequestState deleteVisitRequestState;
+  final RequestState collectPaymentRequestState;
 
   const VisitDetailState({
     this.visit = const VisitDetailModel(),
@@ -37,6 +38,7 @@ class VisitDetailState extends Equatable {
     this.changeSiteRequestState = RequestState.loaded,
     this.addCommentRequestState = RequestState.loaded,
     this.deleteVisitRequestState = RequestState.loaded,
+    this.collectPaymentRequestState = RequestState.loaded,
   });
 
   /// The visit has been loaded at least once.
@@ -63,6 +65,7 @@ class VisitDetailState extends Equatable {
     RequestState? changeSiteRequestState,
     RequestState? addCommentRequestState,
     RequestState? deleteVisitRequestState,
+    RequestState? collectPaymentRequestState,
   }) {
     return VisitDetailState(
       visit: visit ?? this.visit,
@@ -95,6 +98,8 @@ class VisitDetailState extends Equatable {
           addCommentRequestState ?? this.addCommentRequestState,
       deleteVisitRequestState:
           deleteVisitRequestState ?? this.deleteVisitRequestState,
+      collectPaymentRequestState:
+          collectPaymentRequestState ?? this.collectPaymentRequestState,
     );
   }
 
@@ -117,5 +122,6 @@ class VisitDetailState extends Equatable {
         changeSiteRequestState,
         addCommentRequestState,
         deleteVisitRequestState,
+        collectPaymentRequestState,
       ];
 }

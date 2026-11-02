@@ -8,6 +8,7 @@ import 'package:visit_proof/features/visits/data/models/visit_detail_models/visi
 import '../../../../../core/utils/enums/priority_enum.dart';
 import '../../../../../core/utils/general_models/g_model_catg.dart';
 import 'visit_history_model.dart';
+import 'visit_photo_model.dart';
 
 class VisitDetailModel extends Equatable {
   final String? id;
@@ -31,6 +32,9 @@ class VisitDetailModel extends Equatable {
   final bool? requireBeforeWorkPhotos;
   final bool? requireAfterWorkPhotos;
 
+  /// Proof photos taken by the technician, oldest first.
+  final List<VisitPhotoModel>? photos;
+
   const VisitDetailModel(
       {this.id,
       this.visitNumber,
@@ -51,7 +55,8 @@ class VisitDetailModel extends Equatable {
       this.paymentStatus,
       this.invoiceID,
       this.requireBeforeWorkPhotos,
-      this.requireAfterWorkPhotos});
+      this.requireAfterWorkPhotos,
+      this.photos});
 
   factory VisitDetailModel.fromJson(Map<String, dynamic> json) {
     return VisitDetailModel(
@@ -93,7 +98,10 @@ class VisitDetailModel extends Equatable {
                 .switchEnum(),
         invoiceID: json['invoiceID'] as String?,
         requireAfterWorkPhotos: json['requireAfterWorkPhotos'] as bool?,
-        requireBeforeWorkPhotos: json['requireBeforeWorkPhotos'] as bool?);
+        requireBeforeWorkPhotos: json['requireBeforeWorkPhotos'] as bool?,
+        photos: (json['photos'] as List<dynamic>?)
+            ?.map((e) => VisitPhotoModel.fromJson(Map<String, dynamic>.from(e)))
+            .toList());
   }
 
   VisitDetailModel copyWith({
@@ -117,6 +125,7 @@ class VisitDetailModel extends Equatable {
     String? invoiceID,
     bool? requireBeforeWorkPhotos,
     bool? requireAfterWorkPhotos,
+    List<VisitPhotoModel>? photos,
   }) {
     return VisitDetailModel(
       id: id ?? this.id,
@@ -141,6 +150,7 @@ class VisitDetailModel extends Equatable {
       invoiceID: invoiceID ?? this.invoiceID,
       requireAfterWorkPhotos:
           requireAfterWorkPhotos ?? this.requireAfterWorkPhotos,
+      photos: photos ?? this.photos,
     );
   }
 
@@ -170,7 +180,8 @@ class VisitDetailModel extends Equatable {
             : PaymentStatusSwitch(paymentStatusEnum: paymentStatus).switchID(),
         'invoiceID': invoiceID,
         'requireAfterWorkPhotos': requireAfterWorkPhotos,
-        'requireBeforeWorkPhotos': requireBeforeWorkPhotos
+        'requireBeforeWorkPhotos': requireBeforeWorkPhotos,
+        'photos': photos?.map((e) => e.toJson()).toList()
       };
 
   @override
@@ -194,6 +205,7 @@ class VisitDetailModel extends Equatable {
         paymentStatus,
         invoiceID,
         requireBeforeWorkPhotos,
-        requireAfterWorkPhotos
+        requireAfterWorkPhotos,
+        photos
       ];
 }

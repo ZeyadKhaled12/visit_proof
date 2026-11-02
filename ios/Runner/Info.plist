@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Technicians take before and after work photos as proof of the visit.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Visit photos are saved with the visit as proof of work.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The camera may record audio while taking visit photos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is recorded with each visit action so the admin can confirm you were on site.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
