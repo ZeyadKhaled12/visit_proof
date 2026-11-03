@@ -1,11 +1,11 @@
 {
-    "name": "Visit Proof",
-    "short_name": "Visit Proof",
+    "name": "Wizpo",
+    "short_name": "Wizpo",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#F4F6F9",
-    "theme_color": "#6C5CE7",
-    "description": "Field visits with proof of work: live location, photos and a full activity log for small service teams.",
+    "background_color": "#FBF7EF",
+    "theme_color": "#15182D",
+    "description": "Business apps made simple: ready-to-use apps for small teams. Small apps, big magic.",
     "orientation": "any",
     "prefer_related_applications": false,
     "icons": [

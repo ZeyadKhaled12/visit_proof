@@ -1161,29 +1161,47 @@ const Map<String, String> arabicTranslations = {
   'Sharurah': 'شرورة',
 
   // --- Website: landing page -------------------------------------------------
-  '{0} — field visits with proof': '{0} — زيارات ميدانية موثقة',
-  'Features': 'المزايا',
+  'Apps': 'التطبيقات',
+  'Small apps. Big magic.': 'تطبيقات صغيرة، سحر كبير.',
+  'Business apps made simple.': 'تطبيقات الأعمال، ببساطة.',
+  'Ready-to-use apps for small teams. Choose the tools you need, try a live demo and start working in minutes — all in one workspace, with your colors and your logo.':
+      'تطبيقات جاهزة للاستخدام للفرق الصغيرة. اختر الأدوات التي تحتاجها، وجرّبها تجربة مباشرة، وابدأ العمل خلال دقائق — في مساحة عمل واحدة، بألوانك وشعارك.',
+  'Browse the apps': 'تصفّح التطبيقات',
+  'Try {0} live': 'جرّب {0} مباشرة',
+  'My workspace': 'مساحة عملي',
+  'Coming soon': 'قريبًا',
+  'The apps': 'التطبيقات',
+  'Pick the tools your team needs': 'اختر الأدوات التي يحتاجها فريقك',
+  'Each app does one job well. Start with one today and add more as they arrive.':
+      'يؤدي كل تطبيق مهمة واحدة بإتقان. ابدأ بتطبيق واحد اليوم، وأضف غيره عند صدوره.',
+  'Field visits with proof': 'زيارات ميدانية موثقة',
+  'Available now': 'متاح الآن',
+  'See the details': 'اطّلع على التفاصيل',
+  'More apps are on the way': 'المزيد من التطبيقات في الطريق',
+  'We are building more small apps for the everyday work of a business. Each one will join the same workspace, with the same simple pricing.':
+      'نعمل على تطوير مزيد من التطبيقات الصغيرة للأعمال اليومية في المنشآت، وسينضم كل منها إلى مساحة العمل نفسها، وبالتسعير البسيط ذاته.',
+  '{0} · one plan for every small team': '{0} · باقة واحدة لكل فريق صغير',
+  'What is {0}?': 'ما هو {0}؟',
+  '{0} is a marketplace of ready-to-use business apps for small teams. You choose the apps you need, try each one live, and we set it up with your colors and your logo.':
+      '{0} متجر لتطبيقات الأعمال الجاهزة للفرق الصغيرة. تختار التطبيقات التي تحتاجها، وتجرّب كلًّا منها تجربة مباشرة، ثم نُعدّه لك بألوانك وشعارك.',
+  'Which apps can I get today?': 'ما التطبيقات المتاحة اليوم؟',
+  '{0} is available now. More apps are coming soon and will join the same workspace.':
+      'تطبيق {0} متاح الآن، وستصدر تطبيقات أخرى قريبًا لتنضم إلى مساحة العمل نفسها.',
   'Pricing': 'الأسعار',
   'FAQ': 'الأسئلة الشائعة',
   'Demo': 'تجربة',
   'Light mode': 'الوضع الفاتح',
   'Free for the first {0} months': 'مجانًا لأول {0} أشهر',
-  'Stop managing field visits on WhatsApp.':
-      'توقّف عن إدارة الزيارات الميدانية عبر واتساب.',
   'Every technician visit is scheduled, proven with live location and photos, and closed with a clear record — in an app with your colors, your fonts and your logo.':
       'تُجدوَل كل زيارة للفني، وتُوثَّق بالموقع المباشر والصور، وتُغلق بسجل واضح — في تطبيق بألوانك وخطوطك وشعارك.',
   'Try it and design your app': 'جرّبه وصمّم تطبيقك',
-  'See the price': 'اطّلع على السعر',
   'No sign-up and no card. The demo resets every time you open it.':
       'دون تسجيل ودون بطاقة دفع. تبدأ التجربة من جديد في كل مرة تفتحها.',
   'VIS-000124 · AC periodic maintenance': 'VIS-000124 · صيانة دورية للمكيف',
   'Al Noor Pharmacy · Riyadh': 'صيدلية النور · الرياض',
-  'Trip started 09:12': 'بدأت الرحلة 09:12',
   'Arrived · 18 m from the site': 'الوصول · على بُعد 18 م من الموقع',
   '3 photos before and after': '3 صور قبل العمل وبعده',
-  'Checklist done · 4 of 4': 'اكتملت قائمة التحقق · 4 من 4',
   'Payment collected · receipt photo': 'تم تحصيل الدفعة · صورة الإيصال',
-  'What it does': 'ما الذي يقدمه',
   'Everything a small field team needs, nothing it does not':
       'كل ما يحتاجه فريق ميداني صغير، دون أي تعقيد',
   'One app for the office and one for the technicians, connected live.':
@@ -1230,7 +1248,6 @@ const Map<String, String> arabicTranslations = {
   'Simple, small and clear': 'بسيط وواضح ومناسب للشركات الصغيرة',
   'We are built for companies at the start of their journey. When you grow past {0} users, you have outgrown us — and that is the goal.':
       'صُمّمنا للشركات في بداية مسيرتها. وعندما يتجاوز فريقك {0} مستخدمين تكون قد كبرت — وهذا هو الهدف.',
-  'One plan for every small team': 'باقة واحدة لكل فريق صغير',
   'Free for {0} months': 'مجانًا لمدة {0} أشهر',
   'then {0}': 'ثم {0}',
   'every {0} months': 'كل {0} أشهر',

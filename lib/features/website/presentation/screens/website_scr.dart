@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../widgets/studio_widget_panel.dart';
+import '../widgets/website_widget_brand.dart';
 import '../widgets/website_widget_parts.dart';
 import '../widgets/website_widget_sections.dart';
 import 'website_request_scr.dart';
@@ -16,7 +17,7 @@ class WebsiteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '{0} — field visits with proof'.trArgs(['Visit Proof'.tr]),
+      title: WebsiteBrand.pageTitle,
       debugShowCheckedModeBanner: false,
       theme: WebTheme.materialTheme,
       locale: AppLanguage.locale,
@@ -31,7 +32,8 @@ class WebsiteApp extends StatelessWidget {
   }
 }
 
-/// The landing page: what the app does, how to get it and what it costs.
+/// The landing page: Wizpo's apps, then the one available today (Visit
+/// Proof) — what it does, how to get it and what it costs.
 class WebsiteScr extends StatefulWidget {
   const WebsiteScr({super.key});
 
@@ -40,6 +42,7 @@ class WebsiteScr extends StatefulWidget {
 }
 
 class _WebsiteScrState extends State<WebsiteScr> {
+  final _apps = GlobalKey();
   final _features = GlobalKey();
   final _pricing = GlobalKey();
   final _faq = GlobalKey();
@@ -94,7 +97,8 @@ class _WebsiteScrState extends State<WebsiteScr> {
         title: const WebsiteLogo(),
         actions: [
           if (wide) ...[
-            _NavLink('Features'.tr, () => _scrollTo(_features)),
+            _NavLink('Apps'.tr, () => _scrollTo(_apps)),
+            _NavLink('Visit Proof'.tr, () => _scrollTo(_features)),
             _NavLink('Pricing'.tr, () => _scrollTo(_pricing)),
             _NavLink('FAQ'.tr, () => _scrollTo(_faq)),
           ],
@@ -119,7 +123,12 @@ class _WebsiteScrState extends State<WebsiteScr> {
         child: Column(
           children: [
             WebsiteHero(
-                onTryDemo: _openStudio, onPricing: () => _scrollTo(_pricing)),
+                onTryDemo: _openStudio, onBrowse: () => _scrollTo(_apps)),
+            KeyedSubtree(
+                key: _apps,
+                child: WebsiteApps(
+                    onTryDemo: _openStudio,
+                    onDetails: () => _scrollTo(_features))),
             KeyedSubtree(key: _features, child: const WebsiteFeatures()),
             WebsiteSteps(onTryDemo: _openStudio),
             KeyedSubtree(

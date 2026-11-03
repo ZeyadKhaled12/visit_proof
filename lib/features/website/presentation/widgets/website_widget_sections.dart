@@ -2,6 +2,7 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_offer.dart';
+import 'website_widget_brand.dart';
 import 'website_widget_parts.dart';
 import '../website_theme.dart';
 
@@ -13,33 +14,25 @@ String _usd(num amount) => AppOffer.usd(amount);
 
 class WebsiteHero extends StatelessWidget {
   const WebsiteHero(
-      {super.key, required this.onTryDemo, required this.onPricing});
+      {super.key, required this.onTryDemo, required this.onBrowse});
   final VoidCallback onTryDemo;
-  final VoidCallback onPricing;
+  final VoidCallback onBrowse;
 
   @override
   Widget build(BuildContext context) {
     final wide = WebsiteLayout.isWide(context);
+    final align = wide ? TextAlign.start : TextAlign.center;
     final text = Column(
       crossAxisAlignment:
           wide ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: WebTheme.statGreen.withValues(alpha: .12),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: Text(
-              'Free for the first {0} months'.trArgs([AppOffer.freeMonths]),
-              style: WebTheme.font(
-                  color: WebTheme.statGreen,
-                  fontSize: WebTheme.textSmall,
-                  fontWeight: FontWeight.w800)),
-        ),
+        WebsiteBadge(
+            text: WebsiteBrand.tagline.tr.toUpperCase(),
+            color: WebTheme.accent,
+            background: WebTheme.primary),
         const SizedBox(height: 18),
-        Text('Stop managing field visits on WhatsApp.'.tr,
-            textAlign: wide ? TextAlign.start : TextAlign.center,
+        Text('Business apps made simple.'.tr,
+            textAlign: align,
             style: WebTheme.font(
                 color: WebTheme.textPrimary,
                 fontSize: wide ? 46 : 32,
@@ -47,9 +40,9 @@ class WebsiteHero extends StatelessWidget {
                 height: 1.15)),
         const SizedBox(height: 16),
         Text(
-            'Every technician visit is scheduled, proven with live location and photos, and closed with a clear record — in an app with your colors, your fonts and your logo.'
+            'Ready-to-use apps for small teams. Choose the tools you need, try a live demo and start working in minutes — all in one workspace, with your colors and your logo.'
                 .tr,
-            textAlign: wide ? TextAlign.start : TextAlign.center,
+            textAlign: align,
             style: WebTheme.font(
                 color: WebTheme.textSecondary,
                 fontSize: WebTheme.textTitleLarge,
@@ -61,21 +54,21 @@ class WebsiteHero extends StatelessWidget {
           alignment: wide ? WrapAlignment.start : WrapAlignment.center,
           children: [
             WebsiteButton(
-                text: 'Try it and design your app'.tr,
-                icon: Icons.palette_rounded,
-                onPressed: onTryDemo),
+                text: 'Browse the apps'.tr,
+                icon: Icons.apps_rounded,
+                onPressed: onBrowse),
             WebsiteButton(
-                text: 'See the price'.tr,
-                icon: Icons.sell_outlined,
+                text: 'Try {0} live'.trArgs(['Visit Proof'.tr]),
+                icon: Icons.play_arrow_rounded,
                 outlined: true,
-                onPressed: onPricing),
+                onPressed: onTryDemo),
           ],
         ),
         const SizedBox(height: 18),
         Text(
             'No sign-up and no card. The demo resets every time you open it.'
                 .tr,
-            textAlign: wide ? TextAlign.start : TextAlign.center,
+            textAlign: align,
             style: WebTheme.font(
                 color: WebTheme.textLightHint, fontSize: WebTheme.textSmall)),
       ],
@@ -100,14 +93,15 @@ class WebsiteHero extends StatelessWidget {
   }
 }
 
-/// A mock visit card: what the customer receives at the end of a visit.
+/// A mock workspace: the live app with a visit it proved, and room for the
+/// apps that are coming.
 class _HeroPreview extends StatelessWidget {
   const _HeroPreview();
 
   @override
   Widget build(BuildContext context) {
     Widget step(IconData icon, String text, Color color) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
+          padding: const EdgeInsets.symmetric(vertical: 6),
           child: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
@@ -134,40 +128,262 @@ class _HeroPreview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
+            const WizpoMark(size: 26),
+            const SizedBox(width: 10),
             Expanded(
-              child: Text('VIS-000124 · AC periodic maintenance'.tr,
+              child: Text('My workspace'.tr,
                   style: WebTheme.font(
                       color: WebTheme.textPrimary,
                       fontSize: WebTheme.textTitle,
                       fontWeight: FontWeight.w800)),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                  color: WebTheme.statGreen.withValues(alpha: .12),
-                  borderRadius: BorderRadius.circular(100)),
-              child: Text('Completed'.tr,
-                  style: WebTheme.font(
-                      color: WebTheme.statGreen,
-                      fontSize: WebTheme.textCaption,
-                      fontWeight: FontWeight.w800)),
+            Icon(Icons.auto_awesome_rounded, color: WebTheme.accent, size: 20),
+          ]),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: WebTheme.surface,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  const _AppIcon(icon: Icons.verified_rounded, size: 36),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Visit Proof'.tr,
+                            style: WebTheme.font(
+                                color: WebTheme.textPrimary,
+                                fontSize: WebTheme.textSubtitle,
+                                fontWeight: FontWeight.w800)),
+                        Text('VIS-000124 · AC periodic maintenance'.tr,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: WebTheme.font(
+                                color: WebTheme.textSecondary,
+                                fontSize: WebTheme.textSmall)),
+                      ],
+                    ),
+                  ),
+                  WebsiteBadge(text: 'Completed'.tr, color: WebTheme.statGreen),
+                ]),
+                const SizedBox(height: 8),
+                step(Icons.location_on_rounded,
+                    'Arrived · 18 m from the site'.tr, WebTheme.secondary),
+                step(Icons.photo_camera_rounded,
+                    '3 photos before and after'.tr, WebTheme.primary),
+                step(Icons.payments_rounded,
+                    'Payment collected · receipt photo'.tr, WebTheme.statGreen),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Row(children: [
+            Expanded(child: _ComingSoonTile()),
+            SizedBox(width: 12),
+            Expanded(child: _ComingSoonTile()),
+          ]),
+        ],
+      ),
+    );
+  }
+}
+
+/// A placeholder for an app that is not out yet.
+class _ComingSoonTile extends StatelessWidget {
+  const _ComingSoonTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: WebTheme.iconLightGrey, width: 1.4),
+      ),
+      child: Row(children: [
+        const Icon(Icons.auto_awesome_rounded, color: WebTheme.accent, size: 18),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text('Coming soon'.tr,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: WebTheme.font(
+                  color: WebTheme.textLightHint,
+                  fontSize: WebTheme.textBody,
+                  fontWeight: FontWeight.w700)),
+        ),
+      ]),
+    );
+  }
+}
+
+/// An app's icon tile in the brand's purple and ink.
+class _AppIcon extends StatelessWidget {
+  const _AppIcon({required this.icon, this.size = 48});
+  final IconData icon;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+            colors: [WebTheme.secondary, WebTheme.primary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(size * .28),
+      ),
+      child: Icon(icon, color: WebTheme.parchment, size: size * .55),
+    );
+  }
+}
+
+// =============================================================================
+// APPS
+// =============================================================================
+
+/// The catalog: the apps available today and the ones on the way.
+class WebsiteApps extends StatelessWidget {
+  const WebsiteApps(
+      {super.key, required this.onTryDemo, required this.onDetails});
+  final VoidCallback onTryDemo;
+  final VoidCallback onDetails;
+
+  @override
+  Widget build(BuildContext context) {
+    final visitProof = WebsiteCard(
+      borderColor: WebTheme.primary,
+      padding: const EdgeInsets.all(26),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            const _AppIcon(icon: Icons.verified_rounded, size: 52),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Visit Proof'.tr,
+                      style: WebTheme.font(
+                          color: WebTheme.textPrimary,
+                          fontSize: WebTheme.textHeadline,
+                          fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 2),
+                  Text('Field visits with proof'.tr,
+                      style: WebTheme.font(
+                          color: WebTheme.textSecondary,
+                          fontSize: WebTheme.textBody)),
+                ],
+              ),
             ),
           ]),
-          const SizedBox(height: 4),
-          Text('Al Noor Pharmacy · Riyadh'.tr,
+          const SizedBox(height: 16),
+          Wrap(spacing: 8, runSpacing: 8, children: [
+            WebsiteBadge(text: 'Available now'.tr, color: WebTheme.statGreen),
+            WebsiteBadge(
+                text: 'Free for the first {0} months'
+                    .trArgs([AppOffer.freeMonths]),
+                color: WebTheme.accentText,
+                background: WebTheme.accent.withValues(alpha: .18)),
+          ]),
+          const SizedBox(height: 16),
+          Text(
+              'Every technician visit is scheduled, proven with live location and photos, and closed with a clear record — in an app with your colors, your fonts and your logo.'
+                  .tr,
               style: WebTheme.font(
-                  color: WebTheme.textSecondary, fontSize: WebTheme.textSmall)),
+                  color: WebTheme.textSecondary,
+                  fontSize: WebTheme.textBodyLarge,
+                  height: 1.6)),
+          const SizedBox(height: 22),
+          Wrap(spacing: 12, runSpacing: 12, children: [
+            WebsiteButton(
+                text: 'Try it and design your app'.tr,
+                icon: Icons.palette_rounded,
+                onPressed: onTryDemo),
+            WebsiteButton(
+                text: 'See the details'.tr,
+                icon: Icons.arrow_downward_rounded,
+                outlined: true,
+                onPressed: onDetails),
+          ]),
+        ],
+      ),
+    );
+
+    final comingSoon = Container(
+      padding: const EdgeInsets.all(26),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+            colors: [WebTheme.primary, WebTheme.secondary],
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.auto_awesome_rounded,
+              color: WebTheme.accent, size: 36),
+          const SizedBox(height: 16),
+          WebsiteBadge(
+              text: 'Coming soon'.tr,
+              color: WebTheme.accent,
+              background: WebTheme.accent.withValues(alpha: .16)),
           const SizedBox(height: 14),
-          step(Icons.directions_car_rounded, 'Trip started 09:12'.tr,
-              WebTheme.pending),
-          step(Icons.location_on_rounded, 'Arrived · 18 m from the site'.tr,
-              WebTheme.secondary),
-          step(Icons.photo_camera_rounded, '3 photos before and after'.tr,
-              WebTheme.primary),
-          step(Icons.task_alt_rounded, 'Checklist done · 4 of 4'.tr,
-              WebTheme.statGreen),
-          step(Icons.payments_rounded, 'Payment collected · receipt photo'.tr,
-              WebTheme.statGreen),
+          Text('More apps are on the way'.tr,
+              style: WebTheme.font(
+                  color: WebTheme.onPrimary,
+                  fontSize: WebTheme.textHeadline,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Text(
+              'We are building more small apps for the everyday work of a business. Each one will join the same workspace, with the same simple pricing.'
+                  .tr,
+              style: WebTheme.font(
+                  color: WebTheme.onPrimary.withValues(alpha: .85),
+                  fontSize: WebTheme.textBodyLarge,
+                  height: 1.6)),
+        ],
+      ),
+    );
+
+    return WebsiteSection(
+      color: WebTheme.surface,
+      child: Column(
+        children: [
+          WebsiteHeading(
+            eyebrow: 'The apps'.tr,
+            title: 'Pick the tools your team needs'.tr,
+            subtitle:
+                'Each app does one job well. Start with one today and add more as they arrive.'
+                    .tr,
+          ),
+          const SizedBox(height: 36),
+          WebsiteLayout.isWide(context)
+              ? IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(flex: 3, child: visitProof),
+                      const SizedBox(width: 18),
+                      Expanded(flex: 2, child: comingSoon),
+                    ],
+                  ),
+                )
+              : Column(children: [
+                  visitProof,
+                  const SizedBox(height: 18),
+                  comingSoon,
+                ]),
         ],
       ),
     );
@@ -227,11 +443,10 @@ class WebsiteFeatures extends StatelessWidget {
     ];
 
     return WebsiteSection(
-      color: WebTheme.surface,
       child: Column(
         children: [
           WebsiteHeading(
-            eyebrow: 'What it does'.tr,
+            eyebrow: 'Visit Proof'.tr,
             title: 'Everything a small field team needs, nothing it does not'
                 .tr,
             subtitle:
@@ -311,6 +526,7 @@ class WebsiteSteps extends StatelessWidget {
     ];
 
     return WebsiteSection(
+      color: WebTheme.surface,
       child: Column(
         children: [
           WebsiteHeading(
@@ -384,9 +600,11 @@ class WebsitePricing extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('One plan for every small team'.tr,
+          Text(
+              '{0} · one plan for every small team'
+                  .trArgs(['Visit Proof'.tr]),
               style: WebTheme.font(
-                  color: WebTheme.primary,
+                  color: WebTheme.secondary,
                   fontSize: WebTheme.textSubtitle,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 14),
@@ -498,7 +716,6 @@ class WebsitePricing extends StatelessWidget {
     );
 
     return WebsiteSection(
-      color: WebTheme.surface,
       child: Column(
         children: [
           WebsiteHeading(
@@ -590,6 +807,7 @@ class WebsiteDelivery extends StatelessWidget {
     ];
 
     return WebsiteSection(
+      color: WebTheme.surface,
       child: Column(
         children: [
           WebsiteHeading(
@@ -643,6 +861,16 @@ class WebsiteFaq extends StatelessWidget {
   Widget build(BuildContext context) {
     final questions = [
       (
+        'What is {0}?'.trArgs([WebsiteBrand.name]),
+        '{0} is a marketplace of ready-to-use business apps for small teams. You choose the apps you need, try each one live, and we set it up with your colors and your logo.'
+            .trArgs([WebsiteBrand.name])
+      ),
+      (
+        'Which apps can I get today?',
+        '{0} is available now. More apps are coming soon and will join the same workspace.'
+            .trArgs(['Visit Proof'.tr])
+      ),
+      (
         'Do I pay anything now?',
         'No. Your first {0} months are free. We only ask for payment when they end.'
             .trArgs([AppOffer.freeMonths])
@@ -694,7 +922,6 @@ class WebsiteFaq extends StatelessWidget {
     ];
 
     return WebsiteSection(
-      color: WebTheme.surface,
       child: Column(
         children: [
           WebsiteHeading(
@@ -770,6 +997,9 @@ class WebsiteClosing extends StatelessWidget {
         ),
         child: Column(
           children: [
+            const Icon(Icons.auto_awesome_rounded,
+                color: WebTheme.accent, size: 34),
+            const SizedBox(height: 14),
             Text('Every company passes through its first steps.'.tr,
                 textAlign: TextAlign.center,
                 style: WebTheme.font(
@@ -811,7 +1041,19 @@ class WebsiteFooter extends StatelessWidget {
         spacing: 16,
         runSpacing: 12,
         children: [
-          const WebsiteLogo(),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const WebsiteLogo(),
+              const SizedBox(height: 8),
+              Text(WebsiteBrand.tagline.tr,
+                  style: WebTheme.font(
+                      color: WebTheme.secondary,
+                      fontSize: WebTheme.textSmall,
+                      fontWeight: FontWeight.w700)),
+            ],
+          ),
           Text(
               'Prices in US dollars. This website is a demo: it saves nothing.'
                   .tr,

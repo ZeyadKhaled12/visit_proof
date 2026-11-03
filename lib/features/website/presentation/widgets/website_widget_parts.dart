@@ -2,6 +2,7 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../website_theme.dart';
+import 'website_widget_brand.dart';
 
 /// Shared pieces of the sales website.
 class WebsiteLayout {
@@ -75,7 +76,7 @@ class WebsiteHeading extends StatelessWidget {
         Text(eyebrow.toUpperCase(),
             textAlign: align,
             style: WebTheme.font(
-                color: WebTheme.primary,
+                color: WebTheme.secondary,
                 fontSize: WebTheme.textSmall,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.2)),
@@ -224,36 +225,56 @@ class WebsiteGrid extends StatelessWidget {
   }
 }
 
-/// The website's own logo and name. It stays the same whatever the visitor
-/// designs for their app.
+/// The website's own logo and name (Wizpo). It stays the same whatever the
+/// visitor designs for their app.
 class WebsiteLogo extends StatelessWidget {
-  const WebsiteLogo({super.key});
+  const WebsiteLogo({super.key, this.color = WebTheme.textPrimary});
+
+  /// The wordmark's color: ink on light backgrounds, parchment on dark.
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(7),
-          decoration: BoxDecoration(
-            color: WebTheme.primary,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Icon(Icons.verified_rounded,
-              size: 20, color: WebTheme.onPrimary),
-        ),
-        const SizedBox(width: 10),
-        Flexible(
-          child: Text('Visit Proof'.tr,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: WebTheme.font(
-                  color: WebTheme.textPrimary,
-                  fontSize: WebTheme.textTitleLarge,
-                  fontWeight: FontWeight.w700)),
-        ),
-      ],
+    return Semantics(
+      label: WebsiteBrand.name,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const WizpoMark(size: 34),
+          const SizedBox(width: 10),
+          Text('wizpo',
+              textDirection: TextDirection.ltr,
+              style: WebsiteBrand.wordmark(fontSize: 26, color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+/// A small rounded label, e.g. "Available now" or "Coming soon".
+class WebsiteBadge extends StatelessWidget {
+  const WebsiteBadge(
+      {super.key, required this.text, required this.color, this.background});
+  final String text;
+  final Color color;
+
+  /// Defaults to a soft tint of [color].
+  final Color? background;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: background ?? color.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Text(text,
+          style: WebTheme.font(
+              color: color,
+              fontSize: WebTheme.textSmall,
+              fontWeight: FontWeight.w800,
+              letterSpacing: .4)),
     );
   }
 }

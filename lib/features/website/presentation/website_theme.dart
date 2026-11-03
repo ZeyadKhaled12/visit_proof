@@ -1,11 +1,12 @@
 // =============================================================================
-// WEBSITE THEME — the sales website's own look, separate from the app.
+// WEBSITE THEME — the Wizpo website's own look, separate from the app.
 // =============================================================================
 //
-// A fixed black-and-white style (in the spirit of apple.com). Nothing the
-// visitor changes in the design studio — colors, dark mode, fonts, text
-// size — touches it: those live in AppTheme / AppBrand and only restyle the
-// app inside the phone preview.
+// A fixed light style in the Wizpo palette: midnight ink, wizard purple,
+// gold, deep green, wine and parchment. Nothing the visitor changes in the
+// design studio — colors, dark mode, fonts, text size — touches it: those
+// live in AppTheme / AppBrand and only restyle the app inside the phone
+// preview.
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -18,20 +19,30 @@ class WebTheme {
 
   // --- Colors ----------------------------------------------------------------
 
-  /// Buttons, links and highlights: near-black.
-  static const Color primary = Color(0xFF1D1D1F);
+  /// Buttons, links and highlights: midnight ink.
+  static const Color primary = Color(0xFF15182D);
 
   /// Text and icons drawn on [primary].
-  static const Color onPrimary = Color(0xFFFFFFFF);
+  static const Color onPrimary = Color(0xFFF4EAD6);
 
-  /// Second tone for gradients and icons: dark grey.
-  static const Color secondary = Color(0xFF515154);
+  /// Second tone for gradients, labels and icons: wizard purple.
+  static const Color secondary = Color(0xFF4B315F);
+
+  /// The "magic" touch: badges, stars and small highlights. Use it on
+  /// [primary] or as a soft fill; it is too light for text on white.
+  static const Color accent = Color(0xFFD6AC58);
+
+  /// Gold that is dark enough for text on light backgrounds.
+  static const Color accentText = Color(0xFF8A6420);
+
+  /// Parchment: the brand's light color.
+  static const Color parchment = Color(0xFFF4EAD6);
 
   /// Page background.
-  static const Color scaffoldBackground = Color(0xFFFFFFFF);
+  static const Color scaffoldBackground = Color(0xFFFFFDF8);
 
   /// Alternate sections, panels and app bars.
-  static const Color surface = Color(0xFFF5F5F7);
+  static const Color surface = Color(0xFFF8F2E6);
 
   /// Cards on top of sections.
   static const Color cardColor = Color(0xFFFFFFFF);
@@ -40,23 +51,23 @@ class WebTheme {
   static const Color searchFieldBg = Color(0xFFFFFFFF);
 
   /// Soft fills for chips and options.
-  static const Color locationChipBg = Color(0xFFF2F2F4);
+  static const Color locationChipBg = Color(0xFFF2EBDD);
 
-  static const Color textPrimary = Color(0xFF1D1D1F);
-  static const Color textSecondary = Color(0xFF6E6E73);
-  static const Color textLightHint = Color(0xFF86868B);
+  static const Color textPrimary = Color(0xFF15182D);
+  static const Color textSecondary = Color(0xFF5C5870);
+  static const Color textLightHint = Color(0xFF8A8598);
 
-  static const Color iconGrey = Color(0xFF6E6E73);
+  static const Color iconGrey = Color(0xFF5C5870);
 
   /// Borders and dividers.
-  static const Color iconLightGrey = Color(0xFFD2D2D7);
+  static const Color iconLightGrey = Color(0xFFE0D6C2);
 
-  /// Status colors, used sparingly.
-  static const Color statGreen = Color(0xFF248A3D);
-  static const Color pending = Color(0xFFB25000);
-  static const Color statOrange = Color(0xFFD70015);
+  /// Status colors, used sparingly: deep green, dark gold and wine.
+  static const Color statGreen = Color(0xFF1E5045);
+  static const Color pending = Color(0xFF8A6420);
+  static const Color statOrange = Color(0xFF6B2B3A);
 
-  static const Color shadowColor = Color(0x0F000000);
+  static const Color shadowColor = Color(0x1215182D);
 
   // --- Text ------------------------------------------------------------------
 
