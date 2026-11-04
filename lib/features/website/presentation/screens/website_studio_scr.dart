@@ -1,6 +1,7 @@
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/studio_widget_install.dart';
 import '../widgets/studio_widget_panel.dart';
 import '../widgets/studio_widget_phone.dart';
 import '../widgets/website_widget_parts.dart';
@@ -10,12 +11,42 @@ import '../website_theme.dart';
 /// The live demo with the design studio. On a computer the controls sit
 /// beside a phone preview; on a phone the app fills the screen and the
 /// controls open from the top bar.
-class WebsiteStudioScr extends StatelessWidget {
+class WebsiteStudioScr extends StatefulWidget {
   const WebsiteStudioScr({super.key});
 
+  /// What the "Request" (اطلب) buttons do:
+  ///   true  — install the designed app on the device as a PWA
+  ///           ([StudioInstall]);
+  ///   false — the original flow: open the request form
+  ///           ([WebsiteRequestScr]) to send the design and notes.
+  /// See the note in main.dart.
+  static const bool requestInstallsApp = true;
+
+  @override
+  State<WebsiteStudioScr> createState() => _WebsiteStudioScrState();
+}
+
+class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   static const double _panelWidth = 400;
 
-  void _request(BuildContext context) => Navigator.push(
+  @override
+  void initState() {
+    super.initState();
+    if (WebsiteStudioScr.requestInstallsApp) StudioInstall.start();
+  }
+
+  @override
+  void dispose() {
+    if (WebsiteStudioScr.requestInstallsApp) StudioInstall.stop();
+    super.dispose();
+  }
+
+  void _request(BuildContext context) => WebsiteStudioScr.requestInstallsApp
+      ? StudioInstall.install(context)
+      : _openRequestForm(context);
+
+  /// The original "Request" flow, kept for when it comes back.
+  void _openRequestForm(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (_) => const WebsiteRequestScr()));
 
   void _openPanel(BuildContext context) {

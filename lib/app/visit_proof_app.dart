@@ -20,6 +20,7 @@ import '../features/dispatch/presentation/screens/dispatch_scr.dart';
 import '../features/main_menu/presentation/screens/main_menu_scr.dart';
 import '../features/technician_home/presentation/screens/tech_home_scr.dart';
 import '../features/visit_detail/presentation/screens/visit_detail_scr.dart';
+import '../core/utils/general_widgets/g_widget_install_banner.dart';
 import 'app.dart';
 
 /// The Visit Proof app. Also shown inside the website's phone preview.
@@ -41,10 +42,11 @@ class VisitProofApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        // Status bar and navigation bar follow the active theme.
+        // Status bar and navigation bar follow the active theme. An installed
+        // app opened in a browser tab offers to install itself.
         builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
               value: AppTheme.systemOverlay,
-              child: child!,
+              child: GWidgetInstallBanner(child: child!),
             ),
         routes: {
           // Role selection, admin app or technician app, by session.

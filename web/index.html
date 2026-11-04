@@ -40,7 +40,75 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>Wizpo - Business Apps Made Simple | Small Apps, Big Magic</title>
-  <link rel="manifest" href="manifest.json">
+
+  <!-- Installing a designed app as a PWA (lib/core/pwa/). A link opened with
+       "?app=…" is that app: it gets its own manifest from Flutter, so the
+       Wizpo manifest is left out to keep the browser from offering Wizpo. -->
+  <script>
+    if (!/[?&]app=/.test(location.search)) {
+      document.write('<link rel="manifest" href="manifest.json">');
+    }
+    window.wizpoPwa = (function () {
+      var deferred = null;
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferred = e;
+      });
+      window.addEventListener('appinstalled', function () { deferred = null; });
+
+      function tag(selector, create) {
+        var el = document.head.querySelector(selector);
+        if (!el) { el = create(); document.head.appendChild(el); }
+        return el;
+      }
+      function link(rel) {
+        return tag('link[rel="' + rel + '"]', function () {
+          var l = document.createElement('link'); l.rel = rel; return l;
+        });
+      }
+      function meta(name) {
+        return tag('meta[name="' + name + '"]', function () {
+          var m = document.createElement('meta'); m.name = name; return m;
+        });
+      }
+
+      return {
+        // A new manifest makes the browser check again and send a new
+        // install prompt, so the old one is dropped.
+        setManifest: function (json, icon, themeColor, title) {
+          var blob = new Blob([json], { type: 'application/manifest+json' });
+          link('manifest').href = URL.createObjectURL(blob);
+          link('apple-touch-icon').href = icon;
+          meta('theme-color').content = themeColor;
+          meta('apple-mobile-web-app-title').content = title;
+          deferred = null;
+        },
+        resetManifest: function () {
+          link('manifest').href = 'manifest.json';
+          link('apple-touch-icon').href = 'icons/apple-touch-icon.png';
+          meta('theme-color').content = '#15182D';
+          meta('apple-mobile-web-app-title').content = 'Wizpo';
+          deferred = null;
+        },
+        canPrompt: function () { return deferred !== null; },
+        prompt: async function () {
+          if (!deferred) return 'unavailable';
+          var e = deferred;
+          deferred = null;
+          await e.prompt();
+          return (await e.userChoice).outcome;
+        },
+        isIos: function () {
+          return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        },
+        isStandalone: function () {
+          return window.matchMedia('(display-mode: standalone)').matches ||
+            navigator.standalone === true;
+        }
+      };
+    })();
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

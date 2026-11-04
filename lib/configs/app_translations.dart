@@ -1160,6 +1160,25 @@ const Map<String, String> arabicTranslations = {
   'Samtah': 'صامطة',
   'Sharurah': 'شرورة',
 
+  // --- Installed app (PWA) ---------------------------------------------------
+  'Install': 'تثبيت',
+  'Install {0}': 'تثبيت {0}',
+  'Install this app on your device.': 'ثبّت هذا التطبيق على جهازك.',
+  'To install, tap Share and then "Add to Home Screen".':
+      'للتثبيت، اضغط على زر المشاركة ثم اختر «إضافة إلى الشاشة الرئيسية».',
+  'Open your browser menu and choose "Install app" or "Add to Home Screen".':
+      'افتح قائمة المتصفح واختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».',
+  'OK': 'حسنًا',
+  'Close': 'إغلاق',
+  '{0} is installed': 'تم تثبيت {0}',
+  'Open it from your home screen or your apps. It opens with the design you chose.':
+      'افتحه من الشاشة الرئيسية أو من قائمة التطبيقات، وسيظهر بالتصميم الذي اخترته.',
+  'Your app opens in a new tab. In Safari, tap Share and then "Add to Home Screen".':
+      'سيُفتح تطبيقك في علامة تبويب جديدة. في متصفح سفاري، اضغط على زر المشاركة ثم اختر «إضافة إلى الشاشة الرئيسية».',
+  'Your app opens in a new tab. Choose "Install" in the bar at the top, or "Install app" in the browser menu.':
+      'سيُفتح تطبيقك في علامة تبويب جديدة. اختر «تثبيت» من الشريط في الأعلى، أو «تثبيت التطبيق» من قائمة المتصفح.',
+  'Open my app': 'افتح تطبيقي',
+
   // --- Website: landing page -------------------------------------------------
   'Apps': 'التطبيقات',
   'Small apps. Big magic.': 'تطبيقات صغيرة، سحر كبير.',

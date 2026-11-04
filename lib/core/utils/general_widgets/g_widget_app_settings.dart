@@ -2,6 +2,7 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
+import '../../demo/demo_mode.dart';
 
 /// Language and dark mode switches in one card, shared by the admin menu,
 /// the technician menu and the role selection screen.
@@ -9,13 +10,16 @@ class GWidgetAppSettings extends StatelessWidget {
   const GWidgetAppSettings({super.key});
 
   /// False when both switches are turned off for this build.
-  static bool get hasAny =>
-      AppLanguage.languageSwitchEnabled || AppTheme.darkModeEnabled;
+  static bool get hasAny => AppLanguage.languageSwitchEnabled || _showDarkMode;
+
+  /// An installed app keeps the light/dark it was designed in.
+  static bool get _showDarkMode =>
+      AppTheme.darkModeEnabled && !DemoMode.installedApp;
 
   @override
   Widget build(BuildContext context) {
     const showLanguage = AppLanguage.languageSwitchEnabled;
-    final showDarkMode = AppTheme.darkModeEnabled;
+    final showDarkMode = _showDarkMode;
     if (!hasAny) return const SizedBox.shrink();
 
     return Container(

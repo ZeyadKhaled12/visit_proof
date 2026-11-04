@@ -232,26 +232,32 @@ class AppBrand {
     const raw = String.fromEnvironment('BRAND');
     if (raw.isEmpty) return const AppBrandModel();
     try {
-      final json = Map<String, dynamic>.from(jsonDecode(raw) as Map);
-      final colors = <AppBrandColor, Color>{};
-      final savedColors = json['colors'];
-      if (savedColors is Map) {
-        for (final slot in AppBrandColor.values) {
-          final color = parseHex('${savedColors[slot.name] ?? ''}');
-          if (color != null) colors[slot] = color;
-        }
-      }
-      final icon = '${json['icon'] ?? defaultIconKey}';
-      return AppBrandModel(
-        colors: colors,
-        appName: json['appName'] as String?,
-        iconKey: icons.any((e) => e.key == icon) ? icon : defaultIconKey,
-        fontEnglish: json['fontEnglish'] as String?,
-        fontArabic: json['fontArabic'] as String?,
-        fontScale: (json['fontScale'] as num?)?.toDouble() ?? 1.0,
-      );
+      return fromJson(Map<String, dynamic>.from(jsonDecode(raw) as Map));
     } catch (_) {
       return const AppBrandModel();
     }
+  }
+
+  /// Reads [toJson] back, logo included. Throws on malformed data.
+  static AppBrandModel fromJson(Map<String, dynamic> json) {
+    final colors = <AppBrandColor, Color>{};
+    final savedColors = json['colors'];
+    if (savedColors is Map) {
+      for (final slot in AppBrandColor.values) {
+        final color = parseHex('${savedColors[slot.name] ?? ''}');
+        if (color != null) colors[slot] = color;
+      }
+    }
+    final icon = '${json['icon'] ?? defaultIconKey}';
+    final logo = json['logoBase64'];
+    return AppBrandModel(
+      colors: colors,
+      appName: json['appName'] as String?,
+      iconKey: icons.any((e) => e.key == icon) ? icon : defaultIconKey,
+      logo: logo is String ? base64Decode(logo) : null,
+      fontEnglish: json['fontEnglish'] as String?,
+      fontArabic: json['fontArabic'] as String?,
+      fontScale: (json['fontScale'] as num?)?.toDouble() ?? 1.0,
+    );
   }
 }

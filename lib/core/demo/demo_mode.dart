@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../pwa/app_install.dart';
 import '../utils/general_models/g_model_geo_point.dart';
 import '../../features/visits/data/models/visit_detail_models/visit_detail_model.dart';
 
@@ -12,9 +13,14 @@ class DemoMode {
   /// It keeps its data and opens straight into the app, without the website.
   static const bool customerApp = bool.fromEnvironment('CUSTOMER_APP');
 
+  /// An app installed from the design studio, opened with its design in the
+  /// link (see AppInstall): only the app, with that design and no way to
+  /// change it. It keeps the sample company and the simulated location.
+  static bool get installedApp => !customerApp && AppInstall.opened != null;
+
   /// The app is the website demo (a browser build that is not a
-  /// customer's app).
-  static bool get isOn => kIsWeb && !customerApp;
+  /// customer's app or an installed app).
+  static bool get isOn => kIsWeb && !customerApp && !installedApp;
 
   /// Every start loads the test company again (all builds except a
   /// customer's).

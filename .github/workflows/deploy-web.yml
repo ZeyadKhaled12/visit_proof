@@ -1,5 +1,6 @@
 # Builds the Wizpo website (Flutter web) and publishes it on GitHub Pages
-# at https://zeyadkhaled12.github.io/visit_proof/ on every push to main.
+# at https://zeyadkhaled12.github.io/visit_proof/ on every push to main,
+# with the bare app (installable PWA) at .../visit_proof/app/.
 #
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions".
 name: Deploy website
@@ -34,6 +35,18 @@ jobs:
 
       # The site lives under /<repo name>/, not at the domain root.
       - run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      # The bare Visit Proof app (no website), installable as a PWA from
+      # /<repo name>/app/. Same build a customer gets: starts empty, real GPS.
+      - name: Build the app as a PWA
+        run: |
+          flutter build web --release --dart-define=CUSTOMER_APP=true \
+            --base-href "/${{ github.event.repository.name }}/app/" \
+            --output "$RUNNER_TEMP/app"
+          cp -r "$RUNNER_TEMP/app" build/web/app
+          # Installed under the app's own name, not the website's.
+          sed -i 's/"name": "Wizpo"/"name": "Visit Proof"/; s/"short_name": "Wizpo"/"short_name": "Visit Proof"/' build/web/app/manifest.json
+          sed -i 's#<title>[^<]*</title>#<title>Visit Proof</title>#; s#apple-mobile-web-app-title" content="Wizpo"#apple-mobile-web-app-title" content="Visit Proof"#' build/web/app/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:

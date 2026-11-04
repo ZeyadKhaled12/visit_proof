@@ -10,6 +10,7 @@ import 'app/visit_proof_app.dart';
 import 'core/demo/demo_mode.dart';
 import 'core/demo/demo_seed.dart';
 import 'core/local/local_pref.dart';
+import 'core/pwa/app_install.dart';
 import 'core/services/services_locator.dart';
 import 'core/usecase/base_use_case.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
@@ -21,24 +22,52 @@ import 'features/website/presentation/screens/website_scr.dart';
 3- solve start time in both update visit and create visit
 */
 
+/*
+THE STUDIO'S "اطلب" (REQUEST) BUTTON
+-------------------------------------
+Now: it installs the app the visitor designed as a PWA on their device
+(StudioInstall in features/website/presentation/widgets/
+studio_widget_install.dart). The installed app opens with only Visit Proof,
+in that design, and cannot change it (AppInstall in core/pwa/app_install.dart,
+DemoMode.installedApp).
+
+To go back to the old flow (the button opens the request form,
+WebsiteRequestScr, so the visitor sends their design and notes):
+  in features/website/presentation/screens/website_studio_scr.dart set
+      static const bool requestInstallsApp = false;
+That is the only change needed: the request form and its code were kept as
+they are. The landing page's "Request my version" button always opens the
+request form.
+*/
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // A customer's build carries their design (see AppBrand.fromEnvironment).
-  AppBrand.update(AppBrand.fromEnvironment());
+  // A customer's build carries their design (see AppBrand.fromEnvironment);
+  // an app installed from the studio carries it in its link (AppInstall).
+  final installed = DemoMode.installedApp ? AppInstall.opened : null;
+  AppBrand.update(installed?.brand ?? AppBrand.fromEnvironment());
   ServicesLocator().init();
+  // Each installed design keeps its own data, apart from the website demo.
+  if (installed != null) SharedPreferences.setPrefix(AppInstall.storagePrefix);
   LocalPref.sharedPreferences = await SharedPreferences.getInstance();
   final prefs = LocalPref.sharedPreferences;
 
   // The website always opens in Arabic and light mode; the app keeps the
-  // user's choices.
+  // user's choices. An installed app keeps the light/dark it was designed in.
   final savedDark = DemoMode.isOn ? null : prefs.getBool(darkModeKey);
   final savedArabic = DemoMode.isOn ? null : prefs.getBool(arabicKey);
-  AppTheme.darkMode.value =
-      AppTheme.darkModeEnabled && (savedDark ?? AppTheme.darkModeByDefault);
+  AppTheme.darkMode.value = installed?.dark ??
+      (AppTheme.darkModeEnabled && (savedDark ?? AppTheme.darkModeByDefault));
   AppLanguage.arabic.value = AppLanguage.languageSwitchEnabled &&
-      (savedArabic ?? (DemoMode.isOn || AppLanguage.arabicByDefault));
+      (savedArabic ??
+          installed?.arabic ??
+          (DemoMode.isOn || AppLanguage.arabicByDefault));
 
-  if (DemoMode.testData) {
+  // An installed app loads the test company once and then keeps what the
+  // user does in it.
+  final seedNow =
+      installed == null || !(prefs.getBool(_installedSeededKey) ?? false);
+  if (DemoMode.testData && seedNow) {
     // Every start begins again from the large test company (in its
     // language), so there is always plenty to try. A customer's build keeps
     // its data.
@@ -46,6 +75,7 @@ void main() async {
     if (savedDark != null) await prefs.setBool(darkModeKey, savedDark);
     if (savedArabic != null) await prefs.setBool(arabicKey, savedArabic);
     await DemoSeed.run();
+    if (installed != null) await prefs.setBool(_installedSeededKey, true);
   }
   await initializeDateFormatting();
   // Arabic month and day names, but the same 0-9 digits as the rest of the app.
@@ -54,7 +84,19 @@ void main() async {
   // Reopens as the admin or the technician who used the app last.
   await sl<RestoreSessionUc>().call(const NoParameters());
   runApp(const MyApp());
+
+  // Opened in a browser tab, the installed app's page must offer this
+  // design (not Wizpo) for installing. Its icon is drawn with the icon font,
+  // so wait until the first screen has loaded it.
+  final raw = AppInstall.openedRaw;
+  if (installed != null && raw != null) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(
+        const Duration(milliseconds: 800), () => AppInstall.publish(raw)));
+  }
 }
+
+/// The installed app has loaded the test company.
+const String _installedSeededKey = 'installed_seeded';
 
 /// Saved dark mode choice.
 const String darkModeKey = 'dark_mode';
@@ -126,7 +168,7 @@ class MyAppState extends State<MyApp> {
   }
 
   /// The browser build is the sales website, with the app inside it as a
-  /// live demo; phones run the app itself.
+  /// live demo; phones and installed apps run the app itself.
   @override
   Widget build(BuildContext context) =>
       DemoMode.isOn ? const WebsiteApp() : const VisitProofApp();
