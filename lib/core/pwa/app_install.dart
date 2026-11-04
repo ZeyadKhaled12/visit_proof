@@ -27,12 +27,14 @@ class AppInstallPayload {
 // INSTALLED APP — the studio's design as its own PWA.
 // =============================================================================
 //
-// The design travels inside the app's link: <site>/?app=<design>. Opening
+// The design travels inside the app's link: <site>/#app=<design>. Opening
 // that link (from the installed icon or a browser tab) shows only the Visit
 // Proof app with that design and no way to change it (see DemoMode.installedApp
 // and main()). The link is the whole app, so nothing has to be stored on a
 // server, and the design survives cleared browser data and iPhone's
-// separate home-screen storage.
+// separate home-screen storage. It sits after "#", which browsers never send
+// to the server: with a logo the design is far longer than the ~8,000
+// characters GitHub Pages accepts in a link ("414 URI Too Long").
 // =============================================================================
 class AppInstall {
   AppInstall._();
@@ -40,9 +42,20 @@ class AppInstall {
   /// The query parameter that carries the design.
   static const String param = 'app';
 
-  /// The design in this page's link, as written there.
-  static final String? openedRaw =
-      kIsWeb ? Uri.base.queryParameters[param] : null;
+  /// The design in this page's link, as written there: `#app=<design>`
+  /// (followed by `~/<screen>` once the app moves on), or `?app=<design>`
+  /// in links made before the design moved behind "#".
+  static final String? openedRaw = kIsWeb ? _readRaw(Uri.base) : null;
+
+  static String? _readRaw(Uri url) {
+    final fragment = url.fragment;
+    if (fragment.startsWith('$param=')) {
+      final design = fragment.substring(param.length + 1);
+      final screen = design.indexOf('~');
+      return screen < 0 ? design : design.substring(0, screen);
+    }
+    return url.queryParameters[param];
+  }
 
   /// The design this page was opened with, or null for the website.
   static final AppInstallPayload? opened = decode(openedRaw);
@@ -99,7 +112,7 @@ class AppInstall {
   }
 
   /// The link the installed app opens.
-  static String urlFor(String raw) => '$_scope?$param=$raw';
+  static String urlFor(String raw) => '$_scope#$param=$raw';
 
   /// Gives the page the manifest of the design in [raw], styled with the
   /// brand that is active now (the studio's, or the installed app's).

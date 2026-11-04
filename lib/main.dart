@@ -11,6 +11,7 @@ import 'core/demo/demo_mode.dart';
 import 'core/demo/demo_seed.dart';
 import 'core/local/local_pref.dart';
 import 'core/pwa/app_install.dart';
+import 'core/pwa/pwa_bridge.dart';
 import 'core/services/services_locator.dart';
 import 'core/usecase/base_use_case.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
@@ -83,12 +84,16 @@ void main() async {
   Intl.defaultLocale = AppLanguage.locale.languageCode;
   // Reopens as the admin or the technician who used the app last.
   await sl<RestoreSessionUc>().call(const NoParameters());
+  // An installed app's link keeps its design on every screen.
+  final raw = AppInstall.openedRaw;
+  if (installed != null && raw != null) {
+    PwaBridge.useInstalledUrls('${AppInstall.param}=$raw');
+  }
   runApp(const MyApp());
 
   // Opened in a browser tab, the installed app's page must offer this
   // design (not Wizpo) for installing. Its icon is drawn with the icon font,
   // so wait until the first screen has loaded it.
-  final raw = AppInstall.openedRaw;
   if (installed != null && raw != null) {
     WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(
         const Duration(milliseconds: 800), () => AppInstall.publish(raw)));

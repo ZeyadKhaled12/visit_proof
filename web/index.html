@@ -42,10 +42,11 @@
   <title>Wizpo - Business Apps Made Simple | Small Apps, Big Magic</title>
 
   <!-- Installing a designed app as a PWA (lib/core/pwa/). A link opened with
-       "?app=…" is that app: it gets its own manifest from Flutter, so the
-       Wizpo manifest is left out to keep the browser from offering Wizpo. -->
+       "#app=…" (or the older "?app=…") is that app: it gets its own manifest
+       from Flutter, so the Wizpo manifest is left out to keep the browser
+       from offering Wizpo. -->
   <script>
-    if (!/[?&]app=/.test(location.search)) {
+    if (!/^#app=/.test(location.hash) && !/[?&]app=/.test(location.search)) {
       document.write('<link rel="manifest" href="manifest.json">');
     }
     window.wizpoPwa = (function () {

@@ -15,4 +15,6 @@ class PwaBridge {
   static bool get isIos => false;
 
   static bool get isStandalone => false;
+
+  static void useInstalledUrls(String design) {}
 }

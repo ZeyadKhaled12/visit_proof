@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # URL strategy for apps installed from the studio (core/pwa/).
+  flutter_web_plugins:
+    sdk: flutter
   flutter_localizations:
     sdk: flutter
 
