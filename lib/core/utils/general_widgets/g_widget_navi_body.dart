@@ -7,7 +7,7 @@ class GWidgetNaviBody extends StatelessWidget {
   final String title;
   final Widget body;
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
@@ -17,48 +17,35 @@ class GWidgetNaviBody extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 20,
-                  bottom: 24,
-                  left: 20,
-                  right: 20,
+                padding: EdgeInsetsDirectional.only(
+                  top: MediaQuery.of(context).padding.top + 8,
+                  bottom: 8,
+                  start: 8,
+                  end: 20,
                 ),
                 decoration: BoxDecoration(
                   color: AppTheme.surface,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.shadowColor,
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    )
-                  ],
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
-                  ),
+                  border: Border(
+                      bottom: BorderSide(color: AppTheme.iconLightGrey)),
                 ),
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppTheme.scaffoldBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(Icons.arrow_back_ios_new,
-                            color: AppTheme.textPrimary, size: 20),
-                      ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppTheme.textPrimary, size: 22),
                     ),
-                    const SizedBox(width: 16),
-                    Text(
-                      title,
-                      style: AppTheme.font(
-                        color: AppTheme.textPrimary,
-                        fontSize: AppTheme.textHeadline,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTheme.font(
+                          color: AppTheme.textPrimary,
+                          fontSize: AppTheme.textTitleLarge,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ],

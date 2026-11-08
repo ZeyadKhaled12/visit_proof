@@ -27,7 +27,7 @@ class GWidgetAppSettings extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.iconLightGrey.withValues(alpha: .4)),
+        border: Border.all(color: AppTheme.iconLightGrey),
       ),
       child: Column(
         children: [
@@ -55,7 +55,7 @@ class _LanguageRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Icon(Icons.translate_rounded, color: AppTheme.secondary, size: 22),
+            Icon(Icons.translate_rounded, color: AppTheme.primary, size: 22),
             const SizedBox(width: 12),
             Expanded(
               child: Text('Language'.tr,

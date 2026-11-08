@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../app/app.dart';
 import '../../../../configs/app_theme.dart';
 import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/enums.dart';
@@ -24,12 +25,22 @@ import 'dashboard_widget_period_bar.dart';
 import 'dashboard_widget_quick_links.dart';
 import 'dashboard_widget_technicians.dart';
 import 'dashboard_widget_today.dart';
+import 'dashboard_widget_tour.dart';
 import 'dashboard_widget_trend_chart.dart';
 
 /// Layer 1: what is happening, what needs attention, where to go next.
-class DashboardBody extends StatelessWidget {
+class DashboardBody extends StatefulWidget {
   const DashboardBody({super.key, required this.state});
   final DashboardState state;
+
+  @override
+  State<DashboardBody> createState() => _DashboardBodyState();
+}
+
+class _DashboardBodyState extends State<DashboardBody> {
+  final _tour = DashboardTourKeys();
+
+  DashboardState get state => widget.state;
 
   static List<String> _trail = ['Overview'.tr];
   static const double _wideBreakpoint = 900;
@@ -103,7 +114,13 @@ class DashboardBody extends StatelessWidget {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          _Header(state: state, onRefresh: () => _reload(context)),
+          KeyedSubtree(
+            key: _tour.header,
+            child: _Header(
+                state: state,
+                onRefresh: () => _reload(context),
+                onHelp: () => DashboardTour.start(context, _tour)),
+          ),
           GWidgetEmpty(
             icon: Icons.insights_rounded,
             title: 'Your dashboard starts with a visit'.tr,
@@ -114,9 +131,10 @@ class DashboardBody extends StatelessWidget {
               if (context.mounted) _reload(context);
             },
           ),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: DashboardWidgetQuickLinks(),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: KeyedSubtree(
+                key: _tour.links, child: const DashboardWidgetQuickLinks()),
           ),
         ],
       );
@@ -141,8 +159,6 @@ class DashboardBody extends StatelessWidget {
       DashboardWidgetKpiCard(
         label: 'Visits'.tr,
         value: '${current.length}',
-        icon: Icons.event_note_rounded,
-        color: AppTheme.primary,
         caption: '{0} due so far'.trArgs([dueNow.length]),
         footer: DashboardDelta(
             change: DashboardMetrics.change(current.length, previous.length)),
@@ -150,9 +166,8 @@ class DashboardBody extends StatelessWidget {
       ),
       DashboardWidgetKpiCard(
         label: 'Completion'.tr,
-        value: DashboardFormat.percent(rate),
-        icon: Icons.task_alt_rounded,
-        color: AppTheme.statGreen,
+        value: rate == null ? '—' : '${(rate * 100).round()}',
+        unit: rate == null ? null : '%',
         caption: rate == null
             ? 'Nothing due yet'.tr
             : '{0} of {1} done'.trArgs([DashboardMetrics.completedCount(dueNow), dueNow.length]),
@@ -165,9 +180,8 @@ class DashboardBody extends StatelessWidget {
       ),
       DashboardWidgetKpiCard(
         label: 'Collected'.tr,
-        value: DashboardFormat.money(collected),
-        icon: Icons.payments_rounded,
-        color: AppTheme.secondary,
+        value: DashboardFormat.amount(collected),
+        unit: ' ${App.currency}',
         caption: '{0} outstanding'.trArgs([DashboardFormat.money(outstanding)]),
         footer: DashboardDelta(
             change: DashboardMetrics.change(collected, previousCollected)),
@@ -176,10 +190,7 @@ class DashboardBody extends StatelessWidget {
       DashboardWidgetKpiCard(
         label: 'Needs attention'.tr,
         value: '${attention.total}',
-        icon: Icons.notification_important_rounded,
-        color: attention.total > 0 ? AppTheme.statOrange : AppTheme.statGreen,
         caption: attention.total > 0 ? 'Items to handle now'.tr : 'All on track'.tr,
-        alert: attention.total > 0,
         onTap: () => _openInsight(context, DashboardInsight.attention),
       ),
     ];
@@ -214,25 +225,46 @@ class DashboardBody extends StatelessWidget {
       onSeeAll: () => _openInsight(context, DashboardInsight.completion),
     );
 
+    Widget mark(GlobalKey key, Widget child) =>
+        KeyedSubtree(key: key, child: child);
+
+    final newVisit = mark(_tour.newVisit, const DashboardWidgetNewVisit());
+    final attentionCard = mark(_tour.attention, attentionPanel);
+    final todayCard = mark(_tour.today, todayPanel);
+    final trendCard = mark(_tour.trend, trendPanel);
+    final technicianCard = mark(_tour.technicians, technicianPanel);
+    final links = mark(_tour.links, const DashboardWidgetQuickLinks());
+
     return LayoutBuilder(builder: (context, constraints) {
       final wide = constraints.maxWidth >= _wideBreakpoint;
-      const gap = SizedBox(height: 14);
+      const gap = SizedBox(height: 12);
+      final scores = mark(
+          _tour.scores, DashboardGrid(columns: wide ? 4 : 2, children: kpis));
 
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(bottom: 32),
         children: [
-          _Header(state: state, onRefresh: () => _reload(context)),
-          DashboardWidgetPeriodBar(period: period),
+          KeyedSubtree(
+            key: _tour.header,
+            child: _Header(
+                state: state,
+                onRefresh: () => _reload(context),
+                onHelp: () => DashboardTour.start(context, _tour)),
+          ),
+          gap,
+          mark(_tour.period, DashboardWidgetPeriodBar(period: period)),
           gap,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                DashboardGrid(columns: wide ? 4 : 2, children: kpis),
+                newVisit,
                 gap,
-                if (wide)
+                if (wide) ...[
+                  scores,
+                  gap,
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -240,35 +272,31 @@ class DashboardBody extends StatelessWidget {
                         flex: 3,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [trendPanel, gap, technicianPanel],
+                          children: [trendCard, gap, technicianCard],
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 12),
                       Expanded(
                         flex: 2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            attentionPanel,
-                            gap,
-                            todayPanel,
-                            gap,
-                            const DashboardWidgetQuickLinks(),
-                          ],
+                          children: [attentionCard, gap, todayCard, gap, links],
                         ),
                       ),
                     ],
-                  )
-                else ...[
-                  attentionPanel,
+                  ),
+                ] else ...[
+                  attentionCard,
                   gap,
-                  todayPanel,
+                  scores,
                   gap,
-                  trendPanel,
+                  todayCard,
                   gap,
-                  technicianPanel,
+                  trendCard,
                   gap,
-                  const DashboardWidgetQuickLinks(),
+                  technicianCard,
+                  gap,
+                  links,
                 ],
               ],
             ),
@@ -280,9 +308,11 @@ class DashboardBody extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.state, required this.onRefresh});
+  const _Header(
+      {required this.state, required this.onRefresh, required this.onHelp});
   final DashboardState state;
   final VoidCallback onRefresh;
+  final VoidCallback onHelp;
 
   String get _greeting {
     final hour = DateTime.now().hour;
@@ -291,47 +321,76 @@ class _Header extends StatelessWidget {
     return 'Good evening'.tr;
   }
 
+  Widget _action(IconData icon, String tooltip, VoidCallback onTap) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(start: 6),
+      child: IconButton(
+        tooltip: tooltip,
+        onPressed: onTap,
+        style: IconButton.styleFrom(
+          backgroundColor: AppTheme.locationChipBg,
+          fixedSize: const Size(44, 44),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        icon: Icon(icon, color: AppTheme.textPrimary, size: 22),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final loadedAt = state.snapshot.loadedAt;
 
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 12, 14),
-      child: Row(
+    return Container(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 10, 16, 14),
+      decoration: BoxDecoration(
+        color: AppTheme.surface,
+        border: Border(bottom: BorderSide(color: AppTheme.iconLightGrey)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const GWidgetMenuButton(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_greeting,
+          Row(
+            children: [
+              const GWidgetMenuButton(),
+              Expanded(
+                child: Text(_greeting,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
                         color: AppTheme.textSecondary,
                         fontSize: AppTheme.textBody,
                         fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
+              ),
+              _action(Icons.help_outline_rounded, 'How this screen works'.tr,
+                  onHelp),
+              _action(Icons.refresh_rounded, 'Refresh'.tr, onRefresh),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text('Operations overview'.tr,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTheme.font(
                         color: AppTheme.textPrimary,
                         fontSize: AppTheme.textHeadline,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -.3)),
+                        fontWeight: FontWeight.w800)),
                 const SizedBox(height: 2),
                 Text(
                     '${state.period.dateLabel} · ${state.period.comparisonLabel}'
                     '${loadedAt == null ? '' : ' · ${'updated {0}'.trArgs([DateFormat('hh:mm a').format(loadedAt)])}'}',
                     maxLines: 2,
                     style: AppTheme.font(
-                        color: AppTheme.textLightHint, fontSize: AppTheme.textCaption)),
+                        color: AppTheme.textDarkHint,
+                        fontSize: AppTheme.textCaption)),
               ],
             ),
-          ),
-          IconButton(
-            tooltip: 'Refresh'.tr,
-            onPressed: onRefresh,
-            icon: Icon(Icons.refresh_rounded, color: AppTheme.primary),
           ),
         ],
       ),

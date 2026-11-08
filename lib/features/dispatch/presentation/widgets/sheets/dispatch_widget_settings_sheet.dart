@@ -117,7 +117,7 @@ class _DispatchWidgetSettingsSheetState
               for (final minutes in _bufferOptions)
                 GWidgetChoiceChip(
                   label: minutes == 0 ? 'None'.tr : '{0} min'.trArgs([minutes]),
-                  color: AppTheme.secondary,
+                  color: AppTheme.primary,
                   selected: _settings.travelBuffer == minutes,
                   onTap: () => setState(() => _settings =
                       _settings.copyWith(travelBufferMinutes: minutes)),
@@ -146,8 +146,6 @@ class _DispatchWidgetSettingsSheetState
             isLoading: loading,
             loadingSize: 22,
             loadingStrokeWidth: 3,
-            gradient: LinearGradient(
-                colors: [AppTheme.primary, AppTheme.secondary]),
             onPressed: () => context.read<DispatchBloc>().add(
                 SaveDispatchSettingsEvent(
                     saveDispatchSettingsParameters:

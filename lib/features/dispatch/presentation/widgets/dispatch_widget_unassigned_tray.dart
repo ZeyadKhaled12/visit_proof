@@ -37,13 +37,7 @@ class _DispatchWidgetUnassignedTrayState
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.cardShadowColor,
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
+        border: Border(top: BorderSide(color: AppTheme.iconLightGrey)),
       ),
       child: SafeArea(
         top: false,

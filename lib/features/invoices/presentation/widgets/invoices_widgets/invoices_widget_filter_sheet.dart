@@ -52,7 +52,7 @@ class InvoicesWidgetFilterSheet extends StatefulWidget {
 class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
   static Map<InvoiceStage, (String, Color)> get _stageStyle => {
     InvoiceStage.draft: ('Draft'.tr, AppTheme.iconGrey),
-    InvoiceStage.issued: ('Issued'.tr, AppTheme.secondary),
+    InvoiceStage.issued: ('Issued'.tr, AppTheme.primary),
     InvoiceStage.overdue: ('Overdue'.tr, AppTheme.statOrange),
   };
 

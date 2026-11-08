@@ -62,7 +62,7 @@ class DispatchWidgetTimePicker extends StatelessWidget {
                 icon: Icons.schedule_rounded,
                 label: 'Until {0}'.trArgs([VisitDetailHelpers.time(end)]),
                 value: VisitDetailHelpers.time(value),
-                color: AppTheme.secondary),
+                color: AppTheme.primary),
           ),
         ),
       ],

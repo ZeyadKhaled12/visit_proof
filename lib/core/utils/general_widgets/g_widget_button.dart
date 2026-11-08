@@ -16,15 +16,13 @@ class GWidgetButton extends StatelessWidget {
       this.isLoading = false,
       this.paddingLeftRight = 10,
       this.paddingTopBottom = 10,
-      this.raduis = 15,
+      this.raduis = 14,
       this.border,
       this.widget,
       this.noEnablebackgroundColor,
       this.loadingColor,
-      this.boxShadow,
       this.fontWeight,
       this.loadingSize,
-      this.gradient,
       this.loadingStrokeWidth});
   final Color? backgroundColor;
   final Color? noEnablebackgroundColor;
@@ -43,10 +41,8 @@ class GWidgetButton extends StatelessWidget {
   final double paddingLeftRight;
   final double paddingTopBottom;
   final Border? border;
-  final List<BoxShadow>? boxShadow;
   final double? loadingSize;
   final FontWeight? fontWeight;
-  final Gradient? gradient;
   final double? loadingStrokeWidth;
 
   @override
@@ -55,8 +51,9 @@ class GWidgetButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: !isLoading && isEnable ? onPressed : null,
-        highlightColor: AppTheme.secondary,
-        splashColor: AppTheme.secondary,
+        borderRadius: BorderRadius.circular(raduis),
+        highlightColor: AppTheme.onPrimary.withValues(alpha: .08),
+        splashColor: AppTheme.onPrimary.withValues(alpha: .12),
         child: Container(
             width: width,
             height: height,
@@ -64,12 +61,9 @@ class GWidgetButton extends StatelessWidget {
                 horizontal: paddingLeftRight, vertical: paddingTopBottom),
             decoration: BoxDecoration(
                 border: border,
-                boxShadow: boxShadow,
-                gradient: gradient,
                 color: isEnable
                     ? backgroundColor ?? AppTheme.primary
-                    : noEnablebackgroundColor ??
-                        AppTheme.iconGrey.withValues(alpha: .8),
+                    : noEnablebackgroundColor ?? AppTheme.locationChipBg,
                 borderRadius: BorderRadius.circular(raduis)),
             child: isLoading
                 ? Center(
@@ -83,14 +77,20 @@ class GWidgetButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (text != null)
-                        Text(text ?? '',
-                            textAlign: TextAlign.center,
-                            style: AppTheme.font(
-                                color: isEnable
-                                    ? colorText ?? AppTheme.onPrimary
-                                    : AppTheme.onPrimary.withValues(alpha: .7),
-                                fontSize: fontSize,
-                                fontWeight: fontWeight ?? FontWeight.w600)),
+                        // A long label shrinks instead of overflowing.
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(text ?? '',
+                                textAlign: TextAlign.center,
+                                style: AppTheme.font(
+                                    color: isEnable
+                                        ? colorText ?? AppTheme.onPrimary
+                                        : AppTheme.textDarkHint,
+                                    fontSize: fontSize,
+                                    fontWeight: fontWeight ?? FontWeight.w700)),
+                          ),
+                        ),
                       if (widget != null) widget!
                     ],
                   )),

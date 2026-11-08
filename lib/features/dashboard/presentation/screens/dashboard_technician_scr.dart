@@ -114,7 +114,6 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                 children: [
                   VisitDetailAvatar(
                     letter: VisitDetailHelpers.initial(technician.name),
-                    colors: [status.getColor(), AppTheme.primary],
                     size: 48,
                   ),
                   const SizedBox(width: 12),
@@ -137,7 +136,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                             if (stat.activeNow > 0)
                               VisitDetailPill(
                                   text: '{0} active now'.trArgs([stat.activeNow]),
-                                  color: AppTheme.secondary,
+                                  color: AppTheme.primary,
                                   icon: Icons.bolt_rounded),
                           ],
                         ),

@@ -27,7 +27,7 @@ class AddClientWidgetLocation extends StatelessWidget {
         color: AppTheme.scaffoldBackground,
         borderRadius: BorderRadius.circular(16),
         border:
-            Border.all(color: AppTheme.iconLightGrey.withValues(alpha: 0.3)),
+            Border.all(color: AppTheme.iconLightGrey),
       ),
       child: Column(
         children: [

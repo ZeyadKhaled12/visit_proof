@@ -21,13 +21,7 @@ class GWidgetSearch extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.searchFieldBg,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: AppTheme.iconLightGrey),
       ),
       child: TextField(
         controller: searchController,

@@ -106,7 +106,7 @@ class VisitDetailWidgetInvoice extends StatelessWidget {
                     text:
                         'The invoice is issued when the visit is completed. You can collect payment then.'
                             .tr,
-                    color: AppTheme.secondary,
+                    color: AppTheme.primary,
                   ),
                 ],
                 if (invoice.id != null && VisitRules.canManageInvoice()) ...[
@@ -161,7 +161,7 @@ class _InvoiceHeader extends StatelessWidget {
             text: issued
                 ? 'Issued {0}'.trArgs([VisitDetailHelpers.date(invoice.issueDate)])
                 : 'Draft'.tr,
-            color: issued ? AppTheme.secondary : AppTheme.iconGrey),
+            color: issued ? AppTheme.primary : AppTheme.iconGrey),
         const SizedBox(width: 6),
         VisitDetailPill(
             text: VisitDetailHelpers.capitalize(status.getText()),
@@ -187,7 +187,7 @@ class _DueDate extends StatelessWidget {
       text: overdue
           ? 'Overdue since {0}'.trArgs([VisitDetailHelpers.date(invoice.dueDate)])
           : 'Due by {0}'.trArgs([VisitDetailHelpers.date(invoice.dueDate)]),
-      color: overdue ? AppTheme.statOrange : AppTheme.secondary,
+      color: overdue ? AppTheme.statOrange : AppTheme.primary,
       icon: overdue ? Icons.warning_amber_rounded : Icons.event_rounded,
     );
   }
@@ -207,10 +207,7 @@ class _BalanceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [AppTheme.statGreen, AppTheme.secondary],
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd),
+        color: AppTheme.statGreen,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(

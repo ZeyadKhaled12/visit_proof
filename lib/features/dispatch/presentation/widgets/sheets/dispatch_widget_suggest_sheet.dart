@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../configs/app_theme.dart';
-import '../../../../../core/utils/enums/technician_status_enum.dart';
 import '../../../../../core/utils/general_functions.dart/g_fun_date_pick.dart';
 import '../../../../visit_detail/presentation/widgets/visit_detail_helpers.dart';
 import '../../../../visit_detail/presentation/widgets/visit_detail_widget_parts.dart';
@@ -136,8 +135,6 @@ class _SuggestionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final technician = suggestion.technician;
-    final status =
-        TechnicianStatusSwitch(technicianStatusEnum: technician.status);
     final eligible = suggestion.eligible;
     final warnings = suggestion.violations.where((e) => !e.blocks).length;
 
@@ -168,7 +165,6 @@ class _SuggestionTile extends StatelessWidget {
                   children: [
                     VisitDetailAvatar(
                       letter: VisitDetailHelpers.initial(technician.name),
-                      colors: [status.getColor(), AppTheme.primary],
                       size: 38,
                     ),
                     const SizedBox(width: 10),

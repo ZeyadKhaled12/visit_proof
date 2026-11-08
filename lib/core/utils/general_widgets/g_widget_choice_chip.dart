@@ -23,23 +23,23 @@ class GWidgetChoiceChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
         decoration: BoxDecoration(
-          color: selected ? color : color.withValues(alpha: .08),
+          color: selected ? color : AppTheme.surface,
           borderRadius: BorderRadius.circular(100),
-          border: Border.all(color: color.withValues(alpha: selected ? 1 : .35)),
+          border: Border.all(color: selected ? color : AppTheme.iconLightGrey),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (selected) ...[
               Icon(Icons.check_rounded,
-                  size: 14, color: AppTheme.onPrimary),
+                  size: 16, color: AppTheme.onPrimary),
               const SizedBox(width: 4),
             ],
             Text(label,
                 style: AppTheme.font(
-                    color: selected ? AppTheme.onPrimary : color,
+                    color: selected ? AppTheme.onPrimary : AppTheme.textPrimary,
                     fontSize: AppTheme.textSmall,
                     fontWeight: FontWeight.w700)),
           ],

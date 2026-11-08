@@ -86,15 +86,6 @@ class _Card extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: lifted
-                ? AppTheme.fabShadowColor
-                : statusColor.withValues(alpha: .10),
-            blurRadius: lifted ? 24 : 12,
-            offset: Offset(0, lifted ? 10 : 4),
-          ),
-        ],
       ),
       child: Material(
         color: AppTheme.surface,

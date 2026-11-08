@@ -32,7 +32,7 @@ class DispatchWidgetDateStrip extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: AppTheme.shadowColor, blurRadius: 10)],
+        border: Border.all(color: AppTheme.iconLightGrey),
       ),
       child: Column(
         children: [
@@ -109,14 +109,8 @@ class DispatchWidgetDateStrip extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 3),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      gradient: selected
-                          ? LinearGradient(
-                              colors: [AppTheme.primary, AppTheme.secondary],
-                              begin: AlignmentDirectional.topStart,
-                              end: AlignmentDirectional.bottomEnd)
-                          : null,
                       color: selected
-                          ? null
+                          ? AppTheme.primary
                           : DispatchRules.sameDay(date, today)
                               ? AppTheme.primary.withValues(alpha: .08)
                               : null,
@@ -152,7 +146,7 @@ class DispatchWidgetDateStrip extends StatelessWidget {
                                 ? AppTheme.onPrimary.withValues(alpha: 0)
                                 : selected
                                     ? AppTheme.surface
-                                    : AppTheme.secondary,
+                                    : AppTheme.primary,
                           ),
                         ),
                       ],

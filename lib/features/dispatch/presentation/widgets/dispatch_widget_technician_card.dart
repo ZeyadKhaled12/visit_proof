@@ -105,7 +105,7 @@ class _DispatchWidgetTechnicianCardState
           duration: const Duration(milliseconds: 180),
           decoration: BoxDecoration(
             color: highlight?.withValues(alpha: .08) ?? AppTheme.surface,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(
               color: highlight ??
                   (rejected.isNotEmpty
@@ -113,13 +113,6 @@ class _DispatchWidgetTechnicianCardState
                       : AppTheme.primary.withValues(alpha: .08)),
               width: highlight == null ? 1 : 2,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: (highlight ?? AppTheme.primary).withValues(alpha: .10),
-                blurRadius: 18,
-                offset: const Offset(0, 6),
-              ),
-            ],
           ),
           child: Padding(
             padding: const EdgeInsets.all(14),
@@ -181,7 +174,7 @@ class _DispatchWidgetTechnicianCardState
                         VisitDetailActionChip(
                           label: 'Redistribute'.tr,
                           icon: Icons.alt_route_rounded,
-                          color: AppTheme.secondary,
+                          color: AppTheme.primary,
                           onTap: () => DispatchWidgetActionSheet.show(
                               context,
                               DispatchWidgetRedistributeSheet(
@@ -242,9 +235,6 @@ class _Header extends StatelessWidget {
         children: [
           VisitDetailAvatar(
             letter: VisitDetailHelpers.initial(technician.name),
-            colors: dayOff
-                ? [AppTheme.iconGrey, AppTheme.iconLightGrey]
-                : [status.getColor(), AppTheme.primary],
             size: 42,
           ),
           const SizedBox(width: 10),
@@ -276,7 +266,7 @@ class _Header extends StatelessWidget {
                         text: '{0} visit{1}'.trArgs([visitCount, visitCount == 1 ? '' : 's']),
                         color: AppTheme.primary),
                     if (_skills.isNotEmpty)
-                      VisitDetailPill(text: _skills, color: AppTheme.secondary),
+                      VisitDetailPill(text: _skills, color: AppTheme.primary),
                   ],
                 ),
               ],

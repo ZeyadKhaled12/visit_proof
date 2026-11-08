@@ -68,7 +68,7 @@ class VisitStatusSwitch {
     } else if (visitStatusID == 4) {
       return AppTheme.secondary;
     } else if (visitStatusID == 5) {
-      return AppTheme.pending;
+      return AppTheme.progress;
     } else if (visitStatusID == 6) {
       return AppTheme.statGreen;
     } else if (visitStatusID == 7) {
@@ -87,7 +87,7 @@ class VisitStatusSwitch {
       case VisitStatus.onWay:
         return AppTheme.secondary;
       case VisitStatus.inProgress:
-        return AppTheme.pending;
+        return AppTheme.progress;
       case VisitStatus.completed:
         return AppTheme.statGreen;
       case VisitStatus.cancel:

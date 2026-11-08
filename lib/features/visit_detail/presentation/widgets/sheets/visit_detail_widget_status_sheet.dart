@@ -133,7 +133,7 @@ class _VisitDetailWidgetStatusSheetState
             if (_from == VisitStatus.cancel) ...[
               VisitDetailNotice(
                   text: 'The technician is released and the invoice becomes collectible again.'.tr,
-                  color: AppTheme.secondary),
+                  color: AppTheme.primary),
               const SizedBox(height: 12),
             ],
             if (_fieldAction && error == null) ...[

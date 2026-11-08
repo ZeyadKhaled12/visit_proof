@@ -145,7 +145,7 @@ class _VisitDetailWidgetRescheduleSheetState
               const SizedBox(height: 14),
               VisitDetailNotice(
                   text: 'We will check that {0} is free at the new time.'.trArgs([technician.name ?? 'the technician'.tr]),
-                  color: AppTheme.secondary,
+                  color: AppTheme.primary,
                   icon: Icons.event_busy_rounded),
             ],
             const SizedBox(height: 14),

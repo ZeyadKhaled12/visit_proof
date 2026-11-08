@@ -117,7 +117,7 @@ class GWidgetPhoneField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(24),
               borderSide:
-                  BorderSide(color: AppTheme.secondary, width: 1.5),
+                  BorderSide(color: AppTheme.primary, width: 1.5),
             ),
           ),
         ),
@@ -179,7 +179,7 @@ class GWidgetPhoneField extends StatelessWidget {
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(
-                color: AppTheme.iconLightGrey.withValues(alpha: 0.5), width: 1),
+                color: AppTheme.iconLightGrey, width: 1),
           ),
         ),
       ),

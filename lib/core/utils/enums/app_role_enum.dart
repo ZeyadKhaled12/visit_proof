@@ -31,7 +31,7 @@ class AppRoleSwitch {
       case AppRole.admin:
         return AppTheme.primary;
       case AppRole.technician:
-        return AppTheme.secondary;
+        return AppTheme.primary;
     }
   }
 

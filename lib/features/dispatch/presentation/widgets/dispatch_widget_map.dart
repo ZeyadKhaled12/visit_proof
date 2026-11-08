@@ -37,7 +37,7 @@ class DispatchWidgetMap extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(18),
         child: Stack(
           children: [
             FlutterMap(
@@ -87,9 +87,7 @@ class DispatchWidgetMap extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppTheme.surface,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(color: AppTheme.shadowColor, blurRadius: 8)
-                  ],
+                  border: Border.all(color: AppTheme.iconLightGrey),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -140,9 +138,6 @@ class _Pin extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           border: Border.all(color: AppTheme.onPrimary, width: 3),
-          boxShadow: [
-            BoxShadow(color: color.withValues(alpha: .4), blurRadius: 10)
-          ],
         ),
         child: Icon(
             waiting ? Icons.person_off_rounded : Icons.engineering_rounded,

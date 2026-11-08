@@ -218,7 +218,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
                     label: entry.key,
                     value: entry.value,
                     valueLabel: '${entry.value}',
-                    color: AppTheme.secondary),
+                    color: AppTheme.primary),
             ],
             selectedIndex: _category == null
                 ? null

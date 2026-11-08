@@ -29,22 +29,14 @@ class VisitDetailSection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: color.withValues(alpha: .14)),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: .10),
-            blurRadius: 22,
-            offset: const Offset(0, 8),
-          ),
-        ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(height: 4, color: color),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
               child: Column(
@@ -55,10 +47,7 @@ class VisitDetailSection extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(9),
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                            color.withValues(alpha: .22),
-                            color.withValues(alpha: .08),
-                          ]),
+                          color: color.withValues(alpha: .12),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(icon, color: color, size: 20),
@@ -112,7 +101,7 @@ class VisitDetailPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: onDark ? AppTheme.surface : color.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(100),
@@ -120,13 +109,22 @@ class VisitDetailPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: 13, color: color),
-            const SizedBox(width: 4),
-          ],
-          Text(text,
-              style: AppTheme.font(
-                  color: color, fontSize: AppTheme.textCaption, fontWeight: FontWeight.w800)),
+          if (icon != null)
+            Icon(icon, size: 15, color: color)
+          else
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.font(
+                    color: color, fontSize: AppTheme.textSmall, fontWeight: FontWeight.w700)),
+          ),
         ],
       ),
     );
@@ -343,17 +341,15 @@ class VisitDetailNotice extends StatelessWidget {
   }
 }
 
-/// Circle with the first letter of a name on a gradient.
+/// Circle with the first letter of a name.
 class VisitDetailAvatar extends StatelessWidget {
   const VisitDetailAvatar({
     super.key,
     required this.letter,
-    required this.colors,
     this.size = 46,
   });
 
   final String letter;
-  final List<Color> colors;
   final double size;
 
   @override
@@ -364,14 +360,11 @@ class VisitDetailAvatar extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-            colors: colors,
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd),
+        color: AppTheme.primarySoft,
       ),
       child: Text(letter,
           style: AppTheme.font(
-              color: AppTheme.onPrimary,
+              color: AppTheme.primary,
               fontSize: size * .42,
               fontWeight: FontWeight.w800)),
     );
@@ -399,7 +392,7 @@ class VisitDetailEmpty extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(icon, color: AppTheme.iconLightGrey, size: 28),
+          Icon(icon, color: AppTheme.iconGrey, size: 28),
           const SizedBox(height: 6),
           Text(text,
               textAlign: TextAlign.center,

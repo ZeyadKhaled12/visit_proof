@@ -54,13 +54,6 @@ class TechnicianWidgetCard extends StatelessWidget {
             color: AppTheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.shadowColor,
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ],
           ),
           child: Stack(
             alignment: AlignmentDirectional.bottomEnd,

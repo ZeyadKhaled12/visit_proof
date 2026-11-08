@@ -64,7 +64,7 @@ class _ServicesBodyState extends State<ServicesBody> {
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
         appBar: GWidgetAppbar(
-                title: 'Services'.tr, icon: Icons.miscellaneous_services)
+                title: 'Services'.tr, )
             .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,

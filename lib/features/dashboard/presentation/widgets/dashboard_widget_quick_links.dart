@@ -10,6 +10,66 @@ import '../../../main_menu/presentation/widgets/main_menu_tabs.dart';
 import '../controller/dashboard_bloc.dart';
 import 'dashboard_widget_parts.dart';
 
+/// The main action of the dashboard.
+class DashboardWidgetNewVisit extends StatelessWidget {
+  const DashboardWidgetNewVisit({super.key});
+
+  Future<void> _newVisit(BuildContext context) async {
+    final bloc = context.read<DashboardBloc>();
+    await Navigator.pushNamed(context, AddVisitScr.route);
+    bloc.add(const GetDashboardEvent(noParameters: NoParameters()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppTheme.primary,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: () => _newVisit(context),
+        borderRadius: BorderRadius.circular(18),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppTheme.onPrimary.withValues(alpha: .16),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(Icons.add_rounded,
+                    color: AppTheme.onPrimary, size: 26),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('New visit'.tr,
+                        style: AppTheme.font(
+                            color: AppTheme.onPrimary,
+                            fontSize: AppTheme.textSubtitle,
+                            fontWeight: FontWeight.w800)),
+                    Text('Book a client and send a technician'.tr,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTheme.font(
+                            color: AppTheme.onPrimary.withValues(alpha: .85),
+                            fontSize: AppTheme.textSmall,
+                            fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Shortcuts to every module, so the dashboard is the app's home.
 class DashboardWidgetQuickLinks extends StatelessWidget {
   const DashboardWidgetQuickLinks({super.key});
@@ -24,54 +84,40 @@ class DashboardWidgetQuickLinks extends StatelessWidget {
     bloc.add(const GetDashboardEvent(noParameters: NoParameters()));
   }
 
-  Future<void> _newVisit(BuildContext context) async {
-    final bloc = context.read<DashboardBloc>();
-    await Navigator.pushNamed(context, AddVisitScr.route);
-    bloc.add(const GetDashboardEvent(noParameters: NoParameters()));
-  }
-
   @override
   Widget build(BuildContext context) {
     final links = [
-      (Icons.add_circle_rounded, 'New visit'.tr, AppTheme.primary,
-          () => _newVisit(context)),
-      (Icons.hub_rounded, 'Dispatch'.tr, AppTheme.secondary,
-          () => _go(context, MainMenuTab.dispatch)),
-      (Icons.fact_check_rounded, 'Visits'.tr, AppTheme.primary,
-          () => _go(context, MainMenuTab.visits)),
-      (Icons.people_alt_rounded, 'Clients'.tr, AppTheme.statGreen,
-          () => _go(context, MainMenuTab.clients)),
-      (Icons.engineering_rounded, 'Technicians'.tr, AppTheme.pending,
-          () => _go(context, MainMenuTab.technicians)),
-      (Icons.build_circle_rounded, 'Services'.tr, AppTheme.cardAccent,
-          () => _go(context, MainMenuTab.services)),
-      (Icons.receipt_long_rounded, 'Invoices'.tr, AppTheme.statOrange,
-          () => _go(context, MainMenuTab.invoices)),
+      (Icons.hub_rounded, 'Dispatch'.tr, MainMenuTab.dispatch),
+      (Icons.fact_check_rounded, 'Visits'.tr, MainMenuTab.visits),
+      (Icons.people_alt_rounded, 'Clients'.tr, MainMenuTab.clients),
+      (Icons.engineering_rounded, 'Technicians'.tr, MainMenuTab.technicians),
+      (Icons.build_circle_rounded, 'Services'.tr, MainMenuTab.services),
+      (Icons.receipt_long_rounded, 'Invoices'.tr, MainMenuTab.invoices),
     ];
 
     return DashboardSection(
       title: 'Go to'.tr,
       child: LayoutBuilder(builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 520 ? 7 : 4;
         return DashboardGrid(
-          columns: columns,
+          columns: constraints.maxWidth >= 520 ? 6 : 3,
           spacing: 8,
           children: [
-            for (final (icon, label, color, onTap) in links)
+            for (final (icon, label, tab) in links)
               InkWell(
-                onTap: onTap,
+                onTap: () => _go(context, tab),
                 borderRadius: BorderRadius.circular(14),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
-                          color: color.withValues(alpha: .12),
+                          color: AppTheme.primarySoft,
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: Icon(icon, color: color, size: 22),
+                        child: Icon(icon, color: AppTheme.primary, size: 24),
                       ),
                       const SizedBox(height: 6),
                       Text(label,
@@ -79,7 +125,7 @@ class DashboardWidgetQuickLinks extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: AppTheme.font(
                               color: AppTheme.textPrimary,
-                              fontSize: AppTheme.textCaption,
+                              fontSize: AppTheme.textSmall,
                               fontWeight: FontWeight.w600)),
                     ],
                   ),

@@ -33,6 +33,7 @@ import 'app_language.dart';
 class AppPalette {
   const AppPalette({
     required this.primary,
+    required this.primarySoft,
     required this.secondary,
     required this.cardAccent,
     required this.onPrimary,
@@ -50,11 +51,15 @@ class AppPalette {
     required this.iconLightGrey,
     required this.statGreen,
     required this.pending,
+    required this.progress,
     required this.statOrange,
     required this.whatsappGreen,
     required this.shadowColor,
     required this.cardShadowColor,
     required this.fabShadowColor,
+    required this.scrim,
+    required this.onScrim,
+    required this.reward,
   });
 
   // --- Brand -----------------------------------------------------------------
@@ -62,7 +67,10 @@ class AppPalette {
   /// Main brand color: buttons, links, selected items, charts.
   final Color primary;
 
-  /// Second brand color: section icons, gradients with [primary], accents.
+  /// Soft fill behind brand-colored icons, avatars and selected rows.
+  final Color primarySoft;
+
+  /// Teal with one meaning only: on the way and refunded.
   final Color secondary;
 
   /// Accent on cards and borders. Usually the same as [primary].
@@ -118,8 +126,11 @@ class AppPalette {
   /// Success: completed, paid, available, good changes.
   final Color statGreen;
 
-  /// Waiting / warning: scheduled, in progress, pending, busy.
+  /// Waiting / warning: scheduled, pending, busy.
   final Color pending;
+
+  /// Work in progress.
+  final Color progress;
 
   /// Problem / danger: cancelled, overdue, delete, errors.
   final Color statOrange;
@@ -138,8 +149,20 @@ class AppPalette {
   /// Glow under the floating "Add" buttons.
   final Color fabShadowColor;
 
+  // --- Guided tours ---------------------------------------------------------
+
+  /// Darkens the screen around the spotlight.
+  final Color scrim;
+
+  /// Text and lines drawn on [scrim].
+  final Color onScrim;
+
+  /// Stars and points earned in a tour.
+  final Color reward;
+
   AppPalette copyWith({
     Color? primary,
+    Color? primarySoft,
     Color? secondary,
     Color? cardAccent,
     Color? onPrimary,
@@ -157,14 +180,19 @@ class AppPalette {
     Color? iconLightGrey,
     Color? statGreen,
     Color? pending,
+    Color? progress,
     Color? statOrange,
     Color? whatsappGreen,
     Color? shadowColor,
     Color? cardShadowColor,
     Color? fabShadowColor,
+    Color? scrim,
+    Color? onScrim,
+    Color? reward,
   }) {
     return AppPalette(
       primary: primary ?? this.primary,
+      primarySoft: primarySoft ?? this.primarySoft,
       secondary: secondary ?? this.secondary,
       cardAccent: cardAccent ?? this.cardAccent,
       onPrimary: onPrimary ?? this.onPrimary,
@@ -182,11 +210,15 @@ class AppPalette {
       iconLightGrey: iconLightGrey ?? this.iconLightGrey,
       statGreen: statGreen ?? this.statGreen,
       pending: pending ?? this.pending,
+      progress: progress ?? this.progress,
       statOrange: statOrange ?? this.statOrange,
       whatsappGreen: whatsappGreen ?? this.whatsappGreen,
       shadowColor: shadowColor ?? this.shadowColor,
       cardShadowColor: cardShadowColor ?? this.cardShadowColor,
       fabShadowColor: fabShadowColor ?? this.fabShadowColor,
+      scrim: scrim ?? this.scrim,
+      onScrim: onScrim ?? this.onScrim,
+      reward: reward ?? this.reward,
     );
   }
 }
@@ -199,29 +231,34 @@ class AppTheme {
   // ===========================================================================
 
   static const AppPalette light = AppPalette(
-    primary: Color(0xFF6C5CE7), // purple
-    secondary: Color(0xFF00CEC9), // mint cyan
-    cardAccent: Color(0xFF6C5CE7),
-    onPrimary: Color(0xFFFFFFFF), // white text on purple
-    scaffoldBackground: Color(0xFFF4F6F9),
+    primary: Color(0xFF2350E0), // calm blue
+    primarySoft: Color(0xFFE8EEFF),
+    secondary: Color(0xFF0B7A8F), // teal: on the way, refunds
+    cardAccent: Color(0xFF2350E0),
+    onPrimary: Color(0xFFFFFFFF), // white text on blue
+    scaffoldBackground: Color(0xFFF4F6FA),
     surface: Color(0xFFFFFFFF),
     cardColor: Color(0xFFFFFFFF),
     searchFieldBg: Color(0xFFFFFFFF),
-    locationChipBg: Color(0xFFF1F2F6),
-    textPrimary: Color(0xFF2C3E50),
-    textSecondary: Color(0xFF8B93A6),
-    textDarkHint: Color(0xFF636E72),
-    textLightHint: Color(0xFFA0A5B9),
-    textNotes: Color(0xFFA4B0BE),
-    iconGrey: Color(0xFF8B93A6),
-    iconLightGrey: Color(0xFFB2BEC3),
-    statGreen: Color(0xFF00B894),
-    pending: Color(0xFFFFA000),
-    statOrange: Color(0xFFE17055),
-    whatsappGreen: Color(0xFF00B894),
-    shadowColor: Color(0x08000000), // black at 3 %
-    cardShadowColor: Color(0x146C5CE7), // primary at 8 %
-    fabShadowColor: Color(0x666C5CE7), // primary at 40 %
+    locationChipBg: Color(0xFFEEF1F6),
+    textPrimary: Color(0xFF121826),
+    textSecondary: Color(0xFF4A5468),
+    textDarkHint: Color(0xFF6B7487),
+    textLightHint: Color(0xFF6B7487),
+    textNotes: Color(0xFF6B7487),
+    iconGrey: Color(0xFF5B6577),
+    iconLightGrey: Color(0xFFDCE1EA),
+    statGreen: Color(0xFF15803D),
+    pending: Color(0xFFB45309),
+    progress: Color(0xFF6D28D9),
+    statOrange: Color(0xFFC62828),
+    whatsappGreen: Color(0xFF128C4A),
+    shadowColor: Color(0x0A121826),
+    cardShadowColor: Color(0x0F2350E0),
+    fabShadowColor: Color(0x332350E0),
+    scrim: Color(0xD90B1020),
+    onScrim: Color(0xFFFFFFFF),
+    reward: Color(0xFFFFC23D),
   );
 
   // ===========================================================================
@@ -231,29 +268,34 @@ class AppTheme {
   // stay readable on dark backgrounds.
 
   static const AppPalette dark = AppPalette(
-    primary: Color(0xFF8E80F7),
-    secondary: Color(0xFF2EDBD6),
-    cardAccent: Color(0xFF8E80F7),
-    onPrimary: Color(0xFFFFFFFF),
-    scaffoldBackground: Color(0xFF12141C),
-    surface: Color(0xFF1C1F2A),
-    cardColor: Color(0xFF1C1F2A),
-    searchFieldBg: Color(0xFF232736),
-    locationChipBg: Color(0xFF262A38),
-    textPrimary: Color(0xFFE8EAF1),
-    textSecondary: Color(0xFF9AA1B5),
-    textDarkHint: Color(0xFFB7BDCC),
-    textLightHint: Color(0xFF717889),
-    textNotes: Color(0xFF7D8497),
-    iconGrey: Color(0xFF9AA1B5),
-    iconLightGrey: Color(0xFF4A5063),
-    statGreen: Color(0xFF1AAE85), // checked for chart readability on dark
-    pending: Color(0xFFFFB84D),
-    statOrange: Color(0xFFFF8A70),
+    primary: Color(0xFF7C9BFF),
+    primarySoft: Color(0xFF1E2A52),
+    secondary: Color(0xFF3CC6DB),
+    cardAccent: Color(0xFF7C9BFF),
+    onPrimary: Color(0xFF0B1020),
+    scaffoldBackground: Color(0xFF0E1117),
+    surface: Color(0xFF181C25),
+    cardColor: Color(0xFF181C25),
+    searchFieldBg: Color(0xFF1F2430),
+    locationChipBg: Color(0xFF242A37),
+    textPrimary: Color(0xFFEEF1F7),
+    textSecondary: Color(0xFFA9B1C2),
+    textDarkHint: Color(0xFF8790A3),
+    textLightHint: Color(0xFF8790A3),
+    textNotes: Color(0xFF8790A3),
+    iconGrey: Color(0xFFA9B1C2),
+    iconLightGrey: Color(0xFF2E3442),
+    statGreen: Color(0xFF4ADE80),
+    pending: Color(0xFFFBBF5A),
+    progress: Color(0xFFC4A7FF),
+    statOrange: Color(0xFFFF8A80),
     whatsappGreen: Color(0xFF25D366),
-    shadowColor: Color(0x33000000), // black at 20 %
-    cardShadowColor: Color(0x29000000), // black at 16 %
-    fabShadowColor: Color(0x598E80F7), // primary at 35 %
+    shadowColor: Color(0x00000000),
+    cardShadowColor: Color(0x00000000),
+    fabShadowColor: Color(0x00000000),
+    scrim: Color(0xE6050810),
+    onScrim: Color(0xFFFFFFFF),
+    reward: Color(0xFFFFC23D),
   );
 
   // ===========================================================================
@@ -283,34 +325,34 @@ class AppTheme {
   // --- Text sizes, smallest to largest --------------------------------------
 
   /// Tiny labels: chart axes, small badges.
-  static const double textMicro = 10;
+  static const double textMicro = 11;
 
   /// Captions: hints, timestamps, secondary lines in lists.
-  static const double textCaption = 11.5;
+  static const double textCaption = 12;
 
   /// Small text: chips, notes, subtitles.
-  static const double textSmall = 12;
+  static const double textSmall = 13;
 
   /// Body text: most regular text and list rows.
-  static const double textBody = 13;
+  static const double textBody = 15;
 
   /// Large body: form fields, important rows, sheet text.
-  static const double textBodyLarge = 14;
+  static const double textBodyLarge = 16;
 
   /// Subtitles and button labels.
-  static const double textSubtitle = 15;
+  static const double textSubtitle = 17;
 
   /// Card and section titles.
-  static const double textTitle = 16;
+  static const double textTitle = 18;
 
   /// App bar titles and large buttons.
-  static const double textTitleLarge = 18;
+  static const double textTitleLarge = 20;
 
   /// Screen headlines (e.g. "Operations overview").
-  static const double textHeadline = 20;
+  static const double textHeadline = 24;
 
   /// Big numbers: KPI values, amounts, hero figures.
-  static const double textDisplay = 26;
+  static const double textDisplay = 32;
 
   // ===========================================================================
   // ACTIVE THEME — no design values below this line
@@ -372,6 +414,7 @@ class AppTheme {
       primary: primary,
       cardAccent: primary,
       onPrimary: primary == null ? null : readableOn(primary),
+      primarySoft: primary?.withValues(alpha: .12),
       cardShadowColor: primary?.withValues(alpha: .08),
       fabShadowColor: primary?.withValues(alpha: .4),
       secondary: pick(AppBrandColor.secondary),
@@ -400,6 +443,7 @@ class AppTheme {
           : const Color(0xFF1E2230);
 
   static Color get primary => palette.primary;
+  static Color get primarySoft => palette.primarySoft;
   static Color get secondary => palette.secondary;
   static Color get cardAccent => palette.cardAccent;
   static Color get onPrimary => palette.onPrimary;
@@ -417,11 +461,15 @@ class AppTheme {
   static Color get iconLightGrey => palette.iconLightGrey;
   static Color get statGreen => palette.statGreen;
   static Color get pending => palette.pending;
+  static Color get progress => palette.progress;
   static Color get statOrange => palette.statOrange;
   static Color get whatsappGreen => palette.whatsappGreen;
   static Color get shadowColor => palette.shadowColor;
   static Color get cardShadowColor => palette.cardShadowColor;
   static Color get fabShadowColor => palette.fabShadowColor;
+  static Color get scrim => palette.scrim;
+  static Color get onScrim => palette.onScrim;
+  static Color get reward => palette.reward;
 
   /// Text style in the app font. Use instead of TextStyle everywhere.
   static TextStyle font({

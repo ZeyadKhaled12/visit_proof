@@ -229,7 +229,7 @@ class _LocationChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = AppTheme.secondary;
+    final color = AppTheme.primary;
     return Align(
       alignment: AlignmentDirectional.centerStart,
       child: Material(

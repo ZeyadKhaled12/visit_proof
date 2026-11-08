@@ -45,7 +45,7 @@ class PrioritySwitch {
     } else if (priorityID == 2) {
       return AppTheme.statOrange;
     } else if (priorityID == 3) {
-      return AppTheme.secondary;
+      return AppTheme.pending;
     } else if (priorityID == 4) {
       return AppTheme.iconGrey;
     }
@@ -56,7 +56,7 @@ class PrioritySwitch {
       case Priority.emergency:
         return AppTheme.statOrange;
       case Priority.high:
-        return AppTheme.secondary;
+        return AppTheme.pending;
       case Priority.normal:
         return AppTheme.primary;
       case Priority.low:

@@ -279,7 +279,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       controller: _checklistInputController,
                       hintText: 'Add task (e.g., Wash hair)'.tr,
                       prefixIcon: Icon(Icons.check_box_outlined,
-                          color: AppTheme.secondary),
+                          color: AppTheme.primary),
                       onFieldSubmitted: (_) => _addChecklistItem(),
                     ),
                   ),
@@ -291,14 +291,14 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       height: 56, // Matches GWidgetTextField default height
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                        color: AppTheme.secondary.withValues(alpha: .15),
+                        color: AppTheme.primary.withValues(alpha: .15),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Center(
                         child: Text(
                           'Add'.tr,
                           style: AppTheme.font(
-                            color: AppTheme.secondary,
+                            color: AppTheme.primary,
                             fontWeight: FontWeight.bold,
                             fontSize: AppTheme.textSubtitle,
                           ),
@@ -324,7 +324,7 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                             color:
-                                AppTheme.iconLightGrey.withValues(alpha: .3)),
+                                AppTheme.iconLightGrey),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -427,13 +427,6 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                   },
                   isLoading: widget.loading,
                   isEnable: !widget.getCategoriesLoading,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.fabShadowColor,
-                      blurRadius: 15,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
                   text: widget.serviceModel?.id != null
                       ? 'Update Service'.tr
                       : 'Save Service'.tr)

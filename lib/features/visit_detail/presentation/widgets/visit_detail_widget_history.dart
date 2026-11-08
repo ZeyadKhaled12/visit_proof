@@ -29,7 +29,7 @@ class _VisitDetailWidgetHistoryState
   static const int _collapsedCount = 5;
   static List<Color> get _palette => [
     AppTheme.primary,
-    AppTheme.secondary,
+    AppTheme.primary,
     AppTheme.statOrange,
     AppTheme.statGreen,
     AppTheme.pending,

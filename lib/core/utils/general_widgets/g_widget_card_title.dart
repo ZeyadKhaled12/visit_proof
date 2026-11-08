@@ -20,7 +20,7 @@ class GWidgetCardTitle extends StatelessWidget {
           padding: const EdgeInsetsDirectional.only(start: 4, bottom: 12),
           child: Row(
             children: [
-              Icon(icon, color: AppTheme.secondary, size: 22),
+              Icon(icon, color: AppTheme.primary, size: 22),
               const SizedBox(width: 8),
               Text(
                 title,
@@ -37,16 +37,9 @@ class GWidgetCardTitle extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(
-                color: AppTheme.iconLightGrey.withValues(alpha: 0.2)),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.cardShadowColor,
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
+                color: AppTheme.iconLightGrey),
           ),
           child: child,
         )

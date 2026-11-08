@@ -78,13 +78,13 @@ class _VisitDetailWidgetSiteSheetState
           const SizedBox(height: 10),
           VisitDetailNotice(
               text: 'A draft invoice keeps a copy of the site, so it is updated too. Issued invoices are not changed.'.tr,
-              color: AppTheme.secondary),
+              color: AppTheme.primary),
           const SizedBox(height: 16),
           GWidgetButton(
             text: 'Save site'.tr,
             fontSize: AppTheme.textSubtitle,
             raduis: 14,
-            backgroundColor: AppTheme.secondary,
+            backgroundColor: AppTheme.primary,
             isEnable: _selected != null,
             isLoading: loading,
             loadingSize: 22,

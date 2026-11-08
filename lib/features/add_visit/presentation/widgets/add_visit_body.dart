@@ -279,7 +279,6 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                         color: _selectedTechnician != null
                             ? AppTheme.pending.withValues(alpha: .18)
                             : AppTheme.cardColor.withValues(alpha: .2),
-                        boxShadow: [BoxShadow(color: AppTheme.shadowColor)],
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(25))),
                     child: Column(

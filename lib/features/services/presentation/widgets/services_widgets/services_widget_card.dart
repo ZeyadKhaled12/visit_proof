@@ -28,13 +28,6 @@ class ServicesWidgetCard extends StatelessWidget {
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.cardShadowColor,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          )
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,19 +70,19 @@ class ServicesWidgetCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2), // Tighter padding
                       decoration: BoxDecoration(
-                        color: AppTheme.secondary.withValues(alpha: 0.15),
+                        color: AppTheme.primary.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.category,
-                              size: 12, color: AppTheme.secondary),
+                              size: 12, color: AppTheme.primary),
                           const SizedBox(width: 4),
                           Text(
                             service.category?.name?.tr ?? 'No Category'.tr,
                             style: AppTheme.font(
-                              color: AppTheme.secondary,
+                              color: AppTheme.primary,
                               fontSize: AppTheme.textCaption,
                               fontWeight: FontWeight.bold,
                             ),

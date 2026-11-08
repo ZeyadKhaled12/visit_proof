@@ -51,7 +51,7 @@ class VisitDetailWidgetInfo extends StatelessWidget {
           VisitDetailTextBlock(
               title: 'Notes for the technician'.tr,
               text: visit.notes,
-              color: AppTheme.secondary),
+              color: AppTheme.primary),
         ],
       ),
     );

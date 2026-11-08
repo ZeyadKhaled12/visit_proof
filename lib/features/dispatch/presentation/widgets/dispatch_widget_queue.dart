@@ -153,8 +153,6 @@ class _DispatchWidgetQueueState extends State<DispatchWidgetQueue> {
                 fontSize: AppTheme.textSubtitle,
                 height: 50,
                 raduis: 14,
-                gradient: LinearGradient(
-                    colors: [AppTheme.primary, AppTheme.secondary]),
                 onPressed: _bulkAssign,
               ),
             ),

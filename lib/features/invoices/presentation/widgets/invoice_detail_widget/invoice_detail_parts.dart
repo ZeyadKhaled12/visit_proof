@@ -63,14 +63,8 @@ class InvDetailWidgetPanel extends StatelessWidget {
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: AppTheme.surface,
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.cardShadowColor,
-              blurRadius: 24,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: AppTheme.iconLightGrey),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -49,13 +49,6 @@ class AddTechWidgetCategories extends StatelessWidget {
               color: AppTheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: isError ? Border.all(color: AppTheme.statOrange) : null,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.shadowColor,
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ],
             ),
             child: Wrap(
               spacing: 10,
@@ -77,12 +70,12 @@ class AddTechWidgetCategories extends StatelessWidget {
                         horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppTheme.secondary.withValues(alpha: 0.15)
+                          ? AppTheme.primary.withValues(alpha: 0.15)
                           : AppTheme.locationChipBg,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(18),
                       border: Border.all(
                         color: isSelected
-                            ? AppTheme.secondary
+                            ? AppTheme.primary
                             : Colors.transparent,
                         width: 1.5,
                       ),
@@ -106,7 +99,7 @@ class AddTechWidgetCategories extends StatelessWidget {
                           Icon(
                             Icons.check_circle_rounded,
                             size: 16,
-                            color: AppTheme.secondary,
+                            color: AppTheme.primary,
                           ),
                         ]
                       ],

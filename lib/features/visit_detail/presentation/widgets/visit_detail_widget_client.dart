@@ -25,7 +25,7 @@ class VisitDetailWidgetClient extends StatelessWidget {
     return VisitDetailSection(
       title: 'Client & Site'.tr,
       icon: Icons.person_pin_circle_rounded,
-      color: AppTheme.secondary,
+      color: AppTheme.primary,
       actionText: 'Change site'.tr,
       actionIcon: Icons.edit_location_alt_rounded,
       onAction: VisitRules.canChangeSite(visit)
@@ -42,8 +42,7 @@ class VisitDetailWidgetClient extends StatelessWidget {
                   children: [
                     VisitDetailAvatar(
                       letter: VisitDetailHelpers.initial(client.name),
-                      colors: [AppTheme.secondary, AppTheme.primary],
-                    ),
+                      ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(

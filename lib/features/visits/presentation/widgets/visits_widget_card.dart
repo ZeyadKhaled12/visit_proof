@@ -4,11 +4,16 @@ import 'package:intl/intl.dart';
 import 'package:visit_proof/features/visit_detail/presentation/screens/visit_detail_scr.dart';
 
 import '../../../../configs/app_theme.dart';
+import '../../../../core/session/app_session.dart';
 import '../../../../core/utils/enums/payment_status_enum.dart';
 import '../../../../core/utils/enums/priority_enum.dart';
 import '../../../../core/utils/enums/visit_status_enum.dart';
+import '../../../visit_detail/domain/rules/visit_rules.dart';
+import '../../../visit_detail/presentation/widgets/visit_detail_widget_parts.dart';
 import '../../data/models/visit_detail_models/visit_detail_model.dart';
 
+/// One visit in a list: what it is, for whom, when, and what comes next.
+/// Everything else lives on the visit screen.
 class VisitsWidgetCard extends StatelessWidget {
   const VisitsWidgetCard(
       {super.key, required this.visit, required this.onReturn});
@@ -17,15 +22,40 @@ class VisitsWidgetCard extends StatelessWidget {
   /// Called after the visit screen closes, since the visit may have changed.
   final VoidCallback onReturn;
 
+  /// What the technician does next on this visit, if anything.
+  String? get _nextAction {
+    final status = visit.status;
+    if (!AppSession.isTechnician || status == null) return null;
+    final next = VisitRules.technicianNextStatuses(status);
+    if (next.isEmpty) return null;
+    switch (next.first) {
+      case VisitStatus.onWay:
+        return 'Start trip'.tr;
+      case VisitStatus.inProgress:
+        return 'Start work'.tr;
+      case VisitStatus.completed:
+        return 'Complete visit'.tr;
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final statusSwitch = VisitStatusSwitch(visitStatusEnum: visit.status);
     final prioritySwitch = PrioritySwitch(priorityEnum: visit.priority);
     final paymentSwitch =
         PaymentStatusSwitch(paymentStatusEnum: visit.paymentStatus);
+    final urgent = visit.priority == Priority.emergency ||
+        visit.priority == Priority.high;
+    final next = _nextAction;
+    final radius = BorderRadius.circular(18);
+
     return Material(
-      color: Colors.transparent,
+      color: AppTheme.cardColor,
+      borderRadius: radius,
       child: InkWell(
+        borderRadius: radius,
         onTap: () async {
           if (visit.id == null) return;
           await Navigator.pushNamed(context, VisitDetailScr.route,
@@ -35,191 +65,141 @@ class VisitsWidgetCard extends StatelessWidget {
         highlightColor: AppTheme.primary.withValues(alpha: 0.05),
         splashColor: AppTheme.primary.withValues(alpha: 0.1),
         child: Container(
-            padding: const EdgeInsets.all(12.0),
-            decoration: BoxDecoration(
-              color: AppTheme.cardColor,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.cardShadowColor,
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-              border: Border.all(
-                color: AppTheme.cardAccent.withValues(alpha: 0.1),
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            visit.visitNumber ?? '#VISIT-000',
-                            style: AppTheme.font(
-                              color: AppTheme.textPrimary,
-                              fontSize: AppTheme.textBodyLarge,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(Icons.calendar_today_outlined,
-                              size: 12, color: AppTheme.iconGrey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                            _formatDate(visit.startDate),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTheme.font(
-                              color: AppTheme.textDarkHint,
-                              fontSize: AppTheme.textSmall,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )),
-                          const SizedBox(width: 8),
-                          _buildChip(
-                            text: statusSwitch.getText(),
-                            color: statusSwitch.getColor(),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildCompactInfo(
-                              icon: Icons.person_outline,
-                              text: visit.client?.name ?? 'no client'.tr,
-                              textColor: AppTheme.textPrimary,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildCompactInfo(
-                              icon: Icons.build_circle_outlined,
-                              text: visit.category?.name?.tr ?? 'no category'.tr,
-                              textColor: AppTheme.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      _buildCompactInfo(
-                        icon: Icons.engineering_outlined,
-                        text: visit.technicianModel?.name ??
-                            'no technician assigned'.tr,
-                        textColor: AppTheme.textPrimary,
-                      ),
-                      const SizedBox(height: 6),
-                      _buildCompactInfo(
-                        icon: Icons.location_on_outlined,
-                        text:
-                            '${visit.site?.city?.name?.tr ?? 'Unknown'.tr} - ${visit.site?.addressDetail ?? ''}',
-                        textColor: AppTheme.textSecondary,
-                      ),
-                      if (visit.problemDescription != null &&
-                          visit.problemDescription!.isNotEmpty) ...[
-                        const SizedBox(height: 6),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(start: 20.0),
-                          child: Text(
-                            visit.problemDescription!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTheme.font(
-                              color: AppTheme.textNotes,
-                              fontSize: AppTheme.textSmall,
-                            ),
-                          ),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(color: AppTheme.iconLightGrey),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        VisitDetailPill(
+                          text: statusSwitch.getText(),
+                          color: statusSwitch.getColor(),
                         ),
-                      ],
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          _buildChip(
+                        if (urgent)
+                          VisitDetailPill(
                             text: prioritySwitch.getText(),
                             color: prioritySwitch.getColor(),
-                            isSmall: true,
                           ),
-                          const SizedBox(width: 6),
-                          _buildChip(
-                            text: paymentSwitch.getText(),
-                            color: paymentSwitch.getColor(),
-                            isSmall: true,
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
+                  Text(
+                    visit.visitNumber ?? '#VISIT-000',
+                    style: AppTheme.font(
+                      color: AppTheme.textDarkHint,
+                      fontSize: AppTheme.textSmall,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                visit.client?.name ?? 'no client'.tr,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.font(
+                  color: AppTheme.textPrimary,
+                  fontSize: AppTheme.textTitle,
+                  fontWeight: FontWeight.w700,
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 20,
-                    color: AppTheme.primary.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                (visit.serviceName ?? '').trim().isNotEmpty
+                    ? visit.serviceName!
+                    : visit.category?.name?.tr ?? 'no category'.tr,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.font(
+                  color: AppTheme.textSecondary,
+                  fontSize: AppTheme.textBody,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(Icons.schedule_rounded,
+                      size: 18, color: AppTheme.iconGrey),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      _formatDate(visit.startDate),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTheme.font(
+                        color: AppTheme.textPrimary,
+                        fontSize: AppTheme.textBody,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
+                  if (next != null) ...[
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        'Next: {0}'.trArgs([next]),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTheme.font(
+                          color: AppTheme.primary,
+                          fontSize: AppTheme.textSmall,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.chevron_right_rounded,
+                        size: 20, color: AppTheme.primary),
+                  ],
+                ],
+              ),
+              if (!AppSession.isTechnician) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.engineering_outlined,
+                        size: 18, color: AppTheme.iconGrey),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        [
+                          visit.technicianModel?.name ??
+                              'no technician assigned'.tr,
+                          if (visit.site?.city?.name != null)
+                            visit.site!.city!.name!.tr,
+                        ].join(' · '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTheme.font(
+                          color: AppTheme.textSecondary,
+                          fontSize: AppTheme.textSmall,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      paymentSwitch.getText(),
+                      style: AppTheme.font(
+                        color: paymentSwitch.getColor(),
+                        fontSize: AppTheme.textSmall,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            )),
-      ),
-    );
-  }
-
-  Widget _buildCompactInfo({
-    required IconData icon,
-    required String text,
-    required Color textColor,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(icon, size: 14, color: AppTheme.primary),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTheme.font(
-              color: textColor,
-              fontSize: AppTheme.textSmall,
-              fontWeight: FontWeight.w500,
-            ),
+            ],
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildChip({
-    required String text,
-    required Color color,
-    bool isSmall = false,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isSmall ? 6 : 10,
-        vertical: isSmall ? 2 : 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Text(
-        text.toUpperCase(),
-        style: AppTheme.font(
-          color: color,
-          fontSize: isSmall ? AppTheme.textMicro : AppTheme.textMicro,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
         ),
       ),
     );
@@ -227,6 +207,12 @@ class VisitsWidgetCard extends StatelessWidget {
 
   String _formatDate(DateTime? date) {
     if (date == null) return 'No date'.tr;
+    final now = DateTime.now();
+    final time = DateFormat('hh:mm a').format(date);
+    if (DateUtils.isSameDay(date, now)) return '${'Today'.tr} · $time';
+    if (DateUtils.isSameDay(date, now.add(const Duration(days: 1)))) {
+      return '${'Tomorrow'.tr} · $time';
+    }
     return DateFormat('dd MMM yyyy · hh:mm a').format(date);
   }
 }

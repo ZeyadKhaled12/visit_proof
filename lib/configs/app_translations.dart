@@ -1467,4 +1467,100 @@ const Map<String, String> arabicTranslations = {
       'يعتمد سعرها على ما تطلبه، ونناقش طلبك معك ونتفق على السعر قبل بدء أي عمل.',
   'First {0} months free, then {1} every {2} months for the whole company. Up to {3} users and {4} GB of photos. Delivered as a PWA on a private link. Special requests are priced separately, after we discuss them with you.':
       'أول {0} أشهر مجانًا، ثم {1} كل {2} أشهر للشركة كاملة، حتى {3} مستخدمين ومساحة {4} غيغابايت للصور. يُسلَّم بصيغة PWA على رابط خاص. تُسعَّر الطلبات الخاصة بشكل مستقل بعد مناقشتها معك.',
+
+  // --- Calm dashboard, technician home and guided tour ---------------------
+  'Book a client and send a technician':
+      'احجز موعدًا لعميل وأرسل فنيًا',
+  'How this screen works':
+      'كيف تعمل هذه الشاشة',
+  'Tomorrow':
+      'غدًا',
+  'Next: {0}':
+      'التالي: {0}',
+  'Right now':
+      'الآن',
+  'Open visit details':
+      'فتح تفاصيل الزيارة',
+  'You have {0} open visits · {1} today':
+      'لديك {0} زيارات مفتوحة · {1} اليوم',
+  'New mission':
+      'مهمة جديدة',
+  'I am Proofy, your guide. {0} stops, about one minute, and a star at every stop.':
+      'أنا بروفي، مرشدك. {0} محطات في دقيقة تقريبًا، ونجمة عند كل محطة.',
+  'Start the mission':
+      'ابدأ المهمة',
+  'Not now':
+      'ليس الآن',
+  'Stop {0} of {1}':
+      'المحطة {0} من {1}',
+  'Skip tour':
+      'تخطي الجولة',
+  'Previous':
+      'السابق',
+  'Next stop':
+      'المحطة التالية',
+  'Finish':
+      'إنهاء',
+  'Mission complete!':
+      'اكتملت المهمة!',
+  'You earned the badge: {0}':
+      'حصلت على وسام: {0}',
+  '+{0} XP':
+      '+{0} نقطة',
+  'Play again':
+      'إعادة الجولة',
+  'Master your dashboard':
+      'أتقن لوحة التحكم',
+  'Dashboard expert':
+      'خبير لوحة التحكم',
+  'Your command center':
+      'مركز القيادة الخاص بك',
+  'The whole company on one screen. The line under the title shows the dates you are viewing and when the numbers were last updated.':
+      'الشركة بأكملها في شاشة واحدة. يوضح السطر أسفل العنوان التواريخ المعروضة وآخر وقت حُدّثت فيه الأرقام.',
+  'Tap refresh any time to get the newest numbers.':
+      'اضغط زر التحديث في أي وقت للحصول على أحدث الأرقام.',
+  'Choose your time range':
+      'اختر الفترة الزمنية',
+  'Every number on this screen follows the range you pick here: today, 7 days, 30 days, this month, or your own dates.':
+      'تتبع كل الأرقام في هذه الشاشة الفترة التي تختارها هنا: اليوم، أو 7 أيام، أو 30 يومًا، أو هذا الشهر، أو تواريخ تحددها بنفسك.',
+  'Each number is compared with the period just before it.':
+      'يُقارَن كل رقم بالفترة السابقة لها مباشرة.',
+  'Book new work':
+      'احجز عملًا جديدًا',
+  'The fastest way to start a visit. Choose the client, the service and the time, then send a technician.':
+      'أسرع طريقة لبدء زيارة. اختر العميل والخدمة والوقت، ثم أرسل فنيًا.',
+  'Handle problems first':
+      'ابدأ بمعالجة المشكلات',
+  'Late visits, visits with no technician, work not invoiced yet and overdue invoices. Only real problems appear here.':
+      'الزيارات المتأخرة، والزيارات بلا فني، والأعمال التي لم تصدر فواتيرها، والفواتير المتأخرة. لا يظهر هنا إلا ما يحتاج إلى معالجة فعلية.',
+  'Tap a row to see exactly which ones.':
+      'اضغط على أي صف لمعرفة التفاصيل.',
+  'Your four scores':
+      'مؤشراتك الأربعة',
+  'Visits, completion, money collected and items needing attention. The small arrow shows if you are doing better or worse than before.':
+      'الزيارات، ونسبة الإنجاز، والمبالغ المحصلة، والعناصر التي تحتاج إلى متابعة. يوضح السهم الصغير ما إذا كان الأداء أفضل أم أسوأ من السابق.',
+  'Tap any score to see the details behind it.':
+      'اضغط على أي مؤشر لعرض تفاصيله.',
+  'Today, live':
+      'اليوم مباشرة',
+  "Where each of today's visits stands right now, from scheduled to completed.":
+      'حالة كل زيارة من زيارات اليوم الآن، من الجدولة حتى الإكمال.',
+  'Tap a number to open those visits.':
+      'اضغط على أي رقم لفتح تلك الزيارات.',
+  'See the rhythm':
+      'تابع وتيرة العمل',
+  'Each bar is a slice of time. Green is completed work and blue is work not completed yet.':
+      'يمثل كل عمود فترة زمنية. الأخضر للأعمال المكتملة والأزرق للأعمال غير المكتملة بعد.',
+  'Tap a bar to open the visits behind it.':
+      'اضغط على أي عمود لفتح زياراته.',
+  'Meet your team':
+      'تعرّف على فريقك',
+  'Who finished how much in this period. A bar fills up as a technician completes the visits assigned to them.':
+      'ما أنجزه كل فني في هذه الفترة. يمتلئ الشريط كلما أكمل الفني الزيارات المسندة إليه.',
+  'Tap a name to see their full results.':
+      'اضغط على أي اسم لعرض نتائجه كاملة.',
+  'Jump anywhere':
+      'انتقل إلى أي مكان',
+  'Shortcuts to dispatch, visits, clients, technicians, services and invoices, all from here.':
+      'اختصارات إلى التوزيع والزيارات والعملاء والفنيين والخدمات والفواتير، جميعها من هنا.',
 };

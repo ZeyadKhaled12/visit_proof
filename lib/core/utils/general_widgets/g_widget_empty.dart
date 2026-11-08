@@ -31,10 +31,7 @@ class GWidgetEmpty extends StatelessWidget {
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(colors: [
-                AppTheme.primary.withValues(alpha: .14),
-                AppTheme.secondary.withValues(alpha: .14),
-              ]),
+              color: AppTheme.primary.withValues(alpha: .14),
             ),
             child: Icon(icon, size: 40, color: AppTheme.primary),
           ),
@@ -61,8 +58,6 @@ class GWidgetEmpty extends StatelessWidget {
               height: 46,
               raduis: 14,
               paddingTopBottom: 0,
-              gradient: LinearGradient(
-                  colors: [AppTheme.primary, AppTheme.secondary]),
               onPressed: onAction!,
             ),
           ],

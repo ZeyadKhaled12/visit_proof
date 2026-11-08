@@ -57,7 +57,7 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
           children: [
             VisitDetailNotice(
               text: 'Plan for {0}. Each visit goes to the best available colleague at the closest time.'.trArgs([VisitDetailHelpers.date(day)]),
-              color: AppTheme.secondary,
+              color: AppTheme.primary,
               icon: Icons.alt_route_rounded,
             ),
             if (started > 0) ...[
@@ -81,7 +81,7 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
               isLoading: loading,
               loadingSize: 22,
               loadingStrokeWidth: 3,
-              backgroundColor: AppTheme.secondary,
+              backgroundColor: AppTheme.primary,
               onPressed: () => context.read<DispatchBloc>().add(
                   DispatchBulkAssignEvent(assignments: [
                 for (final plan in ready)

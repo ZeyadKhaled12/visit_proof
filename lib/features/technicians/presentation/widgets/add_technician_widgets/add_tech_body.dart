@@ -280,13 +280,6 @@ class _AddTechBodyState extends State<AddTechBody> {
                     : 'Create Technician'.tr,
                 height: 60,
                 // isLoading: widget.loading,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.fabShadowColor,
-                    blurRadius: 15,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
               ),
               const SizedBox(height: 20),
             ],

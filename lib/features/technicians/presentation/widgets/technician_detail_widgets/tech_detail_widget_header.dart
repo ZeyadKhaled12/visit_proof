@@ -33,14 +33,8 @@ class TechDetailWidgetHeader extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: AppTheme.surface,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.shadowColor,
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              )
-            ],
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: AppTheme.iconLightGrey),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,10 +45,10 @@ class TechDetailWidgetHeader extends StatelessWidget {
                     width: 55,
                     height: 55,
                     decoration: BoxDecoration(
-                      color: AppTheme.secondary.withValues(alpha: 0.15),
+                      color: AppTheme.primary.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                       border:
-                          Border.all(color: AppTheme.secondary, width: 1.5),
+                          Border.all(color: AppTheme.primary, width: 1.5),
                     ),
                     child: Center(
                       child: Text(
@@ -63,7 +57,7 @@ class TechDetailWidgetHeader extends StatelessWidget {
                                 .toUpperCase() ??
                             'T',
                         style: AppTheme.font(
-                          color: AppTheme.secondary,
+                          color: AppTheme.primary,
                           fontSize: AppTheme.textDisplay,
                           fontWeight: FontWeight.bold,
                         ),

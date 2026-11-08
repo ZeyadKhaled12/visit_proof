@@ -49,7 +49,7 @@ class RoleSelectBody extends StatelessWidget {
             const SizedBox(height: 14),
             _RoleCard(
               icon: Icons.engineering_rounded,
-              color: AppTheme.secondary,
+              color: AppTheme.primary,
               title: 'Technician'.tr,
               subtitle:
                   'See your visits, check in on site and add proof photos.'.tr,
@@ -77,17 +77,8 @@ class _Brand extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [AppTheme.primary, AppTheme.secondary],
-                begin: AlignmentDirectional.topStart,
-                end: AlignmentDirectional.bottomEnd),
-            borderRadius: BorderRadius.circular(26),
-            boxShadow: [
-              BoxShadow(
-                  color: AppTheme.primary.withValues(alpha: .3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8)),
-            ],
+            color: AppTheme.primary,
+            borderRadius: BorderRadius.circular(18),
           ),
           child: GWidgetBrandMark(color: AppTheme.onPrimary, size: 44),
         ),
@@ -129,21 +120,15 @@ class _RoleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppTheme.cardColor,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: loading ? null : onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(18),
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(color: color.withValues(alpha: .35)),
-            boxShadow: [
-              BoxShadow(
-                  color: AppTheme.cardShadowColor.withValues(alpha: .05),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4)),
-            ],
           ),
           child: Row(
             children: [

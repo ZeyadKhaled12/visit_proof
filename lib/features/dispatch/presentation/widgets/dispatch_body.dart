@@ -75,7 +75,7 @@ class _DispatchBodyState extends State<DispatchBody> {
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
-      appBar: GWidgetAppbar(title: 'Dispatch'.tr, icon: Icons.hub_rounded, actions: [
+      appBar: GWidgetAppbar(title: 'Dispatch'.tr, actions: [
         IconButton(
           tooltip: 'Dispatch rules'.tr,
           icon: Icon(Icons.tune_rounded, color: AppTheme.primary),
@@ -240,7 +240,7 @@ class _ViewSwitch extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: AppTheme.shadowColor, blurRadius: 8)],
+        border: Border.all(color: AppTheme.iconLightGrey),
       ),
       child: Row(
         children: [
@@ -252,10 +252,7 @@ class _ViewSwitch extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(vertical: 9),
                   decoration: BoxDecoration(
-                    gradient: view == value
-                        ? LinearGradient(
-                            colors: [AppTheme.primary, AppTheme.secondary])
-                        : null,
+                    color: view == value ? AppTheme.primary : null,
                     borderRadius: BorderRadius.circular(11),
                   ),
                   child: Row(

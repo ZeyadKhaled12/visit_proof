@@ -12,16 +12,15 @@ class DashboardFormat {
       value == null ? '—' : '${(value * 100).round()}%';
 
   /// 950 SAR · 12.4K SAR · 1.2M SAR
-  static String money(num value) {
+  static String money(num value) => '${amount(value)} ${App.currency}';
+
+  /// 950 · 12.4K · 1.2M
+  static String amount(num value) {
     final abs = value.abs();
     final sign = value < 0 ? '-' : '';
-    if (abs >= 1000000) {
-      return '$sign${(abs / 1000000).toStringAsFixed(1)}M ${App.currency}';
-    }
-    if (abs >= 10000) {
-      return '$sign${(abs / 1000).toStringAsFixed(1)}K ${App.currency}';
-    }
-    return '$sign${abs.toStringAsFixed(abs % 1 == 0 ? 0 : 2)} ${App.currency}';
+    if (abs >= 1000000) return '$sign${(abs / 1000000).toStringAsFixed(1)}M';
+    if (abs >= 10000) return '$sign${(abs / 1000).toStringAsFixed(1)}K';
+    return '$sign${abs.toStringAsFixed(abs % 1 == 0 ? 0 : 2)}';
   }
 }
 
@@ -35,6 +34,7 @@ class DashboardSection extends StatelessWidget {
     this.actionText,
     this.onAction,
     this.padding = const EdgeInsets.all(16),
+    this.borderColor,
   });
 
   final String title;
@@ -44,20 +44,17 @@ class DashboardSection extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
 
+  /// Draws the card's edge in another color, e.g. when something is wrong.
+  final Color? borderColor;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.iconLightGrey.withValues(alpha: .25)),
-        boxShadow: [
-          BoxShadow(
-              color: AppTheme.shadowColor,
-              blurRadius: 12,
-              offset: const Offset(0, 4)),
-        ],
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor ?? AppTheme.iconLightGrey),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -72,7 +69,7 @@ class DashboardSection extends StatelessWidget {
                     Text(title,
                         style: AppTheme.font(
                             color: AppTheme.textPrimary,
-                            fontSize: AppTheme.textSubtitle,
+                            fontSize: AppTheme.textTitle,
                             fontWeight: FontWeight.w800)),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
@@ -146,7 +143,13 @@ class DashboardDelta extends StatelessWidget {
             : AppTheme.statOrange;
     final amount = (value.abs() * 100).round();
 
-    return Row(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
@@ -170,6 +173,7 @@ class DashboardDelta extends StatelessWidget {
                   color: color, fontSize: AppTheme.textCaption, fontWeight: FontWeight.w800)),
         ),
       ],
+      ),
     );
   }
 }
@@ -191,7 +195,7 @@ class DashboardBreadcrumb extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 child: Icon(Icons.chevron_right_rounded,
-                    size: 16, color: AppTheme.iconLightGrey),
+                    size: 16, color: AppTheme.iconGrey),
               ),
             InkWell(
               borderRadius: BorderRadius.circular(6),

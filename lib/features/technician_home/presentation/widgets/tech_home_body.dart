@@ -8,11 +8,13 @@ import '../../../../core/session/app_session.dart';
 import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/enums/visit_status_enum.dart';
 import '../../../../core/utils/general_widgets/g_widget_appbar.dart';
+import '../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../core/utils/general_widgets/g_widget_choice_chip.dart';
 import '../../../../core/utils/general_widgets/g_widget_empty.dart';
 import '../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../../visit_detail/presentation/screens/visit_detail_scr.dart';
 import '../../../visit_detail/presentation/widgets/visit_detail_helpers.dart';
+import '../../../visit_detail/presentation/widgets/visit_detail_widget_parts.dart';
 import '../../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../../../visits/presentation/controller/visits_bloc.dart';
 import '../../../visits/presentation/widgets/visits_widget_card.dart';
@@ -83,9 +85,11 @@ class _TechHomeBodyState extends State<TechHomeBody> {
   /// The header, then the visit cards, built only as they scroll into view.
   Widget _list(List<VisitDetailModel> active, List<VisitDetailModel> visits) {
     final header = <Widget>[
-      _Greeting(openCount: _count(TechVisitsFilter.open)),
+      _Greeting(
+          openCount: _count(TechVisitsFilter.open),
+          todayCount: _count(TechVisitsFilter.today)),
       if (active.isNotEmpty) ...[
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
         _ActiveJob(visit: active.first, onTap: () => _open(active.first)),
       ],
       const SizedBox(height: 16),
@@ -117,13 +121,13 @@ class _TechHomeBodyState extends State<TechHomeBody> {
 
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
       itemCount: header.length + visits.length,
       itemBuilder: (context, index) {
         if (index < header.length) return header[index];
         final visit = visits[index - header.length];
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: 12),
           child: VisitsWidgetCard(visit: visit, onReturn: _refresh),
         );
       },
@@ -143,7 +147,7 @@ class _TechHomeBodyState extends State<TechHomeBody> {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: GWidgetAppbar(
-              title: 'My Visits'.tr, icon: Icons.engineering_outlined)
+              title: 'My Visits'.tr, )
           .appbar(),
       body: GWidgetLoading(
         isLoading: widget.loading,
@@ -158,60 +162,37 @@ class _TechHomeBodyState extends State<TechHomeBody> {
 }
 
 class _Greeting extends StatelessWidget {
-  const _Greeting({required this.openCount});
+  const _Greeting({required this.openCount, required this.todayCount});
   final int openCount;
+  final int todayCount;
 
   @override
   Widget build(BuildContext context) {
     final name = AppSession.current.value?.technicianName ?? '';
 
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [AppTheme.primary, AppTheme.secondary],
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Hi, {0}'.trArgs([name]),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTheme.font(
-                        color: AppTheme.onPrimary,
-                        fontSize: AppTheme.textTitleLarge,
-                        fontWeight: FontWeight.w800)),
-                const SizedBox(height: 4),
-                Text(DateFormat('EEEE, dd MMM yyyy').format(DateTime.now()),
-                    style: AppTheme.font(
-                        color: AppTheme.onPrimary.withValues(alpha: .85),
-                        fontSize: AppTheme.textSmall,
-                        fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ),
-          Column(
-            children: [
-              Text('$openCount',
-                  style: AppTheme.font(
-                      color: AppTheme.onPrimary,
-                      fontSize: AppTheme.textHeadline,
-                      fontWeight: FontWeight.w800)),
-              Text('open visits'.tr,
-                  style: AppTheme.font(
-                      color: AppTheme.onPrimary.withValues(alpha: .85),
-                      fontSize: AppTheme.textCaption,
-                      fontWeight: FontWeight.w600)),
-            ],
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(DateFormat('EEEE, dd MMM yyyy').format(DateTime.now()),
+            style: AppTheme.font(
+                color: AppTheme.textSecondary,
+                fontSize: AppTheme.textSmall,
+                fontWeight: FontWeight.w600)),
+        const SizedBox(height: 2),
+        Text('Hi, {0}'.trArgs([name]),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTheme.font(
+                color: AppTheme.textPrimary,
+                fontSize: AppTheme.textHeadline,
+                fontWeight: FontWeight.w800)),
+        const SizedBox(height: 2),
+        Text(
+            'You have {0} open visits · {1} today'
+                .trArgs([openCount, todayCount]),
+            style: AppTheme.font(
+                color: AppTheme.textSecondary, fontSize: AppTheme.textBody)),
+      ],
     );
   }
 }
@@ -225,55 +206,74 @@ class _ActiveJob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = VisitDetailHelpers.statusColor(visit.status);
+    final place = [
+      visit.site?.city?.name?.tr,
+      visit.site?.addressDetail,
+    ].where((e) => (e ?? '').isNotEmpty).join(' - ');
 
-    return Material(
-      color: color.withValues(alpha: .10),
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color.withValues(alpha: .5)),
-          ),
-          child: Row(
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: color, width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Icon(
-                  VisitDetailHelpers.statusIcon(
-                      visit.status ?? VisitStatus.onWay),
-                  color: color,
-                  size: 28),
-              const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Current job · {0}'.trArgs(
-                            [VisitDetailHelpers.statusText(visit.status)]),
-                        style: AppTheme.font(
-                            color: color,
-                            fontSize: AppTheme.textSmall,
-                            fontWeight: FontWeight.w800)),
-                    const SizedBox(height: 2),
-                    Text(
-                        [visit.serviceName, visit.client?.name]
-                            .where((e) => (e ?? '').isNotEmpty)
-                            .join(' · '),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTheme.font(
-                            color: AppTheme.textPrimary,
-                            fontSize: AppTheme.textBodyLarge,
-                            fontWeight: FontWeight.w700)),
-                  ],
-                ),
+                child: Text('Right now'.tr,
+                    style: AppTheme.font(
+                        color: color,
+                        fontSize: AppTheme.textSmall,
+                        fontWeight: FontWeight.w800)),
               ),
-              Icon(Icons.arrow_forward_ios_rounded, color: color, size: 16),
+              VisitDetailPill(
+                text: VisitDetailHelpers.statusText(visit.status),
+                color: color,
+                icon: VisitDetailHelpers.statusIcon(
+                    visit.status ?? VisitStatus.onWay),
+              ),
             ],
           ),
-        ),
+          const SizedBox(height: 10),
+          Text(visit.client?.name ?? 'no client'.tr,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTheme.font(
+                  color: AppTheme.textPrimary,
+                  fontSize: AppTheme.textTitleLarge,
+                  fontWeight: FontWeight.w800)),
+          if ((visit.serviceName ?? '').isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(visit.serviceName!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.font(
+                    color: AppTheme.textSecondary,
+                    fontSize: AppTheme.textBody)),
+          ],
+          if (place.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(place,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.font(
+                    color: AppTheme.textDarkHint,
+                    fontSize: AppTheme.textSmall)),
+          ],
+          const SizedBox(height: 14),
+          GWidgetButton(
+            text: 'Open visit details'.tr,
+            fontSize: AppTheme.textSubtitle,
+            height: 56,
+            paddingTopBottom: 0,
+            backgroundColor: color,
+            onPressed: onTap,
+          ),
+        ],
       ),
     );
   }

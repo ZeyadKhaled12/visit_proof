@@ -33,12 +33,11 @@ class MainMenuWidgetDrawer extends StatelessWidget {
                 for (final group in MainMenuGroup.values) ...[
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 14, 12, 6),
-                    child: Text(group.label.toUpperCase(),
+                    child: Text(group.label,
                         style: AppTheme.font(
                             color: AppTheme.textLightHint,
                             fontSize: AppTheme.textCaption,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.1)),
+                            fontWeight: FontWeight.w700)),
                   ),
                   for (final tab
                       in MainMenuTab.values.where((t) => t.group == group))
@@ -95,10 +94,7 @@ class _Header extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(
           20, MediaQuery.paddingOf(context).top + 22, 20, 22),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [AppTheme.primary, AppTheme.secondary],
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd),
+        color: AppTheme.primary,
         borderRadius:
             const BorderRadiusDirectional.only(bottomEnd: Radius.circular(28)),
       ),

@@ -2,7 +2,6 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
-import '../../../../core/utils/enums/technician_status_enum.dart';
 import '../../../visit_detail/presentation/widgets/visit_detail_helpers.dart';
 import '../../../visit_detail/presentation/widgets/visit_detail_widget_parts.dart';
 import '../../domain/rules/dashboard_metrics.dart';
@@ -53,63 +52,57 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final technician = stat.technician;
-    final status = TechnicianStatusSwitch(technicianStatusEnum: technician.status);
     final rate = stat.completionRate;
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
             VisitDetailAvatar(
               letter: VisitDetailHelpers.initial(technician.name),
-              colors: [status.getColor(), AppTheme.primary],
-              size: 36,
+              size: 40,
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(technician.name ?? 'Technician'.tr,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTheme.font(
-                          color: AppTheme.textPrimary,
-                          fontSize: AppTheme.textBody,
-                          fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(technician.name ?? 'Technician'.tr,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTheme.font(
+                                color: AppTheme.textPrimary,
+                                fontSize: AppTheme.textBody,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                          '${stat.completed}/${stat.visits.length} · ${DashboardFormat.percent(rate)}',
+                          style: AppTheme.font(
+                              color: AppTheme.textSecondary,
+                              fontSize: AppTheme.textSmall,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(3),
                     child: LinearProgressIndicator(
                       value: rate ?? 0,
                       minHeight: 6,
                       backgroundColor: AppTheme.locationChipBg,
-                      valueColor:
-                          AlwaysStoppedAnimation(AppTheme.statGreen),
+                      valueColor: AlwaysStoppedAnimation(AppTheme.statGreen),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('${stat.completed}/${stat.visits.length}',
-                    style: AppTheme.font(
-                        color: AppTheme.textPrimary,
-                        fontSize: AppTheme.textBody,
-                        fontWeight: FontWeight.w800)),
-                Text(DashboardFormat.percent(rate),
-                    style: AppTheme.font(
-                        color: AppTheme.textSecondary, fontSize: AppTheme.textCaption)),
-              ],
-            ),
-            Icon(Icons.chevron_right_rounded,
-                size: 18, color: AppTheme.iconLightGrey),
           ],
         ),
       ),

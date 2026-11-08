@@ -7,7 +7,7 @@ import '../../domain/rules/dashboard_metrics.dart';
 import 'dashboard_widget_parts.dart';
 
 /// Bars over time. Visits mode stacks completed (green) under not yet
-/// completed (purple); money mode shows one series. Tap a bar to select it:
+/// completed (soft blue); money mode shows one series. Tap a bar to select it:
 /// the readout above shows its exact values and the caller can filter by it.
 class DashboardWidgetTrendChart extends StatefulWidget {
   const DashboardWidgetTrendChart({
@@ -28,7 +28,7 @@ class DashboardWidgetTrendChart extends StatefulWidget {
   final double height;
 
   static Color get completedColor => AppTheme.statGreen;
-  static Color get openColor => AppTheme.primary;
+  static Color get openColor => AppTheme.primary.withValues(alpha: .55);
 
   @override
   State<DashboardWidgetTrendChart> createState() =>
@@ -137,8 +137,9 @@ class _Readout extends StatelessWidget {
             : '{0} visit{1} · {2} completed'.trArgs([bucket.total, bucket.total == 1 ? '' : 's', bucket.completed]);
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
+        Flexible(
           child: Text(title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -199,7 +200,7 @@ class _BarsPainter extends CustomPainter {
   final bool money;
   final int? selected;
 
-  static const double _labelHeight = 18;
+  static const double _labelHeight = 22;
   static const double _gap = 2;
   static const double _maxBarWidth = 18;
   static const double _minLabelSpacing = 40;
@@ -213,7 +214,7 @@ class _BarsPainter extends CustomPainter {
 
     // Recessive gridlines at 0, half and max, labeled on the left edge.
     final grid = Paint()
-      ..color = AppTheme.iconLightGrey.withValues(alpha: .35)
+      ..color = AppTheme.iconLightGrey
       ..strokeWidth = 1;
     for (final fraction in [0.0, .5, 1.0]) {
       final y = chartHeight - chartHeight * fraction;
@@ -225,7 +226,7 @@ class _BarsPainter extends CustomPainter {
             money ? DashboardFormat.money(value) : value.round().toString(),
             Offset(0, y + 2),
             AppTheme.textLightHint,
-            9.5);
+            AppTheme.textMicro);
       }
     }
 
@@ -258,7 +259,7 @@ class _BarsPainter extends CustomPainter {
       if (i % labelEvery == 0 || i == selected) {
         _text(canvas, bucket.label, Offset(slot * i + slot / 2, chartHeight + 4),
             i == selected ? AppTheme.textPrimary : AppTheme.textSecondary,
-            10,
+            AppTheme.textMicro,
             center: true);
       }
     }

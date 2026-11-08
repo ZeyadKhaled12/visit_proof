@@ -50,13 +50,6 @@ class ClientsWidgetCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             border: BorderDirectional(
                 start: BorderSide(color: AppTheme.primary, width: 5)),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.cardShadowColor.withValues(alpha: .03),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +152,7 @@ class ClientsWidgetCard extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.email_rounded,
-                                  size: 13, color: AppTheme.iconLightGrey),
+                                  size: 13, color: AppTheme.iconGrey),
                               const SizedBox(width: 4),
                               Text(client.email!,
                                   style: AppTheme.font(

@@ -62,7 +62,7 @@ class _ClientsBodyState extends State<ClientsBody> {
 
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
-        appBar: GWidgetAppbar(title: 'Clients'.tr, icon: Icons.people_alt_outlined)
+        appBar: GWidgetAppbar(title: 'Clients'.tr, )
             .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,

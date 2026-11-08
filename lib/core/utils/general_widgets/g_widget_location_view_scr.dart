@@ -211,13 +211,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                 decoration: BoxDecoration(
                   color: AppTheme.surface,
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.shadowColor,
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  border: Border.all(color: AppTheme.iconLightGrey),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -237,7 +231,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                         Icon(
                           Icons.place,
                           size: 20,
-                          color: AppTheme.secondary,
+                          color: AppTheme.primary,
                         ),
                         const SizedBox(width: 8),
                         Expanded(

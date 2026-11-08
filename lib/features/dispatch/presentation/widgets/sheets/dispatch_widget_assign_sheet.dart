@@ -122,10 +122,6 @@ class _DispatchWidgetAssignSheetState extends State<DispatchWidgetAssignSheet> {
                 loadingSize: 22,
                 loadingStrokeWidth: 3,
                 backgroundColor: warned ? AppTheme.pending : null,
-                gradient: blocked || warned
-                    ? null
-                    : LinearGradient(
-                        colors: [AppTheme.primary, AppTheme.secondary]),
                 onPressed: () {
                   if (_form.currentState?.validate() != true) return;
                   context.read<DispatchBloc>().add(DispatchAssignEvent(
@@ -155,10 +151,7 @@ class _Route extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          AppTheme.primary.withValues(alpha: .10),
-          AppTheme.secondary.withValues(alpha: .08),
-        ]),
+        color: AppTheme.primary.withValues(alpha: .10),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -186,7 +179,6 @@ class _Route extends StatelessWidget {
           ),
           VisitDetailAvatar(
             letter: VisitDetailHelpers.initial(technician),
-            colors: [AppTheme.primary, AppTheme.secondary],
             size: 34,
           ),
           const SizedBox(width: 8),

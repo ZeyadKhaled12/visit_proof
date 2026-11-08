@@ -34,7 +34,7 @@ class GWidgetSwitcher extends StatelessWidget {
         Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeTrackColor: AppTheme.secondary,
+            activeTrackColor: AppTheme.primary,
             inactiveTrackColor: AppTheme.locationChipBg,
             thumbColor: WidgetStateProperty.all(AppTheme.onPrimary)),
       ]);

@@ -45,7 +45,7 @@ class AuthWidgetAccountActions extends StatelessWidget {
                 label: technician
                     ? 'Switch to admin'.tr
                     : 'Switch to technician'.tr,
-                color: technician ? AppTheme.primary : AppTheme.secondary,
+                color: technician ? AppTheme.primary : AppTheme.primary,
                 loading:
                     state.enterAsAdminRequestState == RequestState.loading,
                 onTap: () => technician
@@ -73,7 +73,7 @@ class AuthWidgetAccountActions extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppTheme.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         icon: Icon(Icons.logout_rounded, color: AppTheme.statOrange, size: 30),
         title: Text('Log out?'.tr,
             textAlign: TextAlign.center,

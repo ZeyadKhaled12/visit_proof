@@ -142,10 +142,6 @@ class _VisitDetailWidgetAssignSheetState
               isLoading: loading,
               loadingSize: 22,
               loadingStrokeWidth: 3,
-              gradient: _selected == null || error != null
-                  ? null
-                  : LinearGradient(
-                      colors: [AppTheme.primary, AppTheme.secondary]),
               onPressed: _submit,
             ),
           ],
@@ -169,17 +165,13 @@ class _SelectedTechnician extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          AppTheme.primary.withValues(alpha: .10),
-          AppTheme.secondary.withValues(alpha: .06),
-        ]),
+        color: AppTheme.primary.withValues(alpha: .10),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
           VisitDetailAvatar(
             letter: VisitDetailHelpers.initial(technician.name),
-            colors: [status.getColor(), AppTheme.primary],
             size: 42,
           ),
           const SizedBox(width: 10),
@@ -205,7 +197,7 @@ class _SelectedTechnician extends StatelessWidget {
                     if (matchesCategory)
                       VisitDetailPill(
                           text: 'Category match'.tr,
-                          color: AppTheme.secondary,
+                          color: AppTheme.primary,
                           icon: Icons.star_rounded),
                   ],
                 ),

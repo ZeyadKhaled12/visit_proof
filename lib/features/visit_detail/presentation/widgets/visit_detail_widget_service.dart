@@ -90,7 +90,7 @@ class VisitDetailWidgetService extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.check_circle_rounded,
-                              size: 16, color: AppTheme.secondary),
+                              size: 16, color: AppTheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(task,
@@ -112,7 +112,7 @@ class VisitDetailWidgetService extends StatelessWidget {
               if (before)
                 VisitDetailPill(
                     text: 'Before photos required'.tr,
-                    color: AppTheme.secondary,
+                    color: AppTheme.primary,
                     icon: Icons.photo_camera_rounded),
               if (after)
                 VisitDetailPill(

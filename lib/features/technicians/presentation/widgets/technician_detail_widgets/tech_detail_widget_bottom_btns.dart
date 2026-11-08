@@ -25,20 +25,14 @@ class TechDetailWidgetBottomBtns extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
       decoration: BoxDecoration(
         color: AppTheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, -3),
-          )
-        ],
+        border: Border(top: BorderSide(color: AppTheme.iconLightGrey)),
       ),
       child: Row(
         children: [
           Expanded(
             child: GWidgetButton(
               text: 'Edit Technician'.tr,
-              backgroundColor: AppTheme.secondary,
+              backgroundColor: AppTheme.primary,
               height: 42,
               raduis: 12,
               fontSize: AppTheme.textBodyLarge,

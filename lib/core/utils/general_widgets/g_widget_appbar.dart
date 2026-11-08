@@ -5,34 +5,22 @@ import 'g_widget_menu_button.dart';
 
 class GWidgetAppbar {
   final String title;
-  final IconData icon;
   final List<Widget>? actions;
 
-  GWidgetAppbar({required this.title, required this.icon, this.actions});
+  GWidgetAppbar({required this.title, this.actions});
   AppBar appbar() => AppBar(
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+      backgroundColor: AppTheme.surface,
       surfaceTintColor: Colors.transparent,
-      toolbarHeight: 60,
+      toolbarHeight: 64,
+      shape: Border(bottom: BorderSide(color: AppTheme.iconLightGrey)),
       // The menu button below doubles as the back button.
       automaticallyImplyLeading: false,
       title: Row(
         children: [
           // Opens the app menu, or goes back on a screen opened on top.
           const GWidgetMenuButton(),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppTheme.primary.withValues(alpha: .12),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(
-              icon,
-              color: AppTheme.primary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 14),
           Flexible(
             child: Text(
               title,
@@ -42,7 +30,6 @@ class GWidgetAppbar {
                 color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: AppTheme.textTitleLarge,
-                letterSpacing: -0.5,
               ),
             ),
           ),

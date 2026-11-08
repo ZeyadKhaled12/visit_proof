@@ -50,13 +50,14 @@ class _TechLoginBodyState extends State<TechLoginBody> {
           children: [
             Center(
               child: Container(
-                padding: const EdgeInsets.all(18),
+                width: 72,
+                height: 72,
                 decoration: BoxDecoration(
-                  color: AppTheme.secondary.withValues(alpha: .12),
-                  shape: BoxShape.circle,
+                  color: AppTheme.primarySoft,
+                  borderRadius: BorderRadius.circular(18),
                 ),
                 child: Icon(Icons.engineering_rounded,
-                    color: AppTheme.secondary, size: 40),
+                    color: AppTheme.primary, size: 36),
               ),
             ),
             const SizedBox(height: 16),
@@ -64,7 +65,7 @@ class _TechLoginBodyState extends State<TechLoginBody> {
                 textAlign: TextAlign.center,
                 style: AppTheme.font(
                     color: AppTheme.textPrimary,
-                    fontSize: AppTheme.textTitleLarge,
+                    fontSize: AppTheme.textHeadline,
                     fontWeight: FontWeight.w800)),
             const SizedBox(height: 4),
             Text('Use the email and password your admin created for you.'.tr,
@@ -80,7 +81,7 @@ class _TechLoginBodyState extends State<TechLoginBody> {
               hintText: 'name@company.com',
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              prefixIcon: Icon(Icons.alternate_email, color: AppTheme.primary),
+              prefixIcon: Icon(Icons.mail_outline_rounded, color: AppTheme.iconGrey),
               validator: (value) => GFunValid.isValidEmail(value ?? '')
                   ? null
                   : 'Please enter a valid email address'.tr,
@@ -93,7 +94,7 @@ class _TechLoginBodyState extends State<TechLoginBody> {
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _submit(),
               prefixIcon: Icon(Icons.lock_outline_rounded,
-                  color: AppTheme.primary),
+                  color: AppTheme.iconGrey),
               suffixIcon: IconButton(
                 onPressed: () =>
                     setState(() => _hidePassword = !_hidePassword),
@@ -111,19 +112,37 @@ class _TechLoginBodyState extends State<TechLoginBody> {
             GWidgetButton(
               text: 'Sign in'.tr,
               fontSize: AppTheme.textSubtitle,
-              height: 54,
-              raduis: 14,
+              height: 56,
+              paddingTopBottom: 0,
               isLoading: widget.loading,
               loadingSize: 22,
               loadingStrokeWidth: 3,
               onPressed: _submit,
             ),
             const SizedBox(height: 16),
-            Text('Forgot your password? Ask your admin to set a new one.'.tr,
-                textAlign: TextAlign.center,
-                style: AppTheme.font(
-                    color: AppTheme.textLightHint,
-                    fontSize: AppTheme.textSmall)),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AppTheme.cardColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppTheme.iconLightGrey),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.help_outline_rounded,
+                      color: AppTheme.primary, size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                        'Forgot your password? Ask your admin to set a new one.'
+                            .tr,
+                        style: AppTheme.font(
+                            color: AppTheme.textSecondary,
+                            fontSize: AppTheme.textSmall)),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

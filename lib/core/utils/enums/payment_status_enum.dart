@@ -48,11 +48,11 @@ class PaymentStatusSwitch {
 
   Color getColor() {
     if (paymentStatusID == 1) {
-      return AppTheme.textLightHint;
+      return AppTheme.iconGrey;
     } else if (paymentStatusID == 2) {
       return AppTheme.pending;
     } else if (paymentStatusID == 3) {
-      return AppTheme.cardAccent;
+      return AppTheme.primary;
     } else if (paymentStatusID == 4) {
       return AppTheme.statGreen;
     } else if (paymentStatusID == 5) {
@@ -63,13 +63,13 @@ class PaymentStatusSwitch {
 
     switch (paymentStatusEnum) {
       case null:
-        return AppTheme.textLightHint;
+        return AppTheme.iconGrey;
       case PaymentStatus.unpaid:
-        return AppTheme.textLightHint;
+        return AppTheme.iconGrey;
       case PaymentStatus.pending:
         return AppTheme.pending;
       case PaymentStatus.partiallyPaid:
-        return AppTheme.cardAccent;
+        return AppTheme.primary;
       case PaymentStatus.paid:
         return AppTheme.statGreen;
       case PaymentStatus.cancelled:

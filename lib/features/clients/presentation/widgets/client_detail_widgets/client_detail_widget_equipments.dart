@@ -83,13 +83,6 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                             color: AppTheme.primary.withValues(alpha: 0.1)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.cardShadowColor,
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          )
-                        ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,9 +92,9 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                               CircleAvatar(
                                 radius: 14,
                                 backgroundColor:
-                                    AppTheme.secondary.withValues(alpha: 0.2),
+                                    AppTheme.primary.withValues(alpha: 0.2),
                                 child: Icon(Icons.settings,
-                                    color: AppTheme.secondary, size: 14),
+                                    color: AppTheme.primary, size: 14),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -231,7 +224,7 @@ class _AddEquipmentDialogState extends State<_AddEquipmentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppTheme.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       title: Text(
         'Add New Equipment'.tr,
         style: AppTheme.font(

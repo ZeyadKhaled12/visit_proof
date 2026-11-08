@@ -90,7 +90,7 @@ class _DispatchWidgetRescheduleSheetState
                 text: technician == null
                     ? 'Currently {0}'.trArgs([VisitDetailHelpers.dateTime(visit.startDate)])
                     : 'Currently {0} with {1}'.trArgs([VisitDetailHelpers.dateTime(visit.startDate), technician.name ?? 'the technician'.tr]),
-                color: AppTheme.secondary,
+                color: AppTheme.primary,
                 icon: Icons.event_rounded,
               ),
               const SizedBox(height: 12),

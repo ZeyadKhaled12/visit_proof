@@ -94,7 +94,7 @@ class _DispatchWidgetBulkAssignSheetState
               children: [
                 GWidgetChoiceChip(
                   label: 'Best for each'.tr,
-                  color: AppTheme.secondary,
+                  color: AppTheme.primary,
                   selected: _technician == null,
                   onTap: () => setState(() => _technician = null),
                 ),
@@ -127,10 +127,6 @@ class _DispatchWidgetBulkAssignSheetState
               isLoading: loading,
               loadingSize: 22,
               loadingStrokeWidth: 3,
-              gradient: ready.isEmpty
-                  ? null
-                  : LinearGradient(
-                      colors: [AppTheme.primary, AppTheme.secondary]),
               onPressed: () => context.read<DispatchBloc>().add(
                   DispatchBulkAssignEvent(assignments: [
                 for (final plan in ready)

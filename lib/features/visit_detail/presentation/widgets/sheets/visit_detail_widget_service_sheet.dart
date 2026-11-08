@@ -87,7 +87,7 @@ class _VisitDetailWidgetServiceSheetState
                       icon: Icons.checklist_rounded,
                       label: 'Tasks'.tr,
                       value: '${_selected!.checkList?.length ?? 0}',
-                      color: AppTheme.secondary),
+                      color: AppTheme.primary),
                 ),
               ],
             ),
@@ -126,10 +126,7 @@ class _PriceChange extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          AppTheme.statGreen.withValues(alpha: .12),
-          AppTheme.secondary.withValues(alpha: .08),
-        ]),
+        color: AppTheme.statGreen.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(

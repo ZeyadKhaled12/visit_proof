@@ -43,7 +43,7 @@ class VisitDetailWidgetPhotos extends StatelessWidget {
     return VisitDetailSection(
       title: 'Proof Photos'.tr,
       icon: Icons.photo_library_rounded,
-      color: AppTheme.secondary,
+      color: AppTheme.primary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

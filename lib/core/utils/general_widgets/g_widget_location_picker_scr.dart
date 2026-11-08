@@ -553,13 +553,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                   decoration: BoxDecoration(
                     color: AppTheme.surface,
                     borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.shadowColor,
-                        blurRadius: 20,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    border: Border.all(color: AppTheme.iconLightGrey),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -577,7 +571,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                       Row(
                         children: [
                           Icon(Icons.place,
-                              size: 20, color: AppTheme.secondary),
+                              size: 20, color: AppTheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(

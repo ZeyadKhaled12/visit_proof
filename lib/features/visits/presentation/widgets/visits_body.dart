@@ -92,7 +92,6 @@ class _VisitsBodyState extends State<VisitsBody> {
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: GWidgetAppbar(
           title: 'Visits'.tr,
-          icon: Icons.fact_check_outlined,
           actions: [
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 12),
@@ -103,8 +102,6 @@ class _VisitsBodyState extends State<VisitsBody> {
                 raduis: 12,
                 paddingTopBottom: 0,
                 paddingLeftRight: 12,
-                gradient: LinearGradient(
-                    colors: [AppTheme.primary, AppTheme.secondary]),
                 widget: Padding(
                   padding: EdgeInsetsDirectional.only(start: 6),
                   child: Icon(Icons.hub_rounded,

@@ -150,7 +150,7 @@ class VisitDetailWidgetFieldProofState
         if (DemoMode.simulating) ...[
           VisitDetailNotice(
             text: 'Demo: your location is simulated at the site.'.tr,
-            color: AppTheme.secondary,
+            color: AppTheme.primary,
             icon: Icons.science_outlined,
           ),
           const SizedBox(height: 10),
@@ -174,7 +174,7 @@ class VisitDetailWidgetFieldProofState
       decoration: BoxDecoration(
         color: AppTheme.searchFieldBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.iconLightGrey.withValues(alpha: .5)),
+        border: Border.all(color: AppTheme.iconLightGrey),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -267,7 +267,7 @@ class VisitDetailWidgetFieldProofState
                 text:
                     'This site has no map location, so your current location is sent to the admin instead.'
                         .tr,
-                color: AppTheme.secondary,
+                color: AppTheme.primary,
               ),
             const SizedBox(height: 8),
             Align(

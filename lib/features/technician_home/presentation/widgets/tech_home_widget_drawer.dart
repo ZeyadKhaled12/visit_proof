@@ -28,10 +28,7 @@ class TechHomeWidgetDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(
                 20, MediaQuery.paddingOf(context).top + 22, 20, 22),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [AppTheme.secondary, AppTheme.primary],
-                  begin: AlignmentDirectional.topStart,
-                  end: AlignmentDirectional.bottomEnd),
+              color: AppTheme.primary,
               borderRadius: const BorderRadiusDirectional.only(
                   bottomEnd: Radius.circular(28)),
             ),
@@ -126,12 +123,12 @@ class _Tip extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.iconLightGrey.withValues(alpha: .4)),
+        border: Border.all(color: AppTheme.iconLightGrey),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppTheme.secondary, size: 20),
+          Icon(icon, color: AppTheme.primary, size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Text(text,

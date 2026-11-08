@@ -64,7 +64,7 @@ class _TechniciansBodyState extends State<TechniciansBody> {
 
     return Scaffold(
         backgroundColor: AppTheme.scaffoldBackground,
-        appBar: GWidgetAppbar(title: 'Technicians'.tr, icon: Icons.handyman)
+        appBar: GWidgetAppbar(title: 'Technicians'.tr, )
             .appbar(),
         body: GWidgetLoading(
           isLoading: widget.loading,

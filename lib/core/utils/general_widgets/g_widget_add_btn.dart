@@ -13,8 +13,8 @@ class GWidgetAddBtn extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        highlightColor: AppTheme.secondary,
-        splashColor: AppTheme.secondary.withValues(alpha: .4),
+        highlightColor: AppTheme.onPrimary.withValues(alpha: .08),
+        splashColor: AppTheme.primary.withValues(alpha: .4),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 5),
           child: Row(

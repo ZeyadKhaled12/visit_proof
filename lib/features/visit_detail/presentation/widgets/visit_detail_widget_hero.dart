@@ -9,7 +9,7 @@ import '../../domain/rules/visit_rules.dart';
 import 'visit_detail_helpers.dart';
 import 'visit_detail_widget_parts.dart';
 
-/// Gradient header: visit number, service, key figures and workflow progress.
+/// Header card: visit number, service, key figures and workflow progress.
 class VisitDetailWidgetHero extends StatelessWidget {
   const VisitDetailWidgetHero({super.key, required this.visit});
   final VisitDetailModel visit;
@@ -18,39 +18,28 @@ class VisitDetailWidgetHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = VisitRules.statusOf(visit);
     final cancelled = status == VisitStatus.cancel;
-    final colors = cancelled
-        ? [AppTheme.statOrange, AppTheme.pending]
-        : [AppTheme.primary, AppTheme.secondary];
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: colors,
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd),
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: colors.first.withValues(alpha: .35),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        color: AppTheme.cardColor,
+        border: Border.all(color: AppTheme.iconLightGrey),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: 8,
+            runSpacing: 8,
             children: [
               _GlassChip(
                   icon: Icons.tag_rounded, text: visit.visitNumber ?? 'Visit'.tr),
-              const Spacer(),
               VisitDetailPill(
                 text: VisitDetailHelpers.statusText(status),
                 color: VisitDetailHelpers.statusColor(status),
                 icon: VisitDetailHelpers.statusIcon(status),
-                onDark: true,
               ),
             ],
           ),
@@ -60,7 +49,7 @@ class VisitDetailWidgetHero extends StatelessWidget {
                 ? 'No service selected'.tr
                 : visit.serviceName!,
             style: AppTheme.font(
-                color: AppTheme.onPrimary,
+                color: AppTheme.textPrimary,
                 fontSize: AppTheme.textHeadline,
                 fontWeight: FontWeight.w800),
           ),
@@ -69,11 +58,11 @@ class VisitDetailWidgetHero extends StatelessWidget {
             children: [
               Icon(Icons.category_rounded,
                   size: 14,
-                  color: AppTheme.onPrimary.withValues(alpha: .85)),
+                  color: AppTheme.textSecondary),
               const SizedBox(width: 5),
               Text(visit.category?.name?.tr ?? 'Uncategorized'.tr,
                   style: AppTheme.font(
-                      color: AppTheme.onPrimary.withValues(alpha: .85),
+                      color: AppTheme.textSecondary,
                       fontSize: AppTheme.textBody,
                       fontWeight: FontWeight.w600)),
             ],
@@ -124,20 +113,20 @@ class _GlassChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppTheme.onPrimary.withValues(alpha: .2),
+        color: AppTheme.locationChipBg,
         borderRadius: BorderRadius.circular(100),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppTheme.onPrimary),
+          Icon(icon, size: 14, color: AppTheme.textPrimary),
           const SizedBox(width: 4),
           Text(text,
               style: AppTheme.font(
-                  color: AppTheme.onPrimary,
+                  color: AppTheme.textPrimary,
                   fontSize: AppTheme.textSmall,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: .5)),
+                  letterSpacing: 0)),
         ],
       ),
     );
@@ -154,17 +143,15 @@ class _GlassStat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
-        color: AppTheme.onPrimary.withValues(alpha: .16),
+        color: AppTheme.locationChipBg,
         borderRadius: BorderRadius.circular(14),
-        border:
-            Border.all(color: AppTheme.onPrimary.withValues(alpha: .25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
               style: AppTheme.font(
-                  color: AppTheme.onPrimary.withValues(alpha: .8),
+                  color: AppTheme.textSecondary,
                   fontSize: AppTheme.textCaption,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 3),
@@ -172,7 +159,7 @@ class _GlassStat extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTheme.font(
-                  color: AppTheme.onPrimary,
+                  color: AppTheme.textPrimary,
                   fontSize: AppTheme.textBody,
                   fontWeight: FontWeight.w800)),
         ],
@@ -211,19 +198,18 @@ class _WorkflowProgress extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: reached
-                          ? AppTheme.surface
-                          : AppTheme.onPrimary.withValues(alpha: .25),
+                          ? AppTheme.primary
+                          : AppTheme.iconLightGrey,
                       border: isCurrent
                           ? Border.all(
-                              color: AppTheme.onPrimary
-                                  .withValues(alpha: .45),
+                              color: AppTheme.primarySoft,
                               width: 4,
                               strokeAlign: BorderSide.strokeAlignOutside)
                           : null,
                     ),
                     child: reached && !isCurrent
                         ? Icon(Icons.check_rounded,
-                            size: 11, color: AppTheme.primary)
+                            size: 11, color: AppTheme.onPrimary)
                         : null,
                   ),
                   Expanded(
@@ -232,13 +218,15 @@ class _WorkflowProgress extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              Text(_labels[index],
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(_labels[index],
                   textAlign: TextAlign.center,
                   style: AppTheme.font(
-                      color: AppTheme.onPrimary
-                          .withValues(alpha: reached ? 1 : .6),
+                      color: reached ? AppTheme.textPrimary : AppTheme.textDarkHint,
                       fontSize: AppTheme.textMicro,
                       fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600)),
+              ),
             ],
           ),
         );
@@ -249,8 +237,10 @@ class _WorkflowProgress extends StatelessWidget {
   Widget _line({required bool visible, required bool on}) => Container(
         height: 3,
         color: !visible
-            ? AppTheme.onPrimary.withValues(alpha: 0)
-            : AppTheme.onPrimary.withValues(alpha: on ? .9 : .25),
+            ? Colors.transparent
+            : on
+                ? AppTheme.primary
+                : AppTheme.iconLightGrey,
       );
 }
 
@@ -263,18 +253,18 @@ class _CancelledBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppTheme.onPrimary.withValues(alpha: .18),
+        color: AppTheme.statOrange.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         children: [
           Icon(Icons.block_rounded,
-              color: AppTheme.onPrimary, size: 20),
+              color: AppTheme.statOrange, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text('This visit was cancelled and is out of the workflow.'.tr,
                 style: AppTheme.font(
-                    color: AppTheme.onPrimary,
+                    color: AppTheme.statOrange,
                     fontSize: AppTheme.textSmall,
                     fontWeight: FontWeight.w700)),
           ),

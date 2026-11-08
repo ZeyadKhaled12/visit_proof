@@ -23,13 +23,6 @@ class GWidgetMapPicked extends StatelessWidget {
         color: AppTheme.surface,
         border: Border.all(color: AppTheme.iconLightGrey),
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.shadowColor,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       clipBehavior: Clip.hardEdge,
       child: Material(
@@ -112,12 +105,6 @@ class GWidgetMapPicked extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppTheme.onPrimary.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.shadowColor,
-                  blurRadius: 4,
-                ),
-              ],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

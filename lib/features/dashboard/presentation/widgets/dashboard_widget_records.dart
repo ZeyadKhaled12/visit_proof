@@ -119,7 +119,7 @@ class _VisitRow extends StatelessWidget {
                     fontSize: AppTheme.textCaption,
                     fontWeight: FontWeight.w700)),
             Icon(Icons.chevron_right_rounded,
-                size: 18, color: AppTheme.iconLightGrey),
+                size: 18, color: AppTheme.iconGrey),
           ],
         ),
       ),
@@ -211,7 +211,7 @@ class _InvoiceRow extends StatelessWidget {
                     fontSize: AppTheme.textSmall,
                     fontWeight: FontWeight.w800)),
             Icon(Icons.chevron_right_rounded,
-                size: 18, color: AppTheme.iconLightGrey),
+                size: 18, color: AppTheme.iconGrey),
           ],
         ),
       ),
@@ -310,7 +310,7 @@ class _Empty extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.check_circle_outline_rounded,
-              size: 18, color: AppTheme.iconLightGrey),
+              size: 18, color: AppTheme.iconGrey),
           const SizedBox(width: 8),
           Expanded(
             child: Text(text,

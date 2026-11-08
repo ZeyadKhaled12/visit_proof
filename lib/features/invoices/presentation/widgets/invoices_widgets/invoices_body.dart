@@ -71,7 +71,7 @@ class _InvoicesBodyState extends State<InvoicesBody> {
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
-      appBar: GWidgetAppbar(title: 'Invoices'.tr, icon: Icons.receipt_long_outlined)
+      appBar: GWidgetAppbar(title: 'Invoices'.tr, )
           .appbar(),
       body: GWidgetLoading(
         isLoading: widget.loading,

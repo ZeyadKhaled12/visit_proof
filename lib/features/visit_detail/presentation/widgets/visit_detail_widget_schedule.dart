@@ -51,7 +51,7 @@ class VisitDetailWidgetSchedule extends StatelessWidget {
                     icon: Icons.schedule_rounded,
                     label: 'Starts'.tr,
                     value: VisitDetailHelpers.time(start),
-                    color: AppTheme.secondary),
+                    color: AppTheme.primary),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -102,10 +102,7 @@ class _TechnicianCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          AppTheme.primary.withValues(alpha: .10),
-          AppTheme.secondary.withValues(alpha: .06),
-        ]),
+        color: AppTheme.primary.withValues(alpha: .10),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -115,7 +112,6 @@ class _TechnicianCard extends StatelessWidget {
             children: [
               VisitDetailAvatar(
                 letter: VisitDetailHelpers.initial(technician.name),
-                colors: [AppTheme.primary, AppTheme.cardAccent],
                 size: 42,
               ),
               const SizedBox(width: 10),
@@ -154,7 +150,7 @@ class _TechnicianCard extends StatelessWidget {
                 VisitDetailActionChip(
                   label: 'Reassign'.tr,
                   icon: Icons.swap_horiz_rounded,
-                  color: AppTheme.secondary,
+                  color: AppTheme.primary,
                   onTap: () => VisitDetailWidgetActionSheet.show(
                       context, VisitDetailWidgetAssignSheet(visit: visit)),
                 ),

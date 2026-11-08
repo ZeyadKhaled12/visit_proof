@@ -32,7 +32,7 @@ class ClientDetailWidgetVisits extends StatelessWidget {
           child: Column(
             children: [
               Icon(Icons.event_busy_rounded,
-                  size: 32, color: AppTheme.iconLightGrey),
+                  size: 32, color: AppTheme.iconGrey),
               const SizedBox(height: 8),
               Text('No visits recorded yet'.tr,
                   style: AppTheme.font(
@@ -75,13 +75,6 @@ class _VisitCard extends StatelessWidget {
       margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: accent.withValues(alpha: .12),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          )
-        ],
       ),
       child: Material(
         color: AppTheme.surface,

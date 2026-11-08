@@ -162,7 +162,7 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
                   VisitDetailActionChip(
                     label: 'Update status'.tr,
                     icon: Icons.route_rounded,
-                    color: AppTheme.secondary,
+                    color: AppTheme.primary,
                     onTap: () =>
                         open(DispatchWidgetStatusSheet(visitID: visit.id)),
                   ),

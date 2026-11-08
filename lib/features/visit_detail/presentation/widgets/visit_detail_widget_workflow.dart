@@ -142,19 +142,8 @@ class _MoveButton extends StatelessWidget {
       fontSize: AppTheme.textSubtitle,
       text: label,
       colorText: foreground,
-      gradient: filled
-          ? LinearGradient(colors: [color, color.withValues(alpha: .75)])
-          : null,
       backgroundColor: filled ? color : color.withValues(alpha: .08),
       border: filled ? null : Border.all(color: color.withValues(alpha: .6)),
-      boxShadow: filled
-          ? [
-              BoxShadow(
-                  color: color.withValues(alpha: .3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 5))
-            ]
-          : null,
       widget: Padding(
         padding: const EdgeInsetsDirectional.only(start: 8),
         child: Icon(icon, color: foreground, size: 20),

@@ -170,7 +170,7 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    final field = TextFormField(
       controller: _effectiveController,
       focusNode: _effectiveFocusNode,
       keyboardType: widget.keyboardType,
@@ -214,7 +214,7 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
 
       style: AppTheme.font(
         color: AppTheme.textPrimary,
-        fontSize: AppTheme.textTitle,
+        fontSize: AppTheme.textBodyLarge,
         fontWeight: FontWeight.w500,
       ),
 
@@ -228,12 +228,6 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
             color: AppTheme.textLightHint,
             fontSize: AppTheme.textBodyLarge,
           ),
-          labelText: widget.labelText,
-          labelStyle: AppTheme.font(
-            color: AppTheme.textSecondary,
-            fontSize: AppTheme.textBodyLarge,
-            fontWeight: FontWeight.w600,
-          ),
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon,
           errorText: widget.errorMsg,
@@ -243,39 +237,39 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
             fontWeight: FontWeight.w500,
           ),
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 18,
+            horizontal: 16,
+            vertical: 16,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
               color: AppTheme.iconLightGrey,
               width: 1,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
               color: AppTheme.primary,
               width: 2,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
               color: AppTheme.statOrange,
               width: 1.5,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
               color: AppTheme.statOrange,
               width: 2,
             ),
           ),
           disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
               color: AppTheme.iconLightGrey.withValues(
                 alpha: 0.5,
@@ -284,6 +278,24 @@ class _GWidgetTextFieldState extends State<GWidgetTextField> {
             ),
           ),
           counterText: ''),
+    );
+
+    if (widget.labelText == null) return field;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          widget.labelText!,
+          style: AppTheme.font(
+            color: AppTheme.textPrimary,
+            fontSize: AppTheme.textBody,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 8),
+        field,
+      ],
     );
   }
 }

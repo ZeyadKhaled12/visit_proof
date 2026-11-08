@@ -339,14 +339,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   Container(
                     padding: const EdgeInsets.all(22),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppTheme.primary,
-                          AppTheme.secondary,
-                        ],
-                        begin: AlignmentDirectional.topStart,
-                        end: AlignmentDirectional.bottomEnd,
-                      ),
+                      color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Column(

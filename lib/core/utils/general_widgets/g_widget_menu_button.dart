@@ -36,22 +36,14 @@ class GWidgetMenuButton extends StatelessWidget {
 
   Widget _button({required IconData icon, required VoidCallback onTap}) {
     return Padding(
-      padding: const EdgeInsetsDirectional.only(end: 10),
-      child: Material(
-        color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                  color: AppTheme.iconLightGrey.withValues(alpha: .4)),
-            ),
-            child: Icon(icon, color: AppTheme.textPrimary, size: 22),
-          ),
+      padding: const EdgeInsetsDirectional.only(end: 6),
+      child: InkResponse(
+        onTap: onTap,
+        radius: 24,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Icon(icon, color: AppTheme.textPrimary, size: 24),
         ),
       ),
     );

@@ -31,7 +31,7 @@ class CollectionsBody extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: GWidgetAppbar(
-              title: 'Collections'.tr, icon: Icons.payments_outlined)
+              title: 'Collections'.tr, )
           .appbar(),
       body: BlocBuilder<InvoicesBloc, InvoicesState>(
         builder: (context, state) {
@@ -117,11 +117,8 @@ class _Summary extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [AppTheme.pending, AppTheme.secondary],
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd),
-        borderRadius: BorderRadius.circular(20),
+        color: AppTheme.pending,
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
