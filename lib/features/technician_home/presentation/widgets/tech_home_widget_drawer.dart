@@ -23,7 +23,7 @@ class TechHomeWidgetDrawer extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadiusDirectional.horizontal(end: Radius.circular(28))),
-      child: GWidgetTourFlag(tour: AppTours.technicianMenu, bottom: 220, child: Column(
+      child: GWidgetTourFlag(tour: AppTours.technicianMenu, child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
@@ -68,6 +68,7 @@ class TechHomeWidgetDrawer extends StatelessWidget {
                     ],
                   ),
                 ),
+                const GWidgetTourFlagSpace(),
               ],
             ),
           ),

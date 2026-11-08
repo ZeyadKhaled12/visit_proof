@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
 import 'g_widget_menu_button.dart';
+import 'g_widget_tour.dart';
 
 class GWidgetAppbar {
   final String title;
@@ -35,5 +36,5 @@ class GWidgetAppbar {
           ),
         ],
       ),
-      actions: actions);
+      actions: [...?actions, const GWidgetTourFlagSpace()]);
 }

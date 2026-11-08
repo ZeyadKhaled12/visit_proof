@@ -118,7 +118,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
 
   @override
   Widget build(BuildContext context) {
-    return GWidgetTourFlag(tour: AppTours.locationView, bottom: 290, child: Scaffold(
+    return GWidgetTourFlag(tour: AppTours.locationView, top: 16, child: Scaffold(
       backgroundColor: AppTheme.textPrimary,
       body: SafeArea(
         child: Stack(

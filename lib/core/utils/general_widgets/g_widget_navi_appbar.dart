@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
+import 'g_widget_tour.dart';
 
 class GWidgetNaviAppbar {
   static AppBar appBar(BuildContext context, String title) => AppBar(
@@ -33,5 +34,6 @@ class GWidgetNaviAppbar {
             ),
           ),
         ],
-      ));
+      ),
+      actions: const [GWidgetTourFlagSpace()]);
 }

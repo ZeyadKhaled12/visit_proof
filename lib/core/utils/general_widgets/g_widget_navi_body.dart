@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
+import 'g_widget_tour.dart';
 
 class GWidgetNaviBody extends StatelessWidget {
   const GWidgetNaviBody({super.key, required this.title, required this.body});
@@ -48,6 +49,7 @@ class GWidgetNaviBody extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const GWidgetTourFlagSpace(),
                   ],
                 ),
               ),

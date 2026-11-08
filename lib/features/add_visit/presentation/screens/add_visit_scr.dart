@@ -15,7 +15,7 @@ class AddVisitScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GWidgetTourFlag(tour: AppTours.addVisit, bottom: 190, child: BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.addVisit, child: BlocProvider(
         create: (context) => sl<AddVisitBloc>()
           ..add(GetVisitClientsEvent(noParameters: NoParameters()))
           ..add(GetVisitServicesEvent(noParameters: NoParameters()))

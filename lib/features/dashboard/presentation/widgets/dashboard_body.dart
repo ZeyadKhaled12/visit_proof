@@ -342,6 +342,7 @@ class _Header extends StatelessWidget {
                         fontWeight: FontWeight.w600)),
               ),
               _action(Icons.refresh_rounded, 'Refresh'.tr, onRefresh),
+              const GWidgetTourFlagSpace(),
             ],
           ),
           const SizedBox(height: 8),

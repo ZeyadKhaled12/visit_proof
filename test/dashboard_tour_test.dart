@@ -130,6 +130,16 @@ void main() {
     expect(find.byType(GWidgetTour), findsNothing);
   });
 
+  testWidgets('the flag is at the top and clear of the header buttons',
+      (tester) async {
+    await _showDashboard(tester, reduceMotion: true);
+
+    final flag = tester.getRect(find.byTooltip('How this screen works'));
+    expect(flag.top, lessThan(16));
+    expect(flag.right, 390);
+    expect(flag.overlaps(tester.getRect(find.byTooltip('Refresh'))), isFalse);
+  });
+
   testWidgets('the setting hides the flag', (tester) async {
     await _showDashboard(tester, reduceMotion: true);
     expect(find.byTooltip('How this screen works'), findsOneWidget);

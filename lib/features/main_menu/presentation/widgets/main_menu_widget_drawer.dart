@@ -24,7 +24,7 @@ class MainMenuWidgetDrawer extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadiusDirectional.horizontal(end: Radius.circular(28))),
-      child: GWidgetTourFlag(tour: AppTours.adminMenu, bottom: 220, child: Column(
+      child: GWidgetTourFlag(tour: AppTours.adminMenu, child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _Header(),
@@ -128,6 +128,7 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
+          const GWidgetTourFlagSpace(),
         ],
       ),
     );

@@ -90,15 +90,15 @@ class GWidgetTourFlag extends StatefulWidget {
     super.key,
     required this.tour,
     required this.child,
-    this.bottom = 150,
+    this.top = 8,
   });
 
   final GTour tour;
   final Widget child;
 
-  /// Height of the flag above the bottom edge; clear of buttons and cards
-  /// pinned to the bottom of the screen.
-  final double bottom;
+  /// Distance of the flag below the status bar; the default centers it on
+  /// the app's top bars.
+  final double top;
 
   @override
   State<GWidgetTourFlag> createState() => _GWidgetTourFlagState();
@@ -109,33 +109,47 @@ class _GWidgetTourFlagState extends State<GWidgetTourFlag> {
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
+    final safeTop = MediaQuery.paddingOf(context).top;
     return _GTourScope(
       targets: _targets,
       child: Stack(
         fit: StackFit.expand,
         children: [
           widget.child,
-          // Out of the way while the keyboard is open.
-          if (media.viewInsets.bottom == 0)
-            ValueListenableBuilder<bool>(
-              valueListenable: GWidgetTour.showFlags,
-              builder: (context, show, _) => !show
-                  ? const SizedBox.shrink()
-                  : Align(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            bottom: widget.bottom + media.padding.bottom),
-                        child: _HelpFlag(
-                          onTap: () => GWidgetTour.start(context,
-                              tour: widget.tour, targets: _targets),
-                        ),
+          ValueListenableBuilder<bool>(
+            valueListenable: GWidgetTour.showFlags,
+            builder: (context, show, _) => !show
+                ? const SizedBox.shrink()
+                : Align(
+                    alignment: AlignmentDirectional.topEnd,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: widget.top + safeTop),
+                      child: _HelpFlag(
+                        onTap: () => GWidgetTour.start(context,
+                            tour: widget.tour, targets: _targets),
                       ),
                     ),
-            ),
+                  ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// Keeps a top bar's own buttons and title clear of the flag in its corner.
+class GWidgetTourFlagSpace extends StatelessWidget {
+  const GWidgetTourFlagSpace({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (context.getInheritedWidgetOfExactType<_GTourScope>() == null) {
+      return const SizedBox.shrink();
+    }
+    return ValueListenableBuilder<bool>(
+      valueListenable: GWidgetTour.showFlags,
+      builder: (context, show, _) =>
+          SizedBox(width: show ? _HelpFlag.width : 0),
     );
   }
 }
@@ -169,24 +183,35 @@ class _HelpFlag extends StatelessWidget {
   const _HelpFlag({required this.onTap});
   final VoidCallback onTap;
 
+  static const double width = 40;
+
   @override
   Widget build(BuildContext context) {
     final rtl = Directionality.of(context) == TextDirection.rtl;
     return Tooltip(
       message: 'How this screen works'.tr,
-      child: ClipPath(
-        clipper: _PennantClipper(rtl: rtl),
-        child: Material(
-          color: AppTheme.reward,
-          child: InkWell(
-            onTap: onTap,
-            child: SizedBox(
-              width: 56,
-              height: 48,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 12),
-                child: Icon(Icons.question_mark_rounded,
-                    color: AppTheme.onReward, size: 26),
+      // The clear margin keeps the small flag easy to hit.
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Padding(
+          padding:
+              const EdgeInsetsDirectional.only(start: 8, top: 8, bottom: 8),
+          child: ClipPath(
+            clipper: _PennantClipper(rtl: rtl),
+            child: Material(
+              color: AppTheme.reward,
+              child: InkWell(
+                onTap: onTap,
+                child: SizedBox(
+                  width: width,
+                  height: 32,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(start: 9),
+                    child: Icon(Icons.question_mark_rounded,
+                        color: AppTheme.onReward, size: 18),
+                  ),
+                ),
               ),
             ),
           ),
@@ -205,7 +230,7 @@ class _PennantClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final w = size.width;
     final h = size.height;
-    const notch = 14.0;
+    const notch = 10.0;
     double x(double value) => rtl ? w - value : value;
     return Path()
       ..moveTo(x(0), 0)
