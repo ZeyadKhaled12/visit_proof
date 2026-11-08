@@ -30,6 +30,9 @@ class DemoMode {
   /// visitor can book a job with one press.
   static bool prefillNewVisit = false;
 
+  /// The receipt the guide attaches, so the visitor needs no camera.
+  static const String sampleReceipt = 'brand/sample-receipt.png';
+
   /// "I am at the site": technician actions use the visit's site location
   /// instead of the device GPS. On by default in the demo.
   static final ValueNotifier<bool> simulateOnSite = ValueNotifier(true);

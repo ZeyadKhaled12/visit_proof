@@ -67,8 +67,8 @@ class WebsiteRequestModel {
         },
         'offer': {
           'freeMonths': AppOffer.freeMonths,
-          'pricePerPeriodUsd': AppOffer.pricePerPeriod,
-          'monthlyEquivalent': AppOffer.monthlyEquivalent,
+          'pricePerPeriod': AppOffer.pricePerPeriod,
+          'currency': 'SAR',
           'periodMonths': AppOffer.periodMonths,
           'maxUsers': AppOffer.maxUsers,
           'photoStorageGb': AppOffer.photoStorageGb,

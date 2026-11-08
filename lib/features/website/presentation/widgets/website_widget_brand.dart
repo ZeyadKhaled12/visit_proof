@@ -11,7 +11,7 @@ class WebsiteBrand {
 
   /// The browser tab title (same as `<title>` in `web/index.html`).
   static const String pageTitle =
-      'Wizpo - Business Apps Made Simple | Small Apps, Big Magic';
+      'Visit Proof | تطبيق إدارة الفنيين والصيانة وإثبات الزيارات';
 
   /// The wordmark is always Inter, also on the Arabic site.
   static TextStyle wordmark({required double fontSize, required Color color}) =>

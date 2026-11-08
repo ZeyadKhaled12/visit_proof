@@ -155,13 +155,17 @@ class _GlassStat extends StatelessWidget {
                   fontSize: AppTheme.textCaption,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 3),
-          Text(value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTheme.font(
-                  color: AppTheme.textPrimary,
-                  fontSize: AppTheme.textBody,
-                  fontWeight: FontWeight.w800)),
+          // Shrinks on a narrow phone: a cut-off price is no use.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(value,
+                maxLines: 1,
+                style: AppTheme.font(
+                    color: AppTheme.textPrimary,
+                    fontSize: AppTheme.textBody,
+                    fontWeight: FontWeight.w800)),
+          ),
         ],
       ),
     );

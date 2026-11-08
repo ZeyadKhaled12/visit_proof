@@ -148,9 +148,13 @@ class _InvoiceHeader extends StatelessWidget {
     final status = PaymentStatusSwitch(paymentStatusEnum: invoice.paymentStatus);
     final issued = invoice.issueDate != null;
 
-    return Row(
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Expanded(
+        Padding(
+          padding: const EdgeInsetsDirectional.only(end: 6),
           child: Text(invoice.invoiceNumber ?? 'Invoice'.tr,
               style: AppTheme.font(
                   color: AppTheme.textPrimary,
@@ -162,7 +166,6 @@ class _InvoiceHeader extends StatelessWidget {
                 ? 'Issued {0}'.trArgs([VisitDetailHelpers.date(invoice.issueDate)])
                 : 'Draft'.tr,
             color: issued ? AppTheme.primary : AppTheme.iconGrey),
-        const SizedBox(width: 6),
         VisitDetailPill(
             text: VisitDetailHelpers.capitalize(status.getText()),
             color: status.getColor()),

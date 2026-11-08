@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
+import '../demo/demo_mode.dart';
+
 /// Visit photos live as files in the app's documents folder; the visit only
 /// stores their paths. The camera's own copy sits in a cache the system may
 /// clear, so every photo is copied here before it is saved with a visit.
@@ -25,7 +27,7 @@ class LocalPhotos {
       required String photoID}) async {
     // The browser has no documents folder; the picker's link lasts as long
     // as the page, like the demo's data.
-    if (kIsWeb) return tempPath;
+    if (kIsWeb || tempPath == DemoMode.sampleReceipt) return tempPath;
     final source = File(tempPath);
     if (!await source.exists()) {
       throw const FileSystemException('The photo file is missing.');

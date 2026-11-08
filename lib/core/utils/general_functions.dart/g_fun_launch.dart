@@ -33,9 +33,10 @@ class GFunLaunch {
     }
   }
 
-  static Future<void> openWhatsApp(String phoneNumber) async {
+  static Future<void> openWhatsApp(String phoneNumber, {String? message}) async {
     String cleanNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-    final Uri whatsappUri = Uri.parse('https://wa.me/$cleanNumber');
+    final Uri whatsappUri = Uri.https('wa.me', '/$cleanNumber',
+        message == null ? null : {'text': message});
     try {
       if (await canLaunchUrl(whatsappUri)) {
         await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);

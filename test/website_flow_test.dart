@@ -103,12 +103,10 @@ void main() {
     AppSession.current.value = null;
   });
 
-  test('the offer is one free month, then 15 dollars every 6 months', () {
+  test('the offer is one free month, then one price in riyals', () {
     expect(AppOffer.freeMonths, 1);
-    expect(AppOffer.usd(AppOffer.pricePerPeriod), r'$15');
+    expect(AppOffer.price(AppOffer.pricePerPeriod), '56 SAR');
     expect(AppOffer.periodMonths, 6);
-    expect(AppOffer.monthlyEquivalent, r'$2.50');
-    expect(AppOffer.monthlyPerUser, r'$0.25');
   });
 
   test('the sample company has only finished work', () async {
@@ -197,11 +195,11 @@ void main() {
     await move(VisitStatus.inProgress);
     expect(_step(), StudioStep.complete);
     await move(VisitStatus.completed);
-    expect(_step(), StudioStep.backToAdmin);
+    expect(_step(), StudioStep.collect);
 
     await _done(
         tester, AuthRemoteDataSource().enterAsAdmin(const NoParameters()));
-    expect(_step(), StudioStep.finished);
+    expect(_step(), StudioStep.seeProof);
   });
 
   test('every scenario text has an Arabic translation', () {
@@ -420,9 +418,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
       expect(find.byType(WebsiteOfferCard), findsOneWidget);
       expect(find.text('First month free'), findsOneWidget);
-      expect(find.text(r'$2.50'), findsNothing,
+      expect(find.text('then 56 SAR'), findsNothing,
           reason: 'the price shares a line with its unit');
-      expect(find.textContaining(r'$2.50', findRichText: true), findsOneWidget);
+      expect(find.textContaining('then 56 SAR', findRichText: true), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 

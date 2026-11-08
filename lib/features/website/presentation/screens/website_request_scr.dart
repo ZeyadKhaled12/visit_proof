@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import '../../../../configs/app_brand.dart';
 import '../../../../configs/app_offer.dart';
 import '../../../../configs/app_theme.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../../../../core/utils/general_widgets/g_widget_brand_mark.dart';
 import '../../data/datasource/website_request_remote_data_source.dart';
 import '../../data/models/website_request_model.dart';
 import '../widgets/studio_widget_dock.dart';
 import '../widgets/website_widget_parts.dart';
+import 'website_legal_scr.dart';
 import '../website_theme.dart';
 
 /// The visitor sends the design they made, their contact details and what
@@ -122,6 +124,23 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                       fontSize: WebTheme.textBodyLarge,
                       height: 1.6)),
               const SizedBox(height: 24),
+              if (AppOffer.hasWhatsapp) ...[
+                WebsiteButton(
+                  text: 'Send it to us on WhatsApp too'.tr,
+                  icon: Icons.chat_rounded,
+                  onPressed: () => GFunLaunch.openWhatsApp(
+                    AppOffer.whatsappNumber,
+                    message:
+                        'I requested my version of Visit Proof.\nName: {0}\nCompany: {1}\nPhone: {2}'
+                            .trArgs([
+                      _name.text.trim(),
+                      _company.text.trim(),
+                      _phone.text.trim(),
+                    ]),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
               WebsiteButton(
                 text: 'Back to the app'.tr,
                 icon: Icons.home_rounded,
@@ -209,7 +228,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                           [
                             AppTheme.isDark ? 'Dark'.tr : 'Light'.tr,
                             AppLanguage.isArabic ? 'العربية' : 'English',
-                            AppTheme.activeFontFamily,
+                            'Font: {0}'.trArgs([AppTheme.activeFontFamily]),
                             '${(brand.fontScale * 100).round()}%',
                           ].join(' · '),
                           style: WebTheme.font(
@@ -264,7 +283,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
               _PriceLine(AppOffer.freeSpan, 'Free'.tr),
               _PriceLine(
                   'Every {0} months after that'.trArgs([AppOffer.periodMonths]),
-                  AppOffer.usd(AppOffer.pricePerPeriod)),
+                  AppOffer.price(AppOffer.pricePerPeriod)),
               _PriceLine('Changes to your version'.tr, 'Free within a limit'.tr),
               const SizedBox(height: 8),
               Text(AppOffer.summary,
@@ -285,6 +304,10 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                         fontSize: WebTheme.textBodyLarge,
                         fontWeight: FontWeight.w600)),
               ),
+              Wrap(spacing: 4, children: [
+                _legalLink('Terms of service'.tr, WebsiteLegalPage.terms),
+                _legalLink('Privacy policy'.tr, WebsiteLegalPage.privacy),
+              ]),
             ],
           ),
         ),
@@ -322,6 +345,15 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
       ],
     );
   }
+
+  Widget _legalLink(String text, WebsiteLegalPage page) => TextButton(
+        onPressed: () => WebsiteLegalScr.open(context, page),
+        child: Text(text,
+            style: WebTheme.font(
+                color: WebTheme.primary,
+                fontSize: WebTheme.textSmall,
+                fontWeight: FontWeight.w700)),
+      );
 
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 10),

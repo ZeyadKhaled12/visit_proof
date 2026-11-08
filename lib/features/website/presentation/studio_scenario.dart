@@ -11,6 +11,7 @@ import '../../../core/local/local_pref.dart';
 import '../../../core/services/services_locator.dart';
 import '../../../core/session/app_session.dart';
 import '../../../core/usecase/base_use_case.dart';
+import '../../../core/utils/enums/payment_status_enum.dart';
 import '../../../core/utils/enums/visit_status_enum.dart';
 import '../../../core/utils/general_widgets/g_widget_tour.dart';
 import '../../auth/domain/usecases/enter_as_admin_uc.dart';
@@ -18,6 +19,7 @@ import '../../auth/domain/usecases/login_technician_uc.dart';
 import '../../auth/domain/usecases/logout_uc.dart';
 import '../../auth/presentation/widgets/auth_widget_account_actions.dart';
 import '../../dispatch/presentation/screens/dispatch_scr.dart';
+import '../../visit_detail/presentation/screens/visit_detail_scr.dart';
 import '../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../data/datasource/website_design_local_data_source.dart';
 
@@ -59,11 +61,26 @@ enum StudioStep {
   complete('Complete the visit',
       'Press "Complete visit". The invoice is issued by itself.',
       technician: true),
+  collect(
+      'Collect the payment',
+      'If the client pays now, the technician records it with a receipt photo and it waits for the admin to confirm. Open your visit and press "Collect payment".',
+      technician: true,
+      action: 'Skip this step'),
   backToAdmin(
       'Back to the office',
-      'The work is done. Go back as the admin and open the visit to see its proof, its history and its invoice.',
+      'The work is done. Go back as the admin and I will open this visit, so you can see its proof and its invoice.',
       technician: false,
       action: 'Back to admin'),
+  seeProof(
+      'The proof reaches the office',
+      'This is what you get with every visit: who did the work, at what time and how far from the site.',
+      technician: false,
+      action: 'See the invoice'),
+  seeInvoice(
+      'The invoice is ready',
+      'The invoice was issued by itself when the work ended. Money the technician collected waits here for your confirmation.',
+      technician: false,
+      action: 'See the offer'),
   finished(
       'You ran the whole cycle',
       'From the office to the field and back, with proof at every step. Now make it yours.',
@@ -116,6 +133,20 @@ class StudioScenario extends ChangeNotifier {
   int _intro = 0;
   static const int _introSteps = 2;
 
+  /// How far the admin has got looking at the finished visit.
+  int _reviewed = 0;
+  static const _review = [
+    StudioStep.seeProof,
+    StudioStep.seeInvoice,
+    StudioStep.finished,
+  ];
+
+  /// The visitor chose not to try collecting a payment.
+  bool _skippedCollect = false;
+
+  /// The visit the scenario is following.
+  String? _visitID;
+
   /// The visitor loaded the large sample company: nothing to follow.
   bool exploring = false;
 
@@ -160,7 +191,8 @@ class StudioScenario extends ChangeNotifier {
   }
 
   /// Where the visitor is, given the leading visit and who is signed in.
-  static StudioStep stepFor(VisitStatus? status, {required bool technician}) {
+  static StudioStep stepFor(VisitStatus? status,
+      {required bool technician, bool collected = false}) {
     switch (status) {
       case VisitStatus.scheduled:
         return StudioStep.assign;
@@ -171,7 +203,8 @@ class StudioScenario extends ChangeNotifier {
       case VisitStatus.inProgress:
         return technician ? StudioStep.complete : StudioStep.becomeTechnician;
       case VisitStatus.completed:
-        return technician ? StudioStep.backToAdmin : StudioStep.finished;
+        if (!technician) return StudioStep.seeProof;
+        return collected ? StudioStep.backToAdmin : StudioStep.collect;
       default:
         return StudioStep.createVisit;
     }
@@ -184,9 +217,15 @@ class StudioScenario extends ChangeNotifier {
             .map((e) => VisitDetailModel.fromJson(jsonDecode(e)));
     final visit = leadingVisit(visits);
     if (visit != null) _intro = _introSteps;
-    final next = _intro < _introSteps
+    _visitID = visit?.id;
+    var next = _intro < _introSteps
         ? StudioStep.values[_intro]
-        : stepFor(visit?.status, technician: AppSession.isTechnician);
+        : stepFor(visit?.status,
+            technician: AppSession.isTechnician,
+            collected: _skippedCollect ||
+                (visit?.paymentStatus != null &&
+                    visit?.paymentStatus != PaymentStatus.unpaid));
+    if (next == StudioStep.seeProof) next = _review[_reviewed];
     if (next == step) return;
     step = next;
     notifyListeners();
@@ -204,11 +243,41 @@ class StudioScenario extends ChangeNotifier {
         await App.navigatorKey.currentState?.pushNamed(DispatchScr.route);
       case StudioStep.becomeTechnician:
         await _run(() => viewAs(technician: true));
+      case StudioStep.collect:
+        _skippedCollect = true;
+        _check();
       case StudioStep.backToAdmin:
-        await _run(() => viewAs(technician: false));
+        await _run(() async {
+          await viewAs(technician: false);
+          _openVisit();
+        });
+      case StudioStep.seeProof:
+      case StudioStep.seeInvoice:
+        if (_onVisitScreen) {
+          _reviewed++;
+          _check();
+        } else {
+          _openVisit();
+        }
       default:
         break;
     }
+  }
+
+  bool get _onVisitScreen {
+    String? current;
+    App.navigatorKey.currentState?.popUntil((route) {
+      current = route.settings.name;
+      return true;
+    });
+    return current == VisitDetailScr.route;
+  }
+
+  void _openVisit() {
+    final id = _visitID;
+    if (id == null) return;
+    App.navigatorKey.currentState?.pushNamed(VisitDetailScr.route,
+        arguments: VisitDetailArgu(visitID: id).toArgu());
   }
 
   Future<void> _run(Future<void> Function() action) async {
@@ -252,6 +321,8 @@ class StudioScenario extends ChangeNotifier {
         exploring = fullCompany;
         fullCompany ? await DemoSeed.run() : await DemoSeed.runScenario();
         _intro = _introSteps;
+        _reviewed = 0;
+        _skippedCollect = false;
         step = StudioStep.createVisit;
         await sl<EnterAsAdminUc>().call(const NoParameters());
       });

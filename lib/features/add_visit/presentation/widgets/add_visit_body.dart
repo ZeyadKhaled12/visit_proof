@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 import 'package:visit_proof/core/demo/demo_mode.dart';
+import 'package:visit_proof/core/local/company_settings.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
 import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
 import 'package:visit_proof/features/add_visit/domain/usecases/add_visit_uc.dart';
@@ -51,8 +52,8 @@ class _AddVisitBodyState extends State<AddVisitBody> {
   TechnicianModel? _selectedTechnician;
   DateTime? _startDate;
   TimeOfDay? _startTime;
-  bool _requiresBeforePhotos = false;
-  bool _requiresAfterPhotos = false;
+  bool _requiresBeforePhotos = CompanySettings.requireBeforePhotos;
+  bool _requiresAfterPhotos = CompanySettings.requireAfterPhotos;
   final TextEditingController _problem = TextEditingController();
   final TextEditingController _notes = TextEditingController();
 

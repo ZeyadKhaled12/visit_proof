@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
 import '../../demo/demo_mode.dart';
+import '../../local/company_settings.dart';
+import '../../session/app_session.dart';
 import 'g_widget_tour.dart';
 
 /// Language, dark mode and help flag switches in one card, shared by the admin menu,
@@ -37,6 +39,20 @@ class GWidgetAppSettings extends StatelessWidget {
             Divider(
                 height: 12, color: AppTheme.iconLightGrey.withValues(alpha: .3)),
           const _HelpFlagsRow(),
+          if (AppSession.isAdmin) ...[
+            Divider(
+                height: 12, color: AppTheme.iconLightGrey.withValues(alpha: .3)),
+            _RequirePhotosRow(
+              title: 'Always require before-work photos'.tr,
+              read: () => CompanySettings.requireBeforePhotos,
+              write: CompanySettings.setRequireBeforePhotos,
+            ),
+            _RequirePhotosRow(
+              title: 'Always require after-work photos'.tr,
+              read: () => CompanySettings.requireAfterPhotos,
+              write: CompanySettings.setRequireAfterPhotos,
+            ),
+          ],
         ],
       ),
     );
@@ -151,6 +167,45 @@ class _DarkModeRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// A rule the admin sets once for every new visit.
+class _RequirePhotosRow extends StatefulWidget {
+  const _RequirePhotosRow(
+      {required this.title, required this.read, required this.write});
+  final String title;
+  final bool Function() read;
+  final Future<void> Function(bool) write;
+
+  @override
+  State<_RequirePhotosRow> createState() => _RequirePhotosRowState();
+}
+
+class _RequirePhotosRowState extends State<_RequirePhotosRow> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.add_a_photo_rounded, color: AppTheme.primary, size: 22),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(widget.title,
+              style: AppTheme.font(
+                  color: AppTheme.textPrimary,
+                  fontSize: AppTheme.textBody,
+                  fontWeight: FontWeight.w700)),
+        ),
+        Switch.adaptive(
+          value: widget.read(),
+          activeTrackColor: AppTheme.primary,
+          onChanged: (value) async {
+            await widget.write(value);
+            if (mounted) setState(() {});
+          },
+        ),
+      ],
     );
   }
 }

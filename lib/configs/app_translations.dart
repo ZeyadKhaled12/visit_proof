@@ -939,8 +939,6 @@ const Map<String, String> arabicTranslations = {
   'Getting your location…': 'جارٍ تحديد موقعك…',
   'Hi, {0}': 'مرحبًا، {0}',
   'How do you want to continue?': 'كيف تريد المتابعة؟',
-  'I confirm this is my current location and agree to share it with the admin.':
-      'أؤكد أن هذا موقعي الحالي وأوافق على مشاركته مع المسؤول.',
   'Location access is blocked. Allow it from the app settings.':
       'الوصول إلى الموقع محظور. اسمح به من إعدادات التطبيق.',
   'Location access is required to record this action.':
@@ -1259,8 +1257,6 @@ const Map<String, String> arabicTranslations = {
       'صُمّمنا للشركات في بداية مسيرتها. وعندما يتجاوز فريقك {0} مستخدمين تكون قد كبرت — وهذا هو الهدف.',
   'then {0}': 'ثم {0}',
   'every {0} months': 'كل {0} أشهر',
-  'About {0} a month for the whole company, not per user.':
-      'نحو {0} شهريًا للشركة كاملة، لا لكل مستخدم.',
   'Up to {0} users: admins and technicians':
       'حتى {0} مستخدمين: مسؤولون وفنيون',
   'Unlimited visits, clients and sites': 'زيارات وعملاء ومواقع بلا حدود',
@@ -2016,18 +2012,10 @@ const Map<String, String> arabicTranslations = {
       'أول {0} أشهر مجانًا',
   'The first month':
       'الشهر الأول',
-  '{0}, then {1} every {2} months for the whole company ({3} a month). Up to {4} users and {5} GB of photos. Delivered as a PWA on a private link. Changes to your version are free within a limit; anything beyond it is a paid feature we agree on first.':
-      '{0}، ثم {1} كل {2} أشهر للشركة كاملة ({3} شهريًا). حتى {4} مستخدمين و{5} جيجابايت للصور. يصلك التطبيق بصيغة PWA على رابط خاص. التعديلات على نسختك مجانية ضمن حد معين، وما يتجاوزه يصبح ميزة مدفوعة نتفق عليها أولًا.',
   'You have seen it work. Now make it yours.':
       'رأيته يعمل بنفسك، والآن اجعله تطبيقك.',
-  'a month for the whole company':
-      'شهريًا للشركة كاملة',
-  'You pay {0} every {1} months, after the free period.':
-      'تدفع {0} كل {1} أشهر بعد الفترة المجانية.',
   'Less than a cup of coffee a month':
       'أقل من ثمن فنجان قهوة شهريًا',
-  'Only {0} per user with a full team':
-      '{0} فقط لكل مستخدم عند اكتمال الفريق',
   'No card and nothing to pay today':
       'بلا بطاقة، ولا شيء تدفعه اليوم',
   'Up to {0} users, with no fee per user':
@@ -2070,8 +2058,6 @@ const Map<String, String> arabicTranslations = {
       'كل ما لا يقوم به التطبيق اليوم: حقل جديد أو تقرير جديد أو شاشة جديدة أو ربط بنظام آخر. التعديلات الصغيرة مجانية ضمن حد معين، وما يتجاوزه يصبح ميزة مدفوعة، ولا ننفذ شيئًا قبل الاتفاق على سعره.',
   'The demo data starts again every time you open the page. Only your design is kept, in this browser, until you clear it. Nothing is sent until you press send on your request.':
       'تبدأ بيانات التجربة من جديد في كل مرة تفتح فيها الصفحة. ولا يُحفظ إلا تصميمك، في هذا المتصفح، إلى أن تمسحه. ولا يُرسل شيء حتى تضغط إرسال في طلبك.',
-  'Prices in US dollars. The demo runs only in your browser.':
-      'الأسعار بالدولار الأمريكي. تعمل التجربة في متصفحك فقط.',
   'We have received your request':
       'استلمنا طلبك',
   'We are preparing your version and will deliver it to you. We will contact you very soon on {0}.':
@@ -2113,8 +2099,6 @@ const Map<String, String> arabicTranslations = {
       'اضغط «إكمال الزيارة».',
   'Press "Confirm". The time and your location are saved as proof.':
       'اضغط «تأكيد». سيُحفظ الوقت وموقعك كإثبات.',
-  'Tick this box to confirm your location.':
-      'حدد هذا المربع لتأكيد موقعك.',
   'Great job!':
       'أحسنت!',
   'Step {0} of {1}':
@@ -2123,4 +2107,115 @@ const Map<String, String> arabicTranslations = {
       'إخفاء',
   'Design your app':
       'صمّم تطبيقك',
+  // --- Website: the review round ----------------------------------------------
+  'Collect the payment':
+      'تحصيل الدفعة في الموقع',
+  'If the client pays now, the technician records it with a receipt photo and it waits for the admin to confirm. Open your visit and press "Collect payment".':
+      'إذا دفع العميل الآن، يسجل الفني الدفعة مع صورة الإيصال، وتنتظر تأكيد المسؤول. افتح زيارتك واضغط «تحصيل الدفعة».',
+  'Skip this step':
+      'تخطي هذه الخطوة',
+  'The work is done. Go back as the admin and I will open this visit, so you can see its proof and its invoice.':
+      'انتهى العمل. عُد بصفتك المسؤول وسأفتح لك هذه الزيارة لترى إثباتها وفاتورتها.',
+  'The proof reaches the office':
+      'الإثبات يصل إلى المكتب',
+  'This is what you get with every visit: who did the work, at what time and how far from the site.':
+      'هذا ما يصلك مع كل زيارة: من نفذ العمل، وفي أي وقت، وعلى أي بُعد من الموقع.',
+  'See the invoice':
+      'عرض الفاتورة',
+  'The invoice is ready':
+      'الفاتورة جاهزة',
+  'The invoice was issued by itself when the work ended. Money the technician collected waits here for your confirmation.':
+      'صدرت الفاتورة تلقائيًا عند انتهاء العمل، وما حصّله الفني ينتظر تأكيدك هنا.',
+  'Open the visit':
+      'فتح الزيارة',
+  'Tick this box to share your location. I will ask you only this once.':
+      'حدد هذا المربع لمشاركة موقعك. لن أطلب منك ذلك إلا هذه المرة.',
+  'The client is paying now. Press "Collect payment".':
+      'العميل يدفع الآن. اضغط «تحصيل الدفعة».',
+  'I attached a sample receipt. Press "Send to admin".':
+      'أرفقت إيصالًا تجريبيًا. اضغط «إرسال إلى المسؤول».',
+  'I agree to share my live location with the admin on every visit action.':
+      'أوافق على مشاركة موقعي المباشر مع المسؤول عند كل إجراء في الزيارة.',
+  'You agreed to share your location.':
+      'وافقت على مشاركة موقعك.',
+  'Withdraw':
+      'سحب الموافقة',
+  'Always require before-work photos':
+      'صور قبل العمل إلزامية دائمًا',
+  'Always require after-work photos':
+      'صور بعد العمل إلزامية دائمًا',
+  '{0} SAR':
+      '{0} ر.س',
+  'every {0} months for the whole company':
+      'كل {0} أشهر للشركة كاملة',
+  'For the whole company, not per user.':
+      'للشركة كاملة، لا لكل مستخدم.',
+  '{0}, then {1} every {2} months for the whole company. Up to {3} users and {4} GB of photos. Delivered as a PWA on a private link. Changes to your version are free within a limit; anything beyond it is a paid feature we agree on first.':
+      '{0}، ثم {1} كل {2} أشهر للشركة كاملة. حتى {3} مستخدمين و{4} جيجابايت للصور. يصلك التطبيق على رابط خاص ويُثبَّت على الهاتف. التعديلات على نسختك مجانية في حدود معينة، وما زاد عليها يكون ميزة مدفوعة نتفق عليها أولًا.',
+  'Prices in Saudi riyals. The demo runs only in your browser.':
+      'الأسعار بالريال السعودي. تعمل النسخة التجريبية في متصفحك فقط.',
+  'Font: {0}':
+      'الخط: {0}',
+  'Send it to us on WhatsApp too':
+      'أرسله إلينا عبر واتساب أيضًا',
+  'I requested my version of Visit Proof.\nName: {0}\nCompany: {1}\nPhone: {2}':
+      'طلبت نسختي من Visit Proof.\nالاسم: {0}\nالشركة: {1}\nالهاتف: {2}',
+  'Privacy policy':
+      'سياسة الخصوصية',
+  'Terms of service':
+      'شروط الاستخدام',
+  'What we collect':
+      'البيانات التي نجمعها',
+  'When you request your version, we receive your name, company, phone number, email if you give it, the changes you ask for and the design you made. The website asks for nothing else.':
+      'عند طلب نسختك نتلقى اسمك وشركتك ورقم هاتفك وبريدك الإلكتروني إن أدخلته والتعديلات التي تطلبها والتصميم الذي أعددته. ولا يطلب الموقع شيئًا غير ذلك.',
+  'The demo':
+      'النسخة التجريبية',
+  'What you type in the demo stays in your browser and starts again when you reopen the page. Your design is kept in this browser until you clear it.':
+      'ما تكتبه في النسخة التجريبية يبقى في متصفحك ويبدأ من جديد عند إعادة فتح الصفحة. ويُحفظ تصميمك في هذا المتصفح حتى تمسحه.',
+  'Why we use it':
+      'الغرض من استخدامها',
+  'Only to contact you, prepare your version and support you. We do not sell it or share it for advertising.':
+      'نستخدمها فقط للتواصل معك وإعداد نسختك ودعمك، ولا نبيعها ولا نشاركها لأغراض الإعلان.',
+  'Inside the app':
+      'داخل التطبيق',
+  'Each technician agrees once before the app shares their location. After that, their location and proof photos are recorded with each action on a visit, for their company only. A technician can withdraw this from any action screen, but actions that need a location will wait until they agree again.':
+      'يوافق كل فني مرة واحدة قبل أن يشارك التطبيق موقعه. وبعد ذلك يُسجَّل موقعه وصور الإثبات مع كل إجراء في الزيارة، ولا تطلع عليها إلا شركته. ويمكن للفني سحب موافقته من أي شاشة إجراء، على أن تتوقف الإجراءات التي تتطلب الموقع حتى يوافق مجددًا.',
+  'How long we keep it':
+      'مدة الاحتفاظ بها',
+  'We keep your details while we serve you. If a period is not renewed, your app stays readable for {0} days so you can take your data, then it is deleted after a reminder.':
+      'نحتفظ ببياناتك ما دمنا نقدم لك الخدمة. وإذا لم تُجدَّد المدة يبقى تطبيقك متاحًا للقراءة {0} يومًا لتأخذ بياناتك، ثم تُحذف بعد تذكيرك.',
+  'Your rights':
+      'حقوقك',
+  'You can ask us at any time to show, correct, export or delete your data.':
+      'يمكنك أن تطلب منا في أي وقت عرض بياناتك أو تصحيحها أو تصديرها أو حذفها.',
+  'Contact us':
+      'تواصل معنا',
+  'Reach us on WhatsApp or through the contact details you received from us.':
+      'تواصل معنا عبر واتساب أو عبر بيانات التواصل التي وصلتك منا.',
+  'The service':
+      'الخدمة',
+  'Visit Proof is an app for managing technicians and maintenance visits, delivered on a private web link with your design.':
+      'Visit Proof تطبيق لإدارة الفنيين وزيارات الصيانة، يصلك على رابط خاص بتصميمك.',
+  'Price and payment':
+      'السعر والدفع',
+  '{0}, then {1} every {2} months for the whole company, up to {3} users and {4} GB of photos. Nothing is charged before you agree.':
+      '{0}، ثم {1} كل {2} أشهر للشركة كاملة، حتى {3} مستخدمين و{4} جيجابايت للصور. ولا يُحصَّل أي مبلغ قبل موافقتك.',
+  'Renewing and stopping':
+      'التجديد والإيقاف',
+  'There is no long contract. You renew every {0} months. If you stop, the app stays readable for {1} days so you can take your data, then it is deleted after a reminder.':
+      'لا يوجد عقد طويل، وتجدد كل {0} أشهر. وإذا توقفت يبقى التطبيق متاحًا للقراءة {1} يومًا لتأخذ بياناتك، ثم تُحذف بعد تذكيرك.',
+  'Changes are free within a limit. Anything beyond it is a paid feature, and nothing is built before you agree on its price.':
+      'التعديلات مجانية في حدود معينة، وما زاد عليها يكون ميزة مدفوعة، ولا يُنفَّذ شيء قبل موافقتك على سعره.',
+  'Your data':
+      'بياناتك',
+  'Your data stays yours, and we export it for you whenever you ask. You are responsible for telling your technicians that their location and photos are recorded.':
+      'بياناتك ملك لك، ونصدّرها لك متى طلبت. وتقع عليك مسؤولية إبلاغ فنييك بأن مواقعهم وصورهم تُسجَّل.',
+  'Availability':
+      'توفر الخدمة',
+  'We work to keep the service running and backed up, but we cannot promise it will never be interrupted.':
+      'نعمل على استمرار الخدمة وحفظ نسخ احتياطية منها، لكننا لا نضمن عدم انقطاعها مطلقًا.',
+  'Updates to these terms':
+      'تحديث هذه الشروط',
+  'We may update these terms, and we will tell you before any change that affects your price.':
+      'قد نحدّث هذه الشروط، وسنخبرك قبل أي تغيير يؤثر في سعرك.',
 };

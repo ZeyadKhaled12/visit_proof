@@ -43,11 +43,15 @@ class WebsiteOfferCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (finished) ...[
-            Text('You have seen it work. Now make it yours.'.tr,
-                style: WebTheme.font(
-                    color: WebTheme.parchment,
-                    fontSize: WebTheme.textTitle,
-                    fontWeight: FontWeight.w700)),
+            Padding(
+              // Leaves room for the close button.
+              padding: const EdgeInsetsDirectional.only(end: 24),
+              child: Text('You have seen it work. Now make it yours.'.tr,
+                  style: WebTheme.font(
+                      color: WebTheme.parchment,
+                      fontSize: WebTheme.textTitle,
+                      fontWeight: FontWeight.w700)),
+            ),
             const SizedBox(height: 14),
           ],
           WebsiteBadge(
@@ -64,38 +68,25 @@ class WebsiteOfferCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text.rich(TextSpan(children: [
             TextSpan(
-                text: AppOffer.monthlyEquivalent,
+                text: 'then {0}'.trArgs([AppOffer.price(AppOffer.pricePerPeriod)]),
                 style: WebTheme.font(
                     color: WebTheme.onPrimary,
-                    fontSize: 44,
+                    fontSize: 38,
                     fontWeight: FontWeight.w800,
                     height: 1.1)),
             TextSpan(
-                text: ' ${'a month for the whole company'.tr}',
+                text:
+                    ' ${'every {0} months for the whole company'.trArgs([AppOffer.periodMonths])}',
                 style: WebTheme.font(
                     color: WebTheme.parchment,
                     fontSize: WebTheme.textTitle,
                     fontWeight: FontWeight.w600)),
           ])),
-          const SizedBox(height: 6),
-          Text(
-              'You pay {0} every {1} months, after the free period.'.trArgs(
-                  [AppOffer.usd(AppOffer.pricePerPeriod), AppOffer.periodMonths]),
-              style: WebTheme.font(
-                  color: WebTheme.parchment.withValues(alpha: .85),
-                  fontSize: WebTheme.textBodyLarge)),
           const SizedBox(height: 14),
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            WebsiteBadge(
-                text: 'Less than a cup of coffee a month'.tr,
-                color: WebTheme.parchment,
-                background: WebTheme.parchment.withValues(alpha: .14)),
-            WebsiteBadge(
-                text: 'Only {0} per user with a full team'
-                    .trArgs([AppOffer.monthlyPerUser]),
-                color: WebTheme.parchment,
-                background: WebTheme.parchment.withValues(alpha: .14)),
-          ]),
+          WebsiteBadge(
+              text: 'Less than a cup of coffee a month'.tr,
+              color: WebTheme.parchment,
+              background: WebTheme.parchment.withValues(alpha: .14)),
           const SizedBox(height: 18),
           for (final point in points)
             Padding(

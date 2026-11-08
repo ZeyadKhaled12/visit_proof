@@ -4,6 +4,7 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_theme.dart';
+import '../../../../core/local/location_consent.dart';
 import '../../../../core/utils/enums/photo_kind_enum.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_location.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_photo.dart';
@@ -40,12 +41,12 @@ class VisitFieldProofValue {
       distanceFromSite! <= VisitRules.maxStartDistanceMeters;
 }
 
-/// The technician's live location (read-only, taken from GPS) with their
-/// consent to share it, plus the camera photos for this step.
+/// The technician's live location (read-only, taken from GPS), plus the
+/// camera photos for this step.
 ///
 /// The location cannot be picked or edited: it is always the device's
-/// current position, and the action cannot be sent until the technician
-/// accepts it.
+/// current position. The technician agrees once to share it
+/// ([LocationConsent]); no action can be sent without that agreement.
 class VisitDetailWidgetFieldProof extends StatefulWidget {
   const VisitDetailWidgetFieldProof({
     super.key,
@@ -73,7 +74,13 @@ class VisitDetailWidgetFieldProof extends StatefulWidget {
 
 class VisitDetailWidgetFieldProofState
     extends State<VisitDetailWidgetFieldProof> {
-  VisitFieldProofValue _value = const VisitFieldProofValue();
+  late VisitFieldProofValue _value = VisitFieldProofValue(
+      photoPaths: DemoMode.prefillNewVisit && widget.photoKind == PhotoKind.receipt
+          ? const [DemoMode.sampleReceipt]
+          : const []);
+
+  /// Stays true for the whole sheet in which the technician first agrees.
+  bool _askConsent = !LocationConsent.given;
   bool _locating = true;
   GFunLocationException? _error;
 
@@ -88,7 +95,7 @@ class VisitDetailWidgetFieldProofState
     widget.onChanged(value);
   }
 
-  /// Takes a new GPS reading. Consent is asked again for the new position.
+  /// Takes a new GPS reading.
   Future<void> refreshLocation() async {
     setState(() {
       _locating = true;
@@ -106,6 +113,7 @@ class VisitDetailWidgetFieldProofState
         distanceFromSite: VisitRules.siteHasCoordinates(widget.visit)
             ? GFunLocation.distance(location, site!.latitude!, site.longitude!)
             : null,
+        consent: LocationConsent.given,
         photoPaths: _value.photoPaths,
       ));
     } on GFunLocationException catch (error) {
@@ -135,12 +143,20 @@ class VisitDetailWidgetFieldProofState
         photoPaths: _value.photoPaths.where((e) => e != path).toList(),
       ));
 
-  void _setConsent(bool consent) => _update(VisitFieldProofValue(
-        location: _value.location,
-        distanceFromSite: _value.distanceFromSite,
-        consent: consent,
-        photoPaths: _value.photoPaths,
-      ));
+  void _setConsent(bool consent) {
+    consent ? LocationConsent.give() : LocationConsent.withdraw();
+    _update(VisitFieldProofValue(
+      location: _value.location,
+      distanceFromSite: _value.distanceFromSite,
+      consent: consent,
+      photoPaths: _value.photoPaths,
+    ));
+  }
+
+  void _withdrawConsent() {
+    setState(() => _askConsent = true);
+    _setConsent(false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,21 +303,45 @@ class VisitDetailWidgetFieldProofState
               ),
             ),
             const SizedBox(height: 4),
-            CheckboxListTile(
-              value: _value.consent,
-              onChanged: (value) => _setConsent(value ?? false),
-              contentPadding: EdgeInsets.zero,
-              controlAffinity: ListTileControlAffinity.leading,
-              activeColor: AppTheme.primary,
-              title: Text(
-                  'I confirm this is my current location and agree to share it with the admin.'
-                      .tr,
-                  style: AppTheme.font(
-                      color: AppTheme.textPrimary,
-                      fontSize: AppTheme.textSmall,
-                      fontWeight: FontWeight.w600,
-                      height: 1.4)),
-            ),
+            if (_askConsent)
+              CheckboxListTile(
+                value: _value.consent,
+                onChanged: (value) => _setConsent(value ?? false),
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                activeColor: AppTheme.primary,
+                title: Text(
+                    'I agree to share my live location with the admin on every visit action.'
+                        .tr,
+                    style: AppTheme.font(
+                        color: AppTheme.textPrimary,
+                        fontSize: AppTheme.textSmall,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4)),
+              )
+            else
+              Row(
+                children: [
+                  Icon(Icons.verified_user_rounded,
+                      color: AppTheme.statGreen, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('You agreed to share your location.'.tr,
+                        style: AppTheme.font(
+                            color: AppTheme.textSecondary,
+                            fontSize: AppTheme.textSmall,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                  TextButton(
+                    onPressed: _withdrawConsent,
+                    child: Text('Withdraw'.tr,
+                        style: AppTheme.font(
+                            color: AppTheme.statOrange,
+                            fontSize: AppTheme.textSmall,
+                            fontWeight: FontWeight.w700)),
+                  ),
+                ],
+              ),
           ],
         ],
       ),

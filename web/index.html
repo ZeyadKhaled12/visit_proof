@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -18,15 +18,18 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Wizpo is a marketplace of ready-to-use business apps for small teams. Choose the tools you need, try live demos, and start working in minutes—all in one workspace.">
+  <meta name="description" content="أدِر الفنيين والصيانة من تطبيق واحد: جدولة الزيارات وإسنادها، وإثبات كل زيارة بالموقع والوقت والصور، وفاتورة تصدر تلقائيًا. الشهر الأول مجانًا. جرّب التطبيق الآن.">
   <meta name="theme-color" content="#15182D">
 
   <!-- Link previews (WhatsApp, X, LinkedIn…) -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Wizpo">
-  <meta property="og:title" content="Wizpo - Business Apps Made Simple | Small Apps, Big Magic">
-  <meta property="og:description" content="Wizpo is a marketplace of ready-to-use business apps for small teams. Choose the tools you need, try live demos, and start working in minutes—all in one workspace.">
-  <meta property="og:image" content="brand/wizpo-social.png">
+  <meta property="og:site_name" content="Visit Proof">
+  <meta property="og:locale" content="ar_SA">
+  <meta property="og:title" content="Visit Proof | تطبيق إدارة الفنيين والصيانة وإثبات الزيارات">
+  <meta property="og:description" content="أدِر الفنيين والصيانة من تطبيق واحد: جدولة الزيارات وإسنادها، وإثبات كل زيارة بالموقع والوقت والصور، وفاتورة تصدر تلقائيًا. الشهر الأول مجانًا. جرّب التطبيق الآن.">
+  <!-- Link previews need a full address: update it when the site moves to its own domain. -->
+  <meta property="og:url" content="https://zeyadkhaled12.github.io/visit_proof/">
+  <meta property="og:image" content="https://zeyadkhaled12.github.io/visit_proof/brand/wizpo-social.png">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- iOS meta tags & icons -->
@@ -39,7 +42,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Wizpo - Business Apps Made Simple | Small Apps, Big Magic</title>
+  <title>Visit Proof | تطبيق إدارة الفنيين والصيانة وإثبات الزيارات</title>
 
   <!-- Installing a designed app as a PWA (lib/core/pwa/). A link opened with
        "#app=…" (or the older "?app=…") is that app: it gets its own manifest
@@ -112,6 +115,33 @@
   </script>
 </head>
 <body>
+  <!-- What search engines read, and what visitors see while the app loads.
+       The price comes from lib/configs/app_offer.dart: keep the two the same. -->
+  <main id="page-text" dir="rtl" style="max-width:640px;margin:0 auto;padding:32px 20px;font-family:system-ui,'Segoe UI',Tahoma,sans-serif;color:#15182D;line-height:1.7">
+    <h1 style="font-size:26px">Visit Proof: أدِر الفنيين والصيانة من تطبيق واحد</h1>
+    <p>تطبيق لشركات الصيانة والخدمات الميدانية: تُنشئ الزيارة، وتسندها إلى الفني المناسب، وتتابع تنفيذها خطوة بخطوة، وتصلك إثباتاتها وفاتورتها.</p>
+    <ul>
+      <li>جدولة الزيارات وإسنادها مع اقتراح الفني الأنسب.</li>
+      <li>إثبات كل زيارة بموقع الفني ووقت التنفيذ والصور.</li>
+      <li>فاتورة تصدر تلقائيًا عند إتمام العمل.</li>
+      <li>تحصيل الدفعات في الموقع مع صورة الإيصال ومراجعة المسؤول.</li>
+      <li>بألوان شركتك وشعارها، بالعربية والإنجليزية.</li>
+    </ul>
+    <p><strong>الشهر الأول مجانًا، ثم 56 ر.س كل 6 أشهر للشركة كاملة.</strong></p>
+    <p><a href="?privacy">سياسة الخصوصية</a> · <a href="?terms">شروط الاستخدام</a></p>
+  </main>
+  <script>
+    (function () {
+      var text = document.getElementById('page-text');
+      // A customer's own app is not the website.
+      if (/^#app=/.test(location.hash) || /[?&]app=/.test(location.search) ||
+          /\/app\//.test(location.pathname)) {
+        text.remove();
+        return;
+      }
+      window.addEventListener('flutter-first-frame', function () { text.remove(); });
+    })();
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../configs/app_offer.dart';
 import '../../../../core/demo/demo_mode.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../../data/datasource/website_design_local_data_source.dart';
 import '../studio_scenario.dart';
 import '../widgets/studio_widget_bot.dart';
@@ -11,6 +13,7 @@ import '../widgets/studio_widget_phone.dart';
 import '../widgets/website_widget_brand.dart';
 import '../widgets/website_widget_offer.dart';
 import '../widgets/website_widget_parts.dart';
+import 'website_legal_scr.dart';
 import 'website_request_scr.dart';
 import 'website_scr.dart';
 import '../website_theme.dart';
@@ -34,7 +37,16 @@ class WebsiteStudioScr extends StatefulWidget {
   State<WebsiteStudioScr> createState() => _WebsiteStudioScrState();
 }
 
-enum _Menu { language, details, restart, simulate, fullCompany }
+enum _Menu {
+  language,
+  details,
+  restart,
+  simulate,
+  fullCompany,
+  whatsapp,
+  privacy,
+  terms
+}
 
 class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   static const double _dockWidth = 340;
@@ -57,8 +69,8 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
     _openFromLink();
   }
 
-  /// "?demo=technician" opens the app as the technician, "?request" the
-  /// request page and "?site" the details page, so a link can take a
+  /// "?demo=technician" opens the app as the technician; "?request",
+  /// "?site", "?privacy" and "?terms" open those pages, so a link can take a
   /// customer directly there.
   void _openFromLink() {
     final query = Uri.base.queryParameters;
@@ -70,6 +82,10 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         _openRequest();
       } else if (query.containsKey('site')) {
         _openDetails();
+      } else if (query.containsKey('privacy')) {
+        WebsiteLegalScr.open(context, WebsiteLegalPage.privacy);
+      } else if (query.containsKey('terms')) {
+        WebsiteLegalScr.open(context, WebsiteLegalPage.terms);
       }
     });
   }
@@ -117,6 +133,12 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         DemoMode.simulateOnSite.value = !DemoMode.simulateOnSite.value;
       case _Menu.fullCompany:
         _scenario.restart(fullCompany: true);
+      case _Menu.whatsapp:
+        GFunLaunch.openWhatsApp(AppOffer.whatsappNumber);
+      case _Menu.privacy:
+        WebsiteLegalScr.open(context, WebsiteLegalPage.privacy);
+      case _Menu.terms:
+        WebsiteLegalScr.open(context, WebsiteLegalPage.terms);
     }
   }
 
@@ -247,6 +269,10 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
             'Pretend I am at the site'.tr),
         item(_Menu.fullCompany, Icons.business_rounded,
             'Explore a large sample company'.tr),
+        if (AppOffer.hasWhatsapp)
+          item(_Menu.whatsapp, Icons.chat_rounded, 'WhatsApp'.tr),
+        item(_Menu.privacy, Icons.privacy_tip_outlined, 'Privacy policy'.tr),
+        item(_Menu.terms, Icons.description_outlined, 'Terms of service'.tr),
       ],
     );
   }
@@ -279,14 +305,17 @@ class _Title extends StatelessWidget {
                       fontSize: WebTheme.textTitle,
                       fontWeight: FontWeight.w800,
                       height: 1.2)),
-              Text('For managing technicians and maintenance'.tr,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: WebTheme.font(
-                      color: WebTheme.accentText,
-                      fontSize: WebTheme.textCaption,
-                      fontWeight: FontWeight.w700,
-                      height: 1.2)),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerStart,
+                child: Text('For managing technicians and maintenance'.tr,
+                    maxLines: 1,
+                    style: WebTheme.font(
+                        color: WebTheme.accentText,
+                        fontSize: WebTheme.textCaption,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2)),
+              ),
             ],
           ),
         ),

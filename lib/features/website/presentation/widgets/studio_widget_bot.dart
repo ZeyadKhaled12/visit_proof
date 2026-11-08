@@ -24,7 +24,11 @@ class StudioBotLines {
   static const trip = 'Press "Start trip".';
   static const work = 'Press "Start work".';
   static const complete = 'Press "Complete visit".';
-  static const tick = 'Tick this box to confirm your location.';
+  static const tick =
+      'Tick this box to share your location. I will ask you only this once.';
+  static const collect = 'The client is paying now. Press "Collect payment".';
+  static const sendReceipt =
+      'I attached a sample receipt. Press "Send to admin".';
   static const confirm =
       'Press "Confirm". The time and your location are saved as proof.';
 
@@ -41,6 +45,8 @@ class StudioBotLines {
     complete,
     tick,
     confirm,
+    collect,
+    sendReceipt,
   ];
 }
 
@@ -104,6 +110,8 @@ class StudioWidgetBot extends StatefulWidget {
 class _StudioWidgetBotState extends State<StudioWidgetBot>
     with SingleTickerProviderStateMixin {
   static const double _robot = 48;
+  static const double _bubbleMargin = 10;
+  static const double _bubbleMaxWidth = 440;
   static const Duration _trackEvery = Duration(milliseconds: 300);
   static const Duration _cheerFor = Duration(milliseconds: 1800);
 
@@ -219,6 +227,26 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
           _Cue(StudioBotLines.complete.tr, text: 'Complete visit'.tr),
           _Cue(StudioBotLines.openVisit.tr, text: 'Next: {0}'.trArgs(['Complete visit'.tr])),
         ];
+      case StudioStep.collect:
+        return [
+          _Cue(StudioBotLines.tick.tr, unticked: true),
+          _Cue(StudioBotLines.sendReceipt.tr, text: 'Send to admin'.tr),
+          _Cue(StudioBotLines.collect.tr, text: 'Collect payment'.tr),
+        ];
+      case StudioStep.seeProof:
+        return [
+          _Cue(StudioStep.seeProof.hint,
+              text: 'Technician location · {0} from site'
+                  .trArgs(['|'])
+                  .split('|')
+                  .first,
+              prefix: true),
+        ];
+      case StudioStep.seeInvoice:
+        return [
+          _Cue(StudioStep.seeInvoice.hint, text: 'Remaining balance'.tr),
+          _Cue(StudioStep.seeInvoice.hint, text: 'Amount paid'.tr),
+        ];
       default:
         return const [];
     }
@@ -267,7 +295,9 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
           .globalToLocal(box.localToGlobal(box.size.bottomRight(Offset.zero)));
       rect = Rect.fromPoints(topLeft, bottomRight);
       final visible = (Offset.zero & stage.size).deflate(4);
-      if (say != _say && !visible.overlaps(rect)) {
+      final inView =
+          visible.contains(rect.topLeft) && visible.contains(rect.bottomRight);
+      if (say != _say && !inView) {
         Scrollable.ensureVisible(element!,
             alignment: .5, duration: const Duration(milliseconds: 300));
       }
@@ -286,12 +316,48 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     }
   }
 
+  /// The admin should be looking at the finished visit.
+  bool get _reviewing =>
+      widget.scenario.step == StudioStep.seeProof ||
+      widget.scenario.step == StudioStep.seeInvoice;
+
   void _act() {
     if (widget.scenario.step == StudioStep.finished) {
       widget.onOffer();
     } else {
       widget.scenario.runAction();
     }
+  }
+
+  /// Where the bubble ends up, worked out rather than measured so it holds
+  /// while the bubble is still moving.
+  Rect _bubbleRect(Size stage, bool bubbleOnTop) {
+    final width = math.min(stage.width - _bubbleMargin * 2, _bubbleMaxWidth);
+    final top = bubbleOnTop
+        ? _bubbleMargin
+        : stage.height - _bubbleMargin - _bubbleHeight;
+    return Rect.fromLTWH(
+        (stage.width - width) / 2, top, width, _bubbleHeight);
+  }
+
+  /// A spot next to the target that hides neither it nor the bubble's text.
+  Offset? _spotBeside(Rect target, Rect bubble, Size stage) {
+    const gap = 16.0;
+    final dx = target.center.dx - _robot / 2;
+    final dy = target.center.dy - _robot / 2;
+    final ring = target.inflate(gap - 2);
+    final room = Offset.zero & stage;
+    for (final spot in [
+      Offset(dx, target.top - _robot - gap),
+      Offset(dx, target.bottom + gap),
+      Offset(target.left - _robot - gap, dy),
+      Offset(target.right + gap, dy),
+    ]) {
+      final box = spot & const Size.square(_robot);
+      final fits = room.contains(box.topLeft) && room.contains(box.bottomRight);
+      if (fits && !box.overlaps(ring) && !box.overlaps(bubble)) return spot;
+    }
+    return null;
   }
 
   Offset _robotAt(Size stage, bool bubbleOnTop, bool rtl) {
@@ -302,13 +368,8 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     if (_minimized) return Offset(start, stage.height - _robot - 16);
     final target = _target;
     if (target != null) {
-      final above = target.top - _robot - 8;
-      final y = above >= 4 ? above : target.bottom + 8;
-      return Offset(
-        (target.center.dx - _robot / 2)
-            .clamp(4.0, math.max(4.0, stage.width - _robot - 4)),
-        y.clamp(4.0, math.max(4.0, stage.height - _robot - 4)),
-      );
+      final spot = _spotBeside(target, _bubbleRect(stage, bubbleOnTop), stage);
+      if (spot != null) return spot;
     }
     return Offset(
         start,
@@ -343,7 +404,7 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
           if (!_minimized && !keyboard && !_menuOpen)
             Positioned.fill(
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(_bubbleMargin),
                 child: AnimatedAlign(
                   duration: const Duration(milliseconds: 350),
                   curve: Curves.easeInOut,
@@ -351,10 +412,14 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
                       ? Alignment.topCenter
                       : Alignment.bottomCenter,
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 440),
+                    constraints:
+                        const BoxConstraints(maxWidth: _bubbleMaxWidth),
                     child: _Bubble(
                       key: _bubble,
                       step: scenario.step,
+                      action: _reviewing && target == null
+                          ? 'Open the visit'
+                          : scenario.step.action,
                       say: _say ?? scenario.step.hint,
                       cheering: _cheering,
                       busy: scenario.busy,
@@ -424,6 +489,7 @@ class _Bubble extends StatelessWidget {
   const _Bubble({
     super.key,
     required this.step,
+    required this.action,
     required this.say,
     required this.cheering,
     required this.busy,
@@ -432,6 +498,9 @@ class _Bubble extends StatelessWidget {
   });
 
   final StudioStep step;
+
+  /// The label of the shortcut button, when the step has one.
+  final String? action;
   final String say;
   final bool cheering;
   final bool busy;
@@ -440,7 +509,7 @@ class _Bubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final action = step.action;
+    final action = this.action;
     final calm = MediaQuery.disableAnimationsOf(context);
 
     return Material(
@@ -509,7 +578,8 @@ class _Typed extends StatelessWidget {
   final String text;
   final bool instant;
 
-  static const int _msPerLetter = 18;
+  /// Short enough that nobody catches a line half written.
+  static const int _typeForMs = 600;
 
   @override
   Widget build(BuildContext context) {
@@ -523,7 +593,7 @@ class _Typed extends StatelessWidget {
       child: TweenAnimationBuilder<int>(
         key: ValueKey(text),
         tween: IntTween(begin: instant ? text.length : 0, end: text.length),
-        duration: Duration(milliseconds: instant ? 0 : text.length * _msPerLetter),
+        duration: Duration(milliseconds: instant ? 0 : _typeForMs),
         builder: (context, letters, _) => Stack(
           children: [
             Opacity(opacity: 0, child: Text(text, style: style)),

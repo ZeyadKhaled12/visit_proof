@@ -95,21 +95,37 @@ void main() {
 
     await press('Next: Start trip');
     await press('Start trip');
-    await press('I confirm this is my current location and agree to share it with the admin.');
+    await press('I agree to share my live location with the admin on every visit action.');
     await press('Confirm');
     expect(_step(), StudioStep.startWork);
 
     await press('Start work');
-    await press('I confirm this is my current location and agree to share it with the admin.');
+    expect(find.byType(CheckboxListTile), findsNothing);
     await press('Confirm');
     expect(_step(), StudioStep.complete);
 
     await press('Complete visit');
-    await press('I confirm this is my current location and agree to share it with the admin.');
+    expect(find.byType(CheckboxListTile), findsNothing);
     await press('Confirm');
-    expect(_step(), StudioStep.backToAdmin);
+    expect(_step(), StudioStep.collect);
+
+    await press('Collect payment');
+    await press('Send to admin');
+    await _settle(tester);
+    expect(find.text('Back to admin'), findsOneWidget);
 
     await press('Back to admin');
+    await _settle(tester);
+    // The office sees the proof and the invoice before any offer.
+    expect(find.byType(WebsiteOfferCard), findsNothing);
+    expect(find.textContaining('from site'), findsWidgets);
+
+    await press('See the invoice');
+    expect(find.byType(WebsiteOfferCard), findsNothing);
+    expect(find.text('Remaining balance'), findsOneWidget);
+    expect(find.textContaining('awaiting admin confirmation'), findsOneWidget);
+
+    await press('See the offer');
     await _settle(tester);
     expect(find.byType(WebsiteOfferCard), findsOneWidget);
     FlutterError.onError = report;

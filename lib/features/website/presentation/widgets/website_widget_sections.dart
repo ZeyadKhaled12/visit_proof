@@ -2,11 +2,13 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_offer.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
+import '../screens/website_legal_scr.dart';
 import 'website_widget_brand.dart';
 import 'website_widget_parts.dart';
 import '../website_theme.dart';
 
-String _usd(num amount) => AppOffer.usd(amount);
+String _price(num amount) => AppOffer.price(amount);
 
 // =============================================================================
 // HERO
@@ -615,7 +617,7 @@ class WebsitePricing extends StatelessWidget {
           const SizedBox(height: 6),
           Text.rich(TextSpan(children: [
             TextSpan(
-                text: 'then {0}'.trArgs([_usd(AppOffer.pricePerPeriod)]),
+                text: 'then {0}'.trArgs([_price(AppOffer.pricePerPeriod)]),
                 style: WebTheme.font(
                     color: WebTheme.textPrimary,
                     fontSize: WebTheme.textHeadline,
@@ -628,8 +630,7 @@ class WebsitePricing extends StatelessWidget {
           ])),
           const SizedBox(height: 4),
           Text(
-              'About {0} a month for the whole company, not per user.'
-                  .trArgs([AppOffer.monthlyEquivalent]),
+              'For the whole company, not per user.'.tr,
               style: WebTheme.font(
                   color: WebTheme.textSecondary, fontSize: WebTheme.textBody)),
           const SizedBox(height: 18),
@@ -681,7 +682,7 @@ class WebsitePricing extends StatelessWidget {
           _PriceRow(
               label: 'Every {0} months after that'
                   .trArgs([AppOffer.periodMonths]),
-              value: _usd(AppOffer.pricePerPeriod)),
+              value: _price(AppOffer.pricePerPeriod)),
           _PriceRow(label: 'Setup, colors and logo'.tr, value: 'Free'.tr),
           _PriceRow(label: 'Extra fees per user'.tr, value: 'None'.tr),
           const SizedBox(height: 16),
@@ -879,7 +880,7 @@ class WebsiteFaq extends StatelessWidget {
         'What do I pay after the free period?',
         '{0} every {1} months for your whole company, up to {2} users. There is no fee per user and no setup fee.'
             .trArgs([
-          _usd(AppOffer.pricePerPeriod),
+          _price(AppOffer.pricePerPeriod),
           AppOffer.periodMonths,
           AppOffer.maxUsers
         ])
@@ -1054,13 +1055,47 @@ class WebsiteFooter extends StatelessWidget {
                       fontWeight: FontWeight.w700)),
             ],
           ),
-          Text(
-              'Prices in US dollars. The demo runs only in your browser.'
-                  .tr,
-              style: WebTheme.font(
-                  color: WebTheme.textLightHint, fontSize: WebTheme.textSmall)),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(spacing: 4, children: [
+                if (AppOffer.hasWhatsapp)
+                  _FooterLink('WhatsApp'.tr,
+                      () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber)),
+                _FooterLink(
+                    'Privacy policy'.tr,
+                    () => WebsiteLegalScr.open(
+                        context, WebsiteLegalPage.privacy)),
+                _FooterLink('Terms of service'.tr,
+                    () => WebsiteLegalScr.open(context, WebsiteLegalPage.terms)),
+              ]),
+              Text('Prices in Saudi riyals. The demo runs only in your browser.'.tr,
+                  style: WebTheme.font(
+                      color: WebTheme.textLightHint,
+                      fontSize: WebTheme.textSmall)),
+            ],
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _FooterLink extends StatelessWidget {
+  const _FooterLink(this.text, this.onTap);
+  final String text;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onTap,
+      child: Text(text,
+          style: WebTheme.font(
+              color: WebTheme.secondary,
+              fontSize: WebTheme.textSmall,
+              fontWeight: FontWeight.w700)),
     );
   }
 }
