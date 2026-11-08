@@ -114,6 +114,7 @@ class WebsiteButton extends StatelessWidget {
     this.icon,
     this.outlined = false,
     this.color,
+    this.foreground = WebTheme.onPrimary,
     this.expand = false,
   });
 
@@ -122,6 +123,9 @@ class WebsiteButton extends StatelessWidget {
   final IconData? icon;
   final bool outlined;
   final Color? color;
+
+  /// Text and icon color of a solid button.
+  final Color foreground;
   final bool expand;
 
   @override
@@ -129,7 +133,7 @@ class WebsiteButton extends StatelessWidget {
     final color = this.color ?? WebTheme.primary;
     final label = Text(text,
         style: WebTheme.font(
-            color: outlined ? color : WebTheme.onPrimary,
+            color: outlined ? color : foreground,
             fontSize: WebTheme.textSubtitle,
             fontWeight: FontWeight.w800));
     final padding = const EdgeInsets.symmetric(horizontal: 22, vertical: 18);
@@ -150,7 +154,7 @@ class WebsiteButton extends StatelessWidget {
         : FilledButton.icon(
             onPressed: onPressed,
             icon: Icon(icon ?? Icons.arrow_forward_rounded,
-                color: WebTheme.onPrimary, size: 20),
+                color: foreground, size: 20),
             label: label,
             style: FilledButton.styleFrom(
                 backgroundColor: color, padding: padding, shape: shape),

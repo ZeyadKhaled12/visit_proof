@@ -30,7 +30,7 @@ void main() {
   }
 
   testWidgets('the landing page builds', (tester) async {
-    await show(tester, const WebsiteApp());
+    await show(tester, const MaterialApp(home: WebsiteScr()));
     expect(find.byType(WebsiteScr), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

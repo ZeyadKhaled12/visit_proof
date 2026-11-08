@@ -42,8 +42,15 @@ class DemoSeed {
 
   static const String _demoTechnicianId = 'demo-tech-1';
 
-  static Future<void> run() async {
-    final data = _DemoCompany(Random(7), DateTime.now()).build();
+  static Future<void> run() =>
+      _save(_DemoCompany(Random(7), DateTime.now()).build());
+
+  /// The website's guided scenario starts small: a few clients, services and
+  /// technicians and no visits, so the visitor's own visit is the only one.
+  static Future<void> runScenario() =>
+      _save(_DemoCompany(Random(7), DateTime.now()).buildScenario());
+
+  static Future<void> _save(_DemoData data) async {
     final prefs = LocalPref.sharedPreferences;
     String encode(Map<String, dynamic> json) => jsonEncode(json);
 
@@ -99,6 +106,16 @@ class _DemoCompany {
     _technicians();
     _clients();
     _visits();
+    return data;
+  }
+
+  _DemoData buildScenario() {
+    _categoriesAndServices();
+    _technicians();
+    _clients();
+    data.services.removeRange(4, data.services.length);
+    data.technicians.removeRange(2, data.technicians.length);
+    data.clients.removeRange(3, data.clients.length);
     return data;
   }
 

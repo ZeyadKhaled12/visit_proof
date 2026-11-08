@@ -15,7 +15,9 @@ import 'core/pwa/pwa_bridge.dart';
 import 'core/services/services_locator.dart';
 import 'core/usecase/base_use_case.dart';
 import 'core/utils/general_widgets/g_widget_tour.dart';
+import 'features/auth/domain/usecases/enter_as_admin_uc.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
+import 'features/website/data/datasource/website_design_local_data_source.dart';
 import 'features/website/presentation/screens/website_scr.dart';
 
 /*
@@ -27,19 +29,15 @@ import 'features/website/presentation/screens/website_scr.dart';
 /*
 THE STUDIO'S "اطلب" (REQUEST) BUTTON
 -------------------------------------
-Now: it installs the app the visitor designed as a PWA on their device
-(StudioInstall in features/website/presentation/widgets/
-studio_widget_install.dart). The installed app opens with only Visit Proof,
-in that design, and cannot change it (AppInstall in core/pwa/app_install.dart,
-DemoMode.installedApp).
+Now: it opens the request form (WebsiteRequestScr): the visitor sends their
+design and what they want changed (WebsiteRequestModel, no backend yet).
 
-To go back to the old flow (the button opens the request form,
-WebsiteRequestScr, so the visitor sends their design and notes):
-  in features/website/presentation/screens/website_studio_scr.dart set
-      static const bool requestInstallsApp = false;
-That is the only change needed: the request form and its code were kept as
-they are. The landing page's "Request my version" button always opens the
-request form.
+To make it install the designed app as a PWA instead (StudioInstall in
+features/website/presentation/widgets/studio_widget_install.dart), in
+features/website/presentation/screens/website_studio_scr.dart set
+      static const bool requestInstallsApp = true;
+That is the only change needed. The landing page's "Request my version"
+button always opens the request form.
 */
 
 void main() async {
@@ -58,7 +56,7 @@ void main() async {
   // user's choices. An installed app keeps the light/dark it was designed in.
   final savedDark = DemoMode.isOn ? null : prefs.getBool(darkModeKey);
   final savedArabic = DemoMode.isOn ? null : prefs.getBool(arabicKey);
-  final savedHelpFlags = prefs.getBool(helpFlagsKey);
+  final savedHelpFlags = prefs.getBool(GWidgetTour.flagsKey);
   GWidgetTour.showFlags.value = savedHelpFlags ?? true;
   AppTheme.darkMode.value = installed?.dark ??
       (AppTheme.darkModeEnabled && (savedDark ?? AppTheme.darkModeByDefault));
@@ -66,22 +64,34 @@ void main() async {
       (savedArabic ??
           installed?.arabic ??
           (DemoMode.isOn || AppLanguage.arabicByDefault));
+  // The website brings back the design the visitor made last time.
+  if (DemoMode.isOn) WebsiteDesignLocalDataSource.restore();
 
   // An installed app loads the test company once and then keeps what the
   // user does in it.
   final seedNow =
       installed == null || !(prefs.getBool(_installedSeededKey) ?? false);
   if (DemoMode.testData && seedNow) {
-    // Every start begins again from the large test company (in its
-    // language), so there is always plenty to try. A customer's build keeps
-    // its data.
+    // Every start begins again from the test data (in its language): the
+    // website from its guided scenario, test builds from the large company.
+    // A customer's build keeps its data.
+    final savedDesign = prefs.getString(WebsiteDesignLocalDataSource.key);
     await prefs.clear();
+    if (savedDesign != null) {
+      await prefs.setString(WebsiteDesignLocalDataSource.key, savedDesign);
+    }
     if (savedDark != null) await prefs.setBool(darkModeKey, savedDark);
     if (savedArabic != null) await prefs.setBool(arabicKey, savedArabic);
     if (savedHelpFlags != null) {
-      await prefs.setBool(helpFlagsKey, savedHelpFlags);
+      await prefs.setBool(GWidgetTour.flagsKey, savedHelpFlags);
     }
-    await DemoSeed.run();
+    if (DemoMode.isOn) {
+      await DemoSeed.runScenario();
+      // The scenario starts inside the app, as the admin.
+      await sl<EnterAsAdminUc>().call(const NoParameters());
+    } else {
+      await DemoSeed.run();
+    }
     if (installed != null) await prefs.setBool(_installedSeededKey, true);
   }
   await initializeDateFormatting();
@@ -90,6 +100,7 @@ void main() async {
   Intl.defaultLocale = AppLanguage.locale.languageCode;
   // Reopens as the admin or the technician who used the app last.
   await sl<RestoreSessionUc>().call(const NoParameters());
+  if (DemoMode.isOn) WebsiteDesignLocalDataSource.watch();
   // An installed app's link keeps its design on every screen.
   final raw = AppInstall.openedRaw;
   if (installed != null && raw != null) {
@@ -114,9 +125,6 @@ const String darkModeKey = 'dark_mode';
 
 /// Saved language choice.
 const String arabicKey = 'app_arabic';
-
-/// Saved choice to show the help flags.
-const String helpFlagsKey = 'show_help_flags';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -162,7 +170,7 @@ class MyAppState extends State<MyApp> {
   }
 
   void _onHelpFlagsChanged() => LocalPref.sharedPreferences
-      .setBool(helpFlagsKey, GWidgetTour.showFlags.value);
+      .setBool(GWidgetTour.flagsKey, GWidgetTour.showFlags.value);
 
   bool _rebuildScheduled = false;
 

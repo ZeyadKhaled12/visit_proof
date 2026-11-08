@@ -1182,9 +1182,6 @@ const Map<String, String> arabicTranslations = {
   // --- Website: landing page -------------------------------------------------
   'Apps': 'التطبيقات',
   'Small apps. Big magic.': 'تطبيقات صغيرة، سحر كبير.',
-  'Business apps made simple.': 'تطبيقات الأعمال، ببساطة.',
-  'Ready-to-use apps for small teams. Choose the tools you need, try a live demo and start working in minutes — all in one workspace, with your colors and your logo.':
-      'تطبيقات جاهزة للاستخدام للفرق الصغيرة. اختر الأدوات التي تحتاجها، وجرّبها تجربة مباشرة، وابدأ العمل خلال دقائق — في مساحة عمل واحدة، بألوانك وشعارك.',
   'Browse the apps': 'تصفّح التطبيقات',
   'Try {0} live': 'جرّب {0} مباشرة',
   'My workspace': 'مساحة عملي',
@@ -1193,7 +1190,6 @@ const Map<String, String> arabicTranslations = {
   'Pick the tools your team needs': 'اختر الأدوات التي يحتاجها فريقك',
   'Each app does one job well. Start with one today and add more as they arrive.':
       'يؤدي كل تطبيق مهمة واحدة بإتقان. ابدأ بتطبيق واحد اليوم، وأضف غيره عند صدوره.',
-  'Field visits with proof': 'زيارات ميدانية موثقة',
   'Available now': 'متاح الآن',
   'See the details': 'اطّلع على التفاصيل',
   'More apps are on the way': 'المزيد من التطبيقات في الطريق',
@@ -1210,12 +1206,9 @@ const Map<String, String> arabicTranslations = {
   'FAQ': 'الأسئلة الشائعة',
   'Demo': 'تجربة',
   'Light mode': 'الوضع الفاتح',
-  'Free for the first {0} months': 'مجانًا لأول {0} أشهر',
   'Every technician visit is scheduled, proven with live location and photos, and closed with a clear record — in an app with your colors, your fonts and your logo.':
       'تُجدوَل كل زيارة للفني، وتُوثَّق بالموقع المباشر والصور، وتُغلق بسجل واضح — في تطبيق بألوانك وخطوطك وشعارك.',
   'Try it and design your app': 'جرّبه وصمّم تطبيقك',
-  'No sign-up and no card. The demo resets every time you open it.':
-      'دون تسجيل ودون بطاقة دفع. تبدأ التجربة من جديد في كل مرة تفتحها.',
   'VIS-000124 · AC periodic maintenance': 'VIS-000124 · صيانة دورية للمكيف',
   'Al Noor Pharmacy · Riyadh': 'صيدلية النور · الرياض',
   'Arrived · 18 m from the site': 'الوصول · على بُعد 18 م من الموقع',
@@ -1251,9 +1244,6 @@ const Map<String, String> arabicTranslations = {
   'How it works': 'آلية العمل',
   'From demo to your own app in four steps':
       'من التجربة إلى تطبيقك الخاص في أربع خطوات',
-  'Try the live demo': 'جرّب النسخة التجريبية',
-  'Use the real app as the admin and as a technician, with a sample company.':
-      'استخدم التطبيق الفعلي بصفتك مسؤولًا وبصفتك فنيًا، مع شركة تجريبية.',
   'Design your version': 'صمّم نسختك',
   'Pick any colors, fonts, text size, icon or logo, and the app name. You see every change instantly.':
       'اختر أي ألوان وخطوط وحجم نص وأيقونة أو شعار واسمًا للتطبيق، وشاهد كل تغيير فورًا.',
@@ -1267,7 +1257,6 @@ const Map<String, String> arabicTranslations = {
   'Simple, small and clear': 'بسيط وواضح ومناسب للشركات الصغيرة',
   'We are built for companies at the start of their journey. When you grow past {0} users, you have outgrown us — and that is the goal.':
       'صُمّمنا للشركات في بداية مسيرتها. وعندما يتجاوز فريقك {0} مستخدمين تكون قد كبرت — وهذا هو الهدف.',
-  'Free for {0} months': 'مجانًا لمدة {0} أشهر',
   'then {0}': 'ثم {0}',
   'every {0} months': 'كل {0} أشهر',
   'About {0} a month for the whole company, not per user.':
@@ -1293,7 +1282,6 @@ const Map<String, String> arabicTranslations = {
   'Every {0} months after that': 'كل {0} أشهر بعد ذلك',
   'Setup, colors and logo': 'الإعداد والألوان والشعار',
   'Extra fees per user': 'رسوم إضافية لكل مستخدم',
-  'Changes made only for you': 'تعديلات خاصة بك',
   'If a period is not renewed, your app stays readable for {0} days so you can take your data, then it is deleted after a reminder.':
       'إذا لم تُجدَّد الفترة، يبقى تطبيقك متاحًا للقراءة مدة {0} يومًا لتحتفظ ببياناتك، ثم يُحذف بعد إشعارك.',
   'How you receive it': 'طريقة الاستلام',
@@ -1316,9 +1304,6 @@ const Map<String, String> arabicTranslations = {
   'Questions': 'أسئلة',
   'Frequently asked questions': 'الأسئلة الشائعة',
   'Do I pay anything now?': 'هل أدفع شيئًا الآن؟',
-  'No. Your first {0} months are free. We only ask for payment when they end.':
-      'لا. أول {0} أشهر مجانية، ولا نطلب الدفع إلا بعد انتهائها.',
-  'What do I pay after the free months?': 'كم أدفع بعد الأشهر المجانية؟',
   '{0} every {1} months for your whole company, up to {2} users. There is no fee per user and no setup fee.':
       '{0} كل {1} أشهر لشركتك كاملة، حتى {2} مستخدمين. لا توجد رسوم لكل مستخدم ولا رسوم إعداد.',
   'Is there a contract?': 'هل يوجد عقد؟',
@@ -1338,28 +1323,14 @@ const Map<String, String> arabicTranslations = {
   'Each company has its own separate space. Other companies cannot see your clients, visits or photos.':
       'لكل شركة مساحة مستقلة، ولا يمكن لأي شركة أخرى الاطلاع على عملائك أو زياراتك أو صورك.',
   'Is the demo saving what I type?': 'هل تحفظ التجربة ما أكتبه؟',
-  'No. The demo runs only in your browser and starts again from the beginning every time you open the page. Nothing is sent until you press send on your request.':
-      'لا. تعمل التجربة في متصفحك فقط، وتبدأ من جديد في كل مرة تفتح فيها الصفحة، ولا يُرسل شيء حتى تضغط زر إرسال الطلب.',
   'Every company passes through its first steps.':
       'كل شركة تمر بخطواتها الأولى.',
   'Let us organize yours while you grow.': 'دعنا ننظّم خطواتك بينما تنمو.',
   'Design my app now': 'صمّم تطبيقي الآن',
-  'Prices in US dollars. This website is a demo: it saves nothing.':
-      'الأسعار بالدولار الأمريكي. هذا الموقع تجريبي ولا يحفظ أي بيانات.',
 
   // --- Website: design studio ------------------------------------------------
-  'Live demo': 'تجربة مباشرة',
   'Request': 'اطلب',
-  'Request this version': 'اطلب هذه النسخة',
-  'This is the real app with a sample company. Tap around.':
-      'هذا هو التطبيق الفعلي مع شركة تجريبية، تصفّحه بحرية.',
-  'Design your app': 'صمّم تطبيقك',
-  'Every change shows in the app right away.':
-      'يظهر كل تغيير في التطبيق فورًا.',
-  'Quick color themes': 'مجموعات ألوان جاهزة',
   'Colors': 'الألوان',
-  'Tap a color to choose any shade or type its code.':
-      'اضغط على أي لون لاختيار الدرجة التي تريدها أو كتابة رمزه.',
   'Main color': 'اللون الأساسي',
   'Buttons, links and headers': 'الأزرار والروابط والعناوين',
   'Second color': 'اللون الثانوي',
@@ -1384,19 +1355,12 @@ const Map<String, String> arabicTranslations = {
   'English font': 'الخط الإنجليزي',
   'Text size': 'حجم النص',
   'App name': 'اسم التطبيق',
-  'e.g. Cool Air Services': 'مثال: خدمات الهواء البارد',
   'App icon': 'أيقونة التطبيق',
   'Upload your logo': 'ارفع شعارك',
   'Change logo': 'تغيير الشعار',
   'Remove logo': 'إزالة الشعار',
   'Try the demo': 'جرّب التطبيق',
-  'A sample HVAC company with visits in every step.':
-      'شركة تكييف تجريبية لديها زيارات في جميع المراحل.',
-  'Technician sign-in: {0} / {1}': 'دخول الفني: {0} / {1}',
   'Pretend I am at the site': 'افترض أنني في الموقع',
-  'Turn off to use your real location, as your technicians will.':
-      'أوقف هذا الخيار لاستخدام موقعك الفعلي كما سيفعل الفنيون.',
-  'Restart the demo data': 'إعادة بيانات التجربة',
   'Demo: your location is simulated at the site.':
       'تجربة: يُفترض أن موقعك داخل موقع العميل.',
   'Violet': 'بنفسجي',
@@ -1427,18 +1391,8 @@ const Map<String, String> arabicTranslations = {
   'Company name': 'اسم الشركة',
   'Phone / WhatsApp': 'الجوال / واتساب',
   'Email (optional)': 'البريد الإلكتروني (اختياري)',
-  'Which version do you want?': 'ما النسخة التي تريدها؟',
-  'Standard version with my design': 'النسخة القياسية بتصميمي',
-  'Everything in the demo with your colors, fonts, icon and name. Included in the plan.':
-      'كل ما في التجربة بألوانك وخطوطك وأيقونتك واسمك، وهي مشمولة في الباقة.',
-  'I also need custom changes': 'أحتاج أيضًا إلى تعديلات خاصة',
-  'Describe the changes you need': 'صف التعديلات التي تحتاجها',
-  'Notes (optional)': 'ملاحظات (اختياري)',
   'e.g. add a field for the AC model, add my VAT number on the invoice…':
       'مثال: إضافة حقل لطراز المكيف، أو إضافة الرقم الضريبي إلى الفاتورة…',
-  'Anything you want us to know': 'أي معلومات تود إطلاعنا عليها',
-  'Tell us what to change (at least 10 characters).':
-      'أخبرنا بما تريد تغييره (10 أحرف على الأقل).',
   'Your design': 'تصميمك',
   'Change the design': 'تعديل التصميم',
   'What you will pay': 'ما ستدفعه',
@@ -1446,10 +1400,6 @@ const Map<String, String> arabicTranslations = {
   'Please confirm you have read the price.': 'يرجى تأكيد اطلاعك على السعر.',
   'Send my request': 'إرسال الطلب',
   'Sending…': 'جارٍ الإرسال…',
-  'Your request has been sent': 'تم إرسال طلبك',
-  'We will contact you on {0} to confirm your request, then send you the private link to your app.':
-      'سنتواصل معك على الرقم {0} لتأكيد طلبك، ثم نرسل إليك الرابط الخاص بتطبيقك.',
-  'Back to the website': 'العودة إلى الموقع',
 
   // --- Demo data -------------------------------------------------------------
   'updated {0}': 'آخر تحديث {0}',
@@ -1457,16 +1407,8 @@ const Map<String, String> arabicTranslations = {
   'Visit created': 'تم إنشاء الزيارة',
   'Technician assigned: {0}': 'تم إسناد الفني: {0}',
   // --- Website: one price, special requests priced per request ------------
-  'Special requests': 'الطلبات الخاصة',
-  'Priced per request': 'يُحدَّد سعرها حسب الطلب',
-  'Need something the app does not have? Write it in your request. Each special request is priced on its own, depending on what it needs, after we discuss it with you. Nothing is built before you agree.':
-      'هل تحتاج إلى ما لا يوفره التطبيق؟ اكتبه في طلبك. يُسعَّر كل طلب خاص على حدة بحسب ما يتطلبه، بعد مناقشته معك، ولا يُنفَّذ شيء قبل موافقتك.',
   'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. We discuss your request with you, agree on its price, and only then start.':
       'كل ما لا يقدمه التطبيق حاليًا: حقل جديد أو تقرير جديد أو شاشة جديدة أو ربط بنظام آخر. نناقش طلبك معك ونتفق على سعره، ثم نبدأ التنفيذ.',
-  'Their price depends on what you ask for. We discuss your request with you and agree on the price before any work starts.':
-      'يعتمد سعرها على ما تطلبه، ونناقش طلبك معك ونتفق على السعر قبل بدء أي عمل.',
-  'First {0} months free, then {1} every {2} months for the whole company. Up to {3} users and {4} GB of photos. Delivered as a PWA on a private link. Special requests are priced separately, after we discuss them with you.':
-      'أول {0} أشهر مجانًا، ثم {1} كل {2} أشهر للشركة كاملة، حتى {3} مستخدمين ومساحة {4} غيغابايت للصور. يُسلَّم بصيغة PWA على رابط خاص. تُسعَّر الطلبات الخاصة بشكل مستقل بعد مناقشتها معك.',
 
   // --- Calm dashboard, technician home and guided tour ---------------------
   'Book a client and send a technician':
@@ -1997,4 +1939,147 @@ const Map<String, String> arabicTranslations = {
       'يعيد مبلغًا سبق دفعه على هذه الفاتورة.',
   'Saves the price, duration and checklist, so you can pick this service on any visit.':
       'يحفظ السعر والمدة وقائمة المهام لتتمكن من اختيار هذه الخدمة في أي زيارة.',
+  // --- Website: the guided scenario, the offer and the request -------------
+  'For managing technicians and maintenance':
+      'لإدارة الفنيين والصيانة',
+  'Request a copy':
+      'طلب نسخة',
+  'The offer':
+      'العرض',
+  'More':
+      'المزيد',
+  'Details and pricing':
+      'التفاصيل والأسعار',
+  'Start the scenario again':
+      'ابدأ السيناريو من جديد',
+  'Explore a large sample company':
+      'استكشف شركة تجريبية كبيرة',
+  'You are exploring a large sample company. Use the menu to start the scenario again.':
+      'أنت تستكشف شركة تجريبية كبيرة. استخدم القائمة لبدء السيناريو من جديد.',
+  'Steps':
+      'الخطوات',
+  'Name and logo':
+      'الاسم والشعار',
+  'Any color you want':
+      'أي لون تريده',
+  'Your company or app name':
+      'اسم شركتك أو تطبيقك',
+  'Your design is back, as you left it.':
+      'عاد تصميمك كما تركته.',
+  'Clear':
+      'مسح',
+  'Clear your design':
+      'مسح تصميمك',
+  'Clear your design?':
+      'هل تريد مسح تصميمك؟',
+  'The app goes back to its original look.':
+      'سيعود التطبيق إلى شكله الأصلي.',
+  'Create a visit':
+      'أنشئ زيارة',
+  'You are the admin. Press "Create first visit" on the dashboard, pick a client, a service and a time later today, then press "Schedule".':
+      'أنت الآن المسؤول. اضغط «أنشئ أول زيارة» في لوحة التحكم، واختر عميلًا وخدمة وموعدًا لاحقًا اليوم، ثم اضغط «جدولة».',
+  'Dispatch it to a technician':
+      'أسندها إلى فني',
+  'Open the dispatch board, go to the queue, select your visit and assign it to a technician.':
+      'افتح لوحة التوزيع، وانتقل إلى قائمة الانتظار، وحدد زيارتك وأسندها إلى فني.',
+  'Now be the technician':
+      'كن الآن الفني',
+  'The visit is on its way to the technician\'s phone. Sign in as them to see only their work.':
+      'وصلت الزيارة إلى هاتف الفني. ادخل بحسابه لترى عمله فقط.',
+  'Enter as technician':
+      'ادخل كفني',
+  'Start the trip':
+      'ابدأ التنقل',
+  'Open your visit and press "Start trip". Your location is recorded.':
+      'افتح زيارتك واضغط «بدء التنقل». سيُسجَّل موقعك.',
+  'Start the work':
+      'ابدأ العمل',
+  'Press "Start work". The app only allows it near the site; in this demo you count as being there.':
+      'اضغط «بدء العمل». لا يسمح التطبيق بذلك إلا قرب الموقع، وفي هذه التجربة تُعد موجودًا فيه.',
+  'Complete the visit':
+      'أكمل الزيارة',
+  'Press "Complete visit". The invoice is issued by itself.':
+      'اضغط «إكمال الزيارة». ستصدر الفاتورة تلقائيًا.',
+  'Back to the office':
+      'عُد إلى المكتب',
+  'The work is done. Go back as the admin and open the visit to see its proof, its history and its invoice.':
+      'انتهى العمل. عُد بصفتك المسؤول وافتح الزيارة لترى إثباتها وسجلها وفاتورتها.',
+  'Back to admin':
+      'عودة إلى المسؤول',
+  'You ran the whole cycle':
+      'أتممت الدورة كاملة',
+  'From the office to the field and back, with proof at every step. Now make it yours.':
+      'من المكتب إلى الميدان ثم العودة، مع إثبات في كل خطوة. والآن اجعله تطبيقك.',
+  'See the offer':
+      'شاهد العرض',
+  'First month free':
+      'الشهر الأول مجانًا',
+  'First {0} months free':
+      'أول {0} أشهر مجانًا',
+  'The first month':
+      'الشهر الأول',
+  '{0}, then {1} every {2} months for the whole company ({3} a month). Up to {4} users and {5} GB of photos. Delivered as a PWA on a private link. Changes to your version are free within a limit; anything beyond it is a paid feature we agree on first.':
+      '{0}، ثم {1} كل {2} أشهر للشركة كاملة ({3} شهريًا). حتى {4} مستخدمين و{5} جيجابايت للصور. يصلك التطبيق بصيغة PWA على رابط خاص. التعديلات على نسختك مجانية ضمن حد معين، وما يتجاوزه يصبح ميزة مدفوعة نتفق عليها أولًا.',
+  'You have seen it work. Now make it yours.':
+      'رأيته يعمل بنفسك، والآن اجعله تطبيقك.',
+  'a month for the whole company':
+      'شهريًا للشركة كاملة',
+  'You pay {0} every {1} months, after the free period.':
+      'تدفع {0} كل {1} أشهر بعد الفترة المجانية.',
+  'Less than a cup of coffee a month':
+      'أقل من ثمن فنجان قهوة شهريًا',
+  'Only {0} per user with a full team':
+      '{0} فقط لكل مستخدم عند اكتمال الفريق',
+  'No card and nothing to pay today':
+      'بلا بطاقة، ولا شيء تدفعه اليوم',
+  'Up to {0} users, with no fee per user':
+      'حتى {0} مستخدمين، دون رسوم لكل مستخدم',
+  'Setup, your colors and your logo are free':
+      'الإعداد وألوانك وشعارك مجانًا',
+  'Changes to your version are free within a limit':
+      'التعديلات على نسختك مجانية ضمن حد معين',
+  'Not convinced after the free month? Leave and pay nothing':
+      'لم تقتنع بعد الشهر المجاني؟ غادر دون أن تدفع شيئًا',
+  'Request your version now':
+      'اطلب نسختك الآن',
+  'Manage your technicians and maintenance from one app.':
+      'أدِر الفنيين والصيانة من تطبيق واحد.',
+  'Schedule visits, dispatch your technicians and get proof of every job: live location, photos and a clear record, in an app with your colors and your logo.':
+      'جدول الزيارات، ووزّع فنييك، واحصل على إثبات لكل مهمة: موقع مباشر وصور وسجل واضح، في تطبيق بألوانك وشعارك.',
+  'No sign-up and no card. Your design stays saved in this browser.':
+      'بلا تسجيل ولا بطاقة. يبقى تصميمك محفوظًا في هذا المتصفح.',
+  'Try the full cycle':
+      'جرّب الدورة كاملة',
+  'Follow one visit from start to finish, as the admin and then as the technician.':
+      'تابع زيارة واحدة من بدايتها إلى نهايتها، بصفتك المسؤول ثم بصفتك الفني.',
+  'Changes to your version':
+      'التعديلات على نسختك',
+  'Want something changed in your version? Write it in your request. Changes are free within a limit. If we find that what you ask for goes beyond it, it becomes a paid feature, and we agree on its price with you before any work starts.':
+      'هل تريد تعديل شيء في نسختك؟ اكتبه في طلبك. التعديلات مجانية ضمن حد معين، وإذا وجدنا أن ما تطلبه يتجاوز هذا الحد فإنه يصبح ميزة مدفوعة، ونتفق معك على سعرها قبل بدء أي عمل.',
+  'Changes to your version are free within a limit. If we find that what you ask for goes beyond it, it becomes a paid feature, and we agree on its price with you before any work starts.':
+      'التعديلات على نسختك مجانية ضمن حد معين. وإذا وجدنا أن ما تطلبه يتجاوز هذا الحد فإنه يصبح ميزة مدفوعة، ونتفق معك على سعرها قبل بدء أي عمل.',
+  'Free within a limit':
+      'مجانًا ضمن حد معين',
+  'Larger features':
+      'الميزات الأكبر',
+  'Paid, agreed first':
+      'مدفوعة بعد الاتفاق',
+  'No. {0}. We only ask for payment after that.':
+      'لا. {0}، ولا نطلب الدفع إلا بعد ذلك.',
+  'What do I pay after the free period?':
+      'كم أدفع بعد الفترة المجانية؟',
+  'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. Small changes are free within a limit; anything beyond it is a paid feature, and nothing is built before you agree on its price.':
+      'كل ما لا يقوم به التطبيق اليوم: حقل جديد أو تقرير جديد أو شاشة جديدة أو ربط بنظام آخر. التعديلات الصغيرة مجانية ضمن حد معين، وما يتجاوزه يصبح ميزة مدفوعة، ولا ننفذ شيئًا قبل الاتفاق على سعره.',
+  'The demo data starts again every time you open the page. Only your design is kept, in this browser, until you clear it. Nothing is sent until you press send on your request.':
+      'تبدأ بيانات التجربة من جديد في كل مرة تفتح فيها الصفحة. ولا يُحفظ إلا تصميمك، في هذا المتصفح، إلى أن تمسحه. ولا يُرسل شيء حتى تضغط إرسال في طلبك.',
+  'Prices in US dollars. The demo runs only in your browser.':
+      'الأسعار بالدولار الأمريكي. تعمل التجربة في متصفحك فقط.',
+  'We have received your request':
+      'استلمنا طلبك',
+  'We are preparing your version and will deliver it to you. We will contact you very soon on {0}.':
+      'نعمل على تجهيز نسختك وسنسلّمها لك، وسنتواصل معك قريبًا جدًا على {0}.',
+  'Back to the app':
+      'العودة إلى التطبيق',
+  'What do you want changed in your version? (optional)':
+      'ما الذي تريد تعديله في نسختك؟ (اختياري)',
 };

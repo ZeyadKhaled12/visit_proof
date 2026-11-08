@@ -14,7 +14,7 @@ class AppOffer {
 
   // --- The one plan ----------------------------------------------------------
 
-  static const int freeMonths = 6;
+  static const int freeMonths = 1;
   static const int periodMonths = 6;
 
   /// Price of every [periodMonths] after the free months.
@@ -36,13 +36,28 @@ class AppOffer {
   static String get monthlyEquivalent =>
       usd((pricePerPeriod / periodMonths * 100).round() / 100);
 
+  /// What one user costs a month when the company uses all its seats.
+  static String get monthlyPerUser =>
+      usd((pricePerPeriod / periodMonths / maxUsers * 100).round() / 100);
+
+  /// "First month free".
+  static String get freeTitle => freeMonths == 1
+      ? 'First month free'.tr
+      : 'First {0} months free'.trArgs([freeMonths]);
+
+  /// The free period, as a line in a price list.
+  static String get freeSpan => freeMonths == 1
+      ? 'The first month'.tr
+      : 'Months 1 to {0}'.trArgs([freeMonths]);
+
   /// The offer in one paragraph, as shown on the request page.
   static String get summary =>
-      'First {0} months free, then {1} every {2} months for the whole company. Up to {3} users and {4} GB of photos. Delivered as a PWA on a private link. Special requests are priced separately, after we discuss them with you.'
+      '{0}, then {1} every {2} months for the whole company ({3} a month). Up to {4} users and {5} GB of photos. Delivered as a PWA on a private link. Changes to your version are free within a limit; anything beyond it is a paid feature we agree on first.'
           .trArgs([
-        freeMonths,
+        freeTitle,
         usd(pricePerPeriod),
         periodMonths,
+        monthlyEquivalent,
         maxUsers,
         photoStorageGb,
       ]);

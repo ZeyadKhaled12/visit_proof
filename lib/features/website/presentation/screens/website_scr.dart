@@ -2,8 +2,8 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../widgets/studio_widget_panel.dart';
 import '../widgets/website_widget_brand.dart';
+import '../widgets/website_widget_offer.dart';
 import '../widgets/website_widget_parts.dart';
 import '../widgets/website_widget_sections.dart';
 import 'website_request_scr.dart';
@@ -27,13 +27,14 @@ class WebsiteApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const WebsiteScr(),
+      home: const WebsiteStudioScr(),
     );
   }
 }
 
-/// The landing page: Wizpo's apps, then the one available today (Visit
-/// Proof) — what it does, how to get it and what it costs.
+/// The details page, opened from the app: Wizpo's apps, then the one
+/// available today (Visit Proof) — what it does, how to get it and what it
+/// costs.
 class WebsiteScr extends StatefulWidget {
   const WebsiteScr({super.key});
 
@@ -47,26 +48,6 @@ class _WebsiteScrState extends State<WebsiteScr> {
   final _pricing = GlobalKey();
   final _faq = GlobalKey();
 
-  /// "?demo" opens the studio straight away ("?demo=admin" or
-  /// "?demo=technician" also signs in) and "?request" the request page, so
-  /// a link can take a customer directly there.
-  @override
-  void initState() {
-    super.initState();
-    final query = Uri.base.queryParameters;
-    if (query.containsKey('demo')) {
-      final role = query['demo'];
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _openStudio();
-        if (role == 'admin' || role == 'technician') {
-          StudioWidgetPanel.viewAs(technician: role == 'technician');
-        }
-      });
-    } else if (query.containsKey('request')) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _openRequest());
-    }
-  }
-
   void _scrollTo(GlobalKey key) {
     final target = key.currentContext;
     if (target == null) return;
@@ -74,8 +55,8 @@ class _WebsiteScrState extends State<WebsiteScr> {
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
-  void _openStudio() => Navigator.push(
-      context, MaterialPageRoute(builder: (_) => const WebsiteStudioScr()));
+  /// This page is opened on top of the app.
+  void _openStudio() => Navigator.maybePop(context);
 
   void _openRequest() => Navigator.push(
       context, MaterialPageRoute(builder: (_) => const WebsiteRequestScr()));
@@ -92,8 +73,7 @@ class _WebsiteScrState extends State<WebsiteScr> {
         elevation: 0,
         scrolledUnderElevation: 1,
         shadowColor: WebTheme.shadowColor,
-        automaticallyImplyLeading: false,
-        titleSpacing: WebsiteLayout.gutter(context),
+        iconTheme: const IconThemeData(color: WebTheme.textPrimary),
         title: const WebsiteLogo(),
         actions: [
           if (wide) ...[
@@ -124,6 +104,7 @@ class _WebsiteScrState extends State<WebsiteScr> {
           children: [
             WebsiteHero(
                 onTryDemo: _openStudio, onBrowse: () => _scrollTo(_apps)),
+            WebsiteOfferSection(onRequest: _openRequest),
             KeyedSubtree(
                 key: _apps,
                 child: WebsiteApps(

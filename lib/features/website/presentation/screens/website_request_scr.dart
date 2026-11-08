@@ -7,12 +7,13 @@ import '../../../../configs/app_theme.dart';
 import '../../../../core/utils/general_widgets/g_widget_brand_mark.dart';
 import '../../data/datasource/website_request_remote_data_source.dart';
 import '../../data/models/website_request_model.dart';
-import '../widgets/studio_widget_panel.dart';
+import '../widgets/studio_widget_dock.dart';
 import '../widgets/website_widget_parts.dart';
 import '../website_theme.dart';
 
-/// The visitor sends the design they made, their contact details and any
-/// notes. The request goes to the owner's database (not connected yet).
+/// The visitor sends the design they made, their contact details and what
+/// they want changed. The request goes to the owner's database (not connected
+/// yet).
 class WebsiteRequestScr extends StatefulWidget {
   const WebsiteRequestScr({super.key});
 
@@ -26,8 +27,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
   final _company = TextEditingController();
   final _phone = TextEditingController();
   final _email = TextEditingController();
-  final _comments = TextEditingController();
-  bool _custom = false;
+  final _changes = TextEditingController();
   bool _agreed = false;
   bool _sending = false;
   bool _sent = false;
@@ -38,7 +38,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
     _company.dispose();
     _phone.dispose();
     _email.dispose();
-    _comments.dispose();
+    _changes.dispose();
     super.dispose();
   }
 
@@ -57,8 +57,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
         company: _company.text,
         phone: _phone.text,
         email: _email.text,
-        customChanges: _custom,
-        comments: _comments.text,
+        requestedChanges: _changes.text,
       ),
     );
     if (!mounted) return;
@@ -107,7 +106,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                     color: WebTheme.statGreen, size: 38),
               ),
               const SizedBox(height: 18),
-              Text('Your request has been sent'.tr,
+              Text('We have received your request'.tr,
                   textAlign: TextAlign.center,
                   style: WebTheme.font(
                       color: WebTheme.textPrimary,
@@ -115,7 +114,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                       fontWeight: FontWeight.w800)),
               const SizedBox(height: 10),
               Text(
-                  'We will contact you on {0} to confirm your request, then send you the private link to your app.'
+                  'We are preparing your version and will deliver it to you. We will contact you very soon on {0}.'
                       .trArgs([_phone.text.trim()]),
                   textAlign: TextAlign.center,
                   style: WebTheme.font(
@@ -124,7 +123,7 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                       height: 1.6)),
               const SizedBox(height: 24),
               WebsiteButton(
-                text: 'Back to the website'.tr,
+                text: 'Back to the app'.tr,
                 icon: Icons.home_rounded,
                 onPressed: () =>
                     Navigator.popUntil(context, (route) => route.isFirst),
@@ -153,41 +152,24 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
             _field(_email, 'Email (optional)'.tr,
                 keyboard: TextInputType.emailAddress),
             const SizedBox(height: 6),
-            _label('Which version do you want?'.tr),
-            _VersionOption(
-              selected: !_custom,
-              title: 'Standard version with my design'.tr,
-              subtitle:
-                  'Everything in the demo with your colors, fonts, icon and name. Included in the plan.'
-                      .tr,
-              onTap: () => setState(() => _custom = false),
-            ),
-            const SizedBox(height: 10),
-            _VersionOption(
-              selected: _custom,
-              title: 'I also need custom changes'.tr,
-              subtitle:
-                  'Their price depends on what you ask for. We discuss your request with you and agree on the price before any work starts.'
-                      .tr,
-              onTap: () => setState(() => _custom = true),
-            ),
-            const SizedBox(height: 18),
-            _label(_custom
-                ? 'Describe the changes you need'.tr
-                : 'Notes (optional)'.tr),
+            _label('What do you want changed in your version? (optional)'.tr),
             TextFormField(
-              controller: _comments,
+              controller: _changes,
               maxLines: 5,
               maxLength: 1500,
               style: WebTheme.font(
                   color: WebTheme.textPrimary, fontSize: WebTheme.textBodyLarge),
-              decoration: _decoration(_custom
-                  ? 'e.g. add a field for the AC model, add my VAT number on the invoice…'
-                      .tr
-                  : 'Anything you want us to know'.tr),
-              validator: (value) => _custom && (value ?? '').trim().length < 10
-                  ? 'Tell us what to change (at least 10 characters).'.tr
-                  : null,
+              decoration: _decoration(
+                  'e.g. add a field for the AC model, add my VAT number on the invoice…'
+                      .tr),
+            ),
+            const SizedBox(height: 6),
+            WebsiteCheckLine(
+              icon: Icons.card_giftcard_rounded,
+              color: WebTheme.accentText,
+              text:
+                  'Changes to your version are free within a limit. If we find that what you ask for goes beyond it, it becomes a paid feature, and we agree on its price with you before any work starts.'
+                      .tr,
             ),
           ],
         ),
@@ -245,12 +227,12 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                   for (final slot in AppBrandColor.values)
                     Tooltip(
                       message:
-                          '${slot.label} ${AppBrand.hex(StudioWidgetPanel.colorOf(slot))}',
+                          '${slot.label} ${AppBrand.hex(StudioDesign.colorOf(slot))}',
                       child: Container(
                         width: 26,
                         height: 26,
                         decoration: BoxDecoration(
-                          color: StudioWidgetPanel.colorOf(slot),
+                          color: StudioDesign.colorOf(slot),
                           shape: BoxShape.circle,
                           border: Border.all(
                               color:
@@ -279,13 +261,11 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _label('What you will pay'.tr),
-              _PriceLine(
-                  'Months 1 to {0}'.trArgs([AppOffer.freeMonths]), 'Free'.tr),
+              _PriceLine(AppOffer.freeSpan, 'Free'.tr),
               _PriceLine(
                   'Every {0} months after that'.trArgs([AppOffer.periodMonths]),
                   AppOffer.usd(AppOffer.pricePerPeriod)),
-              if (_custom)
-                _PriceLine('Special requests'.tr, 'Priced per request'.tr),
+              _PriceLine('Changes to your version'.tr, 'Free within a limit'.tr),
               const SizedBox(height: 8),
               Text(AppOffer.summary,
                   style: WebTheme.font(
@@ -381,68 +361,6 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
           decoration: _decoration(hint),
         ),
       );
-}
-
-class _VersionOption extends StatelessWidget {
-  const _VersionOption({
-    required this.selected,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-  final bool selected;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: selected
-              ? WebTheme.primary.withValues(alpha: .07)
-              : WebTheme.locationChipBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-              color: selected ? WebTheme.primary : Colors.transparent,
-              width: 1.6),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-                selected
-                    ? Icons.radio_button_checked_rounded
-                    : Icons.radio_button_off_rounded,
-                color: selected ? WebTheme.primary : WebTheme.iconGrey),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: WebTheme.font(
-                          color: WebTheme.textPrimary,
-                          fontSize: WebTheme.textBodyLarge,
-                          fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 4),
-                  Text(subtitle,
-                      style: WebTheme.font(
-                          color: WebTheme.textSecondary,
-                          fontSize: WebTheme.textSmall,
-                          height: 1.5)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _PriceLine extends StatelessWidget {

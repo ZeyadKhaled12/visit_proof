@@ -31,7 +31,7 @@ class WebsiteHero extends StatelessWidget {
             color: WebTheme.accent,
             background: WebTheme.primary),
         const SizedBox(height: 18),
-        Text('Business apps made simple.'.tr,
+        Text('Manage your technicians and maintenance from one app.'.tr,
             textAlign: align,
             style: WebTheme.font(
                 color: WebTheme.textPrimary,
@@ -40,7 +40,7 @@ class WebsiteHero extends StatelessWidget {
                 height: 1.15)),
         const SizedBox(height: 16),
         Text(
-            'Ready-to-use apps for small teams. Choose the tools you need, try a live demo and start working in minutes — all in one workspace, with your colors and your logo.'
+            'Schedule visits, dispatch your technicians and get proof of every job: live location, photos and a clear record, in an app with your colors and your logo.'
                 .tr,
             textAlign: align,
             style: WebTheme.font(
@@ -54,19 +54,19 @@ class WebsiteHero extends StatelessWidget {
           alignment: wide ? WrapAlignment.start : WrapAlignment.center,
           children: [
             WebsiteButton(
-                text: 'Browse the apps'.tr,
-                icon: Icons.apps_rounded,
-                onPressed: onBrowse),
-            WebsiteButton(
                 text: 'Try {0} live'.trArgs(['Visit Proof'.tr]),
                 icon: Icons.play_arrow_rounded,
-                outlined: true,
                 onPressed: onTryDemo),
+            WebsiteButton(
+                text: 'Browse the apps'.tr,
+                icon: Icons.apps_rounded,
+                outlined: true,
+                onPressed: onBrowse),
           ],
         ),
         const SizedBox(height: 18),
         Text(
-            'No sign-up and no card. The demo resets every time you open it.'
+            'No sign-up and no card. Your design stays saved in this browser.'
                 .tr,
             textAlign: align,
             style: WebTheme.font(
@@ -278,7 +278,7 @@ class WebsiteApps extends StatelessWidget {
                           fontSize: WebTheme.textHeadline,
                           fontWeight: FontWeight.w800)),
                   const SizedBox(height: 2),
-                  Text('Field visits with proof'.tr,
+                  Text('For managing technicians and maintenance'.tr,
                       style: WebTheme.font(
                           color: WebTheme.textSecondary,
                           fontSize: WebTheme.textBody)),
@@ -290,8 +290,7 @@ class WebsiteApps extends StatelessWidget {
           Wrap(spacing: 8, runSpacing: 8, children: [
             WebsiteBadge(text: 'Available now'.tr, color: WebTheme.statGreen),
             WebsiteBadge(
-                text: 'Free for the first {0} months'
-                    .trArgs([AppOffer.freeMonths]),
+                text: AppOffer.freeTitle,
                 color: WebTheme.accentText,
                 background: WebTheme.accent.withValues(alpha: .18)),
           ]),
@@ -505,8 +504,8 @@ class WebsiteSteps extends StatelessWidget {
     final steps = [
       (
         Icons.touch_app_rounded,
-        'Try the live demo',
-        'Use the real app as the admin and as a technician, with a sample company.'
+        'Try the full cycle',
+        'Follow one visit from start to finish, as the admin and then as the technician.'
       ),
       (
         Icons.palette_rounded,
@@ -608,7 +607,7 @@ class WebsitePricing extends StatelessWidget {
                   fontSize: WebTheme.textSubtitle,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 14),
-          Text('Free for {0} months'.trArgs([AppOffer.freeMonths]),
+          Text(AppOffer.freeTitle,
               style: WebTheme.font(
                   color: WebTheme.textPrimary,
                   fontSize: 30,
@@ -677,7 +676,7 @@ class WebsitePricing extends StatelessWidget {
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 16),
           _PriceRow(
-              label: 'Months 1 to {0}'.trArgs([AppOffer.freeMonths]),
+              label: AppOffer.freeSpan,
               value: 'Free'.tr),
           _PriceRow(
               label: 'Every {0} months after that'
@@ -686,14 +685,14 @@ class WebsitePricing extends StatelessWidget {
           _PriceRow(label: 'Setup, colors and logo'.tr, value: 'Free'.tr),
           _PriceRow(label: 'Extra fees per user'.tr, value: 'None'.tr),
           const SizedBox(height: 16),
-          Text('Changes made only for you'.tr,
+          Text('Changes to your version'.tr,
               style: WebTheme.font(
                   color: WebTheme.textPrimary,
                   fontSize: WebTheme.textTitle,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
           Text(
-              'Need something the app does not have? Write it in your request. Each special request is priced on its own, depending on what it needs, after we discuss it with you. Nothing is built before you agree.'
+              'Want something changed in your version? Write it in your request. Changes are free within a limit. If we find that what you ask for goes beyond it, it becomes a paid feature, and we agree on its price with you before any work starts.'
                   .tr,
               style: WebTheme.font(
                   color: WebTheme.textSecondary,
@@ -701,8 +700,9 @@ class WebsitePricing extends StatelessWidget {
                   height: 1.55)),
           const SizedBox(height: 10),
           _PriceRow(
-              label: 'Special requests'.tr,
-              value: 'Priced per request'.tr),
+              label: 'Changes to your version'.tr,
+              value: 'Free within a limit'.tr),
+          _PriceRow(label: 'Larger features'.tr, value: 'Paid, agreed first'.tr),
           const SizedBox(height: 14),
           Text(
               'If a period is not renewed, your app stays readable for {0} days so you can take your data, then it is deleted after a reminder.'
@@ -872,11 +872,11 @@ class WebsiteFaq extends StatelessWidget {
       ),
       (
         'Do I pay anything now?',
-        'No. Your first {0} months are free. We only ask for payment when they end.'
-            .trArgs([AppOffer.freeMonths])
+        'No. {0}. We only ask for payment after that.'
+            .trArgs([AppOffer.freeTitle])
       ),
       (
-        'What do I pay after the free months?',
+        'What do I pay after the free period?',
         '{0} every {1} months for your whole company, up to {2} users. There is no fee per user and no setup fee.'
             .trArgs([
           _usd(AppOffer.pricePerPeriod),
@@ -901,7 +901,7 @@ class WebsiteFaq extends StatelessWidget {
       ),
       (
         'What counts as a custom change?',
-        'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. We discuss your request with you, agree on its price, and only then start.'
+        'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. Small changes are free within a limit; anything beyond it is a paid feature, and nothing is built before you agree on its price.'
             .tr
       ),
       (
@@ -916,7 +916,7 @@ class WebsiteFaq extends StatelessWidget {
       ),
       (
         'Is the demo saving what I type?',
-        'No. The demo runs only in your browser and starts again from the beginning every time you open the page. Nothing is sent until you press send on your request.'
+        'The demo data starts again every time you open the page. Only your design is kept, in this browser, until you clear it. Nothing is sent until you press send on your request.'
             .tr
       ),
     ];
@@ -1055,7 +1055,7 @@ class WebsiteFooter extends StatelessWidget {
             ],
           ),
           Text(
-              'Prices in US dollars. This website is a demo: it saves nothing.'
+              'Prices in US dollars. The demo runs only in your browser.'
                   .tr,
               style: WebTheme.font(
                   color: WebTheme.textLightHint, fontSize: WebTheme.textSmall)),

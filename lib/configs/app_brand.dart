@@ -3,8 +3,8 @@
 // =============================================================================
 //
 // The website's design studio edits [AppBrand.current]; every screen redraws
-// with the new colors, fonts, text size, name and icon at once. Nothing here
-// is saved: the demo starts from the default look every time it opens.
+// with the new colors, fonts, text size, name and icon at once. The website
+// keeps the visitor's design between visits (WebsiteDesignLocalDataSource).
 //
 // Anything not set keeps the default value from AppTheme.
 // =============================================================================

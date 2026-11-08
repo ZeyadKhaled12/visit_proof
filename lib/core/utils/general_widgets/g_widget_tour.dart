@@ -255,6 +255,9 @@ class GWidgetTour extends StatefulWidget {
   final Map<String, BuildContext> targets;
 
   /// Whether help flags are shown. Changed from the app settings.
+  /// Where the "Help flags" setting is saved.
+  static const String flagsKey = 'show_help_flags';
+
   static final ValueNotifier<bool> showFlags = ValueNotifier(true);
 
   /// Plays [tour] over the current screen. Stops whose part is not on the
