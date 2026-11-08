@@ -90,15 +90,10 @@ class GWidgetTourFlag extends StatefulWidget {
     super.key,
     required this.tour,
     required this.child,
-    this.top = 8,
   });
 
   final GTour tour;
   final Widget child;
-
-  /// Distance of the flag below the status bar; the default centers it on
-  /// the app's top bars.
-  final double top;
 
   @override
   State<GWidgetTourFlag> createState() => _GWidgetTourFlagState();
@@ -123,8 +118,9 @@ class _GWidgetTourFlagState extends State<GWidgetTourFlag> {
                 : Align(
                     alignment: AlignmentDirectional.topEnd,
                     child: Padding(
-                      padding: EdgeInsets.only(top: widget.top + safeTop),
+                      padding: EdgeInsets.only(top: safeTop),
                       child: _HelpFlag(
+                        hanging: true,
                         onTap: () => GWidgetTour.start(context,
                             tour: widget.tour, targets: _targets),
                       ),
@@ -180,10 +176,13 @@ class GWidgetHelpButton extends StatelessWidget {
 /// A gold pennant with a question mark. Nothing else in the app is gold, so
 /// it stands out on every screen.
 class _HelpFlag extends StatelessWidget {
-  const _HelpFlag({required this.onTap});
+  const _HelpFlag({required this.onTap, this.hanging = false});
   final VoidCallback onTap;
 
-  static const double width = 40;
+  /// Hangs from the top edge of the screen, instead of sitting in a row.
+  final bool hanging;
+
+  static const double width = 30;
 
   @override
   Widget build(BuildContext context) {
@@ -195,8 +194,8 @@ class _HelpFlag extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Padding(
-          padding:
-              const EdgeInsetsDirectional.only(start: 8, top: 8, bottom: 8),
+          padding: EdgeInsetsDirectional.only(
+              start: 8, top: hanging ? 0 : 8, bottom: hanging ? 16 : 8),
           child: ClipPath(
             clipper: _PennantClipper(rtl: rtl),
             child: Material(
@@ -205,11 +204,11 @@ class _HelpFlag extends StatelessWidget {
                 onTap: onTap,
                 child: SizedBox(
                   width: width,
-                  height: 32,
+                  height: 24,
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 9),
+                    padding: const EdgeInsetsDirectional.only(start: 7),
                     child: Icon(Icons.question_mark_rounded,
-                        color: AppTheme.onReward, size: 18),
+                        color: AppTheme.onReward, size: 14),
                   ),
                 ),
               ),
@@ -230,7 +229,7 @@ class _PennantClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final w = size.width;
     final h = size.height;
-    const notch = 10.0;
+    const notch = 7.0;
     double x(double value) => rtl ? w - value : value;
     return Path()
       ..moveTo(x(0), 0)
@@ -258,6 +257,9 @@ class GWidgetTour extends StatefulWidget {
   /// Where the "Help flags" setting is saved.
   static const String flagsKey = 'show_help_flags';
 
+  /// A tour is on screen.
+  static final ValueNotifier<bool> playing = ValueNotifier(false);
+
   static final ValueNotifier<bool> showFlags = ValueNotifier(true);
 
   /// Plays [tour] over the current screen. Stops whose part is not on the
@@ -267,6 +269,7 @@ class GWidgetTour extends StatefulWidget {
     required GTour tour,
     Map<String, BuildContext> targets = const {},
   }) async {
+    playing.value = true;
     await Navigator.of(context, rootNavigator: true).push(PageRouteBuilder<void>(
       opaque: false,
       transitionDuration: const Duration(milliseconds: 260),
@@ -275,6 +278,7 @@ class GWidgetTour extends StatefulWidget {
       transitionsBuilder: (_, animation, __, child) =>
           FadeTransition(opacity: animation, child: child),
     ));
+    playing.value = false;
   }
 
   @override
@@ -601,7 +605,7 @@ class _GWidgetTourState extends State<GWidgetTour>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _Mascot(size: 96, idle: _idle),
+          GWidgetMascot(size: 96, idle: _idle),
           const SizedBox(height: 16),
           Text('Hi, I am Wizpoo'.tr,
               style: AppTheme.font(
@@ -717,7 +721,7 @@ class _GWidgetTourState extends State<GWidgetTour>
             ExcludeSemantics(
               child: Row(
                 children: [
-                  _Mascot(size: 52, idle: _idle),
+                  GWidgetMascot(size: 52, idle: _idle),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
@@ -953,8 +957,8 @@ class _Medal extends StatelessWidget {
 }
 
 /// Wizpoo, the guide: the app's map pin with a face.
-class _Mascot extends StatelessWidget {
-  const _Mascot({required this.size, required this.idle});
+class GWidgetMascot extends StatelessWidget {
+  const GWidgetMascot({super.key, required this.size, required this.idle});
   final double size;
   final Animation<double> idle;
 

@@ -53,9 +53,9 @@ enum _DockTab {
   String get label => _label.tr;
 }
 
-/// The controls beside the live app: the scenario's next step and the design
-/// tools. They stay open while the app stays visible, so one tap restyles
-/// the app in front of the visitor, with nothing to open or close.
+/// The design tools beside the live app, and on a computer the scenario's
+/// steps too (on a phone Wizpoo carries them). The app stays visible, so one
+/// tap restyles it in front of the visitor.
 class StudioWidgetDock extends StatefulWidget {
   const StudioWidgetDock({
     super.key,
@@ -76,8 +76,7 @@ class StudioWidgetDock extends StatefulWidget {
 }
 
 class _StudioWidgetDockState extends State<StudioWidgetDock> {
-  _DockTab _tab = _DockTab.guide;
-  bool _open = true;
+  late _DockTab _tab = widget.wide ? _DockTab.guide : _DockTab.colors;
   bool _custom = false;
   bool _noticeClosed = false;
   AppBrandColor _slot = AppBrandColor.primary;
@@ -118,12 +117,11 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
     _redraw();
   }
 
-  /// A tab opens its strip; the open tab's strip folds away for a bigger
-  /// app.
-  void _selectTab(_DockTab tab) => setState(() {
-        _open = tab != _tab || !_open;
-        _tab = tab;
-      });
+  /// The steps tab only exists beside the phone frame.
+  _DockTab get _active =>
+      !widget.wide && _tab == _DockTab.guide ? _DockTab.colors : _tab;
+
+  void _selectTab(_DockTab tab) => setState(() => _tab = tab);
 
   void _selectSlot(AppBrandColor slot) => setState(() {
         _slot = slot;
@@ -235,14 +233,13 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
           mainAxisSize: MainAxisSize.min,
           children: [
             header,
-            if (_open)
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: media.size.height * .3),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(14, 2, 14, 10),
-                  child: _content(),
-                ),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: media.size.height * .3),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(14, 2, 14, 10),
+                child: _content(),
               ),
+            ),
           ],
         ),
       ),
@@ -286,10 +283,10 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
       padding: const EdgeInsets.fromLTRB(6, 6, 6, 4),
       child: Row(children: [
         for (final tab in _DockTab.values)
-          Expanded(
+          if (widget.wide || tab != _DockTab.guide) Expanded(
             child: _TabButton(
               tab: tab,
-              selected: tab == _tab && (_open || widget.wide),
+              selected: tab == _active,
               onTap: () => _selectTab(tab),
             ),
           ),
@@ -305,7 +302,7 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
   }
 
   Widget _content() {
-    switch (_tab) {
+    switch (_active) {
       case _DockTab.guide:
         return _guide();
       case _DockTab.colors:
@@ -358,7 +355,7 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
-            value: step.index / StudioStep.total,
+            value: step.isIntro ? 0 : (step.number - 1) / StudioStep.total,
             minHeight: 5,
             color: WebTheme.accent,
             backgroundColor: WebTheme.iconLightGrey,
@@ -379,7 +376,7 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
                   child: done
                       ? const Icon(Icons.check_rounded,
                           color: WebTheme.onPrimary, size: 16)
-                      : Text('${step.index + 1}',
+                      : Text(step.isIntro ? '★' : '${step.number}',
                           style: WebTheme.font(
                               color: WebTheme.onPrimary,
                               fontSize: WebTheme.textSmall,
@@ -438,7 +435,8 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
         if (widget.wide) ...[
           const SizedBox(height: 18),
           for (final item in StudioStep.values)
-            if (item != StudioStep.finished) _stepLine(item, step),
+            if (item != StudioStep.finished && !item.isIntro)
+              _stepLine(item, step),
         ],
       ],
     );

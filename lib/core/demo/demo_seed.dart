@@ -45,10 +45,37 @@ class DemoSeed {
   static Future<void> run() =>
       _save(_DemoCompany(Random(7), DateTime.now()).build());
 
-  /// The website's guided scenario starts small: a few clients, services and
-  /// technicians and no visits, so the visitor's own visit is the only one.
+  /// The website's guided scenario: a company with its finished past work,
+  /// so the app looks alive, and nothing open, so the visitor's own visit is
+  /// the only one waiting.
   static Future<void> runScenario() =>
       _save(_DemoCompany(Random(7), DateTime.now()).buildScenario());
+
+  /// Who "Switch to technician" opens in test builds, with no sign-in: the
+  /// technician on the newest open visit, or else the first one.
+  static TechnicianDetailModel? technicianToTry() {
+    final prefs = LocalPref.sharedPreferences;
+    final technicians = (prefs.getStringList('technicians') ?? const [])
+        .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
+        .where((e) => e.email != null && e.password != null)
+        .toList();
+    if (technicians.isEmpty) return null;
+    const open = {
+      VisitStatus.assigned,
+      VisitStatus.onWay,
+      VisitStatus.inProgress,
+    };
+    final visits = (prefs.getStringList('visits') ?? const [])
+        .map((e) => VisitDetailModel.fromJson(jsonDecode(e)));
+    for (final visit in visits) {
+      if (!open.contains(visit.status)) continue;
+      final person = technicians
+          .where((e) => e.id == visit.technicianModel?.id)
+          .firstOrNull;
+      if (person != null) return person;
+    }
+    return technicians.first;
+  }
 
   static Future<void> _save(_DemoData data) async {
     final prefs = LocalPref.sharedPreferences;
@@ -98,6 +125,8 @@ class _DemoCompany {
   late final VisitHistoryActorModel admin = VisitHistoryActorModel(
       id: 'local-admin', name: 'Local Admin'.tr, role: 'admin');
 
+  static const int _scenarioVisits = 30;
+
   bool chance(double probability) => random.nextDouble() < probability;
   T pick<T>(List<T> items) => items[random.nextInt(items.length)];
 
@@ -110,12 +139,22 @@ class _DemoCompany {
   }
 
   _DemoData buildScenario() {
-    _categoriesAndServices();
-    _technicians();
-    _clients();
-    data.services.removeRange(4, data.services.length);
-    data.technicians.removeRange(2, data.technicians.length);
-    data.clients.removeRange(3, data.clients.length);
+    build();
+    final past = data.visits
+        .where((visit) =>
+            (visit.status == VisitStatus.completed ||
+                visit.status == VisitStatus.cancel) &&
+            visit.startDate != null &&
+            visit.startDate!.isBefore(today))
+        .toList();
+    final kept = past.sublist(max(0, past.length - _scenarioVisits));
+    final invoiceIds = kept.map((visit) => visit.invoiceID).toSet();
+    data.visits
+      ..clear()
+      ..addAll(kept);
+    data.invoices.retainWhere((invoice) => invoiceIds.contains(invoice.id));
+    data.payments
+        .retainWhere((payment) => invoiceIds.contains(payment.invoiceId));
     return data;
   }
 

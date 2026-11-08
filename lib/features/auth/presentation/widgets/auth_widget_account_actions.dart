@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app/app.dart';
 import '../../../../configs/app_theme.dart';
+import '../../../../core/demo/demo_mode.dart';
+import '../../../../core/demo/demo_seed.dart';
 import '../../../../core/services/services_locator.dart';
 import '../../../../core/session/app_session.dart';
 import '../../../../core/usecase/base_use_case.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/general_widgets/g_widget_loading.dart';
+import '../../domain/usecases/login_technician_uc.dart';
 import '../controller/auth_bloc.dart';
 import '../screens/tech_login_scr.dart';
 
@@ -30,6 +33,8 @@ class AuthWidgetAccountActions extends StatelessWidget {
         listenWhen: (previous, current) =>
             (previous.enterAsAdminRequestState == RequestState.loading &&
                 current.enterAsAdminRequestState == RequestState.loaded) ||
+            (previous.loginRequestState == RequestState.loading &&
+                current.loginRequestState == RequestState.loaded) ||
             (previous.logoutRequestState == RequestState.loading &&
                 current.logoutRequestState == RequestState.loaded),
         listener: (context, state) => backToHome(),
@@ -47,11 +52,12 @@ class AuthWidgetAccountActions extends StatelessWidget {
                     : 'Switch to technician'.tr,
                 color: technician ? AppTheme.primary : AppTheme.primary,
                 loading:
-                    state.enterAsAdminRequestState == RequestState.loading,
+                    state.enterAsAdminRequestState == RequestState.loading ||
+                        state.loginRequestState == RequestState.loading,
                 onTap: () => technician
                     ? context.read<AuthBloc>().add(const EnterAsAdminEvent(
                         noParameters: NoParameters()))
-                    : Navigator.pushNamed(context, TechLoginScr.route),
+                    : _switchToTechnician(context),
               ),
               const SizedBox(height: 8),
               _ActionTile(
@@ -66,6 +72,19 @@ class AuthWidgetAccountActions extends StatelessWidget {
         },
       ),
     );
+  }
+
+  /// Test builds go straight in as a technician. A customer's app asks for
+  /// the technician's own sign-in.
+  void _switchToTechnician(BuildContext context) {
+    final person = DemoMode.testData ? DemoSeed.technicianToTry() : null;
+    if (person == null) {
+      Navigator.pushNamed(context, TechLoginScr.route);
+      return;
+    }
+    context.read<AuthBloc>().add(LoginTechnicianEvent(
+        loginTechnicianParameters: LoginTechnicianParameters(
+            email: person.email!, password: person.password!)));
   }
 
   Future<void> _confirmLogout(BuildContext context) async {

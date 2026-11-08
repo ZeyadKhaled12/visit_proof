@@ -26,6 +26,10 @@ class DemoMode {
   /// customer's).
   static bool get testData => !customerApp;
 
+  /// The website's guide fills the new-visit form with sample data, so the
+  /// visitor can book a job with one press.
+  static bool prefillNewVisit = false;
+
   /// "I am at the site": technician actions use the visit's site location
   /// instead of the device GPS. On by default in the demo.
   static final ValueNotifier<bool> simulateOnSite = ValueNotifier(true);

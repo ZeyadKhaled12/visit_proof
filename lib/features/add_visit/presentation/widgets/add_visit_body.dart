@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/configs/app_theme.dart';
+import 'package:visit_proof/core/demo/demo_mode.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
 import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
 import 'package:visit_proof/features/add_visit/domain/usecases/add_visit_uc.dart';
@@ -74,6 +75,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
   final GlobalKey _startDateKey = GlobalKey();
 
   VisitStatus _status = VisitStatus.draft;
+  bool _prefilled = false;
 
   @override
   void initState() {
@@ -108,7 +110,30 @@ class _AddVisitBodyState extends State<AddVisitBody> {
         _allTechnicians = List.from(widget.technicians);
       });
     }
+    _prefillForDemo();
     super.didUpdateWidget(oldWidget);
+  }
+
+  /// In the website's guide the form starts filled with sample data.
+  void _prefillForDemo() {
+    if (!DemoMode.prefillNewVisit || _prefilled) return;
+    final client = widget.clients
+        .where((e) => (e.sites ?? const []).isNotEmpty)
+        .firstOrNull;
+    if (client == null || widget.services.isEmpty) return;
+    _prefilled = true;
+    _allClients = List.from(widget.clients);
+    _allServices = List.from(widget.services);
+    // Tomorrow morning is inside working hours whenever the site is opened.
+    final tomorrow = DateTime.now().add(const Duration(days: 1));
+    setState(() {
+      _selectedClient = client;
+      _allSites = client.sites!;
+      _selectedSite = client.sites!.first;
+      _selectedService = _allServices.first;
+      _startDate = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+      _startTime = const TimeOfDay(hour: 10, minute: 0);
+    });
   }
 
   void _moveList(GlobalKey key) {

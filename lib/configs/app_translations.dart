@@ -1976,8 +1976,6 @@ const Map<String, String> arabicTranslations = {
       'سيعود التطبيق إلى شكله الأصلي.',
   'Create a visit':
       'أنشئ زيارة',
-  'You are the admin. Press "Create first visit" on the dashboard, pick a client, a service and a time later today, then press "Schedule".':
-      'أنت الآن المسؤول. اضغط «أنشئ أول زيارة» في لوحة التحكم، واختر عميلًا وخدمة وموعدًا لاحقًا اليوم، ثم اضغط «جدولة».',
   'Dispatch it to a technician':
       'أسندها إلى فني',
   'Open the dispatch board, go to the queue, select your visit and assign it to a technician.':
@@ -2082,4 +2080,47 @@ const Map<String, String> arabicTranslations = {
       'العودة إلى التطبيق',
   'What do you want changed in your version? (optional)':
       'ما الذي تريد تعديله في نسختك؟ (اختياري)',
+  // --- Website: Wizpoo's guide ------------------------------------------------
+  'Let us start':
+      'لنبدأ',
+  'Your help is always here':
+      'مساعدتك دائمًا هنا',
+  'I will walk you through the whole cycle: you book a visit as the admin, carry it out as the technician, then see the proof. Just press what I point at.':
+      'سأرافقك في الدورة كاملة: تحجز زيارة بصفتك المسؤول، وتنفذها بصفتك الفني، ثم ترى الإثبات. ما عليك إلا الضغط على ما أشير إليه.',
+  'See this small gold flag at the top? It is on every screen. Tap it anytime and I will explain everything on that screen.':
+      'هل ترى هذا العلم الذهبي الصغير في الأعلى؟ إنه موجود في كل شاشة. اضغطه في أي وقت وسأشرح لك كل ما في تلك الشاشة.',
+  'You are the admin. Press "New visit" on the dashboard. The form is already filled with sample data, so just press "Schedule".':
+      'أنت الآن المسؤول. اضغط «زيارة جديدة» في لوحة التحكم. النموذج معبأ ببيانات تجريبية، فما عليك إلا الضغط على «جدولة».',
+  'Press "New visit" to book a job.':
+      'اضغط «زيارة جديدة» لحجز مهمة.',
+  'I filled this in with sample data. Change anything you like, then press "Schedule".':
+      'عبأت النموذج ببيانات تجريبية. غيّر ما تشاء، ثم اضغط «جدولة».',
+  'Your new visit is waiting in the queue. Open the queue.':
+      'زيارتك الجديدة تنتظر في قائمة الانتظار. افتح القائمة.',
+  'Let the app pick: press "Suggest technician".':
+      'دع التطبيق يختار: اضغط «اقتراح فني».',
+  'This technician fits best. Tap their name.':
+      'هذا الفني هو الأنسب. اضغط على اسمه.',
+  'Press "Assign" to send it to their phone.':
+      'اضغط «إسناد» لإرسالها إلى هاتفه.',
+  'Open your visit.':
+      'افتح زيارتك.',
+  'Press "Start trip".':
+      'اضغط «بدء التنقل».',
+  'Press "Start work".':
+      'اضغط «بدء العمل».',
+  'Press "Complete visit".':
+      'اضغط «إكمال الزيارة».',
+  'Press "Confirm". The time and your location are saved as proof.':
+      'اضغط «تأكيد». سيُحفظ الوقت وموقعك كإثبات.',
+  'Tick this box to confirm your location.':
+      'حدد هذا المربع لتأكيد موقعك.',
+  'Great job!':
+      'أحسنت!',
+  'Step {0} of {1}':
+      'الخطوة {0} من {1}',
+  'Hide':
+      'إخفاء',
+  'Design your app':
+      'صمّم تطبيقك',
 };

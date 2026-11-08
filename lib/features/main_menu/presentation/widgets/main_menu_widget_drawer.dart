@@ -28,13 +28,17 @@ class MainMenuWidgetDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _Header(),
-          GTourTarget(id: 'sections', child: Expanded(
+          Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
+              cacheExtent: 100000,
+              padding: const EdgeInsets.fromLTRB(10, 4, 10, 0),
               children: [
+                GTourTarget(id: 'sections', child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                 for (final group in MainMenuGroup.values) ...[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 14, 12, 6),
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 2),
                     child: Text(group.label,
                         style: AppTheme.font(
                             color: AppTheme.textLightHint,
@@ -52,10 +56,13 @@ class MainMenuWidgetDrawer extends StatelessWidget {
                       },
                     ),
                 ],
+                  ],
+                )),
+                // Scrolls with the list, so the sections get the height.
+                const _Footer(),
               ],
             ),
-          )),
-          const _Footer(),
+          ),
         ],
       )),
     );
@@ -92,7 +99,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
-          20, MediaQuery.paddingOf(context).top + 22, 20, 22),
+          16, MediaQuery.paddingOf(context).top + 12, 16, 12),
       decoration: BoxDecoration(
         color: AppTheme.primary,
         borderRadius:
@@ -144,7 +151,7 @@ class _Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: 2),
       child: Material(
         color: selected
             ? AppTheme.primary.withValues(alpha: .10)
@@ -154,11 +161,11 @@ class _Item extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: selected
                         ? AppTheme.primary
@@ -173,23 +180,13 @@ class _Item extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tab.label,
-                          style: AppTheme.font(
-                              color: selected
-                                  ? AppTheme.primary
-                                  : AppTheme.textPrimary,
-                              fontSize: AppTheme.textBodyLarge,
-                              fontWeight: FontWeight.w800)),
-                      Text(tab.hint,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTheme.font(
-                              color: AppTheme.textSecondary, fontSize: AppTheme.textCaption)),
-                    ],
-                  ),
+                  child: Text(tab.label,
+                      style: AppTheme.font(
+                          color: selected
+                              ? AppTheme.primary
+                              : AppTheme.textPrimary,
+                          fontSize: AppTheme.textBodyLarge,
+                          fontWeight: FontWeight.w800)),
                 ),
               ],
             ),

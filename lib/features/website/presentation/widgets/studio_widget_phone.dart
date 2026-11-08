@@ -5,7 +5,10 @@ import '../../../../app/visit_proof_app.dart';
 /// The real app running inside a phone-shaped frame. The app is told the
 /// frame is its screen, so its layout matches a phone.
 class StudioWidgetPhone extends StatelessWidget {
-  const StudioWidgetPhone({super.key});
+  const StudioWidgetPhone({super.key, this.overlay});
+
+  /// Drawn over the app, inside the frame.
+  final Widget? overlay;
 
   /// A slightly short phone screen: the frame fills the browser's height,
   /// so a shorter screen draws the app larger.
@@ -33,7 +36,7 @@ class StudioWidgetPhone extends StatelessWidget {
         child: RepaintBoundary(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(38),
-            child: StudioWidgetAppScreen(size: screen),
+            child: StudioWidgetAppScreen(size: screen, overlay: overlay),
           ),
         ),
       ),
@@ -43,22 +46,30 @@ class StudioWidgetPhone extends StatelessWidget {
 
 /// The app sized to [size] as if that were the whole screen.
 class StudioWidgetAppScreen extends StatelessWidget {
-  const StudioWidgetAppScreen({super.key, required this.size});
+  const StudioWidgetAppScreen({super.key, required this.size, this.overlay});
   final Size size;
+  final Widget? overlay;
 
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     return SizedBox.fromSize(
       size: size,
-      child: MediaQuery(
-        data: media.copyWith(
-          size: size,
-          padding: EdgeInsets.zero,
-          viewPadding: EdgeInsets.zero,
-          viewInsets: EdgeInsets.zero,
-        ),
-        child: const VisitProofApp(),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: MediaQuery(
+              data: media.copyWith(
+                size: size,
+                padding: EdgeInsets.zero,
+                viewPadding: EdgeInsets.zero,
+                viewInsets: EdgeInsets.zero,
+              ),
+              child: const VisitProofApp(),
+            ),
+          ),
+          if (overlay != null) Positioned.fill(child: overlay!),
+        ],
       ),
     );
   }

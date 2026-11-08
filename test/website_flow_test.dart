@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visit_proof/app/app.dart';
+import 'package:visit_proof/app/visit_proof_app.dart';
 import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_offer.dart';
 import 'package:visit_proof/configs/app_theme.dart';
@@ -18,10 +19,13 @@ import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/core/utils/enums/payment_status_enum.dart';
 import 'package:visit_proof/core/utils/enums/priority_enum.dart';
 import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_menu_button.dart';
 import 'package:visit_proof/features/add_visit/data/datasource/add_visit_remote_data_source.dart';
 import 'package:visit_proof/features/add_visit/domain/usecases/add_visit_uc.dart';
 import 'package:visit_proof/features/auth/data/datasource/auth_remote_data_source.dart';
 import 'package:visit_proof/features/auth/domain/usecases/login_technician_uc.dart';
+import 'package:visit_proof/features/auth/presentation/screens/tech_login_scr.dart';
+import 'package:visit_proof/features/invoices/data/models/invoice_detail_model.dart';
 import 'package:visit_proof/features/clients/data/datasource/clients_remote_data_source.dart';
 import 'package:visit_proof/features/services/data/models/service_model.dart';
 import 'package:visit_proof/features/technicians/data/models/technician_detail_model.dart';
@@ -37,6 +41,7 @@ import 'package:visit_proof/features/website/presentation/screens/website_reques
 import 'package:visit_proof/features/website/presentation/screens/website_scr.dart';
 import 'package:visit_proof/features/website/presentation/screens/website_studio_scr.dart';
 import 'package:visit_proof/features/website/presentation/studio_scenario.dart';
+import 'package:visit_proof/features/website/presentation/widgets/studio_widget_bot.dart';
 import 'package:visit_proof/features/website/presentation/widgets/website_widget_offer.dart';
 
 List<T> _read<T>(String key, T Function(Map<String, dynamic>) parse) =>
@@ -48,6 +53,22 @@ StudioStep _step() => StudioScenario.stepFor(
     StudioScenario.leadingVisit(_read('visits', VisitDetailModel.fromJson))
         ?.status,
     technician: AppSession.isTechnician);
+
+/// The test font's letters are all as wide as they are tall, so only here
+/// long labels can run out of room.
+void _noRealErrors(WidgetTester tester, String during) {
+  final error = tester.takeException();
+  if (error != null && !'$error'.contains('overflowed')) {
+    fail('$during: $error');
+  }
+}
+
+/// The guide animates forever, so time is moved by hand.
+Future<void> _settle(WidgetTester tester) async {
+  for (var i = 0; i < 25; i++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+}
 
 /// The data sources simulate latency, and test time only moves when pumped.
 Future<T> _done<T>(WidgetTester tester, Future<T> work) async {
@@ -90,10 +111,24 @@ void main() {
     expect(AppOffer.monthlyPerUser, r'$0.25');
   });
 
-  test('the scenario starts small, with no visits', () async {
-    expect(_read('visits', VisitDetailModel.fromJson), isEmpty);
-    expect(_read('technicians', TechnicianDetailModel.fromJson), hasLength(2));
+  test('the sample company has only finished work', () async {
+    final visits = _read('visits', VisitDetailModel.fromJson);
+    expect(visits, isNotEmpty);
+    expect(visits.length, lessThanOrEqualTo(30));
+    expect(
+        visits.every((e) =>
+            e.status == VisitStatus.completed ||
+            e.status == VisitStatus.cancel),
+        isTrue);
     expect(_step(), StudioStep.createVisit);
+  });
+
+  test('every invoice of the sample company belongs to a visit', () {
+    final visits = _read('visits', VisitDetailModel.fromJson);
+    final invoices = _read('invoices', InvoiceDetailModel.fromJson);
+    expect(invoices.length, visits.length);
+    final ids = visits.map((e) => e.invoiceID).toSet();
+    expect(invoices.every((e) => ids.contains(e.id)), isTrue);
   });
 
   testWidgets('the full cycle works on the scenario data, step by step',
@@ -142,7 +177,10 @@ void main() {
     expect(_step(), StudioStep.startTrip);
     final visible = await _done(
         tester, VisitsRemoteDataSource().getVisits(const NoParameters()));
-    expect(visible.map((e) => e.id), [created.id]);
+    expect(visible.map((e) => e.id), contains(created.id));
+    expect(
+        visible.where((e) => e.status == VisitStatus.assigned).map((e) => e.id),
+        [created.id]);
 
     Future<void> move(VisitStatus status) async {
       final visit = _read('visits', VisitDetailModel.fromJson).first;
@@ -173,6 +211,7 @@ void main() {
         step.hint,
         if (step.action != null) step.action!,
       ],
+      ...StudioBotLines.all,
     ];
     expect(texts.where((t) => !arabicTranslations.containsKey(t)), isEmpty);
   });
@@ -250,17 +289,77 @@ void main() {
       await show(tester);
       expect(find.byType(WebsiteStudioScr), findsOneWidget);
       expect(find.byType(WebsiteScr), findsNothing);
-      expect(find.text('Create a visit'), findsOneWidget);
-      expect(find.text('Create first visit'), findsOneWidget);
+      expect(find.text('Hi, I am Wizpoo'), findsOneWidget);
+      expect(find.text('New visit'), findsOneWidget);
       expect(find.text('For managing technicians and maintenance'),
           findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('the app takes nearly the whole screen', (tester) async {
+      await show(tester);
+      final app = tester.getRect(find.byType(VisitProofApp));
+      expect(app.height, greaterThanOrEqualTo(780 - 50));
+      expect(app.width, 390);
+    });
+
+    testWidgets('Wizpoo introduces the flag, then points at the next button',
+        (tester) async {
+      await show(tester);
+      await _settle(tester);
+      await tester.tap(find.text('Let us start'));
+      await _settle(tester);
+      expect(find.text('Your help is always here'), findsOneWidget);
+
+      final flag = tester.getRect(find.byTooltip('How this screen works'));
+      expect(flag.height, lessThanOrEqualTo(40));
+      expect(flag.top, 50, reason: 'hangs from the top of the app');
+
+      await tester.tap(find.text('Got it'));
+      await _settle(tester);
+      expect(find.text('Step 1 of ${StudioStep.total}'), findsOneWidget);
+
+      final ring = tester.getRect(find.byTooltip('Wizpoo'));
+      final button = tester.getRect(find.text('New visit'));
+      expect((ring.center - button.center).distance, lessThan(120),
+          reason: 'Wizpoo flies next to the button to press');
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the menu switches to a technician with no sign-in',
+        (tester) async {
+      await show(tester);
+      await _settle(tester);
+      await tester.tap(find.text('Let us start'));
+      await _settle(tester);
+      await tester.tap(find.text('Got it'));
+      await _settle(tester);
+
+      final menu = find.descendant(
+          of: find.byType(VisitProofApp), matching: find.byType(GWidgetMenuButton));
+      await tester.tap(menu.first);
+      await _settle(tester);
+      final drawerServices = find.descendant(
+          of: find.byType(Drawer), matching: find.text('Services'));
+      expect(drawerServices, findsOneWidget);
+      expect(tester.getRect(drawerServices).bottom, lessThan(660),
+          reason: 'every section shows without scrolling, even on a short phone');
+
+      final toggle = find.text('Switch to technician');
+      await tester.ensureVisible(toggle);
+      await _settle(tester);
+      await tester.tap(toggle);
+      await _settle(tester);
+
+      expect(AppSession.isTechnician, isTrue);
+      expect(find.byType(TechLoginScr), findsNothing);
+      _noRealErrors(tester, 'switch');
+    });
+
     testWidgets('one tap changes the colors with the app still on screen',
         (tester) async {
       await show(tester);
-      await tester.tap(find.text('Colors'));
+      await tester.tap(find.byTooltip('Design your app'));
       await tester.pump(const Duration(milliseconds: 300));
 
       final preset = AppBrand.presets[1];
@@ -269,13 +368,15 @@ void main() {
 
       expect(AppBrand.value[AppBrandColor.primary], preset.primary);
       expect(find.byType(BottomSheet), findsNothing);
-      expect(find.text('Create first visit'), findsOneWidget);
+      expect(find.text('New visit'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
     testWidgets('every design tab fits', (tester) async {
       await show(tester);
-      for (final tab in ['Colors', 'Text', 'Name and logo', 'Steps']) {
+      await tester.tap(find.byTooltip('Design your app'));
+      await tester.pump(const Duration(milliseconds: 300));
+      for (final tab in ['Colors', 'Text', 'Name and logo']) {
         await tester.tap(find.text(tab).last);
         await tester.pump(const Duration(milliseconds: 300));
         expect(tester.takeException(), isNull, reason: tab);
@@ -303,8 +404,8 @@ void main() {
       }
 
       expect(find.byType(PopupMenuItem<dynamic>), findsNothing);
-      expect(_read('visits', VisitDetailModel.fromJson), isEmpty);
-      expect(_read('technicians', TechnicianDetailModel.fromJson), hasLength(2));
+      expect(_step(), StudioStep.createVisit);
+      expect(_read('technicians', TechnicianDetailModel.fromJson), isNotEmpty);
       expect(
           LocalPref.sharedPreferences
               .getString(WebsiteDesignLocalDataSource.key),

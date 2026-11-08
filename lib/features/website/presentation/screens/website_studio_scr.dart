@@ -2,7 +2,9 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/demo/demo_mode.dart';
+import '../../data/datasource/website_design_local_data_source.dart';
 import '../studio_scenario.dart';
+import '../widgets/studio_widget_bot.dart';
 import '../widgets/studio_widget_dock.dart';
 import '../widgets/studio_widget_install.dart';
 import '../widgets/studio_widget_phone.dart';
@@ -13,9 +15,10 @@ import 'website_request_scr.dart';
 import 'website_scr.dart';
 import '../website_theme.dart';
 
-/// The website's first screen: the real app, a guide through its full cycle
-/// and the design tools. On a computer the app sits in a phone frame beside
-/// them; on a phone it fills the screen with them docked underneath.
+/// The website's first screen: the real app with Wizpoo guiding the visitor
+/// through its full cycle. On a computer the app sits in a phone frame beside
+/// the steps and design tools; on a phone it fills the screen and the design
+/// tools open under it from the top bar.
 class WebsiteStudioScr extends StatefulWidget {
   const WebsiteStudioScr({super.key});
 
@@ -34,15 +37,20 @@ class WebsiteStudioScr extends StatefulWidget {
 enum _Menu { language, details, restart, simulate, fullCompany }
 
 class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
-  static const double _dockWidth = 400;
+  static const double _dockWidth = 340;
 
   final _scenario = StudioScenario();
   bool _offerShown = false;
+
+  /// Phones show the design tools only when asked, or to a returning visitor
+  /// whose design was brought back.
+  bool _designOpen = WebsiteDesignLocalDataSource.restored;
 
   @override
   void initState() {
     super.initState();
     if (WebsiteStudioScr.requestInstallsApp) StudioInstall.start();
+    DemoMode.prefillNewVisit = true;
     _scenario
       ..start()
       ..addListener(_onScenario);
@@ -56,6 +64,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
     final query = Uri.base.queryParameters;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (query['demo'] == 'technician') {
+        _scenario.skipIntro();
         StudioScenario.viewAs(technician: true);
       } else if (query.containsKey('request')) {
         _openRequest();
@@ -68,6 +77,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   @override
   void dispose() {
     if (WebsiteStudioScr.requestInstallsApp) StudioInstall.stop();
+    DemoMode.prefillNewVisit = false;
     _scenario.dispose();
     super.dispose();
   }
@@ -115,6 +125,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
     final wide = MediaQuery.sizeOf(context).width >= 980;
     final dock = StudioWidgetDock(
         scenario: _scenario, wide: wide, onOffer: _showOffer);
+    final bot = StudioWidgetBot(scenario: _scenario, onOffer: _showOffer);
 
     return Scaffold(
       backgroundColor: WebTheme.scaffoldBackground,
@@ -122,6 +133,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         backgroundColor: WebTheme.surface,
         surfaceTintColor: Colors.transparent,
         automaticallyImplyLeading: false,
+        toolbarHeight: 50,
         titleSpacing: 12,
         title: InkWell(onTap: _openDetails, child: const _Title()),
         actions: [
@@ -135,8 +147,20 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
             ),
             const WebsiteLanguageButton(),
           ],
+          if (!wide)
+            IconButton(
+              tooltip: 'Design your app'.tr,
+              isSelected: _designOpen,
+              visualDensity: VisualDensity.compact,
+              onPressed: () => setState(() => _designOpen = !_designOpen),
+              icon: const Icon(Icons.palette_outlined,
+                  color: WebTheme.textPrimary),
+              selectedIcon: const Icon(Icons.palette_rounded,
+                  color: WebTheme.accentText),
+            ),
           IconButton(
             tooltip: 'The offer'.tr,
+            visualDensity: VisualDensity.compact,
             onPressed: _showOffer,
             icon: const Icon(Icons.redeem_rounded, color: WebTheme.accentText),
           ),
@@ -162,10 +186,10 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
               children: [
                 Container(
                     width: _dockWidth, color: WebTheme.surface, child: dock),
-                const Expanded(
+                Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Center(child: StudioWidgetPhone()),
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Center(child: StudioWidgetPhone(overlay: bot)),
                   ),
                 ),
               ],
@@ -175,11 +199,12 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) => StudioWidgetAppScreen(
-                        size: Size(
-                            constraints.maxWidth, constraints.maxHeight)),
+                        size:
+                            Size(constraints.maxWidth, constraints.maxHeight),
+                        overlay: bot),
                   ),
                 ),
-                dock,
+                if (_designOpen) dock,
               ],
             ),
     );

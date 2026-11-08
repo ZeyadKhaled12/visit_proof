@@ -18,7 +18,6 @@ import '../../auth/domain/usecases/login_technician_uc.dart';
 import '../../auth/domain/usecases/logout_uc.dart';
 import '../../auth/presentation/widgets/auth_widget_account_actions.dart';
 import '../../dispatch/presentation/screens/dispatch_scr.dart';
-import '../../technicians/data/models/technician_detail_model.dart';
 import '../../visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../data/datasource/website_design_local_data_source.dart';
 
@@ -26,9 +25,19 @@ import '../data/datasource/website_design_local_data_source.dart';
 /// dispatches a visit, the technician carries it out, the office sees the
 /// proof.
 enum StudioStep {
+  welcome(
+      'Hi, I am Wizpoo',
+      'I will walk you through the whole cycle: you book a visit as the admin, carry it out as the technician, then see the proof. Just press what I point at.',
+      technician: false,
+      action: 'Let us start'),
+  helpFlag(
+      'Your help is always here',
+      'See this small gold flag at the top? It is on every screen. Tap it anytime and I will explain everything on that screen.',
+      technician: false,
+      action: 'Got it'),
   createVisit(
       'Create a visit',
-      'You are the admin. Press "Create first visit" on the dashboard, pick a client, a service and a time later today, then press "Schedule".',
+      'You are the admin. Press "New visit" on the dashboard. The form is already filled with sample data, so just press "Schedule".',
       technician: false),
   assign(
       'Dispatch it to a technician',
@@ -76,8 +85,15 @@ enum StudioStep {
   String get title => _title.tr;
   String get hint => _hint.tr;
 
+  /// Wizpoo's introduction, before the cycle starts.
+  bool get isIntro => index < StudioStep.createVisit.index;
+
+  /// Position in the cycle, from 1.
+  int get number => index - StudioStep.createVisit.index + 1;
+
   /// Steps to play, not counting the end.
-  static int get total => StudioStep.finished.index;
+  static int get total =>
+      StudioStep.finished.index - StudioStep.createVisit.index;
 }
 
 /// Follows the visitor through [StudioStep]s by watching the app's own data,
@@ -94,32 +110,49 @@ class StudioScenario extends ChangeNotifier {
     VisitStatus.scheduled,
   ];
 
-  StudioStep step = StudioStep.createVisit;
+  StudioStep step = StudioStep.welcome;
+
+  /// How far the introduction has got.
+  int _intro = 0;
+  static const int _introSteps = 2;
 
   /// The visitor loaded the large sample company: nothing to follow.
   bool exploring = false;
 
   bool busy = false;
-  VisitDetailModel? _visit;
   Timer? _timer;
 
   void start() {
     AppSession.current.addListener(_check);
+    GWidgetTour.playing.addListener(_onTourChanged);
     _timer = Timer.periodic(_checkEvery, (_) => _check());
     _check();
+  }
+
+  void skipIntro() {
+    _intro = _introSteps;
+    _check();
+  }
+
+  /// Trying the flag is the best way to finish its introduction.
+  void _onTourChanged() {
+    if (step == StudioStep.helpFlag && !GWidgetTour.playing.value) skipIntro();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
     AppSession.current.removeListener(_check);
+    GWidgetTour.playing.removeListener(_onTourChanged);
     super.dispose();
   }
 
-  /// The visit that got furthest; null before there is one to follow.
+  /// The visitor's visit that got furthest; null before there is one. The
+  /// sample company's own visits do not count.
   static VisitDetailModel? leadingVisit(Iterable<VisitDetailModel> visits) {
+    final own = visits.where((e) => !(e.id ?? '').startsWith('demo-')).toList();
     for (final status in _progress) {
-      for (final visit in visits) {
+      for (final visit in own) {
         if (visit.status == status) return visit;
       }
     }
@@ -149,9 +182,11 @@ class StudioScenario extends ChangeNotifier {
     final visits =
         (LocalPref.sharedPreferences.getStringList('visits') ?? const [])
             .map((e) => VisitDetailModel.fromJson(jsonDecode(e)));
-    _visit = leadingVisit(visits);
-    final next =
-        stepFor(_visit?.status, technician: AppSession.isTechnician);
+    final visit = leadingVisit(visits);
+    if (visit != null) _intro = _introSteps;
+    final next = _intro < _introSteps
+        ? StudioStep.values[_intro]
+        : stepFor(visit?.status, technician: AppSession.isTechnician);
     if (next == step) return;
     step = next;
     notifyListeners();
@@ -161,11 +196,14 @@ class StudioScenario extends ChangeNotifier {
   /// handled by the page, which owns the offer.
   Future<void> runAction() async {
     switch (step) {
+      case StudioStep.welcome:
+      case StudioStep.helpFlag:
+        _intro++;
+        _check();
       case StudioStep.assign:
         await App.navigatorKey.currentState?.pushNamed(DispatchScr.route);
       case StudioStep.becomeTechnician:
-        await _run(() => viewAs(
-            technician: true, technicianId: _visit?.technicianModel?.id));
+        await _run(() => viewAs(technician: true));
       case StudioStep.backToAdmin:
         await _run(() => viewAs(technician: false));
       default:
@@ -182,14 +220,10 @@ class StudioScenario extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Opens the app as the admin, or as a technician: the one given, or the
-  /// demo technician.
-  static Future<void> viewAs(
-      {required bool technician, String? technicianId}) async {
+  /// Opens the app as the admin, or as the technician who has work waiting.
+  static Future<void> viewAs({required bool technician}) async {
     if (technician) {
-      final person = _technicians()
-          .where((e) => technicianId != null && e.id == technicianId)
-          .firstOrNull;
+      final person = DemoSeed.technicianToTry();
       await sl<LoginTechnicianUc>().call(LoginTechnicianParameters(
           email: person?.email ?? DemoSeed.technicianEmail,
           password: person?.password ?? DemoSeed.technicianPassword));
@@ -198,11 +232,6 @@ class StudioScenario extends ChangeNotifier {
     }
     AuthWidgetAccountActions.backToHome();
   }
-
-  static List<TechnicianDetailModel> _technicians() =>
-      (LocalPref.sharedPreferences.getStringList('technicians') ?? const [])
-          .map((e) => TechnicianDetailModel.fromJson(jsonDecode(e)))
-          .toList();
 
   /// Starts the scenario again from nothing, or loads the large sample
   /// company to look around in. The visitor's design stays.
@@ -222,6 +251,7 @@ class StudioScenario extends ChangeNotifier {
         }
         exploring = fullCompany;
         fullCompany ? await DemoSeed.run() : await DemoSeed.runScenario();
+        _intro = _introSteps;
         step = StudioStep.createVisit;
         await sl<EnterAsAdminUc>().call(const NoParameters());
       });

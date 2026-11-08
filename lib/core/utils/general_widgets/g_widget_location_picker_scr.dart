@@ -355,7 +355,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final resultsMaxHeight = (screenHeight * 0.43).clamp(140.0, 350.0);
 
-    return GWidgetTourFlag(tour: AppTours.locationPicker, top: 16, child: Scaffold(
+    return GWidgetTourFlag(tour: AppTours.locationPicker, child: Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppTheme.scaffoldBackground,
       body: SafeArea(
