@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_brand_mark.dart';
 import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_language.dart';
@@ -36,7 +37,7 @@ class RoleSelectBody extends StatelessWidget {
                     color: AppTheme.textSecondary,
                     fontSize: AppTheme.textBody)),
             const SizedBox(height: 18),
-            _RoleCard(
+            GTourTarget(id: 'admin', child: _RoleCard(
               icon: Icons.admin_panel_settings_rounded,
               color: AppTheme.primary,
               title: 'Admin'.tr,
@@ -45,9 +46,9 @@ class RoleSelectBody extends StatelessWidget {
               loading: enteringAsAdmin,
               onTap: () => context.read<AuthBloc>().add(
                   const EnterAsAdminEvent(noParameters: NoParameters())),
-            ),
+            )),
             const SizedBox(height: 14),
-            _RoleCard(
+            GTourTarget(id: 'technician', child: _RoleCard(
               icon: Icons.engineering_rounded,
               color: AppTheme.primary,
               title: 'Technician'.tr,
@@ -55,11 +56,9 @@ class RoleSelectBody extends StatelessWidget {
                   'See your visits, check in on site and add proof photos.'.tr,
               loading: false,
               onTap: () => Navigator.pushNamed(context, TechLoginScr.route),
-            ),
-            if (GWidgetAppSettings.hasAny) ...[
-              const SizedBox(height: 32),
-              const GWidgetAppSettings(),
-            ],
+            )),
+            const SizedBox(height: 32),
+              GTourTarget(id: 'settings', child: const GWidgetAppSettings()),
           ],
         ),
       ),

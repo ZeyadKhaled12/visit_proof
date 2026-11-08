@@ -73,15 +73,18 @@ class GWidgetButton extends StatelessWidget {
                         strokeWidth: loadingStrokeWidth ?? 5,
                         height: loadingSize),
                   )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (text != null)
-                        // A long label shrinks instead of overflowing.
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(text ?? '',
+                // A long label shrinks instead of overflowing. Align and
+                // FittedBox also work where the button has no width limit,
+                // such as in an app bar.
+                : Align(
+                    heightFactor: 1,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (text != null)
+                            Text(text ?? '',
                                 textAlign: TextAlign.center,
                                 style: AppTheme.font(
                                     color: isEnable
@@ -89,10 +92,10 @@ class GWidgetButton extends StatelessWidget {
                                         : AppTheme.textDarkHint,
                                     fontSize: fontSize,
                                     fontWeight: fontWeight ?? FontWeight.w700)),
-                          ),
-                        ),
-                      if (widget != null) widget!
-                    ],
+                          if (widget != null) widget!
+                        ],
+                      ),
+                    ),
                   )),
       ),
     );

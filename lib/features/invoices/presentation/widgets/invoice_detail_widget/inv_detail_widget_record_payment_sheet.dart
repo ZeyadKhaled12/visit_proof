@@ -59,6 +59,7 @@ class _InvDetailWidgetRecordPaymentSheetState
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
+            help: 'Records money received for this invoice, up to the remaining balance.'.tr,
             title: 'Record a payment'.tr,
             subtitle: widget.subtitle,
             body: Form(

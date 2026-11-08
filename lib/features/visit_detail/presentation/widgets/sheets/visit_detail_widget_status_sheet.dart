@@ -92,6 +92,7 @@ class _VisitDetailWidgetStatusSheetState
         : VisitDetailHelpers.statusColor(target);
 
     return VisitDetailWidgetActionSheet(
+      help: 'Confirms moving this visit to its next status. Some changes ask for a reason.'.tr,
       title: VisitDetailHelpers.statusActionLabel(_from, target),
       subtitle: VisitDetailHelpers.statusHint(target),
       requestState: (state) => state.changeStatusRequestState,

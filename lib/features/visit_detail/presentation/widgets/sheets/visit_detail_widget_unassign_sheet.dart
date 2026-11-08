@@ -43,6 +43,7 @@ class _VisitDetailWidgetUnassignSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
+      help: 'Takes the technician off this visit so it can be given to someone else.'.tr,
       title: 'Unassign technician'.tr,
       subtitle: widget.visit.technicianModel?.name,
       requestState: (state) => state.unassignTechnicianRequestState,

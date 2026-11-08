@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -139,7 +140,11 @@ class _AddServiceBodyState extends State<AddServiceBody> {
               const SizedBox(height: 24),
 
               // Title
-              Column(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -159,6 +164,15 @@ class _AddServiceBodyState extends State<AddServiceBody> {
                       color: AppTheme.textSecondary,
                       fontSize: AppTheme.textBody,
                     ),
+                  ),
+                ],
+              ),
+                  ),
+                  GWidgetHelpButton(
+                    title: widget.serviceModel?.id != null
+                        ? 'Update Service'.tr
+                        : 'Create New Service'.tr,
+                    help: 'Saves the price, duration and checklist, so you can pick this service on any visit.'.tr,
                   ),
                 ],
               ),

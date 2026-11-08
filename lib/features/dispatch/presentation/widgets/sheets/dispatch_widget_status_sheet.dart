@@ -39,6 +39,7 @@ class _DispatchWidgetStatusSheetState extends State<DispatchWidgetStatusSheet> {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Moves this visit to another status in its workflow.'.tr,
       title: 'Update status'.tr,
       requestState: (state) => state.changeStatusRequestState,
       builder: (context, state, loading) {

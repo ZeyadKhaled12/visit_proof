@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -116,12 +118,12 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GWidgetTourFlag(tour: AppTours.locationView, bottom: 290, child: Scaffold(
       backgroundColor: AppTheme.textPrimary,
       body: SafeArea(
         child: Stack(
           children: [
-            FlutterMap(
+            GTourTarget(id: 'map', child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
                 initialCenter: _location,
@@ -159,7 +161,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                   ],
                 ),
               ],
-            ),
+            )),
 
             // Same floating back button and pill styling as your picker.
             Positioned(
@@ -183,7 +185,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
             ),
 
             // Moves only the CAMERA back to the marker, not the marker itself.
-            PositionedDirectional(
+            GTourTarget(id: 'recenter', child: PositionedDirectional(
               bottom: 220,
               end: 16,
               child: Material(
@@ -199,10 +201,10 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                   onPressed: _recenterMap,
                 ),
               ),
-            ),
+            )),
 
             // Bottom card: read-only address and coordinates; no confirm button.
-            Positioned(
+            GTourTarget(id: 'details', child: Positioned(
               left: 16,
               right: 16,
               bottom: 40,
@@ -251,10 +253,10 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                   ],
                 ),
               ),
-            ),
+            )),
           ],
         ),
       ),
-    );
+    ));
   }
 }

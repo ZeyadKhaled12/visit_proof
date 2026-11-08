@@ -60,6 +60,7 @@ class AppPalette {
     required this.scrim,
     required this.onScrim,
     required this.reward,
+    required this.onReward,
   });
 
   // --- Brand -----------------------------------------------------------------
@@ -157,8 +158,11 @@ class AppPalette {
   /// Text and lines drawn on [scrim].
   final Color onScrim;
 
-  /// Stars and points earned in a tour.
+  /// The help flag and the stars of a tour.
   final Color reward;
+
+  /// The question mark on the help flag.
+  final Color onReward;
 
   AppPalette copyWith({
     Color? primary,
@@ -189,6 +193,7 @@ class AppPalette {
     Color? scrim,
     Color? onScrim,
     Color? reward,
+    Color? onReward,
   }) {
     return AppPalette(
       primary: primary ?? this.primary,
@@ -219,6 +224,7 @@ class AppPalette {
       scrim: scrim ?? this.scrim,
       onScrim: onScrim ?? this.onScrim,
       reward: reward ?? this.reward,
+      onReward: onReward ?? this.onReward,
     );
   }
 }
@@ -259,6 +265,7 @@ class AppTheme {
     scrim: Color(0xD90B1020),
     onScrim: Color(0xFFFFFFFF),
     reward: Color(0xFFFFC23D),
+    onReward: Color(0xFF2B2000),
   );
 
   // ===========================================================================
@@ -296,6 +303,7 @@ class AppTheme {
     scrim: Color(0xE6050810),
     onScrim: Color(0xFFFFFFFF),
     reward: Color(0xFFFFC23D),
+    onReward: Color(0xFF2B2000),
   );
 
   // ===========================================================================
@@ -470,6 +478,7 @@ class AppTheme {
   static Color get scrim => palette.scrim;
   static Color get onScrim => palette.onScrim;
   static Color get reward => palette.reward;
+  static Color get onReward => palette.onReward;
 
   /// Text style in the app font. Use instead of TextStyle everywhere.
   static TextStyle font({

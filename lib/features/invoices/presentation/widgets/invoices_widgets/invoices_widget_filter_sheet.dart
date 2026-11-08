@@ -65,6 +65,7 @@ class _InvoicesWidgetFilterSheetState extends State<InvoicesWidgetFilterSheet> {
   @override
   Widget build(BuildContext context) {
     return GWidgetBottomSheet(
+      help: 'Narrow the list by choosing one or more options in each group.'.tr,
       title: 'Filter invoices'.tr,
       subtitle: 'Pick one or more options in each group'.tr,
       body: Column(

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/configs/app_translations.dart';
 import 'package:visit_proof/core/network/error/failure.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
 import 'package:visit_proof/core/utils/enums/visit_status_enum.dart';
@@ -46,10 +48,13 @@ Future<void> _showDashboard(WidgetTester tester,
       data: MediaQuery.of(context).copyWith(disableAnimations: reduceMotion),
       child: child!,
     ),
-    home: BlocProvider.value(
-      value: bloc,
-      child: BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) => DashboardBody(state: state),
+    home: GWidgetTourFlag(
+      tour: AppTours.dashboard,
+      child: BlocProvider.value(
+        value: bloc,
+        child: BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) => DashboardBody(state: state),
+        ),
       ),
     ),
   ));
@@ -67,6 +72,7 @@ Future<void> _advance(WidgetTester tester) async {
 
 void main() {
   setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
+  tearDown(() => GWidgetTour.showFlags.value = true);
 
   testWidgets('tour visits every section and ends with the medal',
       (tester) async {
@@ -75,6 +81,7 @@ void main() {
     await tester.tap(find.byTooltip('How this screen works'));
     await _advance(tester);
     expect(find.text('Master your dashboard'), findsOneWidget);
+    expect(find.text('Hi, I am Wizpoo'), findsOneWidget);
 
     await tester.tap(find.text('Start the mission'));
     await _advance(tester);
@@ -101,7 +108,7 @@ void main() {
     await _advance(tester);
     await _advance(tester);
     expect(find.text('Mission complete!'), findsOneWidget);
-    expect(find.text('+90 XP'), findsOneWidget);
+    expect(find.textContaining('XP'), findsNothing);
 
     await tester.tap(find.text('Back to work'));
     await _advance(tester);
@@ -121,5 +128,39 @@ void main() {
     await tester.tap(find.text('Skip tour'));
     await tester.pumpAndSettle();
     expect(find.byType(GWidgetTour), findsNothing);
+  });
+
+  testWidgets('the setting hides the flag', (tester) async {
+    await _showDashboard(tester, reduceMotion: true);
+    expect(find.byTooltip('How this screen works'), findsOneWidget);
+
+    GWidgetTour.showFlags.value = false;
+    await tester.pump();
+    expect(find.byTooltip('How this screen works'), findsNothing);
+  });
+
+  test('every tour text has an Arabic translation', () {
+    final tours = [
+      AppTours.roleSelect, AppTours.techLogin, AppTours.adminMenu,
+      AppTours.technicianMenu, AppTours.dashboard, AppTours.dashboardInsight,
+      AppTours.dashboardTechnician, AppTours.dispatch, AppTours.visits,
+      AppTours.addVisit, AppTours.visitDetail, AppTours.technicianHome,
+      AppTours.invoices, AppTours.invoiceDetail, AppTours.collections,
+      AppTours.clients, AppTours.addClient, AppTours.clientDetail,
+      AppTours.technicians, AppTours.addTechnician, AppTours.technicianDetail,
+      AppTours.services, AppTours.locationPicker, AppTours.locationView,
+    ];
+    final missing = <String>{
+      for (final tour in tours) ...[
+        tour.mission,
+        tour.about,
+        for (final step in tour.steps) ...[
+          step.title,
+          step.text,
+          if (step.tip != null) step.tip!,
+        ],
+      ],
+    }.where((text) => !arabicTranslations.containsKey(text));
+    expect(missing, isEmpty);
   });
 }

@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +22,7 @@ class VisitDetailScr extends StatelessWidget {
       argu = VisitDetailArgu.fromJson(data);
     }
 
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.visitDetail, child: BlocProvider(
         create: (context) => sl<VisitDetailBloc>()
           ..add(GetVisitDetailEvent(
               getVisitDetailParameters:
@@ -37,7 +39,7 @@ class VisitDetailScr extends StatelessWidget {
           builder: (context, state) {
             return VisitDetailBody(visitID: argu.visitID, state: state);
           },
-        ));
+        )));
   }
 }
 

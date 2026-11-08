@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +23,7 @@ class TechHomeWidgetDrawer extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadiusDirectional.horizontal(end: Radius.circular(28))),
-      child: Column(
+      child: GWidgetTourFlag(tour: AppTours.technicianMenu, bottom: 220, child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
@@ -69,7 +71,7 @@ class TechHomeWidgetDrawer extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
+          GTourTarget(id: 'tips', child: Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
               children: [
@@ -88,7 +90,7 @@ class TechHomeWidgetDrawer extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          )),
           SafeArea(
             top: false,
             child: Padding(
@@ -96,17 +98,15 @@ class TechHomeWidgetDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (GWidgetAppSettings.hasAny) ...[
-                    const GWidgetAppSettings(),
+                  GTourTarget(id: 'settings', child: const GWidgetAppSettings()),
                     const SizedBox(height: 8),
-                  ],
-                  const AuthWidgetAccountActions(),
+                  GTourTarget(id: 'account', child: const AuthWidgetAccountActions()),
                 ],
               ),
             ),
           ),
         ],
-      ),
+      )),
     );
   }
 }

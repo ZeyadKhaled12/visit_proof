@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/features/technicians/domain/usecases/get_tech_detail_uc.dart';
@@ -20,7 +22,7 @@ class TechnicianDetailScr extends StatelessWidget {
       argu = TechnicianDetailArgu.fromJson(data);
     }
 
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.technicianDetail, child: BlocProvider(
         create: (context) => sl<TechBloc>()
           ..add(GetTechDetailEvent(
               getTechDetailParameters:
@@ -42,7 +44,7 @@ class TechnicianDetailScr extends StatelessWidget {
                     state.removeTechnicianRequestState == RequestState.loading,
                 technicianDetailModel: state.technicianDetailModel);
           },
-        ));
+        )));
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,15 +86,15 @@ class _TechHomeBodyState extends State<TechHomeBody> {
   /// The header, then the visit cards, built only as they scroll into view.
   Widget _list(List<VisitDetailModel> active, List<VisitDetailModel> visits) {
     final header = <Widget>[
-      _Greeting(
+      GTourTarget(id: 'greeting', child: _Greeting(
           openCount: _count(TechVisitsFilter.open),
-          todayCount: _count(TechVisitsFilter.today)),
+          todayCount: _count(TechVisitsFilter.today))),
       if (active.isNotEmpty) ...[
         const SizedBox(height: 16),
-        _ActiveJob(visit: active.first, onTap: () => _open(active.first)),
+        GTourTarget(id: 'active', child: _ActiveJob(visit: active.first, onTap: () => _open(active.first))),
       ],
       const SizedBox(height: 16),
-      Wrap(
+      GTourTarget(id: 'filters', child: Wrap(
         spacing: 8,
         runSpacing: 8,
         children: [
@@ -105,7 +106,7 @@ class _TechHomeBodyState extends State<TechHomeBody> {
               onTap: () => setState(() => _filter = filter),
             ),
         ],
-      ),
+      )),
       const SizedBox(height: 16),
       if (visits.isEmpty && !widget.loading)
         GWidgetEmpty(
@@ -128,7 +129,7 @@ class _TechHomeBodyState extends State<TechHomeBody> {
         final visit = visits[index - header.length];
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: VisitsWidgetCard(visit: visit, onReturn: _refresh),
+          child: GTourTarget(id: 'card_${index - header.length}', child: VisitsWidgetCard(visit: visit, onReturn: _refresh)),
         );
       },
     );

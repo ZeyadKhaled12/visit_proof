@@ -47,6 +47,7 @@ class DispatchWidgetVisitSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'A quick view of this visit and what you can do with it from the board.'.tr,
       title: 'Visit'.tr,
       builder: (context, state, loading) {
         final visit = state.visitById(visitID);

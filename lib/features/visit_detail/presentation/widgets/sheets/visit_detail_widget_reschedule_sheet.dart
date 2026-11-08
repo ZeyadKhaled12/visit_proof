@@ -108,6 +108,7 @@ class _VisitDetailWidgetRescheduleSheetState
     final technician = widget.visit.technicianModel;
 
     return VisitDetailWidgetActionSheet(
+      help: 'Pick a new date and time for this visit.'.tr,
       title: 'Reschedule visit'.tr,
       subtitle:
           'Currently {0}'.trArgs([VisitDetailHelpers.dateTime(widget.visit.startDate)]),

@@ -45,6 +45,7 @@ class _AddVisitWidgetSiteSheetState extends State<AddVisitWidgetSiteSheet> {
   @override
   Widget build(BuildContext context) {
     return GWidgetBottomSheet(
+        help: 'Add or correct the place where the work happens for this client.'.tr,
         title: widget.site == null ? 'Add new site'.tr : 'Update Site'.tr,
         body: SingleChildScrollView(
           child: Column(

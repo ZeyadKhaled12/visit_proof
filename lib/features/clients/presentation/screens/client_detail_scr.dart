@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/utils/enums.dart';
@@ -20,7 +22,7 @@ class ClientDetailScr extends StatelessWidget {
       argu = ClientDetailArgu.fromJson(data);
     }
 
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.clientDetail, child: BlocProvider(
         create: (context) => sl<ClientsBloc>()
           ..add(GetClientDetailEvent(
               getClientDetailParameters:
@@ -47,7 +49,7 @@ class ClientDetailScr extends StatelessWidget {
                     state.removeClientRequestState == RequestState.loading,
                 client: state.clientDetailModel);
           },
-        ));
+        )));
   }
 }
 

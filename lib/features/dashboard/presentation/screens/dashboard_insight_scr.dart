@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -110,16 +112,17 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
     _lastPeriod = period;
     final now = DateTime.now();
 
-    return GWidgetNaviBody(
+    return GWidgetTourFlag(tour: AppTours.dashboardInsight, child: GWidgetNaviBody(
       title: DashboardInsightScr.titleOf(widget.insight),
       body: ListView(
+        cacheExtent: 100000, // keeps every section built for the guided tour
         padding: const EdgeInsets.only(top: 12, bottom: 32),
         children: [
-          DashboardBreadcrumb(trail: widget.trail),
+          GTourTarget(id: 'trail', child: DashboardBreadcrumb(trail: widget.trail)),
           if (widget.fixedPeriod == null &&
               widget.insight != DashboardInsight.attention) ...[
             const SizedBox(height: 10),
-            DashboardWidgetPeriodBar(period: period),
+            GTourTarget(id: 'period', child: DashboardWidgetPeriodBar(period: period)),
           ],
           const SizedBox(height: 14),
           Padding(
@@ -128,7 +131,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _content(DashboardState state, DashboardPeriod period, DateTime now) {
@@ -163,7 +166,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
     final filtered = _filter(withCancelled, buckets);
 
     return _Stack(children: [
-      DashboardGrid(columns: 3, children: [
+      GTourTarget(id: 'stats', child: DashboardGrid(columns: 3, children: [
         DashboardMiniStat(
           label: 'Visits'.tr,
           value: '${active.length}',
@@ -176,15 +179,15 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         DashboardMiniStat(
             label: 'Per day'.tr,
             value: (active.length / period.days).toStringAsFixed(1)),
-      ]),
+      ])),
       DashboardSection(
         title: 'Visits over time'.tr,
         subtitle: 'Tap a bar to list that {0}'.trArgs([period.days > 31 ? 'week'.tr : 'day']),
-        child: DashboardWidgetTrendChart(
+        child: GTourTarget(id: 'chart', child: DashboardWidgetTrendChart(
           buckets: buckets,
           selectedIndex: _bucket,
           onSelect: (index) => setState(() => _bucket = index),
-        ),
+        )),
       ),
       DashboardSection(
         title: 'By status'.tr,
@@ -255,7 +258,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         .toList();
 
     return _Stack(children: [
-      DashboardGrid(columns: 3, children: [
+      GTourTarget(id: 'stats', child: DashboardGrid(columns: 3, children: [
         DashboardMiniStat(
           label: 'Completion'.tr,
           value: DashboardFormat.percent(rate),
@@ -268,16 +271,16 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         DashboardMiniStat(label: 'Completed'.tr, value: '$completed'),
         DashboardMiniStat(
             label: 'Not done yet'.tr, value: '${dueVisits.length - completed}'),
-      ]),
+      ])),
       _Note('Completion = completed ÷ visits whose start time has passed. Cancelled visits are not counted.'.tr),
       DashboardSection(
         title: 'Completed vs not completed'.tr,
         subtitle: 'Tap a bar to list that {0}'.trArgs([period.days > 31 ? 'week'.tr : 'day']),
-        child: DashboardWidgetTrendChart(
+        child: GTourTarget(id: 'chart', child: DashboardWidgetTrendChart(
           buckets: buckets,
           selectedIndex: _bucket,
           onSelect: (index) => setState(() => _bucket = index),
-        ),
+        )),
       ),
       DashboardSection(
         title: 'By technician'.tr,
@@ -358,7 +361,7 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         DashboardMetrics.attention(state.snapshot, DateTime.now());
 
     return _Stack(children: [
-      DashboardGrid(columns: 3, children: [
+      GTourTarget(id: 'stats', child: DashboardGrid(columns: 3, children: [
         DashboardMiniStat(
           label: 'Collected'.tr,
           value: DashboardFormat.money(collected),
@@ -372,17 +375,17 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
         DashboardMiniStat(
             label: 'Outstanding'.tr,
             value: DashboardFormat.money(DashboardMetrics.outstanding(invoices))),
-      ]),
+      ])),
       _Note('Collected = payments minus refunds, by payment date. Outstanding is what customers owe today on issued invoices.'.tr),
       DashboardSection(
         title: 'Money collected'.tr,
         subtitle: 'Tap a bar to list its payments'.tr,
-        child: DashboardWidgetTrendChart(
+        child: GTourTarget(id: 'chart', child: DashboardWidgetTrendChart(
           buckets: buckets,
           money: true,
           selectedIndex: _bucket,
           onSelect: (index) => setState(() => _bucket = index),
-        ),
+        )),
       ),
       DashboardSection(
         title: 'Payments'.tr,
@@ -481,14 +484,14 @@ class _DashboardInsightScrState extends State<DashboardInsightScr> {
 
   Widget _recordsSection(
       List<VisitDetailModel> visits, List<DashboardBucket> buckets) {
-    return DashboardSection(
+    return GTourTarget(id: 'list', child: DashboardSection(
       title: '{0} visit{1}'.trArgs([visits.length, visits.length == 1 ? '' : 's']),
       subtitle: _filterLabel(buckets),
       actionText: _hasFilter ? 'Clear filter'.tr : null,
       onAction: _hasFilter ? _clearFilters : null,
       child: DashboardWidgetVisitList(
           visits: visits, emptyText: 'No visits match this selection'.tr),
-    );
+    ));
   }
 }
 

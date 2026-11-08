@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -109,7 +110,7 @@ class _AddClientBodyState extends State<AddClientBody> {
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
-              GWidgetCardTitle(
+              GTourTarget(id: 'personal', child: GWidgetCardTitle(
                   icon: Icons.person_pin,
                   title: 'Personal Info'.tr,
                   child: Column(
@@ -137,9 +138,9 @@ class _AddClientBodyState extends State<AddClientBody> {
                         textInputAction: TextInputAction.next,
                       ),
                     ],
-                  )),
+                  ))),
               const SizedBox(height: 32),
-              GWidgetCardTitle(
+              GTourTarget(id: 'contact', child: GWidgetCardTitle(
                   icon: Icons.contact_phone_outlined,
                   title: 'Contact Info'.tr,
                   child: Column(
@@ -172,9 +173,9 @@ class _AddClientBodyState extends State<AddClientBody> {
                           },
                           hasWhatsapp: _hasWhatsapp)
                     ],
-                  )),
+                  ))),
               const SizedBox(height: 32),
-              GWidgetCardTitle(
+              GTourTarget(id: 'location', child: GWidgetCardTitle(
                   icon: Icons.map_outlined,
                   title: 'Location Details'.tr,
                   child: Column(
@@ -221,9 +222,9 @@ class _AddClientBodyState extends State<AddClientBody> {
                         addressController: _addressController,
                       )
                     ],
-                  )),
+                  ))),
               const SizedBox(height: 32),
-              GWidgetCardTitle(
+              GTourTarget(id: 'extra', child: GWidgetCardTitle(
                   icon: Icons.note_alt_outlined,
                   title: 'Extra Info'.tr,
                   child: GWidgetTextField(
@@ -234,9 +235,9 @@ class _AddClientBodyState extends State<AddClientBody> {
                     maxLines: 4,
                     prefixIcon:
                         Icon(Icons.edit_note, color: AppTheme.textNotes),
-                  )),
+                  ))),
               const SizedBox(height: 40),
-              GWidgetButton(
+              GTourTarget(id: 'save', child: GWidgetButton(
                 onPressed: () {
                   setState(() {
                     _nameErrorMsg = null;
@@ -354,7 +355,7 @@ class _AddClientBodyState extends State<AddClientBody> {
                     : 'Save Client'.tr,
                 height: 60,
                 isLoading: widget.loading,
-              ),
+              )),
               const SizedBox(height: 20),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
@@ -13,7 +15,7 @@ class AddVisitScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.addVisit, bottom: 190, child: BlocProvider(
         create: (context) => sl<AddVisitBloc>()
           ..add(GetVisitClientsEvent(noParameters: NoParameters()))
           ..add(GetVisitServicesEvent(noParameters: NoParameters()))
@@ -41,6 +43,6 @@ class AddVisitScr extends StatelessWidget {
                   state.addVisitRequestState == RequestState.loading,
             );
           },
-        ));
+        )));
   }
 }

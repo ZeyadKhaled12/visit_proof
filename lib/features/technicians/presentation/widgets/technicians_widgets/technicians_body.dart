@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,12 +74,12 @@ class _TechniciansBodyState extends State<TechniciansBody> {
             child: Column(
               children: [
                 const SizedBox(height: 5),
-                GWidgetSearch(
+                GTourTarget(id: 'search', child: GWidgetSearch(
                   searchController: _searchController,
                   hint: 'Search name, phone, specialty...'.tr,
                   onChanged: (value) => setState(() => _query = value ?? ''),
                   onClear: _clearSearch,
-                ),
+                )),
                 const SizedBox(height: 16),
                 Expanded(
                     child: technicians.isEmpty
@@ -90,15 +91,15 @@ class _TechniciansBodyState extends State<TechniciansBody> {
                             padding: const EdgeInsets.only(bottom: 80),
                             itemCount: technicians.length,
                             itemBuilder: (context, index) =>
-                                TechnicianWidgetCard(
-                                    technician: technicians[index]),
+                                GTourTarget(id: 'card_$index', child: TechnicianWidgetCard(
+                                    technician: technicians[index])),
                           )),
               ],
             ),
           ),
         ),
-        floatingActionButton: GWidgetFloatingBtn(
-            text: "Add new technician".tr, onPressed: _addTechnician));
+        floatingActionButton: GTourTarget(id: 'add', child: GWidgetFloatingBtn(
+            text: "Add new technician".tr, onPressed: _addTechnician)));
   }
 
   Widget _emptyState() {

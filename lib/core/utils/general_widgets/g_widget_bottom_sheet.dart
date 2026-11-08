@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 
+import 'g_widget_tour.dart';
+
 
 class GWidgetBottomSheet extends StatelessWidget {
   const GWidgetBottomSheet(
-      {super.key, required this.title, this.subtitle, required this.body});
+      {super.key,
+      required this.title,
+      required this.help,
+      this.subtitle,
+      required this.body});
   final String title;
+
+  /// What the help flag says about this sheet.
+  final String help;
   final String? subtitle;
   final Widget body;
 
@@ -40,14 +49,17 @@ class GWidgetBottomSheet extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: AppTheme.font(
-                      fontSize: AppTheme.textHeadline,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: AppTheme.font(
+                        fontSize: AppTheme.textHeadline,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
                   ),
+                  GWidgetHelpButton(title: title, help: help),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: Icon(Icons.close, color: AppTheme.iconGrey),

@@ -23,6 +23,7 @@ class DispatchWidgetRedistributeSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Moves the visits of this technician to other technicians.'.tr,
       title: 'Redistribute visits'.tr,
       subtitle: 'From {0}'.trArgs([technician.name ?? 'technician'.tr]),
       requestState: (state) => state.bulkAssignRequestState,

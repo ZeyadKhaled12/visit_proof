@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,29 +35,29 @@ class TechnicianDetailBody extends StatelessWidget {
         appBar: GWidgetNaviAppbar.appBar(context, 'Technician Detail'.tr),
         bottomNavigationBar: loading
             ? null
-            : TechDetailWidgetBottomBtns(
+            : GTourTarget(id: 'actions', child: TechDetailWidgetBottomBtns(
                 removeLoading: removeClientLoading,
-                technicianDetailModel: technicianDetailModel),
+                technicianDetailModel: technicianDetailModel)),
         body: GWidgetLoading(
           isLoading: loading,
           body: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
-                  child: TechDetailWidgetHeader(
-                      technicianDetailModel: technicianDetailModel)),
+                  child: GTourTarget(id: 'header', child: TechDetailWidgetHeader(
+                      technicianDetailModel: technicianDetailModel))),
 
               // // Equipments Section
               SliverToBoxAdapter(
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 16.0),
-                    child: TechDetailWidgetCategories(
+                    child: GTourTarget(id: 'categories', child: TechDetailWidgetCategories(
                       categories: technicianDetailModel.categories
                               ?.map((e) => e.name ?? '')
                               .toList() ??
                           [],
-                    )),
+                    ))),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
               // Sticky Visit History Title
@@ -67,8 +68,8 @@ class TechnicianDetailBody extends StatelessWidget {
                       color: AppTheme.scaffoldBackground,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 12.0),
-                      child: ClientDetailWidgetTitle(
-                          title: 'Visit History'.tr, icon: Icons.history),
+                      child: GTourTarget(id: 'history', child: ClientDetailWidgetTitle(
+                          title: 'Visit History'.tr, icon: Icons.history)),
                     ),
                     height: 60),
               ),

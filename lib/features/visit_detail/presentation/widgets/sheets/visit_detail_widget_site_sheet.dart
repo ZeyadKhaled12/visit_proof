@@ -50,6 +50,7 @@ class _VisitDetailWidgetSiteSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
+      help: 'Changes the place where this visit happens.'.tr,
       title: 'Change site'.tr,
       subtitle: 'Current: {0}'.trArgs([VisitDetailHelpers.site(widget.visit.site)]),
       requestState: (state) => state.changeSiteRequestState,

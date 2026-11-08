@@ -58,6 +58,7 @@ class _VisitDetailWidgetInfoSheetState
     final canChangeProof = VisitRules.canChangeProofRequirements(widget.visit);
 
     return VisitDetailWidgetActionSheet(
+      help: 'Edit the job notes, and choose whether before and after photos are required.'.tr,
       title: 'Edit job notes'.tr,
       requestState: (state) => state.updateInfoRequestState,
       builder: (context, state, loading) => Column(

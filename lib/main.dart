@@ -14,6 +14,7 @@ import 'core/pwa/app_install.dart';
 import 'core/pwa/pwa_bridge.dart';
 import 'core/services/services_locator.dart';
 import 'core/usecase/base_use_case.dart';
+import 'core/utils/general_widgets/g_widget_tour.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
 import 'features/website/presentation/screens/website_scr.dart';
 
@@ -57,6 +58,8 @@ void main() async {
   // user's choices. An installed app keeps the light/dark it was designed in.
   final savedDark = DemoMode.isOn ? null : prefs.getBool(darkModeKey);
   final savedArabic = DemoMode.isOn ? null : prefs.getBool(arabicKey);
+  final savedHelpFlags = prefs.getBool(helpFlagsKey);
+  GWidgetTour.showFlags.value = savedHelpFlags ?? true;
   AppTheme.darkMode.value = installed?.dark ??
       (AppTheme.darkModeEnabled && (savedDark ?? AppTheme.darkModeByDefault));
   AppLanguage.arabic.value = AppLanguage.languageSwitchEnabled &&
@@ -75,6 +78,9 @@ void main() async {
     await prefs.clear();
     if (savedDark != null) await prefs.setBool(darkModeKey, savedDark);
     if (savedArabic != null) await prefs.setBool(arabicKey, savedArabic);
+    if (savedHelpFlags != null) {
+      await prefs.setBool(helpFlagsKey, savedHelpFlags);
+    }
     await DemoSeed.run();
     if (installed != null) await prefs.setBool(_installedSeededKey, true);
   }
@@ -109,6 +115,9 @@ const String darkModeKey = 'dark_mode';
 /// Saved language choice.
 const String arabicKey = 'app_arabic';
 
+/// Saved choice to show the help flags.
+const String helpFlagsKey = 'show_help_flags';
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   static MyAppState? of(BuildContext context) =>
@@ -123,6 +132,7 @@ class MyAppState extends State<MyApp> {
     super.initState();
     AppTheme.darkMode.addListener(_onThemeChanged);
     AppLanguage.arabic.addListener(_onLanguageChanged);
+    GWidgetTour.showFlags.addListener(_onHelpFlagsChanged);
     AppBrand.current.addListener(_rebuildAll);
   }
 
@@ -130,6 +140,7 @@ class MyAppState extends State<MyApp> {
   void dispose() {
     AppTheme.darkMode.removeListener(_onThemeChanged);
     AppLanguage.arabic.removeListener(_onLanguageChanged);
+    GWidgetTour.showFlags.removeListener(_onHelpFlagsChanged);
     AppBrand.current.removeListener(_rebuildAll);
     super.dispose();
   }
@@ -149,6 +160,9 @@ class MyAppState extends State<MyApp> {
     LocalPref.sharedPreferences.setBool(darkModeKey, AppTheme.isDark);
     _rebuildAll();
   }
+
+  void _onHelpFlagsChanged() => LocalPref.sharedPreferences
+      .setBool(helpFlagsKey, GWidgetTour.showFlags.value);
 
   bool _rebuildScheduled = false;
 

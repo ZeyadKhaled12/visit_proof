@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +17,7 @@ class DispatchScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.dispatch, child: BlocProvider(
         create: (context) => sl<DispatchBloc>()
           ..add(const GetDispatchBoardEvent(noParameters: NoParameters())),
         child: BlocConsumer<DispatchBloc, DispatchState>(
@@ -32,6 +34,6 @@ class DispatchScr extends StatelessWidget {
           listenWhen: (previous, current) =>
               previous.bulkAssignRequestState != current.bulkAssignRequestState,
           builder: (context, state) => DispatchBody(state: state),
-        ));
+        )));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -300,13 +301,14 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                 _getInvoiceDetail();
               },
               child: ListView(
+                cacheExtent: 100000, // keeps every section built for the guided tour
                 padding: const EdgeInsets.fromLTRB(16, 25, 16, 32),
                 children: [
                   // -----------------------------------------
                   // Invoice title + status
                   // -----------------------------------------
 
-                  Row(
+                  GTourTarget(id: 'status', child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
@@ -328,7 +330,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                             .getColor(),
                       ),
                     ],
-                  ),
+                  )),
 
                   const SizedBox(height: 14),
 
@@ -450,7 +452,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   // Customer and linked visit
                   // -----------------------------------------
 
-                  InvDetailWidgetPanel(
+                  GTourTarget(id: 'customer', child: InvDetailWidgetPanel(
                     title: 'Customer & visit'.tr,
                     icon: Icons.home_repair_service_outlined,
                     child: Column(
@@ -473,7 +475,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                         ),
                       ],
                     ),
-                  ),
+                  )),
 
                   const SizedBox(height: 14),
 
@@ -481,7 +483,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   // Financial breakdown
                   // -----------------------------------------
 
-                  InvDetailWidgetPanel(
+                  GTourTarget(id: 'amounts', child: InvDetailWidgetPanel(
                     title: 'Amount breakdown'.tr,
                     icon: Icons.calculate_outlined,
                     child: Column(
@@ -519,7 +521,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                         ),
                       ],
                     ),
-                  ),
+                  )),
 
                   // -----------------------------------------
                   // Optional notes
@@ -543,7 +545,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
                   if (widget.payments.isNotEmpty) ...[
                     const SizedBox(height: 14),
-                    _payments(),
+                    GTourTarget(id: 'payments', child: _payments()),
                   ],
 
                   const SizedBox(height: 17),
@@ -554,7 +556,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   // -----------------------------------------
 
                   if (_canRecord)
-                    GWidgetButton(
+                    GTourTarget(id: 'actions', child: GWidgetButton(
                         text: 'Record payment'.tr,
                         widget: Padding(
                           padding: EdgeInsetsDirectional.only(start: 8),
@@ -577,14 +579,14 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           if (data == true) {
                             _getInvoiceDetail();
                           }
-                        }),
+                        })),
 
                   if (_canIssue)
-                    GWidgetButton(
+                    GTourTarget(id: 'actions', child: GWidgetButton(
                       text: 'Issue invoice'.tr,
                       fontSize: AppTheme.textSubtitle,
                       onPressed: _issueInvoice,
-                    ),
+                    )),
 
                   if (_canEdit || _canRefund) ...[
                     const SizedBox(height: 9),

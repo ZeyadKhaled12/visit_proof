@@ -61,6 +61,7 @@ class _DispatchWidgetAssignSheetState extends State<DispatchWidgetAssignSheet> {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Gives this visit to the technician shown here. Any rule it breaks, such as a time clash, is listed before you confirm.'.tr,
       title: 'Assign visit'.tr,
       subtitle: 'To {0}'.trArgs([widget.technician.name ?? 'technician'.tr]),
       requestState: (state) => state.assignRequestState,

@@ -62,6 +62,7 @@ class _VisitDetailWidgetCommentSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
+      help: 'Adds a note to the visit activity log.'.tr,
       title: 'Add a note'.tr,
       subtitle: 'Notes are added to the visit activity log.'.tr,
       requestState: (state) => state.addCommentRequestState,

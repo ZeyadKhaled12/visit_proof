@@ -36,6 +36,7 @@ class _DispatchWidgetUnassignSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Takes the technician off this visit so it can be given to someone else.'.tr,
       title: 'Unassign technician'.tr,
       requestState: (state) => state.unassignRequestState,
       builder: (context, state, loading) {

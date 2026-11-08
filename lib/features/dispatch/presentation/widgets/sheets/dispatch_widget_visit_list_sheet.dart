@@ -16,6 +16,7 @@ class DispatchWidgetVisitListSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'The visits behind the number you tapped.'.tr,
       title: title,
       builder: (context, state, loading) {
         final visits = [

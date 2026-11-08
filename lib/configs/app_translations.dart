@@ -1483,10 +1483,6 @@ const Map<String, String> arabicTranslations = {
       'فتح تفاصيل الزيارة',
   'You have {0} open visits · {1} today':
       'لديك {0} زيارات مفتوحة · {1} اليوم',
-  'New mission':
-      'مهمة جديدة',
-  'I am Proofy, your guide. {0} stops, about one minute, and a star at every stop.':
-      'أنا بروفي، مرشدك. {0} محطات في دقيقة تقريبًا، ونجمة عند كل محطة.',
   'Start the mission':
       'ابدأ المهمة',
   'Not now':
@@ -1503,16 +1499,10 @@ const Map<String, String> arabicTranslations = {
       'إنهاء',
   'Mission complete!':
       'اكتملت المهمة!',
-  'You earned the badge: {0}':
-      'حصلت على وسام: {0}',
-  '+{0} XP':
-      '+{0} نقطة',
   'Play again':
       'إعادة الجولة',
   'Master your dashboard':
       'أتقن لوحة التحكم',
-  'Dashboard expert':
-      'خبير لوحة التحكم',
   'Your command center':
       'مركز القيادة الخاص بك',
   'The whole company on one screen. The line under the title shows the dates you are viewing and when the numbers were last updated.':
@@ -1563,4 +1553,448 @@ const Map<String, String> arabicTranslations = {
       'انتقل إلى أي مكان',
   'Shortcuts to dispatch, visits, clients, technicians, services and invoices, all from here.':
       'اختصارات إلى التوزيع والزيارات والعملاء والفنيين والخدمات والفواتير، جميعها من هنا.',
+
+  // --- Guided tours: Wizpoo on every screen and sheet -----------------------
+  'Actions':
+      'الإجراءات',
+  'Client details':
+      'تفاصيل العميل',
+  'Equipment':
+      'المعدات',
+  'My visits':
+      'زياراتي',
+  'Search':
+      'بحث',
+  'Specialties':
+      'التخصصات',
+  'Technician details':
+      'تفاصيل الفني',
+  'Visit details':
+      'تفاصيل الزيارة',
+  'Visit history':
+      'سجل الزيارات',
+  'Hi, I am Wizpoo':
+      'مرحبًا، أنا ويزبو',
+  'Got it':
+      'حسنًا',
+  'You now know how this screen works.':
+      'أصبحت تعرف الآن كيف تعمل هذه الشاشة.',
+  'Help flags':
+      'أعلام المساعدة',
+  'Choose how to enter':
+      'اختر طريقة الدخول',
+  'This app has two sides. Pick the one that fits you.':
+      'للتطبيق جانبان. اختر الجانب المناسب لك.',
+  'Runs the whole company: clients, technicians, visits and invoices. No account is needed.':
+      'يدير الشركة بأكملها: العملاء والفنيين والزيارات والفواتير. لا يلزم إنشاء حساب.',
+  'Signs in with the email and password the admin created, then works on their own visits.':
+      'يسجل الدخول بالبريد الإلكتروني وكلمة المرور اللذين أنشأهما المسؤول، ثم يعمل على زياراته.',
+  'Your preferences':
+      'تفضيلاتك',
+  'Change the language, turn dark mode on or off, or hide these help flags.':
+      'غيّر اللغة، أو فعّل الوضع الداكن أو أوقفه، أو أخفِ أعلام المساعدة هذه.',
+  'Sign in to see the visits assigned to you.':
+      'سجّل الدخول لعرض الزيارات المسندة إليك.',
+  'Your email':
+      'بريدك الإلكتروني',
+  'Use the same email your admin saved for you.':
+      'استخدم البريد الإلكتروني نفسه الذي حفظه لك المسؤول.',
+  'Your password':
+      'كلمة المرور',
+  'Use the password your admin set. Tap the eye to see what you typed.':
+      'استخدم كلمة المرور التي حددها المسؤول. اضغط على رمز العين لرؤية ما كتبته.',
+  'Enter the app':
+      'ادخل إلى التطبيق',
+  'Your visits open right after you sign in.':
+      'تظهر زياراتك مباشرة بعد تسجيل الدخول.',
+  'App menu':
+      'قائمة التطبيق',
+  'Every part of the app is one tap away from here.':
+      'كل أقسام التطبيق على بُعد ضغطة واحدة من هنا.',
+  'All sections':
+      'جميع الأقسام',
+  'Operations come first, then finance, then your client, technician and service lists.':
+      'تأتي العمليات أولًا، ثم المالية، ثم قوائم العملاء والفنيين والخدمات.',
+  'Your account':
+      'حسابك',
+  'Switch between admin and technician from here.':
+      'بدّل بين المسؤول والفني من هنا.',
+  'Reminders for your work and your preferences.':
+      'تذكيرات عملك وتفضيلاتك.',
+  'Work reminders':
+      'تذكيرات العمل',
+  'What the app records while you work, and when photos are needed.':
+      'ما يسجله التطبيق أثناء عملك، ومتى تلزم الصور.',
+  'Sign out or switch role from here.':
+      'سجّل الخروج أو بدّل الدور من هنا.',
+  'How the whole company is doing, on one screen.':
+      'أداء الشركة بأكملها في شاشة واحدة.',
+  'The details behind a number':
+      'التفاصيل خلف الرقم',
+  'Everything behind the score you tapped, ready to filter.':
+      'كل ما يقف خلف المؤشر الذي اخترته، جاهز للتصفية.',
+  'Where you are':
+      'موقعك الحالي',
+  'Shows how you got here. Tap an earlier name to go back to it.':
+      'يوضح كيف وصلت إلى هنا. اضغط على اسم سابق للرجوع إليه.',
+  'Every number on this screen follows the range you pick here.':
+      'تتبع كل الأرقام في هذه الشاشة الفترة التي تختارها هنا.',
+  'Key numbers':
+      'الأرقام الرئيسية',
+  'The main totals for the period you picked.':
+      'الإجماليات الرئيسية للفترة التي اخترتها.',
+  'Over time':
+      'على مدار الوقت',
+  'How the numbers moved during the period.':
+      'كيف تغيرت الأرقام خلال الفترة.',
+  'Tap a bar to filter by it.':
+      'اضغط على أي عمود للتصفية بحسبه.',
+  'The records':
+      'السجلات',
+  'The exact visits behind the numbers. Tap one to open it.':
+      'الزيارات التي تقف خلف الأرقام. اضغط على أي زيارة لفتحها.',
+  'Technician results':
+      'نتائج الفني',
+  'How one technician performed in the period you picked.':
+      'أداء فني واحد خلال الفترة التي اخترتها.',
+  'The main results of this technician in the period.':
+      'النتائج الرئيسية لهذا الفني خلال الفترة.',
+  'How much work this technician had during the period.':
+      'حجم العمل الذي تولاه هذا الفني خلال الفترة.',
+  'How their visits split between the workflow stages. Tap one to filter the list.':
+      'توزيع زياراته على مراحل العمل. اضغط على أي مرحلة لتصفية القائمة.',
+  'Dispatch board':
+      'لوحة التوزيع',
+  'Plan the day: who goes where, and when.':
+      'خطط ليومك: من يذهب إلى أين، ومتى.',
+  'Pick the day':
+      'اختر اليوم',
+  'Everything on the board belongs to the day you select here.':
+      'كل ما في اللوحة يخص اليوم الذي تختاره هنا.',
+  'The day at a glance':
+      'اليوم في لمحة',
+  'Visits waiting for a technician, conflicts, late visits and the total planned.':
+      'الزيارات التي تنتظر فنيًا، والتعارضات، والزيارات المتأخرة، وإجمالي المخطط.',
+  'Tap a counter to see those visits.':
+      'اضغط على أي عداد لعرض تلك الزيارات.',
+  'Change the view':
+      'غيّر طريقة العرض',
+  'See the work by technician, as a waiting queue, or on the map.':
+      'اعرض العمل بحسب الفني، أو كقائمة انتظار، أو على الخريطة.',
+  'The board':
+      'اللوحة',
+  'This is where you assign and arrange the work of the day.':
+      'هنا تسند أعمال اليوم وترتبها.',
+  'Waiting visits':
+      'الزيارات المنتظرة',
+  'Visits on this day that still need a technician.':
+      'زيارات هذا اليوم التي ما زالت تحتاج إلى فني.',
+  'Set what the board checks every time you assign a visit.':
+      'حدد ما تتحقق منه اللوحة في كل مرة تسند فيها زيارة.',
+  'All visits':
+      'جميع الزيارات',
+  'Every visit of the company and where it stands.':
+      'كل زيارات الشركة وحالة كل منها.',
+  'Find a visit':
+      'ابحث عن زيارة',
+  'Search here, or use the filter button to narrow the list.':
+      'ابحث هنا، أو استخدم زر التصفية لتضييق القائمة.',
+  'Open dispatch':
+      'افتح التوزيع',
+  'Jump to the board to plan who does what.':
+      'انتقل إلى اللوحة لتحديد مهام كل فني.',
+  'One visit':
+      'زيارة واحدة',
+  'Its status, client, service, time, technician and payment. Tap it to open everything.':
+      'حالتها وعميلها وخدمتها ووقتها وفنيها ودفعها. اضغط عليها لعرض كل التفاصيل.',
+  'Add a visit':
+      'أضف زيارة',
+  'Create a new visit. Its invoice is created with it automatically.':
+      'أنشئ زيارة جديدة، وتُنشأ فاتورتها معها تلقائيًا.',
+  'Fill these parts from top to bottom to book the work.':
+      'املأ هذه الأجزاء من الأعلى إلى الأسفل لحجز العمل.',
+  'Who is it for':
+      'لمن الزيارة',
+  'Choose the client and the site where the work happens.':
+      'اختر العميل والموقع الذي سيتم فيه العمل.',
+  'What is the job':
+      'ما العمل المطلوب',
+  'Choose the service. Its details can be adjusted for this visit.':
+      'اختر الخدمة، ويمكن تعديل تفاصيلها لهذه الزيارة.',
+  'When and who':
+      'متى ومن',
+  'Set the date and time, and choose a technician if you already know who will go.':
+      'حدد التاريخ والوقت، واختر فنيًا إذا كنت تعرف من سيذهب.',
+  'Save it':
+      'احفظها',
+  'Save a draft to finish later, or schedule the visit. With a technician selected, it is assigned right away.':
+      'احفظ مسودة لإكمالها لاحقًا، أو جدول الزيارة. وعند اختيار فني تُسند إليه مباشرة.',
+  'Everything about this visit, from booking to payment.':
+      'كل ما يخص هذه الزيارة، من الحجز حتى الدفع.',
+  'Where it stands':
+      'وضع الزيارة',
+  'The service, price, priority and payment, with the visit progress along the bottom.':
+      'الخدمة والسعر والأولوية والدفع، مع تقدم الزيارة في الأسفل.',
+  'The next step':
+      'الخطوة التالية',
+  'The action that moves this visit forward is always here. Technician actions record the live location.':
+      'الإجراء الذي ينقل الزيارة إلى الأمام موجود هنا دائمًا. وتسجل إجراءات الفني موقعه الحالي.',
+  'The client':
+      'العميل',
+  'Who the visit is for and how to reach them.':
+      'لمن هذه الزيارة وكيفية التواصل معه.',
+  'Time and technician':
+      'الوقت والفني',
+  'When the visit happens and who is going.':
+      'موعد الزيارة ومن سيذهب إليها.',
+  'The job':
+      'العمل',
+  'The service and what needs to be done.':
+      'الخدمة وما يجب إنجازه.',
+  'Job notes':
+      'ملاحظات العمل',
+  'The problem description and the notes for this visit.':
+      'وصف المشكلة وملاحظات هذه الزيارة.',
+  'Proof photos':
+      'صور الإثبات',
+  'Before and after pictures taken on site.':
+      'صور ما قبل العمل وبعده الملتقطة في الموقع.',
+  'The invoice':
+      'الفاتورة',
+  'What is billed for this visit and what has been paid.':
+      'المبلغ المفوتر لهذه الزيارة وما تم دفعه.',
+  'Full history':
+      'السجل الكامل',
+  'Every change to this visit: who did it, when, and from where.':
+      'كل تغيير على هذه الزيارة: من أجراه ومتى ومن أين.',
+  'Your work: what is happening now and what comes next.':
+      'عملك: ما يجري الآن وما يليه.',
+  'Your day':
+      'يومك',
+  'How many visits are open and how many are today.':
+      'عدد الزيارات المفتوحة وعدد زيارات اليوم.',
+  'The visit you are travelling to or working on. Open it to continue.':
+      'الزيارة التي تتجه إليها أو تعمل عليها. افتحها للمتابعة.',
+  'Choose a list':
+      'اختر قائمة',
+  'Switch between open visits, today, completed and all.':
+      'بدّل بين الزيارات المفتوحة وزيارات اليوم والمكتملة والجميع.',
+  'The client, the job, the time and your next step. Tap it to open.':
+      'العميل والعمل والوقت وخطوتك التالية. اضغط عليها لفتحها.',
+  'Every invoice and how much of it has been paid.':
+      'كل فاتورة والمبلغ المدفوع منها.',
+  'Find an invoice':
+      'ابحث عن فاتورة',
+  'One invoice':
+      'فاتورة واحدة',
+  'Its client, amount and payment status. Tap it to open.':
+      'عميلها ومبلغها وحالة دفعها. اضغط عليها لفتحها.',
+  'What was billed, what was paid and what is still owed.':
+      'ما تمت فوترته وما تم دفعه وما زال مستحقًا.',
+  'Invoice status':
+      'حالة الفاتورة',
+  'The invoice number and whether it is paid.':
+      'رقم الفاتورة وهل تم دفعها.',
+  'Customer and visit':
+      'العميل والزيارة',
+  'Who this invoice is for and the visit it belongs to.':
+      'صاحب هذه الفاتورة والزيارة التابعة لها.',
+  'The price, discount, tax and the total.':
+      'السعر والخصم والضريبة والإجمالي.',
+  'Every payment recorded on this invoice.':
+      'كل دفعة مسجلة على هذه الفاتورة.',
+  'What you can do':
+      'ما يمكنك فعله',
+  'Only the actions allowed for this invoice right now are shown.':
+      'لا تظهر إلا الإجراءات المسموح بها لهذه الفاتورة حاليًا.',
+  'Money technicians collected on site, waiting for you to confirm.':
+      'المبالغ التي حصلها الفنيون في الموقع بانتظار تأكيدك.',
+  'Waiting for you':
+      'بانتظارك',
+  'How many payments are waiting and their total.':
+      'عدد الدفعات المنتظرة وإجماليها.',
+  'One payment':
+      'دفعة واحدة',
+  'Check the amount and the receipt, then confirm or reject it. Rejecting needs a reason.':
+      'تحقق من المبلغ والإيصال، ثم أكدها أو ارفضها. ويتطلب الرفض ذكر السبب.',
+  'Your customers, their sites and their equipment.':
+      'عملاؤك ومواقعهم ومعداتهم.',
+  'Find a client':
+      'ابحث عن عميل',
+  'Search by name, phone or city.':
+      'ابحث بالاسم أو الهاتف أو المدينة.',
+  'One client':
+      'عميل واحد',
+  'Tap a client to see their details and visit history.':
+      'اضغط على عميل لعرض بياناته وسجل زياراته.',
+  'Add a client':
+      'أضف عميلًا',
+  'Add a new customer before booking their first visit.':
+      'أضف عميلًا جديدًا قبل حجز زيارته الأولى.',
+  'Client form':
+      'بيانات العميل',
+  'Save the details you need to reach and visit this client.':
+      'احفظ البيانات اللازمة للوصول إلى هذا العميل وزيارته.',
+  'Personal info':
+      'البيانات الشخصية',
+  'The client name. The email is optional.':
+      'اسم العميل، والبريد الإلكتروني اختياري.',
+  'Contact info':
+      'بيانات التواصل',
+  'The phone number, and whether it is on WhatsApp.':
+      'رقم الهاتف، وهل هو مسجل في واتساب.',
+  'The city and the exact place on the map.':
+      'المدينة والموقع المحدد على الخريطة.',
+  'Anything else your team should know.':
+      'أي معلومات أخرى يجب أن يعرفها فريقك.',
+  'Saves the client. Fields marked with * are required.':
+      'يحفظ العميل. الحقول المميزة بعلامة * إلزامية.',
+  'Everything you know about this client.':
+      'كل ما تعرفه عن هذا العميل.',
+  'Client profile':
+      'ملف العميل',
+  'Their name and how to contact them.':
+      'اسمه وطريقة التواصل معه.',
+  'The machines at this client, so the technician knows what to expect.':
+      'الأجهزة الموجودة لدى هذا العميل، ليعرف الفني ما سيجده.',
+  'Every visit made for this client.':
+      'كل الزيارات التي تمت لهذا العميل.',
+  'Update this client or remove them.':
+      'حدّث بيانات هذا العميل أو احذفه.',
+  'Your field team.':
+      'فريقك الميداني.',
+  'Find a technician':
+      'ابحث عن فني',
+  'Search by name, phone or specialty.':
+      'ابحث بالاسم أو الهاتف أو التخصص.',
+  'One technician':
+      'فني واحد',
+  'Tap a technician to see their details and visit history.':
+      'اضغط على فني لعرض بياناته وسجل زياراته.',
+  'Add a technician':
+      'أضف فنيًا',
+  'Create an account for a new member of your team.':
+      'أنشئ حسابًا لعضو جديد في فريقك.',
+  'Technician form':
+      'بيانات الفني',
+  'Add a team member and create their sign in.':
+      'أضف عضوًا إلى الفريق وأنشئ بيانات دخوله.',
+  'Their name':
+      'الاسم',
+  'The name your team and clients will see.':
+      'الاسم الذي سيراه فريقك وعملاؤك.',
+  'Their phone':
+      'الهاتف',
+  'The number used to reach them in the field.':
+      'الرقم المستخدم للتواصل معه في الميدان.',
+  'Sign in email':
+      'بريد تسجيل الدخول',
+  'The technician signs in with this email. Each technician needs a different one.':
+      'يسجل الفني الدخول بهذا البريد، ولكل فني بريد مختلف.',
+  'Sign in password':
+      'كلمة مرور الدخول',
+  'Share this password with the technician so they can sign in.':
+      'شارك كلمة المرور هذه مع الفني ليتمكن من تسجيل الدخول.',
+  'The types of work this technician can do.':
+      'أنواع العمل التي يستطيع هذا الفني القيام بها.',
+  'Saves the technician. Fields marked with * are required.':
+      'يحفظ الفني. الحقول المميزة بعلامة * إلزامية.',
+  'Everything about this member of your team.':
+      'كل ما يخص هذا العضو في فريقك.',
+  'Technician profile':
+      'ملف الفني',
+  'Their name, status and contact details.':
+      'اسمه وحالته وبيانات التواصل معه.',
+  'Every visit assigned to this technician.':
+      'كل الزيارات المسندة إلى هذا الفني.',
+  'Update this technician or remove them.':
+      'حدّث بيانات هذا الفني أو احذفه.',
+  'What you sell, with prices, durations and checklists.':
+      'ما تقدمه من خدمات مع الأسعار والمدد وقوائم المهام.',
+  'Find a service':
+      'ابحث عن خدمة',
+  'Search by service or category name.':
+      'ابحث باسم الخدمة أو الفئة.',
+  'One service':
+      'خدمة واحدة',
+  'Its category, price and duration.':
+      'فئتها وسعرها ومدتها.',
+  'Add a service':
+      'أضف خدمة',
+  'Add a service once, then pick it on any visit.':
+      'أضف الخدمة مرة واحدة ثم اخترها في أي زيارة.',
+  'Pick a location':
+      'اختر موقعًا',
+  'Find the exact place, then confirm it.':
+      'حدد المكان بدقة ثم أكده.',
+  'Type a place name to jump to it.':
+      'اكتب اسم مكان للانتقال إليه.',
+  'Move the map':
+      'حرّك الخريطة',
+  'Drag the map until the pin sits on the exact place.':
+      'اسحب الخريطة حتى يستقر الدبوس على المكان المحدد.',
+  'Check the address shown here, then confirm it.':
+      'تحقق من العنوان المعروض هنا ثم أكده.',
+  'View location':
+      'عرض الموقع',
+  'See exactly where this place is.':
+      'اعرف مكان هذا الموقع بدقة.',
+  'The map':
+      'الخريطة',
+  'The marker shows the saved place. You can move around freely.':
+      'تشير العلامة إلى المكان المحفوظ، ويمكنك التنقل بحرية.',
+  'Back to the marker':
+      'العودة إلى العلامة',
+  'Returns the map to the saved place.':
+      'يعيد الخريطة إلى المكان المحفوظ.',
+  'The address':
+      'العنوان',
+  'The address of this place.':
+      'عنوان هذا المكان.',
+  'Gives this visit to the technician shown here. Any rule it breaks, such as a time clash, is listed before you confirm.':
+      'يسند هذه الزيارة إلى الفني المعروض هنا. وتظهر أي قاعدة تخالفها، مثل تعارض الوقت، قبل التأكيد.',
+  'Review the plan for all the selected visits, then confirm to assign them together.':
+      'راجع خطة جميع الزيارات المحددة، ثم أكد لإسنادها معًا.',
+  'Moves the visits of this technician to other technicians.':
+      'ينقل زيارات هذا الفني إلى فنيين آخرين.',
+  'Pick a new date and time for this visit.':
+      'اختر تاريخًا ووقتًا جديدين لهذه الزيارة.',
+  'Set the rules the board checks on every assignment, such as matching the specialty.':
+      'حدد القواعد التي تتحقق منها اللوحة عند كل إسناد، مثل مطابقة التخصص.',
+  'Moves this visit to another status in its workflow.':
+      'ينقل هذه الزيارة إلى حالة أخرى في مسار عملها.',
+  'Technicians ranked from the best match down. Tap an available one to assign the visit.':
+      'الفنيون مرتبون من الأنسب فالأقل. اضغط على فني متاح لإسناد الزيارة إليه.',
+  'Takes the technician off this visit so it can be given to someone else.':
+      'يزيل الفني من هذه الزيارة لتتمكن من إسنادها إلى غيره.',
+  'The visits behind the number you tapped.':
+      'الزيارات التي يمثلها الرقم الذي ضغطت عليه.',
+  'A quick view of this visit and what you can do with it from the board.':
+      'عرض سريع لهذه الزيارة وما يمكنك فعله بها من اللوحة.',
+  'Choose the technician for this visit, or replace the current one.':
+      'اختر فني هذه الزيارة، أو استبدل الفني الحالي.',
+  'Records money received on site. It needs your location and a receipt photo, then the admin confirms it.':
+      'يسجل المبلغ المستلم في الموقع. ويتطلب موقعك وصورة الإيصال، ثم يؤكده المسؤول.',
+  'Adds a note to the visit activity log.':
+      'يضيف ملاحظة إلى سجل نشاط الزيارة.',
+  'Edit the job notes, and choose whether before and after photos are required.':
+      'عدّل ملاحظات العمل، وحدد هل تلزم صور ما قبل العمل وبعده.',
+  'Replaces the service on this visit.':
+      'يستبدل الخدمة في هذه الزيارة.',
+  'Changes the place where this visit happens.':
+      'يغير مكان هذه الزيارة.',
+  'Confirms moving this visit to its next status. Some changes ask for a reason.':
+      'يؤكد نقل هذه الزيارة إلى حالتها التالية. وتتطلب بعض التغييرات ذكر السبب.',
+  'Add or correct the place where the work happens for this client.':
+      'أضف أو صحح مكان تنفيذ العمل لهذا العميل.',
+  'Narrow the list by choosing one or more options in each group.':
+      'ضيّق القائمة باختيار خيار واحد أو أكثر من كل مجموعة.',
+  'Change the amounts while this invoice is still a draft.':
+      'غيّر المبالغ ما دامت هذه الفاتورة مسودة.',
+  'Records money received for this invoice, up to the remaining balance.':
+      'يسجل المبلغ المستلم لهذه الفاتورة بحد أقصى الرصيد المتبقي.',
+  'Returns money that was already paid on this invoice.':
+      'يعيد مبلغًا سبق دفعه على هذه الفاتورة.',
+  'Saves the price, duration and checklist, so you can pick this service on any visit.':
+      'يحفظ السعر والمدة وقائمة المهام لتتمكن من اختيار هذه الخدمة في أي زيارة.',
 };

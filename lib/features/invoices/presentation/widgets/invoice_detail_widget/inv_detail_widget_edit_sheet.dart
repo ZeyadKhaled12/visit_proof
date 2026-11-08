@@ -78,6 +78,7 @@ class _InvDetailWidgetEditSheetState extends State<InvDetailWidgetEditSheet> {
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
+            help: 'Change the amounts while this invoice is still a draft.'.tr,
             title: 'Edit draft invoice'.tr,
             subtitle: widget.subtitle,
             body: Form(

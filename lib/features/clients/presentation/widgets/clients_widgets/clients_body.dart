@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,12 +72,12 @@ class _ClientsBodyState extends State<ClientsBody> {
             child: Column(
               children: [
                 const SizedBox(height: 5),
-                GWidgetSearch(
+                GTourTarget(id: 'search', child: GWidgetSearch(
                   searchController: _searchController,
                   hint: 'Search name, phone, email, city...'.tr,
                   onChanged: (value) => setState(() => _query = value ?? ''),
                   onClear: _clearSearch,
-                ),
+                )),
                 const SizedBox(height: 16),
                 Expanded(
                     child: clients.isEmpty
@@ -88,14 +89,14 @@ class _ClientsBodyState extends State<ClientsBody> {
                             padding: const EdgeInsets.only(bottom: 80),
                             itemCount: clients.length,
                             itemBuilder: (context, index) =>
-                                ClientsWidgetCard(client: clients[index]),
+                                GTourTarget(id: 'card_$index', child: ClientsWidgetCard(client: clients[index])),
                           )),
               ],
             ),
           ),
         ),
         floatingActionButton:
-            GWidgetFloatingBtn(text: "Add new client".tr, onPressed: _addClient));
+            GTourTarget(id: 'add', child: GWidgetFloatingBtn(text: "Add new client".tr, onPressed: _addClient)));
   }
 
   Widget _emptyState() {

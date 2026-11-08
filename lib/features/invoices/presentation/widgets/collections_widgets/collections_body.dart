@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +55,7 @@ class CollectionsBody extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
                 children: [
                   if (payments.isNotEmpty) ...[
-                    _Summary(count: payments.length, total: total),
+                    GTourTarget(id: 'summary', child: _Summary(count: payments.length, total: total)),
                     const SizedBox(height: 14),
                   ],
                   if (payments.isEmpty && !loading)
@@ -66,7 +67,7 @@ class CollectionsBody extends StatelessWidget {
                               .tr,
                     ),
                   for (final payment in payments) ...[
-                    PaymentsWidgetTile(
+                    GTourTarget(id: 'tile_${payments.indexOf(payment)}', child: PaymentsWidgetTile(
                       payment: payment,
                       currency: invoices[payment.invoiceId]?.currency,
                       title: _title(invoices[payment.invoiceId]),
@@ -85,7 +86,7 @@ class CollectionsBody extends StatelessWidget {
                           currency: invoices[payment.invoiceId]?.currency),
                       onReject: () =>
                           PaymentsWidgetReview.reject(context, payment),
-                    ),
+                    )),
                     const SizedBox(height: 10),
                   ],
                 ],

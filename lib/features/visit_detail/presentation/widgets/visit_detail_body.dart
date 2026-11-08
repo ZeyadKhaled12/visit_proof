@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,38 +105,39 @@ class VisitDetailBody extends StatelessWidget {
         color: AppTheme.primary,
         onRefresh: () async => _refresh(context),
         child: ListView(
+          cacheExtent: 100000, // keeps every section built for the guided tour
           physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics()),
           padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),
           children: [
-            VisitDetailWidgetHero(visit: visit),
+            GTourTarget(id: 'hero', child: VisitDetailWidgetHero(visit: visit)),
             gap,
-            VisitDetailWidgetWorkflow(visit: visit, invoice: invoice),
+            GTourTarget(id: 'workflow', child: VisitDetailWidgetWorkflow(visit: visit, invoice: invoice)),
             gap,
-            VisitDetailWidgetClient(visit: visit),
+            GTourTarget(id: 'client', child: VisitDetailWidgetClient(visit: visit)),
             gap,
-            VisitDetailWidgetSchedule(visit: visit),
+            GTourTarget(id: 'schedule', child: VisitDetailWidgetSchedule(visit: visit)),
             gap,
-            VisitDetailWidgetService(visit: visit, invoice: invoice),
+            GTourTarget(id: 'service', child: VisitDetailWidgetService(visit: visit, invoice: invoice)),
             gap,
-            VisitDetailWidgetInfo(visit: visit),
+            GTourTarget(id: 'info', child: VisitDetailWidgetInfo(visit: visit)),
             if (VisitDetailWidgetPhotos.shouldShow(visit)) ...[
               gap,
-              VisitDetailWidgetPhotos(visit: visit),
+              GTourTarget(id: 'photos', child: VisitDetailWidgetPhotos(visit: visit)),
             ],
             if (VisitRules.canSeeInvoice(visit)) ...[
               gap,
-              VisitDetailWidgetInvoice(
+              GTourTarget(id: 'invoice', child: VisitDetailWidgetInvoice(
                 visit: visit,
                 invoice: invoice,
                 loading: state.getInvoiceRequestState == RequestState.loading,
                 onInvoiceClosed: () => _refresh(context),
-              ),
+              )),
             ],
             gap,
-            VisitDetailWidgetHistory(
+            GTourTarget(id: 'history', child: VisitDetailWidgetHistory(
                 history: visit.history ?? const [],
-                canAddNote: VisitRules.canAddComment(visit)),
+                canAddNote: VisitRules.canAddComment(visit))),
             if (VisitRules.canDelete(visit, invoice)) ...[
               const SizedBox(height: 24),
               GWidgetButton(

@@ -50,6 +50,7 @@ class _InvDetailWidgetRefundPaymentSheetState
             current.invoiceDetailRequestState,
         builder: (context, state) {
           return GWidgetBottomSheet(
+              help: 'Returns money that was already paid on this invoice.'.tr,
               title: 'Refund payment'.tr,
               subtitle: 'Refunds require a verified payment ledger.'.tr,
               body: Form(

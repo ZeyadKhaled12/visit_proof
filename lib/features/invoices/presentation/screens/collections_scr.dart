@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
@@ -13,12 +15,12 @@ class CollectionsScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.collections, child: BlocProvider(
       create: (context) => sl<InvoicesBloc>()
         ..add(GetInvoicesEvent(noParameters: NoParameters()))
         ..add(const GetPaymentsEvent(
             getPaymentsParameters: GetPaymentsParameters(pendingOnly: true))),
       child: const CollectionsBody(),
-    );
+    ));
   }
 }

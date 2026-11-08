@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,12 +77,12 @@ class _DispatchBodyState extends State<DispatchBody> {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: GWidgetAppbar(title: 'Dispatch'.tr, actions: [
-        IconButton(
+        GTourTarget(id: 'rules', child: IconButton(
           tooltip: 'Dispatch rules'.tr,
           icon: Icon(Icons.tune_rounded, color: AppTheme.primary),
           onPressed: () => DispatchWidgetActionSheet.show(
               context, const DispatchWidgetSettingsSheet()),
-        ),
+        )),
         const SizedBox(width: 8),
       ]).appbar(),
       body: GWidgetLoading(
@@ -96,15 +97,15 @@ class _DispatchBodyState extends State<DispatchBody> {
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
-                        DispatchWidgetDateStrip(
+                        GTourTarget(id: 'date', child: DispatchWidgetDateStrip(
                           day: day,
                           visits: state.visits,
                           onChanged: (date) => context
                               .read<DispatchBloc>()
                               .add(ChangeDispatchDateEvent(date: date)),
-                        ),
+                        )),
                         const SizedBox(height: 10),
-                        DispatchWidgetKpis(
+                        GTourTarget(id: 'counters', child: DispatchWidgetKpis(
                           unassigned: unassigned.length,
                           conflicts: conflicts.length,
                           late: late.length,
@@ -117,7 +118,7 @@ class _DispatchBodyState extends State<DispatchBody> {
                           onLate: () => _showList('Late visits'.tr, late),
                           onPlanned: () =>
                               _showList('Visits on this day'.tr, dayVisits),
-                        ),
+                        )),
                         const SizedBox(height: 4),
                       ],
                     ),
@@ -126,22 +127,24 @@ class _DispatchBodyState extends State<DispatchBody> {
                     pinned: true,
                     delegate: _PinnedHeader(
                       height: 60 * MediaQuery.textScalerOf(context).scale(1),
-                      child: _ViewSwitch(
+                      child: GTourTarget(id: 'views', child: _ViewSwitch(
                         view: _view,
                         showQueue: !wide,
                         queueCount: unassigned.length,
                         onChanged: (view) => setState(() => _view = view),
-                      ),
+                      )),
                     ),
                   ),
                 ],
-                body: _content(state, unassigned, dayVisits, wide),
+                body: GTourTarget(
+                    id: 'board',
+                    child: _content(state, unassigned, dayVisits, wide)),
               ),
             ),
             if (_view == DispatchView.technicians &&
                 !wide &&
                 state.technicians.isNotEmpty)
-              DispatchWidgetUnassignedTray(visits: unassigned, day: day),
+              GTourTarget(id: 'tray', child: DispatchWidgetUnassignedTray(visits: unassigned, day: day)),
           ],
         ),
       ),

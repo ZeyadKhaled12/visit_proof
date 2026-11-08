@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +16,7 @@ class RoleSelectScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.roleSelect, child: BlocProvider(
         create: (context) => sl<AuthBloc>(),
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
@@ -22,6 +24,6 @@ class RoleSelectScr extends StatelessWidget {
                 enteringAsAdmin:
                     state.enterAsAdminRequestState == RequestState.loading);
           },
-        ));
+        )));
   }
 }

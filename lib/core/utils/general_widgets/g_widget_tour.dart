@@ -7,55 +7,243 @@ import 'package:flutter/services.dart';
 import '../../../configs/app_theme.dart';
 import 'g_widget_button.dart';
 
-/// One stop of a guided tour: the part of the screen to spotlight and what
-/// to say about it.
+/// One stop of a guided tour: the part of the screen to spotlight (the id
+/// of a [GTourTarget]) and what to say about it.
 class GTourStep {
-  const GTourStep({
-    required this.target,
-    required this.icon,
-    required this.title,
-    required this.text,
-    this.tip,
-  });
+  const GTourStep(this.id, this.icon, this.title, this.text, {this.tip});
 
-  /// Put this key on the widget to spotlight (a [KeyedSubtree] is enough).
-  final GlobalKey target;
+  final String id;
   final IconData icon;
   final String title;
   final String text;
   final String? tip;
 }
 
-/// A guided tour played like a game level: a spotlight flies from stop to
-/// stop, the guide types its explanation, and every stop earns a star, up to
-/// a medal and confetti at the end. Reusable on any screen.
-class GWidgetTour extends StatefulWidget {
-  const GWidgetTour._({
-    required this.mission,
-    required this.badge,
-    required this.steps,
-  });
+/// A screen's guided tour: its name, what the screen is for, and its stops.
+class GTour {
+  const GTour({required this.mission, required this.about, this.steps = const []});
 
   final String mission;
-  final String badge;
+  final String about;
   final List<GTourStep> steps;
+}
 
-  /// Plays the tour over the current screen. Stops whose target is not on
-  /// the screen are skipped.
+/// Finds the [GTourTarget]s under a [GWidgetTourFlag].
+class _GTourScope extends InheritedWidget {
+  const _GTourScope({required this.targets, required super.child});
+
+  final Map<String, BuildContext> targets;
+
+  @override
+  bool updateShouldNotify(_GTourScope oldWidget) => false;
+}
+
+/// Marks a part of a screen so its tour can spotlight it. Costs nothing and
+/// adds no layout; outside a [GWidgetTourFlag] it does nothing.
+class GTourTarget extends StatefulWidget {
+  const GTourTarget({super.key, required this.id, required this.child});
+
+  final String id;
+  final Widget child;
+
+  @override
+  State<GTourTarget> createState() => _GTourTargetState();
+}
+
+class _GTourTargetState extends State<GTourTarget> {
+  Map<String, BuildContext>? _targets;
+
+  void _forget(String id) {
+    if (identical(_targets?[id], context)) _targets?.remove(id);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _targets = context.getInheritedWidgetOfExactType<_GTourScope>()?.targets;
+    _targets?[widget.id] = context;
+  }
+
+  @override
+  void didUpdateWidget(GTourTarget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.id != widget.id) {
+      _forget(oldWidget.id);
+      _targets?[widget.id] = context;
+    }
+  }
+
+  @override
+  void dispose() {
+    _forget(widget.id);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+/// Puts the help flag on a screen and connects it to the screen's tour.
+/// Wrap the whole screen, so every [GTourTarget] in it is found.
+class GWidgetTourFlag extends StatefulWidget {
+  const GWidgetTourFlag({
+    super.key,
+    required this.tour,
+    required this.child,
+    this.bottom = 150,
+  });
+
+  final GTour tour;
+  final Widget child;
+
+  /// Height of the flag above the bottom edge; clear of buttons and cards
+  /// pinned to the bottom of the screen.
+  final double bottom;
+
+  @override
+  State<GWidgetTourFlag> createState() => _GWidgetTourFlagState();
+}
+
+class _GWidgetTourFlagState extends State<GWidgetTourFlag> {
+  final Map<String, BuildContext> _targets = {};
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    return _GTourScope(
+      targets: _targets,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          widget.child,
+          // Out of the way while the keyboard is open.
+          if (media.viewInsets.bottom == 0)
+            ValueListenableBuilder<bool>(
+              valueListenable: GWidgetTour.showFlags,
+              builder: (context, show, _) => !show
+                  ? const SizedBox.shrink()
+                  : Align(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            bottom: widget.bottom + media.padding.bottom),
+                        child: _HelpFlag(
+                          onTap: () => GWidgetTour.start(context,
+                              tour: widget.tour, targets: _targets),
+                        ),
+                      ),
+                    ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The help flag for a bottom sheet's header: Wizpoo explains the sheet.
+class GWidgetHelpButton extends StatelessWidget {
+  const GWidgetHelpButton({super.key, required this.title, required this.help});
+  final String title;
+  final String help;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: GWidgetTour.showFlags,
+      builder: (context, show, _) => !show
+          ? const SizedBox.shrink()
+          : Padding(
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 8),
+              child: _HelpFlag(
+                onTap: () => GWidgetTour.start(context,
+                    tour: GTour(mission: title, about: help)),
+              ),
+            ),
+    );
+  }
+}
+
+/// A gold pennant with a question mark. Nothing else in the app is gold, so
+/// it stands out on every screen.
+class _HelpFlag extends StatelessWidget {
+  const _HelpFlag({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    return Tooltip(
+      message: 'How this screen works'.tr,
+      child: ClipPath(
+        clipper: _PennantClipper(rtl: rtl),
+        child: Material(
+          color: AppTheme.reward,
+          child: InkWell(
+            onTap: onTap,
+            child: SizedBox(
+              width: 56,
+              height: 48,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(start: 12),
+                child: Icon(Icons.question_mark_rounded,
+                    color: AppTheme.onReward, size: 26),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A swallowtail cut into the side facing the middle of the screen.
+class _PennantClipper extends CustomClipper<Path> {
+  const _PennantClipper({required this.rtl});
+  final bool rtl;
+
+  @override
+  Path getClip(Size size) {
+    final w = size.width;
+    final h = size.height;
+    const notch = 14.0;
+    double x(double value) => rtl ? w - value : value;
+    return Path()
+      ..moveTo(x(0), 0)
+      ..lineTo(x(w), 0)
+      ..lineTo(x(w), h)
+      ..lineTo(x(0), h)
+      ..lineTo(x(notch), h / 2)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(_PennantClipper oldClipper) => oldClipper.rtl != rtl;
+}
+
+/// A guided tour played like a game level: a spotlight flies from stop to
+/// stop, Wizpoo types the explanation, and every stop bursts with stars, up
+/// to a medal and confetti at the end.
+class GWidgetTour extends StatefulWidget {
+  const GWidgetTour._({required this.tour, required this.targets});
+
+  final GTour tour;
+  final Map<String, BuildContext> targets;
+
+  /// Whether help flags are shown. Changed from the app settings.
+  static final ValueNotifier<bool> showFlags = ValueNotifier(true);
+
+  /// Plays [tour] over the current screen. Stops whose part is not on the
+  /// screen are skipped; with none left, Wizpoo just explains the screen.
   static Future<void> start(
     BuildContext context, {
-    required String mission,
-    required String badge,
-    required List<GTourStep> steps,
+    required GTour tour,
+    Map<String, BuildContext> targets = const {},
   }) async {
-    final ready = steps.where((s) => s.target.currentContext != null).toList();
-    if (ready.isEmpty) return;
     await Navigator.of(context, rootNavigator: true).push(PageRouteBuilder<void>(
       opaque: false,
       transitionDuration: const Duration(milliseconds: 260),
       reverseTransitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (_, __, ___) =>
-          GWidgetTour._(mission: mission, badge: badge, steps: ready),
+      pageBuilder: (_, __, ___) => GWidgetTour._(tour: tour, targets: targets),
       transitionsBuilder: (_, animation, __, child) =>
           FadeTransition(opacity: animation, child: child),
     ));
@@ -69,8 +257,6 @@ enum _Stage { intro, playing, finished }
 
 class _GWidgetTourState extends State<GWidgetTour>
     with TickerProviderStateMixin {
-  static const int _xpPerStop = 10;
-
   /// Keeps the guide bobbing and the spotlight breathing.
   late final AnimationController _idle = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 2400));
@@ -106,9 +292,13 @@ class _GWidgetTourState extends State<GWidgetTour>
   bool _reduceMotion = false;
   Size? _size;
 
-  GTourStep get _step => widget.steps[_index];
-  bool get _last => _index == widget.steps.length - 1;
-  int get _xp => _collected.length * _xpPerStop;
+  /// The stops whose part of the screen is there when the tour opens.
+  late final List<GTourStep> _steps = widget.tour.steps
+      .where((step) => widget.targets[step.id] != null)
+      .toList();
+
+  GTourStep get _step => _steps[_index];
+  bool get _last => _index == _steps.length - 1;
 
   @override
   void didChangeDependencies() {
@@ -161,7 +351,7 @@ class _GWidgetTourState extends State<GWidgetTour>
 
   /// Where a step's target is, in this overlay's coordinates.
   Rect? _measure(GTourStep step) {
-    final target = step.target.currentContext?.findRenderObject();
+    final target = widget.targets[step.id]?.findRenderObject();
     final self = context.findRenderObject();
     if (target is! RenderBox || self is! RenderBox || !target.attached) {
       return null;
@@ -184,7 +374,7 @@ class _GWidgetTourState extends State<GWidgetTour>
     await _hidePanel();
     if (!mounted) return;
 
-    final target = widget.steps[index].target.currentContext;
+    final target = widget.targets[_steps[index].id];
     if (target != null && target.mounted) {
       await Scrollable.ensureVisible(
         target,
@@ -198,10 +388,10 @@ class _GWidgetTourState extends State<GWidgetTour>
     await WidgetsBinding.instance.endOfFrame;
     if (!mounted) return;
 
-    final rect = _measure(widget.steps[index]);
+    final rect = _measure(_steps[index]);
     if (rect == null) {
       _busy = false;
-      if (index < widget.steps.length - 1) {
+      if (index < _steps.length - 1) {
         _go(index + 1);
       } else {
         _finish();
@@ -280,8 +470,8 @@ class _GWidgetTourState extends State<GWidgetTour>
   }
 
   void _close() {
-    final first = widget.steps.first.target.currentContext;
-    if (first != null) {
+    final first = _steps.isEmpty ? null : widget.targets[_steps.first.id];
+    if (first != null && first.mounted) {
       Scrollable.ensureVisible(first,
           duration: _reduceMotion
               ? Duration.zero
@@ -366,29 +556,11 @@ class _GWidgetTourState extends State<GWidgetTour>
         builder: (context, _) {
           final t = _reward.value;
           if (t == 0 || t == 1) return const SizedBox.shrink();
-          final center = _rewardAt!.center;
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              CustomPaint(
-                  painter: _BurstPainter(
-                      center: center, progress: t, color: AppTheme.reward)),
-              Positioned(
-                left: center.dx - 70,
-                top: center.dy - 20 - 70 * Curves.easeOut.transform(t),
-                width: 140,
-                child: Opacity(
-                  opacity: (1 - t).clamp(0.0, 1.0),
-                  child: Text('+{0} XP'.trArgs([_xpPerStop]),
-                      textAlign: TextAlign.center,
-                      style: AppTheme.font(
-                          color: AppTheme.reward,
-                          fontSize: AppTheme.textTitleLarge,
-                          fontWeight: FontWeight.w800)),
-                ),
-              ),
-            ],
-          );
+          return CustomPaint(
+              painter: _BurstPainter(
+                  center: _rewardAt!.center,
+                  progress: t,
+                  color: AppTheme.reward));
         },
       ),
     );
@@ -403,22 +575,20 @@ class _GWidgetTourState extends State<GWidgetTour>
         children: [
           _Mascot(size: 96, idle: _idle),
           const SizedBox(height: 16),
-          Text('New mission'.tr,
+          Text('Hi, I am Wizpoo'.tr,
               style: AppTheme.font(
                   color: AppTheme.primary,
                   fontSize: AppTheme.textSmall,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text(widget.mission,
+          Text(widget.tour.mission,
               textAlign: TextAlign.center,
               style: AppTheme.font(
                   color: AppTheme.textPrimary,
                   fontSize: AppTheme.textHeadline,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
-          Text(
-              'I am Proofy, your guide. {0} stops, about one minute, and a star at every stop.'
-                  .trArgs([widget.steps.length]),
+          Text(widget.tour.about,
               textAlign: TextAlign.center,
               style: AppTheme.font(
                   color: AppTheme.textSecondary,
@@ -426,14 +596,17 @@ class _GWidgetTourState extends State<GWidgetTour>
                   height: 1.4)),
           const SizedBox(height: 20),
           GWidgetButton(
-            text: 'Start the mission'.tr,
+            text: _steps.isEmpty ? 'Got it'.tr : 'Start the mission'.tr,
             fontSize: AppTheme.textSubtitle,
             height: 56,
             paddingTopBottom: 0,
-            onPressed: _begin,
+            onPressed: _steps.isEmpty ? () => Navigator.of(context).pop() : _begin,
           ),
-          const SizedBox(height: 4),
-          _QuietButton(label: 'Not now'.tr, onTap: () => Navigator.of(context).pop()),
+          if (_steps.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            _QuietButton(
+                label: 'Not now'.tr, onTap: () => Navigator.of(context).pop()),
+          ],
         ],
       ),
     );
@@ -475,7 +648,7 @@ class _GWidgetTourState extends State<GWidgetTour>
 
   Widget _stopCard() {
     final step = _step;
-    final total = widget.steps.length;
+    final total = _steps.length;
     final stop = 'Stop {0} of {1}'.trArgs([_index + 1, total]);
 
     return _Card(
@@ -535,8 +708,6 @@ class _GWidgetTourState extends State<GWidgetTour>
                       ],
                     ),
                   ),
-                  _XpPill(xp: _xp),
-                  const SizedBox(width: 4),
                 ],
               ),
             ),
@@ -550,9 +721,12 @@ class _GWidgetTourState extends State<GWidgetTour>
             const SizedBox(height: 8),
             Row(
               children: [
-                Flexible(
+                Expanded(
                   flex: 2,
-                  child: _QuietButton(label: 'Skip tour'.tr, onTap: _close),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: _QuietButton(label: 'Skip tour'.tr, onTap: _close),
+                  ),
                 ),
                 if (_index > 0)
                   IconButton(
@@ -637,8 +811,6 @@ class _GWidgetTourState extends State<GWidgetTour>
   // --- Finale ----------------------------------------------------------------
 
   Widget _finaleCard() {
-    final total = _xp;
-
     return AnimatedBuilder(
       animation: _finale,
       builder: (context, _) {
@@ -646,10 +818,6 @@ class _GWidgetTourState extends State<GWidgetTour>
                 parent: _finale,
                 curve: Interval(from, to, curve: Curves.elasticOut))
             .value;
-        final counted = (total *
-                Curves.easeOut
-                    .transform(((_finale.value - .2) / .3).clamp(0.0, 1.0)))
-            .round();
 
         return _Card(
           child: Column(
@@ -675,17 +843,11 @@ class _GWidgetTourState extends State<GWidgetTour>
                       fontSize: AppTheme.textHeadline,
                       fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
-              Text('You earned the badge: {0}'.trArgs([widget.badge]),
+              Text('You now know how this screen works.'.tr,
                   textAlign: TextAlign.center,
                   style: AppTheme.font(
                       color: AppTheme.textSecondary,
                       fontSize: AppTheme.textBody)),
-              const SizedBox(height: 12),
-              Text('+{0} XP'.trArgs([counted]),
-                  style: AppTheme.font(
-                      color: AppTheme.primary,
-                      fontSize: AppTheme.textDisplay,
-                      fontWeight: FontWeight.w800)),
               const SizedBox(height: 16),
               GWidgetButton(
                 text: 'Back to work'.tr,
@@ -743,40 +905,6 @@ class _QuietButton extends StatelessWidget {
   }
 }
 
-class _XpPill extends StatelessWidget {
-  const _XpPill({required this.xp});
-  final int xp;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppTheme.locationChipBg,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.star_rounded, size: 18, color: AppTheme.reward),
-          const SizedBox(width: 3),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 220),
-            transitionBuilder: (child, animation) =>
-                ScaleTransition(scale: animation, child: child),
-            child: Text('$xp',
-                key: ValueKey(xp),
-                style: AppTheme.font(
-                    color: AppTheme.textPrimary,
-                    fontSize: AppTheme.textSmall,
-                    fontWeight: FontWeight.w800)),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _Medal extends StatelessWidget {
   const _Medal();
 
@@ -796,7 +924,7 @@ class _Medal extends StatelessWidget {
   }
 }
 
-/// Proofy, the guide: the app's map pin with a face.
+/// Wizpoo, the guide: the app's map pin with a face.
 class _Mascot extends StatelessWidget {
   const _Mascot({required this.size, required this.idle});
   final double size;

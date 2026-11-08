@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -353,13 +355,13 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final resultsMaxHeight = (screenHeight * 0.43).clamp(140.0, 350.0);
 
-    return Scaffold(
+    return GWidgetTourFlag(tour: AppTours.locationPicker, bottom: 290, child: Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppTheme.scaffoldBackground,
       body: SafeArea(
         child: Stack(
           children: [
-            FlutterMap(
+            GTourTarget(id: 'map', child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
                 initialCenter: _fallbackLocation,
@@ -376,7 +378,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                   userAgentPackageName: 'com.example.visit_proof',
                 ),
               ],
-            ),
+            )),
 
             // Center pin is fixed while the map moves beneath it.
             IgnorePointer(
@@ -398,7 +400,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
             ),
 
             // Navigation and search field.
-            Positioned(
+            GTourTarget(id: 'search', child: Positioned(
               top: 16,
               left: 16,
               right: 16,
@@ -471,7 +473,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                   ),
                 ],
               ),
-            ),
+            )),
 
             // Live suggestions float over the map, below search input.
             if (_showSuggestions)
@@ -544,7 +546,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
 
             // Bottom confirmation card: keep it out of the way during search.
             if (!keyboardVisible && !_showSuggestions)
-              Positioned(
+              GTourTarget(id: 'confirm', child: Positioned(
                 left: 16,
                 right: 16,
                 bottom: 24,
@@ -615,7 +617,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                     ],
                   ),
                 ),
-              ),
+              )),
 
             if (_gpsLoading)
               Positioned(
@@ -631,6 +633,6 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

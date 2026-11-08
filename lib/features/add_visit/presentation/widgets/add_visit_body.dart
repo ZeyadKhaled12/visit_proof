@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -163,7 +164,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Column(
                 children: [
-                  AddVisitWidgetClient(
+                  GTourTarget(id: 'client', child: AddVisitWidgetClient(
                     key: _clientKey,
                     clients: _allClients,
                     sites: _allSites,
@@ -196,9 +197,9 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                         _siteErrorMsg = null;
                       });
                     },
-                  ),
+                  )),
                   SizedBox(height: 32),
-                  AddVisitWidgetService(
+                  GTourTarget(id: 'service', child: AddVisitWidgetService(
                     key: _serviceKey,
                     services: _allServices,
                     selectedService: _selectedService,
@@ -225,9 +226,9 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                         _requiresAfterPhotos = requiresAfterPhotos;
                       });
                     },
-                  ),
+                  )),
                   SizedBox(height: 32),
-                  AddVisitWidgetSchedule(
+                  GTourTarget(id: 'schedule', child: AddVisitWidgetSchedule(
                       key: _startDateKey,
                       technicians: _allTechnicians,
                       selectedPriority: _selectedPriority,
@@ -263,7 +264,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                           _startTime = startTime;
                           _startTimeErrorMsg = null;
                         });
-                      }),
+                      })),
                   SizedBox(height: 90)
                 ],
               ),
@@ -284,7 +285,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
+                        GTourTarget(id: 'actions', child: Row(
                           children: [
                             Expanded(
                                 child: GWidgetButton(
@@ -371,7 +372,7 @@ class _AddVisitBodyState extends State<AddVisitBody> {
                               },
                             ))
                           ],
-                        ),
+                        )),
                         if (_selectedTechnician != null) ...[
                           SizedBox(height: 6),
                           Text(

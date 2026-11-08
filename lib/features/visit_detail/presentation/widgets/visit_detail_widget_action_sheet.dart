@@ -12,12 +12,16 @@ class VisitDetailWidgetActionSheet extends StatelessWidget {
   const VisitDetailWidgetActionSheet({
     super.key,
     required this.title,
+    required this.help,
     required this.requestState,
     required this.builder,
     this.subtitle,
   });
 
   final String title;
+
+  /// What the help flag says about this sheet.
+  final String help;
   final String? subtitle;
   final RequestState Function(VisitDetailState state) requestState;
   final Widget Function(
@@ -41,6 +45,7 @@ class VisitDetailWidgetActionSheet extends StatelessWidget {
       listener: (context, state) => Navigator.pop(context),
       builder: (context, state) => GWidgetBottomSheet(
         title: title,
+        help: help,
         subtitle: subtitle,
         body: builder(
             context, state, requestState(state) == RequestState.loading),

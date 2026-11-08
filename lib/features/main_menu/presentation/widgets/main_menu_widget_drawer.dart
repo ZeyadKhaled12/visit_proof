@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/core/utils/general_widgets/g_widget_brand_mark.dart';
 import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_language.dart';
@@ -22,11 +24,11 @@ class MainMenuWidgetDrawer extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadiusDirectional.horizontal(end: Radius.circular(28))),
-      child: Column(
+      child: GWidgetTourFlag(tour: AppTours.adminMenu, bottom: 220, child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _Header(),
-          Expanded(
+          GTourTarget(id: 'sections', child: Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
               children: [
@@ -52,10 +54,10 @@ class MainMenuWidgetDrawer extends StatelessWidget {
                 ],
               ],
             ),
-          ),
+          )),
           const _Footer(),
         ],
-      ),
+      )),
     );
   }
 }
@@ -73,11 +75,9 @@ class _Footer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (GWidgetAppSettings.hasAny) ...[
-              const GWidgetAppSettings(),
+            GTourTarget(id: 'settings', child: const GWidgetAppSettings()),
               const SizedBox(height: 8),
-            ],
-            const AuthWidgetAccountActions(),
+            GTourTarget(id: 'account', child: const AuthWidgetAccountActions()),
           ],
         ),
       ),

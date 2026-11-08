@@ -53,6 +53,7 @@ class _VisitsWidgetFilterSheetState extends State<VisitsWidgetFilterSheet> {
   @override
   Widget build(BuildContext context) {
     return GWidgetBottomSheet(
+      help: 'Narrow the list by choosing one or more options in each group.'.tr,
       title: 'Filter visits'.tr,
       subtitle: 'Pick one or more options in each group'.tr,
       body: Column(

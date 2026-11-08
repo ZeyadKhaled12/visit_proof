@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,7 +76,7 @@ class _TechLoginBodyState extends State<TechLoginBody> {
                     fontSize: AppTheme.textBody,
                     height: 1.4)),
             const SizedBox(height: 28),
-            GWidgetTextField(
+            GTourTarget(id: 'email', child: GWidgetTextField(
               controller: _email,
               labelText: 'Email Address'.tr,
               hintText: 'name@company.com',
@@ -85,9 +86,9 @@ class _TechLoginBodyState extends State<TechLoginBody> {
               validator: (value) => GFunValid.isValidEmail(value ?? '')
                   ? null
                   : 'Please enter a valid email address'.tr,
-            ),
+            )),
             const SizedBox(height: 16),
-            GWidgetTextField(
+            GTourTarget(id: 'password', child: GWidgetTextField(
               controller: _password,
               labelText: 'Password'.tr,
               obscureText: _hidePassword,
@@ -107,9 +108,9 @@ class _TechLoginBodyState extends State<TechLoginBody> {
               validator: (value) => (value ?? '').isEmpty
                   ? 'Please enter your password'.tr
                   : null,
-            ),
+            )),
             const SizedBox(height: 28),
-            GWidgetButton(
+            GTourTarget(id: 'signIn', child: GWidgetButton(
               text: 'Sign in'.tr,
               fontSize: AppTheme.textSubtitle,
               height: 56,
@@ -118,7 +119,7 @@ class _TechLoginBodyState extends State<TechLoginBody> {
               loadingSize: 22,
               loadingStrokeWidth: 3,
               onPressed: _submit,
-            ),
+            )),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),

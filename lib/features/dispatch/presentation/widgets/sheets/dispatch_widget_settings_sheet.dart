@@ -42,6 +42,7 @@ class _DispatchWidgetSettingsSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Set the rules the board checks on every assignment, such as matching the specialty.'.tr,
       title: 'Dispatch rules'.tr,
       subtitle: 'Applied to every assignment on the board'.tr,
       requestState: (state) => state.saveSettingsRequestState,

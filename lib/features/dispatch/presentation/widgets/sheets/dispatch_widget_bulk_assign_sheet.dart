@@ -46,6 +46,7 @@ class _DispatchWidgetBulkAssignSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Review the plan for all the selected visits, then confirm to assign them together.'.tr,
       title: 'Assign {0} visits'.trArgs([widget.visitIDs.length]),
       subtitle: 'Review the plan, then confirm'.tr,
       requestState: (state) => state.bulkAssignRequestState,

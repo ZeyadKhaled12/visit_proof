@@ -45,6 +45,7 @@ class _VisitDetailWidgetServiceSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
+      help: 'Replaces the service on this visit.'.tr,
       title: 'Change service'.tr,
       subtitle: 'Current: {0}'.trArgs([widget.visit.serviceName ?? 'none'.tr]),
       requestState: (state) => state.changeServiceRequestState,

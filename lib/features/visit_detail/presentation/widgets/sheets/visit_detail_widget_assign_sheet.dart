@@ -83,6 +83,7 @@ class _VisitDetailWidgetAssignSheetState
     final draft = VisitRules.statusOf(widget.visit) == VisitStatus.draft;
 
     return VisitDetailWidgetActionSheet(
+      help: 'Choose the technician for this visit, or replace the current one.'.tr,
       title: current == null ? 'Assign technician'.tr : 'Reassign technician'.tr,
       subtitle: current == null
           ? 'Technicians busy at this time are rejected automatically.'.tr

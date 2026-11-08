@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,22 +26,12 @@ import 'dashboard_widget_period_bar.dart';
 import 'dashboard_widget_quick_links.dart';
 import 'dashboard_widget_technicians.dart';
 import 'dashboard_widget_today.dart';
-import 'dashboard_widget_tour.dart';
 import 'dashboard_widget_trend_chart.dart';
 
 /// Layer 1: what is happening, what needs attention, where to go next.
-class DashboardBody extends StatefulWidget {
+class DashboardBody extends StatelessWidget {
   const DashboardBody({super.key, required this.state});
   final DashboardState state;
-
-  @override
-  State<DashboardBody> createState() => _DashboardBodyState();
-}
-
-class _DashboardBodyState extends State<DashboardBody> {
-  final _tour = DashboardTourKeys();
-
-  DashboardState get state => widget.state;
 
   static List<String> _trail = ['Overview'.tr];
   static const double _wideBreakpoint = 900;
@@ -114,12 +105,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          KeyedSubtree(
-            key: _tour.header,
-            child: _Header(
-                state: state,
-                onRefresh: () => _reload(context),
-                onHelp: () => DashboardTour.start(context, _tour)),
+          GTourTarget(id: 'header', child: _Header(state: state, onRefresh: () => _reload(context)),
           ),
           GWidgetEmpty(
             icon: Icons.insights_rounded,
@@ -133,8 +119,7 @@ class _DashboardBodyState extends State<DashboardBody> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: KeyedSubtree(
-                key: _tour.links, child: const DashboardWidgetQuickLinks()),
+            child: GTourTarget(id: 'links', child: const DashboardWidgetQuickLinks()),
           ),
         ],
       );
@@ -225,35 +210,30 @@ class _DashboardBodyState extends State<DashboardBody> {
       onSeeAll: () => _openInsight(context, DashboardInsight.completion),
     );
 
-    Widget mark(GlobalKey key, Widget child) =>
-        KeyedSubtree(key: key, child: child);
+    Widget mark(String id, Widget child) =>
+        GTourTarget(id: id, child: child);
 
-    final newVisit = mark(_tour.newVisit, const DashboardWidgetNewVisit());
-    final attentionCard = mark(_tour.attention, attentionPanel);
-    final todayCard = mark(_tour.today, todayPanel);
-    final trendCard = mark(_tour.trend, trendPanel);
-    final technicianCard = mark(_tour.technicians, technicianPanel);
-    final links = mark(_tour.links, const DashboardWidgetQuickLinks());
+    final newVisit = mark('newVisit', const DashboardWidgetNewVisit());
+    final attentionCard = mark('attention', attentionPanel);
+    final todayCard = mark('today', todayPanel);
+    final trendCard = mark('trend', trendPanel);
+    final technicianCard = mark('technicians', technicianPanel);
+    final links = mark('links', const DashboardWidgetQuickLinks());
 
     return LayoutBuilder(builder: (context, constraints) {
       final wide = constraints.maxWidth >= _wideBreakpoint;
       const gap = SizedBox(height: 12);
       final scores = mark(
-          _tour.scores, DashboardGrid(columns: wide ? 4 : 2, children: kpis));
+          'scores', DashboardGrid(columns: wide ? 4 : 2, children: kpis));
 
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(bottom: 32),
         children: [
-          KeyedSubtree(
-            key: _tour.header,
-            child: _Header(
-                state: state,
-                onRefresh: () => _reload(context),
-                onHelp: () => DashboardTour.start(context, _tour)),
+          GTourTarget(id: 'header', child: _Header(state: state, onRefresh: () => _reload(context)),
           ),
           gap,
-          mark(_tour.period, DashboardWidgetPeriodBar(period: period)),
+          mark('period', DashboardWidgetPeriodBar(period: period)),
           gap,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -308,11 +288,9 @@ class _DashboardBodyState extends State<DashboardBody> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header(
-      {required this.state, required this.onRefresh, required this.onHelp});
+  const _Header({required this.state, required this.onRefresh});
   final DashboardState state;
   final VoidCallback onRefresh;
-  final VoidCallback onHelp;
 
   String get _greeting {
     final hour = DateTime.now().hour;
@@ -363,8 +341,6 @@ class _Header extends StatelessWidget {
                         fontSize: AppTheme.textBody,
                         fontWeight: FontWeight.w600)),
               ),
-              _action(Icons.help_outline_rounded, 'How this screen works'.tr,
-                  onHelp),
               _action(Icons.refresh_rounded, 'Refresh'.tr, onRefresh),
             ],
           ),

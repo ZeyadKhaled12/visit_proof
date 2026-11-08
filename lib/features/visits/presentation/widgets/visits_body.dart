@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -95,7 +96,7 @@ class _VisitsBodyState extends State<VisitsBody> {
           actions: [
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 12),
-              child: GWidgetButton(
+              child: GTourTarget(id: 'dispatch', child: GWidgetButton(
                 text: 'Dispatch'.tr,
                 fontSize: AppTheme.textBody,
                 height: 38,
@@ -108,11 +109,11 @@ class _VisitsBodyState extends State<VisitsBody> {
                       size: 16, color: AppTheme.onPrimary),
                 ),
                 onPressed: _openDispatch,
-              ),
+              )),
             ),
           ]).appbar(),
       floatingActionButton:
-          GWidgetFloatingBtn(text: 'Add New Visit'.tr, onPressed: _addVisit),
+          GTourTarget(id: 'add', child: GWidgetFloatingBtn(text: 'Add New Visit'.tr, onPressed: _addVisit)),
       body: GWidgetLoading(
         isLoading: widget.loading,
         body: Padding(
@@ -120,12 +121,12 @@ class _VisitsBodyState extends State<VisitsBody> {
           child: Column(
             children: [
               const SizedBox(height: 5),
-              VisitsWidgetFilters(
+              GTourTarget(id: 'filters', child: VisitsWidgetFilters(
                 searchController: _searchController,
                 onSearch: (value) => setState(() => _query = value),
                 activeFilters: _filter.activeCount,
                 onFilter: _openFilters,
-              ),
+              )),
               const SizedBox(height: 16),
               Expanded(
                 child: RefreshIndicator(
@@ -139,8 +140,8 @@ class _VisitsBodyState extends State<VisitsBody> {
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       if (visits.isEmpty) return _emptyState();
-                      return VisitsWidgetCard(
-                          visit: visits[index], onReturn: _refresh);
+                      return GTourTarget(id: 'card_$index', child: VisitsWidgetCard(
+                          visit: visits[index], onReturn: _refresh));
                     },
                   ),
                 ),

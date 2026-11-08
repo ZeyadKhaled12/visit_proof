@@ -51,6 +51,7 @@ class _DispatchWidgetRescheduleSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Pick a new date and time for this visit.'.tr,
       title: 'Reschedule visit'.tr,
       requestState: (state) => state.rescheduleRequestState,
       builder: (context, state, loading) {

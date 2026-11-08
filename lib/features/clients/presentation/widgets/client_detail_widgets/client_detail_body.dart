@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,8 +41,8 @@ class ClientDetailBody extends StatelessWidget {
         appBar: GWidgetNaviAppbar.appBar(context, 'Client Details'.tr),
         bottomNavigationBar: laoding
             ? null
-            : ClientDetailWidgetBottomBtns(
-                removeLoading: removeClientLoading, clientDetailModel: client),
+            : GTourTarget(id: 'actions', child: ClientDetailWidgetBottomBtns(
+                removeLoading: removeClientLoading, clientDetailModel: client)),
         body: GWidgetLoading(
           isLoading: laoding,
           body: CustomScrollView(
@@ -49,19 +50,19 @@ class ClientDetailBody extends StatelessWidget {
             slivers: [
               // Header Profile section
               SliverToBoxAdapter(
-                  child: ClientDetailWidgetHeader(clientDetailModel: client)),
+                  child: GTourTarget(id: 'header', child: ClientDetailWidgetHeader(clientDetailModel: client))),
 
               // Equipments Section
               SliverToBoxAdapter(
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 16.0),
-                    child: ClientDetailWidgetEquipments(
+                    child: GTourTarget(id: 'equipment', child: ClientDetailWidgetEquipments(
                         equipmentIDLoading: equipmentIDLoading,
                         removeEquipmentLoading: removeEquipmentLoading,
                         clientID: client.id ?? "",
                         addEquipmentLoading: addEquipmentLoading,
-                        equipments: client.equipments ?? [])),
+                        equipments: client.equipments ?? []))),
               ),
 
               // Sticky Visit History Title
@@ -72,8 +73,8 @@ class ClientDetailBody extends StatelessWidget {
                       color: AppTheme.scaffoldBackground,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 12.0),
-                      child: ClientDetailWidgetTitle(
-                          title: 'Visit History'.tr, icon: Icons.history),
+                      child: GTourTarget(id: 'history', child: ClientDetailWidgetTitle(
+                          title: 'Visit History'.tr, icon: Icons.history)),
                     ),
                     height: 60),
               ),

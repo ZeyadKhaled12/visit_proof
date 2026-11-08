@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/services/services_locator.dart';
@@ -19,7 +21,7 @@ class AddClientScr extends StatelessWidget {
       argu = AddClientArgu.fromJson(data);
     }
 
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.addClient, child: BlocProvider(
         create: (context) => sl<ClientsBloc>(),
         child: BlocConsumer<ClientsBloc, ClientsState>(
           listener: (context, state) {
@@ -38,7 +40,7 @@ class AddClientScr extends StatelessWidget {
                 clientDetailModel: argu.client,
                 loading: state.addClientRequestState == RequestState.loading);
           },
-        ));
+        )));
   }
 }
 

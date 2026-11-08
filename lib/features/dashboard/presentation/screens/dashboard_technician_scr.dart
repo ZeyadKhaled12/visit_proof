@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,7 +68,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
         .where((s) => s.technician.id == widget.technicianID)
         .firstOrNull;
 
-    return GWidgetNaviBody(
+    return GWidgetTourFlag(tour: AppTours.dashboardTechnician, child: GWidgetNaviBody(
       title: stat?.technician.name ?? 'Technician'.tr,
       body: stat == null
           ? Center(
@@ -74,7 +76,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                   icon: Icons.person_off_rounded,
                   text: 'This technician no longer exists'.tr))
           : _body(stat, period),
-    );
+    ));
   }
 
   Widget _body(DashboardTechnicianStat stat, DashboardPeriod period) {
@@ -99,11 +101,12 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
     final hasFilter = _status != null || bucket != null;
 
     return ListView(
+      cacheExtent: 100000, // keeps every section built for the guided tour
       padding: const EdgeInsets.only(top: 12, bottom: 32),
       children: [
-        DashboardBreadcrumb(trail: widget.trail),
+        GTourTarget(id: 'trail', child: DashboardBreadcrumb(trail: widget.trail)),
         const SizedBox(height: 10),
-        DashboardWidgetPeriodBar(period: period),
+        GTourTarget(id: 'period', child: DashboardWidgetPeriodBar(period: period)),
         const SizedBox(height: 14),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -158,7 +161,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                 ],
               ),
               const SizedBox(height: 14),
-              DashboardGrid(columns: 4, spacing: 8, children: [
+              GTourTarget(id: 'stats', child: DashboardGrid(columns: 4, spacing: 8, children: [
                 DashboardMiniStat(label: 'Visits'.tr, value: '${stat.visits.length}'),
                 DashboardMiniStat(label: 'Completed'.tr, value: '${stat.completed}'),
                 DashboardMiniStat(
@@ -167,19 +170,19 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                 DashboardMiniStat(
                     label: 'Collected'.tr,
                     value: DashboardFormat.money(stat.collected)),
-              ]),
+              ])),
               const SizedBox(height: 14),
               DashboardSection(
                 title: 'Workload over time'.tr,
                 subtitle: 'Tap a bar to list those visits'.tr,
-                child: DashboardWidgetTrendChart(
+                child: GTourTarget(id: 'chart', child: DashboardWidgetTrendChart(
                   buckets: buckets,
                   selectedIndex: _bucket,
                   onSelect: (index) => setState(() => _bucket = index),
-                ),
+                )),
               ),
               const SizedBox(height: 14),
-              DashboardSection(
+              GTourTarget(id: 'status', child: DashboardSection(
                 title: 'By status'.tr,
                 child: statusList.isEmpty
                     ? Text('No visits in this period'.tr,
@@ -201,9 +204,9 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                         onTap: (i) => setState(() => _status =
                             _status == statusList[i] ? null : statusList[i]),
                       ),
-              ),
+              )),
               const SizedBox(height: 14),
-              DashboardSection(
+              GTourTarget(id: 'list', child: DashboardSection(
                 title: '{0} visit{1}'.trArgs([filtered.length, filtered.length == 1 ? '' : 's']),
                 subtitle: hasFilter ? 'Filtered selection'.tr : 'All in this period'.tr,
                 actionText: hasFilter ? 'Clear filter'.tr : null,
@@ -216,7 +219,7 @@ class _DashboardTechnicianScrState extends State<DashboardTechnicianScr> {
                 child: DashboardWidgetVisitList(
                     visits: filtered,
                     emptyText: 'No visits match this selection'.tr),
-              ),
+              )),
             ],
           ),
         ),

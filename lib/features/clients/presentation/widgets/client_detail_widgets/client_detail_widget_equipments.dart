@@ -66,7 +66,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
                 ),
               )
             : SizedBox(
-                height: 125,
+                height: 150,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: equipments.length,

@@ -81,6 +81,7 @@ class _VisitDetailWidgetCollectSheetState
   @override
   Widget build(BuildContext context) {
     return VisitDetailWidgetActionSheet(
+      help: 'Records money received on site. It needs your location and a receipt photo, then the admin confirms it.'.tr,
       title: 'Collect payment'.tr,
       subtitle:
           'The admin confirms the payment before it counts as paid.'.tr,

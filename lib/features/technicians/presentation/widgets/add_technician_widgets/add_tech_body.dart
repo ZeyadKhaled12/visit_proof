@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'dart:developer';
 
@@ -87,7 +88,7 @@ class _AddTechBodyState extends State<AddTechBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GWidgetTextField(
+              GTourTarget(id: 'name', child: GWidgetTextField(
                 controller: _nameController,
                 labelText: 'Full Name *'.tr,
                 hintText: 'e.g. Zeyad Khaled'.tr,
@@ -96,9 +97,9 @@ class _AddTechBodyState extends State<AddTechBody> {
                 prefixIcon:
                     Icon(Icons.person_outline, color: AppTheme.primary),
                 textInputAction: TextInputAction.next,
-              ),
+              )),
               const SizedBox(height: 20),
-              GWidgetPhoneField(
+              GTourTarget(id: 'phone', child: GWidgetPhoneField(
                 initialCountryCode: _phoneNumber?.countryISOCode ?? 'SA',
                 controller: _phoneController,
                 labelText: 'Phone Number *'.tr,
@@ -114,9 +115,9 @@ class _AddTechBodyState extends State<AddTechBody> {
                     _phoneNumber = phoneNumber;
                   });
                 },
-              ),
+              )),
               const SizedBox(height: 20),
-              GWidgetTextField(
+              GTourTarget(id: 'email', child: GWidgetTextField(
                 controller: _emailController,
                 labelText: 'Email Address *'.tr,
                 hintText: 'technician@example.com'.tr,
@@ -126,9 +127,9 @@ class _AddTechBodyState extends State<AddTechBody> {
                 prefixIcon:
                     Icon(Icons.alternate_email, color: AppTheme.primary),
                 textInputAction: TextInputAction.next,
-              ),
+              )),
               const SizedBox(height: 20),
-              GWidgetTextField(
+              GTourTarget(id: 'password', child: GWidgetTextField(
                 controller: _passwordController,
                 labelText: 'Password *'.tr,
                 hintText: '••••••••••••',
@@ -153,12 +154,12 @@ class _AddTechBodyState extends State<AddTechBody> {
                 prefixIcon:
                     Icon(Icons.lock_outline, color: AppTheme.primary),
                 textInputAction: TextInputAction.next,
-              ),
+              )),
 
               const SizedBox(height: 24),
 
               // Categories Section (Multi-select)
-              AddTechWidgetCategories(
+              GTourTarget(id: 'categories', child: AddTechWidgetCategories(
                   selectedCategories: _selectedCategories,
                   categories: widget.categories,
                   categoriesLoading: widget.categoriesLoading,
@@ -172,12 +173,12 @@ class _AddTechBodyState extends State<AddTechBody> {
                     setState(() {
                       _selectedCategories.add(category);
                     });
-                  }),
+                  })),
 
               const SizedBox(height: 40),
 
               // Submit Button
-              GWidgetButton(
+              GTourTarget(id: 'save', child: GWidgetButton(
                 isLoading: widget.loading,
                 onPressed: () {
                   setState(() {
@@ -280,7 +281,7 @@ class _AddTechBodyState extends State<AddTechBody> {
                     : 'Create Technician'.tr,
                 height: 60,
                 // isLoading: widget.loading,
-              ),
+              )),
               const SizedBox(height: 20),
             ],
           ),

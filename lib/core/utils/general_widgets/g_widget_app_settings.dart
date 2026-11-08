@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
 import '../../demo/demo_mode.dart';
+import 'g_widget_tour.dart';
 
-/// Language and dark mode switches in one card, shared by the admin menu,
+/// Language, dark mode and help flag switches in one card, shared by the admin menu,
 /// the technician menu and the role selection screen.
 class GWidgetAppSettings extends StatelessWidget {
   const GWidgetAppSettings({super.key});
-
-  /// False when both switches are turned off for this build.
-  static bool get hasAny => AppLanguage.languageSwitchEnabled || _showDarkMode;
 
   /// An installed app keeps the light/dark it was designed in.
   static bool get _showDarkMode =>
@@ -20,7 +18,6 @@ class GWidgetAppSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     const showLanguage = AppLanguage.languageSwitchEnabled;
     final showDarkMode = _showDarkMode;
-    if (!hasAny) return const SizedBox.shrink();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -36,6 +33,10 @@ class GWidgetAppSettings extends StatelessWidget {
             Divider(
                 height: 12, color: AppTheme.iconLightGrey.withValues(alpha: .3)),
           if (showDarkMode) const _DarkModeRow(),
+          if (showLanguage || showDarkMode)
+            Divider(
+                height: 12, color: AppTheme.iconLightGrey.withValues(alpha: .3)),
+          const _HelpFlagsRow(),
         ],
       ),
     );
@@ -147,6 +148,36 @@ class _DarkModeRow extends StatelessWidget {
             value: dark,
             activeTrackColor: AppTheme.primary,
             onChanged: (value) => AppTheme.darkMode.value = value,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Shows or hides the help flags on every screen. The app saves the choice.
+class _HelpFlagsRow extends StatelessWidget {
+  const _HelpFlagsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: GWidgetTour.showFlags,
+      builder: (context, show, _) => Row(
+        children: [
+          Icon(Icons.flag_rounded, color: AppTheme.reward, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text('Help flags'.tr,
+                style: AppTheme.font(
+                    color: AppTheme.textPrimary,
+                    fontSize: AppTheme.textBodyLarge,
+                    fontWeight: FontWeight.w700)),
+          ),
+          Switch.adaptive(
+            value: show,
+            activeTrackColor: AppTheme.primary,
+            onChanged: (value) => GWidgetTour.showFlags.value = value,
           ),
         ],
       ),

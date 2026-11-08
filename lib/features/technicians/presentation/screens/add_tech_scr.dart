@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visit_proof/core/usecase/base_use_case.dart';
@@ -29,7 +31,7 @@ class AddTechScr extends StatelessWidget {
       argu = AddTechArgu.fromJson(data);
     }
 
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.addTechnician, child: BlocProvider(
         create: (context) => sl<TechBloc>()
           ..add(GetTCategoriesEvent(noParameters: NoParameters())),
         child: BlocConsumer<TechBloc, TechState>(
@@ -50,7 +52,7 @@ class AddTechScr extends StatelessWidget {
                 loading:
                     state.addTechnicianRequestState == RequestState.loading);
           },
-        ));
+        )));
   }
 }
 

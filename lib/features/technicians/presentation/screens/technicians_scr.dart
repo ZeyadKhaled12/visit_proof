@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/services/services_locator.dart';
@@ -12,7 +14,7 @@ class TechniciansScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return GWidgetTourFlag(tour: AppTours.technicians, child: BlocProvider(
         create: (context) => sl<TechBloc>()
           ..add(GetTechniciansEvent(noParameters: NoParameters())),
         child: BlocBuilder<TechBloc, TechState>(
@@ -22,6 +24,6 @@ class TechniciansScr extends StatelessWidget {
                     state.getTechniciansRequestState == RequestState.loading,
                 technicians: state.technicians);
           },
-        ));
+        )));
   }
 }

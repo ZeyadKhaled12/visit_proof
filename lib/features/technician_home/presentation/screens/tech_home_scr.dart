@@ -1,3 +1,5 @@
+import 'package:visit_proof/configs/app_tours.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +19,7 @@ class TechHomeScr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GWidgetTourFlag(tour: AppTours.technicianHome, child: Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       drawer: const TechHomeWidgetDrawer(),
       body: BlocProvider(
@@ -31,6 +33,6 @@ class TechHomeScr extends StatelessWidget {
                       state.getVisitsRequestState == RequestState.loading);
             },
           )),
-    );
+    ));
   }
 }

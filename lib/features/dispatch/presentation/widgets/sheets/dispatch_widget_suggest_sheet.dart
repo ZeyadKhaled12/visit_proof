@@ -49,6 +49,7 @@ class _DispatchWidgetSuggestSheetState
   @override
   Widget build(BuildContext context) {
     return DispatchWidgetActionSheet(
+      help: 'Technicians ranked from the best match down. Tap an available one to assign the visit.'.tr,
       title: 'Suggested technicians'.tr,
       subtitle: 'Best match first: specialty, free time, distance and status'.tr,
       requestState: (state) => state.assignRequestState,

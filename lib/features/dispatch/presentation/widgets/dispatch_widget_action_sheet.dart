@@ -12,12 +12,16 @@ class DispatchWidgetActionSheet extends StatelessWidget {
   const DispatchWidgetActionSheet({
     super.key,
     required this.title,
+    required this.help,
     required this.builder,
     this.requestState,
     this.subtitle,
   });
 
   final String title;
+
+  /// What the help flag says about this sheet.
+  final String help;
   final String? subtitle;
 
   /// The operation that closes the sheet; null keeps it open.
@@ -45,6 +49,7 @@ class DispatchWidgetActionSheet extends StatelessWidget {
       listener: (context, state) => Navigator.pop(context),
       builder: (context, state) => GWidgetBottomSheet(
         title: title,
+        help: help,
         subtitle: subtitle,
         body: builder(context, state,
             requestState != null && requestState(state) == RequestState.loading),

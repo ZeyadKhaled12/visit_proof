@@ -1,3 +1,4 @@
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,12 +81,12 @@ class _InvoicesBodyState extends State<InvoicesBody> {
           child: Column(
             children: [
               const SizedBox(height: 5),
-              InvoicesWidgetFilters(
+              GTourTarget(id: 'filters', child: InvoicesWidgetFilters(
                 searchController: _searchController,
                 onSearch: (value) => setState(() => _query = value),
                 activeFilters: _filter.activeCount,
                 onFilter: _openFilters,
-              ),
+              )),
               const SizedBox(height: 16),
               Expanded(
                 child: RefreshIndicator(
@@ -99,8 +100,8 @@ class _InvoicesBodyState extends State<InvoicesBody> {
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       if (invoices.isEmpty) return _emptyState();
-                      return InvoicesWidgetCard(
-                          invoice: invoices[index], onReturn: _refresh);
+                      return GTourTarget(id: 'card_$index', child: InvoicesWidgetCard(
+                          invoice: invoices[index], onReturn: _refresh));
                     },
                   ),
                 ),
