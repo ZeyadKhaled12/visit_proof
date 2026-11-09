@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visit_proof/configs/app_offer.dart';
 import 'package:visit_proof/core/demo/demo_seed.dart';
 import 'package:visit_proof/core/local/local_pref.dart';
 import 'package:visit_proof/core/services/services_locator.dart';
@@ -60,6 +61,8 @@ void main() {
 
     await tester.pumpWidget(const WebsiteApp());
     await settle(tester, steps: 15);
+    expect(find.text(AppOffer.whatsappDisplay), findsOneWidget,
+        reason: 'a computer shows the number in the top bar');
 
     await tester.tap(inDock('See the invoice'));
     await settle(tester);

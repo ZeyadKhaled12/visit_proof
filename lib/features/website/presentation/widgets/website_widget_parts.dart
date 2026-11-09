@@ -1,8 +1,37 @@
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../configs/app_offer.dart';
+import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../website_theme.dart';
 import 'website_widget_brand.dart';
+
+/// The round WhatsApp button that floats over the page.
+class WebsiteWhatsappButton extends StatelessWidget {
+  const WebsiteWhatsappButton({super.key});
+
+  static const double _size = 48;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: 'WhatsApp'.tr,
+      child: Material(
+        color: WebTheme.whatsapp,
+        shape: const CircleBorder(),
+        elevation: 5,
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber),
+          child: const SizedBox.square(
+            dimension: _size,
+            child: Icon(Icons.whatsapp, color: WebTheme.onPrimary, size: 28),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 /// Shared pieces of the sales website.
 class WebsiteLayout {

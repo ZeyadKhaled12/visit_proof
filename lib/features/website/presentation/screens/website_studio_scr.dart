@@ -43,7 +43,6 @@ enum _Menu {
   restart,
   simulate,
   fullCompany,
-  offer,
   whatsapp,
   privacy,
   terms
@@ -138,8 +137,6 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         DemoMode.simulateOnSite.value = !DemoMode.simulateOnSite.value;
       case _Menu.fullCompany:
         _scenario.restart(fullCompany: true);
-      case _Menu.offer:
-        _showOffer();
       case _Menu.whatsapp:
         _openWhatsapp();
       case _Menu.privacy:
@@ -187,32 +184,22 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
               selectedIcon: const Icon(Icons.palette_rounded,
                   color: WebTheme.accentText),
             ),
+          IconButton(
+            tooltip: 'The offer'.tr,
+            visualDensity: VisualDensity.compact,
+            onPressed: _showOffer,
+            icon: const Icon(Icons.redeem_rounded, color: WebTheme.accentText),
+          ),
+          _menu(wide),
           if (AppOffer.hasWhatsapp && wide)
             TextButton.icon(
               onPressed: _openWhatsapp,
-              icon: const Icon(Icons.chat_rounded, color: WebTheme.statGreen),
+              icon: const Icon(Icons.whatsapp, color: WebTheme.whatsapp),
               label: Text(AppOffer.whatsappDisplay,
                   style: WebTheme.font(
                       color: WebTheme.textPrimary,
                       fontWeight: FontWeight.w700)),
             ),
-          if (AppOffer.hasWhatsapp && !wide)
-            IconButton(
-              tooltip: 'WhatsApp'.tr,
-              visualDensity: VisualDensity.compact,
-              onPressed: _openWhatsapp,
-              icon: const Icon(Icons.chat_rounded, color: WebTheme.statGreen),
-            ),
-          // A phone's bar has room for one of the two.
-          if (wide || !AppOffer.hasWhatsapp)
-            IconButton(
-              tooltip: 'The offer'.tr,
-              visualDensity: VisualDensity.compact,
-              onPressed: _showOffer,
-              icon:
-                  const Icon(Icons.redeem_rounded, color: WebTheme.accentText),
-            ),
-          _menu(wide),
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 2, end: 10),
             child: FilledButton(
@@ -245,11 +232,24 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
           : Column(
               children: [
                 Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, constraints) => StudioWidgetAppScreen(
-                        size:
-                            Size(constraints.maxWidth, constraints.maxHeight),
-                        overlay: bot),
+                  child: Stack(
+                    children: [
+                      LayoutBuilder(
+                        builder: (context, constraints) =>
+                            StudioWidgetAppScreen(
+                                size: Size(constraints.maxWidth,
+                                    constraints.maxHeight),
+                                overlay: bot),
+                      ),
+                      if (AppOffer.hasWhatsapp &&
+                          MediaQuery.viewInsetsOf(context).bottom == 0)
+                        // Above Wizpoo's bubble and the screens' bottom buttons.
+                        const PositionedDirectional(
+                          end: 10,
+                          bottom: 200,
+                          child: WebsiteWhatsappButton(),
+                        ),
+                    ],
                   ),
                 ),
                 if (_designOpen) dock,
@@ -295,10 +295,8 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
             'Pretend I am at the site'.tr),
         item(_Menu.fullCompany, Icons.business_rounded,
             'Explore a large sample company'.tr),
-        if (!wide && AppOffer.hasWhatsapp)
-          item(_Menu.offer, Icons.redeem_rounded, 'The offer'.tr),
         if (AppOffer.hasWhatsapp)
-          item(_Menu.whatsapp, Icons.chat_rounded,
+          item(_Menu.whatsapp, Icons.whatsapp,
               'WhatsApp: {0}'.trArgs([AppOffer.whatsappDisplay])),
         item(_Menu.privacy, Icons.privacy_tip_outlined, 'Privacy policy'.tr),
         item(_Menu.terms, Icons.description_outlined, 'Terms of service'.tr),

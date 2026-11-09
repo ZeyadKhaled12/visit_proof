@@ -64,6 +64,9 @@ class WebTheme {
 
   /// Status colors, used sparingly: deep green, dark gold and wine.
   static const Color statGreen = Color(0xFF1E5045);
+
+  /// WhatsApp's own green, so the button is recognised at a glance.
+  static const Color whatsapp = Color(0xFF25D366);
   static const Color pending = Color(0xFF8A6420);
   static const Color statOrange = Color(0xFF6B2B3A);
 

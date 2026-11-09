@@ -2,6 +2,7 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../../../../configs/app_offer.dart';
 import '../widgets/website_widget_brand.dart';
 import '../widgets/website_widget_offer.dart';
 import '../widgets/website_widget_parts.dart';
@@ -66,6 +67,8 @@ class _WebsiteScrState extends State<WebsiteScr> {
     final wide = WebsiteLayout.isWide(context);
 
     return Scaffold(
+      floatingActionButton:
+          AppOffer.hasWhatsapp ? const WebsiteWhatsappButton() : null,
       backgroundColor: WebTheme.scaffoldBackground,
       appBar: AppBar(
         backgroundColor: WebTheme.surface,
