@@ -1111,8 +1111,9 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
           parameters.invoiceId,
           description: field
               ? 'Technician collected {0} · awaiting admin confirmation'
-                  .trArgs([parameters.amount])
-              : 'Invoice payment recorded: {0}'.trArgs([parameters.amount]),
+                  .trArgs([parameters.amount.toStringAsFixed(2)])
+              : 'Invoice payment recorded: {0}'
+                  .trArgs([parameters.amount.toStringAsFixed(2)]),
           actor: field ? AppSession.actor : parameters.collectedBy,
           location: field ? parameters.location : null,
           keepPhotos: field
@@ -1277,7 +1278,8 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
 
         final updated = await _change(
           parameters.invoiceId,
-          description: 'Invoice payment refunded: {0}'.trArgs([parameters.amount]),
+          description: 'Invoice payment refunded: {0}'
+              .trArgs([parameters.amount.toStringAsFixed(2)]),
           reason: parameters.reason.trim(),
           actor: parameters.actor,
           edit: (invoice, visit, ledger) {
@@ -1423,7 +1425,7 @@ class InvoicesRemoteDataSource extends BaseInvoicesRemoteDataSource {
             }
 
             final cents = _cents(entry.paymentAmount, allowZero: false);
-            amount = '${cents / 100}';
+            amount = (cents / 100).toStringAsFixed(2);
 
             ledger[index] = entry.copyWith(
               status: parameters.approve

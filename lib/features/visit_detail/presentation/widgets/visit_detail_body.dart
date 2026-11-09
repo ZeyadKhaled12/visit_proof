@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../configs/app_theme.dart';
 import '../../../../configs/app_toasts.dart';
 import '../../../../core/utils/enums.dart';
+import '../../../../core/utils/enums/visit_status_enum.dart';
 import '../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../core/utils/general_widgets/g_widget_loading.dart';
 import '../../../../core/utils/general_widgets/g_widget_navi_body.dart';
@@ -98,6 +99,15 @@ class VisitDetailBody extends StatelessWidget {
     final visit = state.visit;
     final invoice = state.linkedInvoice;
     const gap = SizedBox(height: 16);
+    // On a finished visit the office reads the proof before the money.
+    final proofFirst = VisitRules.canManageInvoice() &&
+        VisitRules.statusOf(visit) == VisitStatus.completed;
+    final history = [
+      gap,
+      GTourTarget(id: 'history', child: VisitDetailWidgetHistory(
+          history: visit.history ?? const [],
+          canAddNote: VisitRules.canAddComment(visit))),
+    ];
 
     return GWidgetLoading(
       isLoading: state.getVisitDetailRequestState == RequestState.loading,
@@ -125,6 +135,7 @@ class VisitDetailBody extends StatelessWidget {
               gap,
               GTourTarget(id: 'photos', child: VisitDetailWidgetPhotos(visit: visit)),
             ],
+            if (proofFirst) ...history,
             if (VisitRules.canSeeInvoice(visit)) ...[
               gap,
               GTourTarget(id: 'invoice', child: VisitDetailWidgetInvoice(
@@ -134,10 +145,7 @@ class VisitDetailBody extends StatelessWidget {
                 onInvoiceClosed: () => _refresh(context),
               )),
             ],
-            gap,
-            GTourTarget(id: 'history', child: VisitDetailWidgetHistory(
-                history: visit.history ?? const [],
-                canAddNote: VisitRules.canAddComment(visit))),
+            if (!proofFirst) ...history,
             if (VisitRules.canDelete(visit, invoice)) ...[
               const SizedBox(height: 24),
               GWidgetButton(

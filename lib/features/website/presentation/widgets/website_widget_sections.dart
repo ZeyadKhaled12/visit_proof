@@ -1061,7 +1061,7 @@ class WebsiteFooter extends StatelessWidget {
             children: [
               Wrap(spacing: 4, children: [
                 if (AppOffer.hasWhatsapp)
-                  _FooterLink('WhatsApp'.tr,
+                  _FooterLink('WhatsApp: {0}'.trArgs([AppOffer.whatsappDisplay]),
                       () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber)),
                 _FooterLink(
                     'Privacy policy'.tr,

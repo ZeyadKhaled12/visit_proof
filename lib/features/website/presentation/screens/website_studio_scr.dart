@@ -1,6 +1,4 @@
 import 'package:visit_proof/configs/app_language.dart';
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_offer.dart';
@@ -46,6 +44,7 @@ enum _Menu {
   simulate,
   fullCompany,
   offer,
+  whatsapp,
   privacy,
   terms
 }
@@ -53,12 +52,8 @@ enum _Menu {
 class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   static const double _dockWidth = 340;
 
-  /// Time to see the invoice turn paid before the offer covers it.
-  static const Duration _paidPause = Duration(seconds: 3);
-
   final _scenario = StudioScenario();
   bool _offerShown = false;
-  Timer? _offerTimer;
 
   /// Phones show the design tools only when asked, or to a returning visitor
   /// whose design was brought back.
@@ -100,29 +95,27 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   void dispose() {
     if (WebsiteStudioScr.requestInstallsApp) StudioInstall.stop();
     DemoMode.prefillNewVisit = false;
-    _offerTimer?.cancel();
     _scenario.dispose();
     super.dispose();
   }
 
-  /// Finishing the cycle is when the offer means the most.
+  /// Finishing the cycle is when the offer means the most. A payment just
+  /// confirmed is left on screen: the visitor opens the offer when ready, and
+  /// nothing appears under their pointer as they reach for a button.
   void _onScenario() {
     final finished = _scenario.step == StudioStep.finished;
     if (finished && !_offerShown && !_scenario.exploring) {
       _offerShown = true;
-      _offerTimer = Timer(
-          _scenario.paymentConfirmed ? _paidPause : Duration.zero, _showOffer);
+      if (!_scenario.paymentConfirmed) _showOffer();
     } else if (!finished) {
       _offerShown = false;
-      _offerTimer?.cancel();
     }
   }
 
-  void _showOffer() {
-    _offerTimer?.cancel();
-    WebsiteOfferCard.show(context,
-        finished: _scenario.step == StudioStep.finished, onRequest: _request);
-  }
+  void _showOffer() => WebsiteOfferCard.show(context,
+      finished: _scenario.step == StudioStep.finished, onRequest: _request);
+
+  void _openWhatsapp() => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber);
 
   void _request() =>
       WebsiteStudioScr.requestInstallsApp ? StudioInstall.install(context) : _openRequest();
@@ -147,6 +140,8 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         _scenario.restart(fullCompany: true);
       case _Menu.offer:
         _showOffer();
+      case _Menu.whatsapp:
+        _openWhatsapp();
       case _Menu.privacy:
         WebsiteLegalScr.open(context, WebsiteLegalPage.privacy);
       case _Menu.terms:
@@ -192,11 +187,20 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
               selectedIcon: const Icon(Icons.palette_rounded,
                   color: WebTheme.accentText),
             ),
-          if (AppOffer.hasWhatsapp)
+          if (AppOffer.hasWhatsapp && wide)
+            TextButton.icon(
+              onPressed: _openWhatsapp,
+              icon: const Icon(Icons.chat_rounded, color: WebTheme.statGreen),
+              label: Text(AppOffer.whatsappDisplay,
+                  style: WebTheme.font(
+                      color: WebTheme.textPrimary,
+                      fontWeight: FontWeight.w700)),
+            ),
+          if (AppOffer.hasWhatsapp && !wide)
             IconButton(
               tooltip: 'WhatsApp'.tr,
               visualDensity: VisualDensity.compact,
-              onPressed: () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber),
+              onPressed: _openWhatsapp,
               icon: const Icon(Icons.chat_rounded, color: WebTheme.statGreen),
             ),
           // A phone's bar has room for one of the two.
@@ -293,6 +297,9 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
             'Explore a large sample company'.tr),
         if (!wide && AppOffer.hasWhatsapp)
           item(_Menu.offer, Icons.redeem_rounded, 'The offer'.tr),
+        if (AppOffer.hasWhatsapp)
+          item(_Menu.whatsapp, Icons.chat_rounded,
+              'WhatsApp: {0}'.trArgs([AppOffer.whatsappDisplay])),
         item(_Menu.privacy, Icons.privacy_tip_outlined, 'Privacy policy'.tr),
         item(_Menu.terms, Icons.description_outlined, 'Terms of service'.tr),
       ],

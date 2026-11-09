@@ -452,7 +452,11 @@ void main() {
 
     testWidgets('the offer opens from the top bar', (tester) async {
       await show(tester);
-      await tester.tap(find.byTooltip('The offer'));
+      await tester.tap(find.byTooltip('More'));
+      for (var i = 0; i < 15; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      await tester.tap(find.text('The offer'));
       await tester.pump(const Duration(milliseconds: 400));
       expect(find.byType(WebsiteOfferCard), findsOneWidget);
       expect(find.text('First month free'), findsOneWidget);

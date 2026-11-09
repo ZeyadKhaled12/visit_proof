@@ -2240,4 +2240,8 @@ const Map<String, String> arabicTranslations = {
       'تواصل معنا عبر واتساب على الرقم {0}، أو عبر بيانات التواصل التي وصلتك منا.',
   'Reach us through the contact details you received from us.':
       'تواصل معنا عبر بيانات التواصل التي وصلتك منا.',
+  'WhatsApp: {0}':
+      'واتساب: {0}',
+  'A question before you request? Message us on WhatsApp: {0}':
+      'هل لديك سؤال قبل الطلب؟ راسلنا عبر واتساب: {0}',
 };

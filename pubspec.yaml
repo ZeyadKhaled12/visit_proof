@@ -84,6 +84,9 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    # The Arabic fonts of the app and the website, so they arrive with it
+    # instead of from Google Fonts. google_fonts finds them by file name.
+    - assets/google_fonts/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

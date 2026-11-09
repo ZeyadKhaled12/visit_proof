@@ -34,9 +34,12 @@ class AppOffer {
 
   /// International format, digits only (e.g. 9665XXXXXXXX). While empty, the
   /// website shows no WhatsApp buttons.
-  static const String whatsappNumber = '';
+  static const String whatsappNumber = '201109300241';
 
   static bool get hasWhatsapp => whatsappNumber.isNotEmpty;
+
+  /// The number as shown. The mark keeps the "+" in front of it in Arabic text.
+  static String get whatsappDisplay => '\u200E+$whatsappNumber';
 
   /// 56 → "56 SAR" ("56 ر.س" in Arabic).
   static String price(num amount) => '{0} SAR'.trArgs([amount]);

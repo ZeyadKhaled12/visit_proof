@@ -1,6 +1,11 @@
 import 'package:visit_proof/configs/app_language.dart';
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +24,7 @@ import 'features/auth/domain/usecases/enter_as_admin_uc.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
 import 'features/website/data/datasource/website_design_local_data_source.dart';
 import 'features/website/presentation/screens/website_scr.dart';
+import 'features/website/presentation/website_theme.dart';
 
 /*
 1- add option to move to full screen of picks
@@ -106,6 +112,7 @@ void main() async {
   if (installed != null && raw != null) {
     PwaBridge.useInstalledUrls('${AppInstall.param}=$raw');
   }
+  await _loadFonts();
   runApp(const MyApp());
 
   // Opened in a browser tab, the installed app's page must offer this
@@ -114,6 +121,34 @@ void main() async {
   if (installed != null && raw != null) {
     WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(
         const Duration(milliseconds: 800), () => AppInstall.publish(raw)));
+  }
+}
+
+/// A browser paints text it has no font for as empty boxes, so the first
+/// screen waits (behind the loading screen) for the fonts it uses. A design
+/// with another font comes from the network, so the wait has a limit.
+Future<void> _loadFonts() async {
+  for (final family in const ['cairo', 'ibmplexsansarabic']) {
+    LicenseRegistry.addLicense(() async* {
+      yield LicenseEntryWithLineBreaks(['google_fonts'],
+          await rootBundle.loadString('assets/google_fonts/OFL-$family.txt'));
+    });
+  }
+  if (!kIsWeb) return;
+  for (final weight in const [
+    FontWeight.w400,
+    FontWeight.w500,
+    FontWeight.w600,
+    FontWeight.w700,
+    FontWeight.w800,
+  ]) {
+    AppTheme.font(fontWeight: weight);
+    if (DemoMode.isOn) WebTheme.font(fontWeight: weight);
+  }
+  try {
+    await GoogleFonts.pendingFonts().timeout(const Duration(seconds: 5));
+  } catch (_) {
+    // The app starts anyway; the text appears when its font arrives.
   }
 }
 

@@ -645,7 +645,8 @@ class _DemoCompany {
           notes: '',
           status: PaymentEntryStatus.confirmed,
         ));
-        log('Invoice payment recorded: {0}'.trArgs([paid / 100]), paidAt, admin);
+        log('Invoice payment recorded: {0}'
+            .trArgs([(paid / 100).toStringAsFixed(2)]), paidAt, admin);
       }
       if (pending > 0 && techActor != null) {
         ledger.add(InvoicePaymentHistoryModel(
@@ -661,7 +662,7 @@ class _DemoCompany {
         ));
         log(
             'Technician collected {0} · awaiting admin confirmation'
-                .trArgs([pending / 100]),
+                .trArgs([(pending / 100).toStringAsFixed(2)]),
             paidAt,
             techActor,
             location: _near(site, paidAt));

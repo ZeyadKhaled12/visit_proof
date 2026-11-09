@@ -58,7 +58,11 @@ class StudioBotLines {
 /// Something to point at, found by what the app shows on the screen.
 class _Cue {
   const _Cue(this.say,
-      {this.text, this.tooltip, this.prefix = false, this.unticked = false});
+      {this.text,
+      this.tooltip,
+      this.prefix = false,
+      this.unticked = false,
+      this.first = false});
   final String say;
   final String? text;
   final String? tooltip;
@@ -68,6 +72,9 @@ class _Cue {
 
   /// A box still to be ticked.
   final bool unticked;
+
+  /// Take the first match rather than the last.
+  final bool first;
 
   bool matches(Widget widget) {
     if (unticked) {
@@ -79,12 +86,13 @@ class _Cue {
     return prefix ? widget.data!.startsWith(text!) : widget.data == text;
   }
 
-  /// The topmost match on the screen the visitor is looking at.
+  /// The match on the screen the visitor is looking at.
   Element? find() {
     final root = App.navigatorKey.currentContext as Element?;
     if (root == null) return null;
     Element? found;
     void visit(Element element) {
+      if (first && found != null) return;
       final widget = element.widget;
       if (widget is Offstage && widget.offstage) return;
       if (matches(widget) && (ModalRoute.of(element)?.isCurrent ?? true)) {
@@ -257,7 +265,8 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
                   .trArgs(['|'])
                   .split('|')
                   .first,
-              prefix: true),
+              prefix: true,
+              first: true),
         ];
       case StudioStep.seeInvoice:
         return [

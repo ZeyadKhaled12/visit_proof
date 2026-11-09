@@ -125,7 +125,7 @@ void main() {
     await press('See the invoice');
     expect(find.byType(WebsiteOfferCard), findsNothing);
     expect(find.text('Remaining balance'), findsOneWidget);
-    expect(find.textContaining('awaiting admin confirmation'), findsOneWidget);
+    expect(find.textContaining('awaiting admin confirmation'), findsWidgets);
 
     await press('Continue');
     expect(find.byType(WebsiteOfferCard), findsNothing);

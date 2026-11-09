@@ -331,6 +331,23 @@ class _WebsiteRequestScrState extends State<WebsiteRequestScr> {
                 color: WebTheme.textSecondary,
                 fontSize: WebTheme.textTitle,
                 height: 1.5)),
+        if (AppOffer.hasWhatsapp) ...[
+          const SizedBox(height: 8),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              onPressed: () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber),
+              icon: const Icon(Icons.chat_rounded, color: WebTheme.statGreen),
+              label: Text(
+                  'A question before you request? Message us on WhatsApp: {0}'
+                      .trArgs([AppOffer.whatsappDisplay]),
+                  style: WebTheme.font(
+                      color: WebTheme.textPrimary,
+                      fontSize: WebTheme.textBodyLarge,
+                      fontWeight: FontWeight.w700)),
+            ),
+          ),
+        ],
         const SizedBox(height: 20),
         wide
             ? Row(
