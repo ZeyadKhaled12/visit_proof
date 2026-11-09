@@ -2,6 +2,7 @@ import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_offer.dart';
+import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../website_theme.dart';
 import 'website_widget_brand.dart';
@@ -23,9 +24,12 @@ class WebsiteWhatsappButton extends StatelessWidget {
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber),
-          child: const SizedBox.square(
+          child: SizedBox.square(
             dimension: _size,
-            child: Icon(Icons.whatsapp, color: WebTheme.onPrimary, size: 28),
+            child: Center(
+              child: Image.asset(IconAsset.whatsapp,
+                  width: 26, height: 26, color: WebTheme.onPrimary),
+            ),
           ),
         ),
       ),

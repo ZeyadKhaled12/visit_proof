@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../configs/app_offer.dart';
 import '../../../../core/demo/demo_mode.dart';
+import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
 import '../../data/datasource/website_design_local_data_source.dart';
 import '../studio_scenario.dart';
@@ -194,7 +195,8 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
           if (AppOffer.hasWhatsapp && wide)
             TextButton.icon(
               onPressed: _openWhatsapp,
-              icon: const Icon(Icons.whatsapp, color: WebTheme.whatsapp),
+              icon: Image.asset(IconAsset.whatsapp,
+                  width: 20, height: 20, color: WebTheme.whatsapp),
               label: Text(AppOffer.whatsappDisplay,
                   style: WebTheme.font(
                       color: WebTheme.textPrimary,
@@ -296,7 +298,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         item(_Menu.fullCompany, Icons.business_rounded,
             'Explore a large sample company'.tr),
         if (AppOffer.hasWhatsapp)
-          item(_Menu.whatsapp, Icons.whatsapp,
+          item(_Menu.whatsapp, Icons.chat_rounded,
               'WhatsApp: {0}'.trArgs([AppOffer.whatsappDisplay])),
         item(_Menu.privacy, Icons.privacy_tip_outlined, 'Privacy policy'.tr),
         item(_Menu.terms, Icons.description_outlined, 'Terms of service'.tr),
