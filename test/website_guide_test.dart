@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/core/demo/demo_seed.dart';
 import 'package:visit_proof/core/local/local_pref.dart';
 import 'package:visit_proof/core/services/services_locator.dart';
@@ -125,7 +127,24 @@ void main() {
     expect(find.text('Remaining balance'), findsOneWidget);
     expect(find.textContaining('awaiting admin confirmation'), findsOneWidget);
 
-    await press('See the offer');
+    await press('Continue');
+    expect(find.byType(WebsiteOfferCard), findsNothing);
+    await press('Open invoice');
+    expect(find.byType(QrImageView, skipOffstage: false), findsOneWidget);
+    expect(find.text('VAT (15%)', skipOffstage: false), findsOneWidget);
+    await press('Confirm');
+    // The question stays inside the app, not over the whole website.
+    expect(
+        ModalRoute.of(tester.element(find.text('Confirm this collection?')))
+            ?.navigator,
+        App.navigatorKey.currentState);
+    await press('Confirm');
+    expect(find.text('Amount paid'), findsOneWidget);
+    expect(find.byType(WebsiteOfferCard), findsNothing,
+        reason: 'the visitor first sees the invoice turn paid');
+
+    // One press is enough.
+    await tester.tap(find.text('See the offer'));
     await _settle(tester);
     expect(find.byType(WebsiteOfferCard), findsOneWidget);
     FlutterError.onError = report;

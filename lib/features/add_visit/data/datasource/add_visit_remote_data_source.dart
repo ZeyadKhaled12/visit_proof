@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:visit_proof/core/local/company_settings.dart';
 
 import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
@@ -331,6 +332,12 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
           // 7. CREATE INVOICE MODEL
           // ==================================================
 
+          final int netCents = (invoiceTotal * 100).round();
+          final int taxCents = CompanySettings.vatRegistered
+              ? CompanySettings.vatCents(netCents)
+              : 0;
+          final double grossTotal = (netCents + taxCents) / 100;
+
           final InvoiceDetailModel invoice = InvoiceDetailModel(
             id: invoiceID,
             invoiceNumber: invoiceNumber,
@@ -355,10 +362,10 @@ class AddVisitRemoteDataSource extends BaseAddVisitRemoteDataSource {
             // Financial details.
             subtotal: invoiceTotal,
             discountAmount: 0,
-            taxAmount: 0,
-            totalAmount: invoiceTotal,
+            taxAmount: taxCents / 100,
+            totalAmount: grossTotal,
             paidAmount: 0,
-            remainingAmount: invoiceTotal,
+            remainingAmount: grossTotal,
 
             currency: App.currency,
             notes: null,

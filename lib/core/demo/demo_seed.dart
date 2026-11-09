@@ -13,6 +13,7 @@ import '../../features/visits/data/models/visit_detail_models/visit_client_model
 import '../../features/visits/data/models/visit_detail_models/visit_detail_model.dart';
 import '../../features/visits/data/models/visit_detail_models/visit_history_model.dart';
 import '../local/local_pref.dart';
+import '../local/company_settings.dart';
 import '../utils/enums/payment_entry_status_enum.dart';
 import '../utils/enums/payment_method_enum.dart';
 import '../utils/enums/payment_status_enum.dart';
@@ -77,7 +78,11 @@ class DemoSeed {
     return technicians.first;
   }
 
+  /// A sample number, in the format of a Saudi VAT number.
+  static const String _vatNumber = '300000000000003';
+
   static Future<void> _save(_DemoData data) async {
+    await CompanySettings.setVatNumber(_vatNumber);
     final prefs = LocalPref.sharedPreferences;
     String encode(Map<String, dynamic> json) => jsonEncode(json);
 
@@ -546,7 +551,9 @@ class _DemoCompany {
     final visitNumber = 'VIS-${_number.toString().padLeft(6, '0')}';
     final invoiceNumber = 'INV-${_number.toString().padLeft(6, '0')}';
     final price = service.defaultPrice ?? 0;
-    final cents = (price * 100).round();
+    final netCents = (price * 100).round();
+    final taxCents = CompanySettings.vatCents(netCents);
+    final cents = netCents + taxCents;
     final created = start.subtract(Duration(days: 2 + random.nextInt(5)));
     final site = client.site;
     final techActor = technician == null
@@ -731,8 +738,8 @@ class _DemoCompany {
           : null,
       subtotal: price,
       discountAmount: 0,
-      taxAmount: 0,
-      totalAmount: price,
+      taxAmount: taxCents / 100,
+      totalAmount: cents / 100,
       paidAmount: paid / 100,
       remainingAmount: (cents - paid) / 100,
       pendingAmount: pending / 100,

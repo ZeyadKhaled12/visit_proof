@@ -2190,8 +2190,6 @@ const Map<String, String> arabicTranslations = {
       'يمكنك أن تطلب منا في أي وقت عرض بياناتك أو تصحيحها أو تصديرها أو حذفها.',
   'Contact us':
       'تواصل معنا',
-  'Reach us on WhatsApp or through the contact details you received from us.':
-      'تواصل معنا عبر واتساب أو عبر بيانات التواصل التي وصلتك منا.',
   'The service':
       'الخدمة',
   'Visit Proof is an app for managing technicians and maintenance visits, delivered on a private web link with your design.':
@@ -2218,4 +2216,28 @@ const Map<String, String> arabicTranslations = {
       'تحديث هذه الشروط',
   'We may update these terms, and we will tell you before any change that affects your price.':
       'قد نحدّث هذه الشروط، وسنخبرك قبل أي تغيير يؤثر في سعرك.',
+  'Confirm the payment':
+      'تأكيد الدفعة',
+  'The technician\'s collection is waiting for you. Open the invoice and confirm it, and watch it turn paid.':
+      'ما حصّله الفني ينتظرك. افتح الفاتورة وأكّده، وشاهدها تتحول إلى مدفوعة.',
+  'Press "Open invoice".':
+      'اضغط «فتح الفاتورة».',
+  'Press "Confirm". The money is added to the invoice.':
+      'اضغط «تأكيد». سيُضاف المبلغ إلى الفاتورة.',
+  'Registered for VAT':
+      'مسجل في ضريبة القيمة المضافة',
+  'VAT number':
+      'الرقم الضريبي',
+  '15 digits, starting and ending with 3':
+      '15 رقمًا، تبدأ بالرقم 3 وتنتهي به',
+  'Tax invoice':
+      'فاتورة ضريبية',
+  'VAT number: {0}':
+      'الرقم الضريبي: {0}',
+  'VAT ({0}%)':
+      'ضريبة القيمة المضافة ({0}%)',
+  'Reach us on WhatsApp on {0}, or through the contact details you received from us.':
+      'تواصل معنا عبر واتساب على الرقم {0}، أو عبر بيانات التواصل التي وصلتك منا.',
+  'Reach us through the contact details you received from us.':
+      'تواصل معنا عبر بيانات التواصل التي وصلتك منا.',
 };

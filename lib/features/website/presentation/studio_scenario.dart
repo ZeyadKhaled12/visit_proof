@@ -80,7 +80,11 @@ enum StudioStep {
       'The invoice is ready',
       'The invoice was issued by itself when the work ended. Money the technician collected waits here for your confirmation.',
       technician: false,
-      action: 'See the offer'),
+      action: 'Continue'),
+  confirmPayment(
+      'Confirm the payment',
+      'The technician\'s collection is waiting for you. Open the invoice and confirm it, and watch it turn paid.',
+      technician: false),
   finished(
       'You ran the whole cycle',
       'From the office to the field and back, with proof at every step. Now make it yours.',
@@ -135,11 +139,9 @@ class StudioScenario extends ChangeNotifier {
 
   /// How far the admin has got looking at the finished visit.
   int _reviewed = 0;
-  static const _review = [
-    StudioStep.seeProof,
-    StudioStep.seeInvoice,
-    StudioStep.finished,
-  ];
+
+  /// The admin confirmed the visit's payment, so the invoice shows as paid.
+  bool paymentConfirmed = false;
 
   /// The visitor chose not to try collecting a payment.
   bool _skippedCollect = false;
@@ -225,10 +227,19 @@ class StudioScenario extends ChangeNotifier {
             collected: _skippedCollect ||
                 (visit?.paymentStatus != null &&
                     visit?.paymentStatus != PaymentStatus.unpaid));
-    if (next == StudioStep.seeProof) next = _review[_reviewed];
+    if (next == StudioStep.seeProof) next = _reviewStep(visit);
+    paymentConfirmed = visit?.paymentStatus == PaymentStatus.paid;
     if (next == step) return;
     step = next;
     notifyListeners();
+  }
+
+  StudioStep _reviewStep(VisitDetailModel? visit) {
+    if (_reviewed == 0) return StudioStep.seeProof;
+    if (_reviewed == 1) return StudioStep.seeInvoice;
+    return visit?.paymentStatus == PaymentStatus.pending
+        ? StudioStep.confirmPayment
+        : StudioStep.finished;
   }
 
   /// The guide's shortcut for the current step. The end of the scenario is
@@ -253,24 +264,27 @@ class StudioScenario extends ChangeNotifier {
         });
       case StudioStep.seeProof:
       case StudioStep.seeInvoice:
-        if (_onVisitScreen) {
+        if (atHome) {
+          _openVisit();
+        } else {
           _reviewed++;
           _check();
-        } else {
-          _openVisit();
         }
+      case StudioStep.confirmPayment:
+        if (atHome) _openVisit();
       default:
         break;
     }
   }
 
-  bool get _onVisitScreen {
-    String? current;
+  /// The app is on its first screen, so there is no visit or invoice open.
+  bool get atHome {
+    var first = true;
     App.navigatorKey.currentState?.popUntil((route) {
-      current = route.settings.name;
+      first = route.isFirst;
       return true;
     });
-    return current == VisitDetailScr.route;
+    return first;
   }
 
   void _openVisit() {

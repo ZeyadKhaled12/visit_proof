@@ -52,6 +52,7 @@ class GWidgetAppSettings extends StatelessWidget {
               read: () => CompanySettings.requireAfterPhotos,
               write: CompanySettings.setRequireAfterPhotos,
             ),
+            const _VatRow(),
           ],
         ],
       ),
@@ -167,6 +168,119 @@ class _DarkModeRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Registering for VAT adds it to new invoices and puts a QR code on them.
+class _VatRow extends StatefulWidget {
+  const _VatRow();
+
+  @override
+  State<_VatRow> createState() => _VatRowState();
+}
+
+class _VatRowState extends State<_VatRow> {
+  Future<void> _change(bool registered) async {
+    final number = registered
+        ? await showDialog<String>(
+            context: context,
+            useRootNavigator: false,
+            builder: (_) => const _VatNumberDialog())
+        : null;
+    if (registered && number == null) return;
+    await CompanySettings.setVatNumber(number);
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final number = CompanySettings.vatNumber;
+    return Row(
+      children: [
+        Icon(Icons.receipt_long_rounded, color: AppTheme.primary, size: 22),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Registered for VAT'.tr,
+                  style: AppTheme.font(
+                      color: AppTheme.textPrimary,
+                      fontSize: AppTheme.textBody,
+                      fontWeight: FontWeight.w700)),
+              if (number.isNotEmpty)
+                Text(number,
+                    style: AppTheme.font(
+                        color: AppTheme.textSecondary,
+                        fontSize: AppTheme.textCaption)),
+            ],
+          ),
+        ),
+        Switch.adaptive(
+          value: number.isNotEmpty,
+          activeTrackColor: AppTheme.primary,
+          onChanged: _change,
+        ),
+      ],
+    );
+  }
+}
+
+class _VatNumberDialog extends StatefulWidget {
+  const _VatNumberDialog();
+
+  @override
+  State<_VatNumberDialog> createState() => _VatNumberDialogState();
+}
+
+class _VatNumberDialogState extends State<_VatNumberDialog> {
+  final _number = TextEditingController();
+
+  @override
+  void dispose() {
+    _number.dispose();
+    super.dispose();
+  }
+
+  bool get _valid => CompanySettings.isValidVatNumber(_number.text.trim());
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppTheme.surface,
+      title: Text('VAT number'.tr,
+          style: AppTheme.font(
+              color: AppTheme.textPrimary, fontWeight: FontWeight.w800)),
+      content: TextField(
+        controller: _number,
+        autofocus: true,
+        keyboardType: TextInputType.number,
+        maxLength: 15,
+        onChanged: (_) => setState(() {}),
+        style: AppTheme.font(
+            color: AppTheme.textPrimary, fontSize: AppTheme.textBody),
+        decoration: InputDecoration(
+          hintText: '15 digits, starting and ending with 3'.tr,
+          hintStyle: AppTheme.font(
+              color: AppTheme.textLightHint, fontSize: AppTheme.textSmall),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('Back'.tr,
+              style: AppTheme.font(color: AppTheme.textSecondary)),
+        ),
+        TextButton(
+          onPressed:
+              _valid ? () => Navigator.pop(context, _number.text.trim()) : null,
+          child: Text('Save'.tr,
+              style: AppTheme.font(
+                  color: _valid ? AppTheme.primary : AppTheme.textLightHint,
+                  fontWeight: FontWeight.w800)),
+        ),
+      ],
     );
   }
 }

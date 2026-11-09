@@ -8,6 +8,8 @@ import 'package:visit_proof/app/app.dart';
 import 'package:visit_proof/app/visit_proof_app.dart';
 import 'package:visit_proof/configs/app_brand.dart';
 import 'package:visit_proof/configs/app_offer.dart';
+import 'package:visit_proof/core/local/company_settings.dart';
+import 'package:visit_proof/core/utils/general_functions.dart/g_fun_vat_qr.dart';
 import 'package:visit_proof/configs/app_theme.dart';
 import 'package:visit_proof/configs/app_translations.dart';
 import 'package:visit_proof/core/demo/demo_mode.dart';
@@ -119,6 +121,38 @@ void main() {
             e.status == VisitStatus.cancel),
         isTrue);
     expect(_step(), StudioStep.createVisit);
+  });
+
+  test('the sample company charges 15% VAT on every invoice', () {
+    expect(CompanySettings.vatRegistered, isTrue);
+    for (final invoice in _read('invoices', InvoiceDetailModel.fromJson)) {
+      final net = ((invoice.subtotal ?? 0) * 100).round();
+      final tax = ((invoice.taxAmount ?? 0) * 100).round();
+      expect(tax, CompanySettings.vatCents(net));
+      expect(((invoice.totalAmount ?? 0) * 100).round(), net + tax);
+    }
+  });
+
+  test('the VAT QR code holds its five fields', () {
+    final bytes = base64.decode(GFunVatQr.encode(
+        seller: 'شركة',
+        vatNumber: '300000000000003',
+        issuedAt: DateTime.utc(2026, 11, 9, 8, 30),
+        total: 287.5,
+        vat: 37.5));
+    final fields = <int, String>{};
+    for (var i = 0; i < bytes.length;) {
+      final length = bytes[i + 1];
+      fields[bytes[i]] = utf8.decode(bytes.sublist(i + 2, i + 2 + length));
+      i += 2 + length;
+    }
+    expect(fields, {
+      1: 'شركة',
+      2: '300000000000003',
+      3: '2026-11-09T08:30:00Z',
+      4: '287.50',
+      5: '37.50',
+    });
   });
 
   test('every invoice of the sample company belongs to a visit', () {
@@ -317,10 +351,14 @@ void main() {
       await _settle(tester);
       expect(find.text('Step 1 of ${StudioStep.total}'), findsOneWidget);
 
-      final ring = tester.getRect(find.byTooltip('Wizpoo'));
-      final button = tester.getRect(find.text('New visit'));
-      expect((ring.center - button.center).distance, lessThan(120),
-          reason: 'Wizpoo flies next to the button to press');
+      final robot = tester.getRect(find.byTooltip('Wizpoo'));
+      final bubble = tester.getRect(find
+          .ancestor(
+              of: find.text('Step 1 of ${StudioStep.total}'),
+              matching: find.byType(Material))
+          .first);
+      expect(bubble.contains(robot.center), isTrue,
+          reason: 'after showing the button, Wizpoo waits in its bubble');
       expect(tester.takeException(), isNull);
     });
 

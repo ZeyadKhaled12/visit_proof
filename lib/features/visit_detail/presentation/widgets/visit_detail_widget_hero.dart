@@ -177,7 +177,10 @@ class _WorkflowProgress extends StatelessWidget {
   const _WorkflowProgress({required this.current});
   final VisitStatus current;
 
-  static List<String> get _labels => ['Draft'.tr, 'Scheduled'.tr, 'Assigned'.tr, 'On way'.tr, 'Work'.tr, 'Done'.tr];
+  /// The status's full name; a two-word name takes two lines.
+  String _label(int index) =>
+      VisitDetailHelpers.statusText(VisitRules.workflow[index])
+          .replaceFirst(' ', '\n');
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +227,7 @@ class _WorkflowProgress extends StatelessWidget {
               const SizedBox(height: 6),
               FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Text(_labels[index],
+                child: Text(_label(index),
                   textAlign: TextAlign.center,
                   style: AppTheme.font(
                       color: reached ? AppTheme.textPrimary : AppTheme.textDarkHint,

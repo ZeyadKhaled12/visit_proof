@@ -39,6 +39,7 @@ class ClientDetailWidgetEquipments extends StatelessWidget {
             onAdd: () async {
               final data = await showDialog(
                 context: context,
+                useRootNavigator: false,
                 builder: (context) => _AddEquipmentDialog(),
               );
               if (data is GModelEquipment) {

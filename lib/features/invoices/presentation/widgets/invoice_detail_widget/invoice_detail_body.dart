@@ -2,12 +2,16 @@ import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:visit_proof/configs/app_toasts.dart';
 import 'package:visit_proof/features/invoices/domain/usecases/get_invoice_detail_uc.dart';
 import 'package:visit_proof/features/invoices/domain/usecases/issue_invoice_uc.dart';
 import 'package:visit_proof/features/invoices/presentation/controller/invoices_bloc.dart';
 
+import '../../../../../configs/app_brand.dart';
 import '../../../../../configs/app_theme.dart';
+import '../../../../../core/local/company_settings.dart';
+import '../../../../../core/utils/general_functions.dart/g_fun_vat_qr.dart';
 import '../../../../../core/utils/enums/payment_status_enum.dart';
 import '../../../../../core/utils/general_widgets/g_widget_button.dart';
 import '../../../../../core/utils/general_widgets/g_widget_loading.dart';
@@ -188,6 +192,7 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
 
     final confirmed = await showDialog<bool>(
       context: context,
+      useRootNavigator: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surface,
         title: Text(
@@ -232,6 +237,49 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
     context.read<InvoicesBloc>().add(IssueInvoiceEvent(
         issueInvoiceParameters:
             IssueInvoiceParameters(invoiceId: widget.invoice.id!)));
+  }
+
+  /// True when the tax on the invoice is exactly the standard VAT.
+  bool get _isStandardVat {
+    final taxable = (widget.invoice.subtotal ?? 0) -
+        (widget.invoice.discountAmount ?? 0);
+    final tax = ((widget.invoice.taxAmount ?? 0) * 100).round();
+    return tax > 0 && tax == CompanySettings.vatCents((taxable * 100).round());
+  }
+
+  bool get _showVatQr =>
+      CompanySettings.vatRegistered &&
+      widget.invoice.issueDate != null &&
+      (widget.invoice.taxAmount ?? 0) > 0;
+
+  Widget _vatQr() {
+    final vatNumber = CompanySettings.vatNumber;
+    return InvDetailWidgetPanel(
+      title: 'Tax invoice'.tr,
+      icon: Icons.qr_code_2_rounded,
+      child: Column(
+        children: [
+          // White in dark mode too, or scanners cannot read it.
+          QrImageView(
+            data: GFunVatQr.encode(
+              seller: AppBrand.appName,
+              vatNumber: vatNumber,
+              issuedAt: widget.invoice.issueDate!,
+              total: widget.invoice.totalAmount ?? 0,
+              vat: widget.invoice.taxAmount ?? 0,
+            ),
+            size: 150,
+            backgroundColor: Colors.white,
+          ),
+          const SizedBox(height: 8),
+          Text('VAT number: {0}'.trArgs([vatNumber]),
+              style: AppTheme.font(
+                  color: AppTheme.textSecondary,
+                  fontSize: AppTheme.textSmall,
+                  fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
   }
 
   void _getInvoiceDetail() {
@@ -497,7 +545,9 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                           value: '- ${_money(widget.invoice.discountAmount)}',
                         ),
                         InvDetailWidgetInfoLine(
-                          label: 'Tax'.tr,
+                          label: _isStandardVat
+                              ? 'VAT ({0}%)'.trArgs([CompanySettings.vatPercent])
+                              : 'Tax'.tr,
                           value: _money(widget.invoice.taxAmount),
                         ),
                         Divider(
@@ -526,6 +576,11 @@ class _InvoiceDetailBodyState extends State<InvoiceDetailBody> {
                   // -----------------------------------------
                   // Optional notes
                   // -----------------------------------------
+
+                  if (_showVatQr) ...[
+                    const SizedBox(height: 14),
+                    _vatQr(),
+                  ],
 
                   if ((widget.invoice.notes ?? '').trim().isNotEmpty) ...[
                     const SizedBox(height: 14),

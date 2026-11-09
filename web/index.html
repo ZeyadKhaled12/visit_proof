@@ -115,31 +115,46 @@
   </script>
 </head>
 <body>
-  <!-- What search engines read, and what visitors see while the app loads.
-       The price comes from lib/configs/app_offer.dart: keep the two the same. -->
-  <main id="page-text" dir="rtl" style="max-width:640px;margin:0 auto;padding:32px 20px;font-family:system-ui,'Segoe UI',Tahoma,sans-serif;color:#15182D;line-height:1.7">
-    <h1 style="font-size:26px">Visit Proof: أدِر الفنيين والصيانة من تطبيق واحد</h1>
+  <!-- The loading screen, until the app paints its first frame. -->
+  <style>
+    #app-splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: #F4EAD6; transition: opacity .25s; }
+    #app-splash img { width: 92px; height: 92px; }
+    #app-splash i { width: 30px; height: 30px; border-radius: 50%; border: 3px solid rgba(75,49,95,.2); border-top-color: #4B315F; animation: app-splash-turn .8s linear infinite; }
+    @keyframes app-splash-turn { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { #app-splash i { animation-duration: 3s; } }
+  </style>
+  <div id="app-splash" role="status" aria-label="Visit Proof"><img src="brand/wizpo-icon.svg" alt=""><i></i></div>
+
+  <!-- For search engines only: never shown, and the app has its own
+       accessibility text. The price comes from lib/configs/app_offer.dart:
+       keep the two the same. -->
+  <main id="page-text" dir="rtl" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">
+    <h1>Visit Proof: أدِر الفنيين والصيانة من تطبيق واحد</h1>
     <p>تطبيق لشركات الصيانة والخدمات الميدانية: تُنشئ الزيارة، وتسندها إلى الفني المناسب، وتتابع تنفيذها خطوة بخطوة، وتصلك إثباتاتها وفاتورتها.</p>
     <ul>
       <li>جدولة الزيارات وإسنادها مع اقتراح الفني الأنسب.</li>
       <li>إثبات كل زيارة بموقع الفني ووقت التنفيذ والصور.</li>
-      <li>فاتورة تصدر تلقائيًا عند إتمام العمل.</li>
+      <li>فاتورة تصدر تلقائيًا عند إتمام العمل، مع ضريبة القيمة المضافة ورمز QR.</li>
       <li>تحصيل الدفعات في الموقع مع صورة الإيصال ومراجعة المسؤول.</li>
       <li>بألوان شركتك وشعارها، بالعربية والإنجليزية.</li>
     </ul>
-    <p><strong>الشهر الأول مجانًا، ثم 56 ر.س كل 6 أشهر للشركة كاملة.</strong></p>
-    <p><a href="?privacy">سياسة الخصوصية</a> · <a href="?terms">شروط الاستخدام</a></p>
+    <p>الشهر الأول مجانًا، ثم 56 ر.س كل 6 أشهر للشركة كاملة.</p>
+    <p><a href="?privacy" tabindex="-1">سياسة الخصوصية</a> · <a href="?terms" tabindex="-1">شروط الاستخدام</a></p>
   </main>
   <script>
     (function () {
-      var text = document.getElementById('page-text');
+      var splash = document.getElementById('app-splash');
       // A customer's own app is not the website.
       if (/^#app=/.test(location.hash) || /[?&]app=/.test(location.search) ||
           /\/app\//.test(location.pathname)) {
-        text.remove();
+        splash.remove();
+        document.getElementById('page-text').remove();
         return;
       }
-      window.addEventListener('flutter-first-frame', function () { text.remove(); });
+      window.addEventListener('flutter-first-frame', function () {
+        splash.style.opacity = '0';
+        setTimeout(function () { splash.remove(); }, 300);
+      });
     })();
   </script>
   <script src="flutter_bootstrap.js" async></script>

@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visit_proof/core/local/company_settings.dart';
 
 import '../../../../app/app.dart';
 import '../../../../configs/app_toasts.dart';
@@ -474,7 +475,10 @@ class VisitDetailRemoteDataSource
     int subtotal,
   ) {
     final discount = _cents(invoice.discountAmount ?? 0);
-    final tax = _cents(invoice.taxAmount ?? 0);
+    // An invoice that carries VAT keeps carrying it on the new price.
+    final tax = (invoice.taxAmount ?? 0) > 0
+        ? CompanySettings.vatCents(subtotal - discount)
+        : 0;
 
     if (discount > subtotal) {
       _fail('The invoice discount is higher than the new price. Lower the discount first.'.tr);
@@ -484,6 +488,7 @@ class VisitDetailRemoteDataSource
 
     return invoice.copyWith(
       subtotal: subtotal / 100,
+      taxAmount: tax / 100,
       totalAmount: total / 100,
       remainingAmount: total / 100,
     );

@@ -29,6 +29,9 @@ class StudioBotLines {
   static const collect = 'The client is paying now. Press "Collect payment".';
   static const sendReceipt =
       'I attached a sample receipt. Press "Send to admin".';
+  static const openInvoice = 'Press "Open invoice".';
+  static const confirmPayment =
+      'Press "Confirm". The money is added to the invoice.';
   static const confirm =
       'Press "Confirm". The time and your location are saved as proof.';
 
@@ -47,6 +50,8 @@ class StudioBotLines {
     confirm,
     collect,
     sendReceipt,
+    openInvoice,
+    confirmPayment,
   ];
 }
 
@@ -109,11 +114,14 @@ class StudioWidgetBot extends StatefulWidget {
 
 class _StudioWidgetBotState extends State<StudioWidgetBot>
     with SingleTickerProviderStateMixin {
-  static const double _robot = 48;
+  static const double _robot = 44;
   static const double _bubbleMargin = 10;
   static const double _bubbleMaxWidth = 440;
   static const Duration _trackEvery = Duration(milliseconds: 300);
   static const Duration _cheerFor = Duration(milliseconds: 1800);
+
+  /// How long it stays by a new target before going back to its bubble.
+  static const Duration _visitFor = Duration(milliseconds: 1400);
 
   late final _idle =
       AnimationController(vsync: this, duration: const Duration(seconds: 3));
@@ -122,11 +130,19 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
 
   Timer? _tracker;
   Timer? _cheerTimer;
+  Timer? _visitTimer;
   Rect? _target;
   String? _say;
   double _bubbleHeight = 130;
   bool _minimized = false;
   bool _cheering = false;
+
+  /// Flying to a new target. The rest of the time it sits in its bubble, so
+  /// it never stays on top of something the visitor wants to read.
+  bool _visiting = false;
+
+  /// No visit or invoice is open behind the guide.
+  bool _atHome = true;
 
   /// The app's menu is open: the guide steps aside so all of it shows.
   bool _menuOpen = false;
@@ -154,6 +170,7 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
   void dispose() {
     _tracker?.cancel();
     _cheerTimer?.cancel();
+    _visitTimer?.cancel();
     widget.scenario.removeListener(_onScenario);
     GWidgetTour.playing.removeListener(_redraw);
     _idle.dispose();
@@ -247,6 +264,13 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
           _Cue(StudioStep.seeInvoice.hint, text: 'Remaining balance'.tr),
           _Cue(StudioStep.seeInvoice.hint, text: 'Amount paid'.tr),
         ];
+      case StudioStep.confirmPayment:
+        return [
+          _Cue(StudioBotLines.confirmPayment.tr, text: 'Confirm'.tr),
+          _Cue(StudioBotLines.openInvoice.tr, text: 'Open invoice'.tr),
+        ];
+      case StudioStep.finished:
+        return [_Cue(StudioStep.finished.hint, text: 'Amount paid'.tr)];
       default:
         return const [];
     }
@@ -276,6 +300,7 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     if (stage == null || !stage.hasSize) return;
 
     final menuOpen = _isMenuOpen();
+    final atHome = widget.scenario.atHome;
     final height = _bubble.currentContext?.size?.height;
     Rect? rect;
     String? say;
@@ -306,8 +331,11 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     if (rect != _target ||
         say != _say ||
         menuOpen != _menuOpen ||
+        atHome != _atHome ||
         (height != null && height != _bubbleHeight)) {
       setState(() {
+        if (say != _say && rect != null && !_showingResult) _visitTarget();
+        _atHome = atHome;
         _target = rect;
         _say = say;
         _menuOpen = menuOpen;
@@ -316,10 +344,26 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     }
   }
 
+  /// The ring marks something to read here, so nothing may cover it.
+  bool get _showingResult =>
+      widget.scenario.step == StudioStep.seeProof ||
+      widget.scenario.step == StudioStep.seeInvoice ||
+      widget.scenario.step == StudioStep.finished;
+
+  void _visitTarget() {
+    _visiting = true;
+    _visitTimer?.cancel();
+    _visitTimer = Timer(_visitFor, () {
+      _visiting = false;
+      _redraw();
+    });
+  }
+
   /// The admin should be looking at the finished visit.
   bool get _reviewing =>
       widget.scenario.step == StudioStep.seeProof ||
-      widget.scenario.step == StudioStep.seeInvoice;
+      widget.scenario.step == StudioStep.seeInvoice ||
+      widget.scenario.step == StudioStep.confirmPayment;
 
   void _act() {
     if (widget.scenario.step == StudioStep.finished) {
@@ -360,22 +404,22 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     return null;
   }
 
-  Offset _robotAt(Size stage, bool bubbleOnTop, bool rtl) {
+  Offset _robotAt(Size stage, bool bubbleOnTop, bool rtl, bool keyboard) {
     final start = rtl ? stage.width - _robot - 12 : 12.0;
     final end = rtl ? 12.0 : stage.width - _robot - 12;
     // The menu opens from the start side, so wait beside it.
     if (_menuOpen) return Offset(end, stage.height - _robot - 16);
-    if (_minimized) return Offset(start, stage.height - _robot - 16);
+    if (_minimized || keyboard) {
+      return Offset(start, stage.height - _robot - 16);
+    }
+    final bubble = _bubbleRect(stage, bubbleOnTop);
     final target = _target;
-    if (target != null) {
-      final spot = _spotBeside(target, _bubbleRect(stage, bubbleOnTop), stage);
+    if (_visiting && target != null) {
+      final spot = _spotBeside(target, bubble, stage);
       if (spot != null) return spot;
     }
     return Offset(
-        start,
-        bubbleOnTop
-            ? _bubbleHeight + 18
-            : stage.height - _bubbleHeight - _robot - 16);
+        rtl ? bubble.right - _robot - 10 : bubble.left + 10, bubble.top + 10);
   }
 
   @override
@@ -391,7 +435,7 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
       final stage = constraints.biggest;
       final target = _target;
       final bubbleOnTop = target != null && target.center.dy > stage.height * .55;
-      final robot = _robotAt(stage, bubbleOnTop, rtl);
+      final robot = _robotAt(stage, bubbleOnTop, rtl, keyboard);
 
       return Stack(
         key: _stage,
@@ -417,7 +461,7 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
                     child: _Bubble(
                       key: _bubble,
                       step: scenario.step,
-                      action: _reviewing && target == null
+                      action: _reviewing && _atHome
                           ? 'Open the visit'
                           : scenario.step.action,
                       say: _say ?? scenario.step.hint,
@@ -517,7 +561,8 @@ class _Bubble extends StatelessWidget {
       elevation: 8,
       borderRadius: BorderRadius.circular(18),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(14, 6, 6, 12),
+        padding: const EdgeInsetsDirectional.fromSTEB(
+            _StudioWidgetBotState._robot + 18, 6, 6, 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

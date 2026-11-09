@@ -22,6 +22,7 @@ class PaymentsWidgetReview {
     final bloc = context.read<InvoicesBloc>();
     final ok = await showDialog<bool>(
       context: context,
+      useRootNavigator: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surface,
         title: Text('Confirm this collection?'.tr,
@@ -62,7 +63,9 @@ class PaymentsWidgetReview {
   ) async {
     final bloc = context.read<InvoicesBloc>();
     final reason = await showDialog<String>(
-        context: context, builder: (_) => const _RejectDialog());
+        context: context,
+        useRootNavigator: false,
+        builder: (_) => const _RejectDialog());
     if (reason == null) return;
     bloc.add(ReviewPaymentEvent(
         reviewPaymentParameters: ReviewPaymentParameters(

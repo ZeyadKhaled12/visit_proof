@@ -35,6 +35,7 @@ class AppToasts {
       {String? headTitle, required String title}) async {
     return await showDialog(
       context: App.navigatorKey.currentContext!,
+      useRootNavigator: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

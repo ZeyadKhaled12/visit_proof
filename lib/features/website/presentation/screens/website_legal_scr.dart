@@ -19,6 +19,11 @@ class WebsiteLegalScr extends StatelessWidget {
   String get _title =>
       page == WebsiteLegalPage.privacy ? 'Privacy policy'.tr : 'Terms of service'.tr;
 
+  String get _contact => AppOffer.hasWhatsapp
+      ? 'Reach us on WhatsApp on {0}, or through the contact details you received from us.'
+          .trArgs(['+${AppOffer.whatsappNumber}'])
+      : 'Reach us through the contact details you received from us.'.tr;
+
   List<(String, String)> get _sections => page == WebsiteLegalPage.privacy
       ? [
           (
@@ -53,8 +58,7 @@ class WebsiteLegalScr extends StatelessWidget {
           ),
           (
             'Contact us'.tr,
-            'Reach us on WhatsApp or through the contact details you received from us.'
-                .tr
+            _contact
           ),
         ]
       : [
@@ -101,8 +105,7 @@ class WebsiteLegalScr extends StatelessWidget {
           ),
           (
             'Contact us'.tr,
-            'Reach us on WhatsApp or through the contact details you received from us.'
-                .tr
+            _contact
           ),
         ];
 

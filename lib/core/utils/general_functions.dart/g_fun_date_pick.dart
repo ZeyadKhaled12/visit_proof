@@ -13,6 +13,7 @@ class GFunDatePick {
 
     return await showDatePicker(
       context: context,
+      useRootNavigator: false,
       initialDate: initialDate ?? now,
       firstDate: firstDate ?? DateTime(2000),
       lastDate: lastDate ?? DateTime(2100),
@@ -45,6 +46,7 @@ class GFunDatePick {
   }) async {
     return await showTimePicker(
       context: context,
+      useRootNavigator: false,
       initialTime: initialTime ?? TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
         return Theme(

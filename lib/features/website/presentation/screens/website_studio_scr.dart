@@ -1,4 +1,6 @@
 import 'package:visit_proof/configs/app_language.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../../configs/app_offer.dart';
@@ -43,7 +45,7 @@ enum _Menu {
   restart,
   simulate,
   fullCompany,
-  whatsapp,
+  offer,
   privacy,
   terms
 }
@@ -51,8 +53,12 @@ enum _Menu {
 class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   static const double _dockWidth = 340;
 
+  /// Time to see the invoice turn paid before the offer covers it.
+  static const Duration _paidPause = Duration(seconds: 3);
+
   final _scenario = StudioScenario();
   bool _offerShown = false;
+  Timer? _offerTimer;
 
   /// Phones show the design tools only when asked, or to a returning visitor
   /// whose design was brought back.
@@ -94,6 +100,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   void dispose() {
     if (WebsiteStudioScr.requestInstallsApp) StudioInstall.stop();
     DemoMode.prefillNewVisit = false;
+    _offerTimer?.cancel();
     _scenario.dispose();
     super.dispose();
   }
@@ -103,14 +110,19 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
     final finished = _scenario.step == StudioStep.finished;
     if (finished && !_offerShown && !_scenario.exploring) {
       _offerShown = true;
-      _showOffer(finished: true);
+      _offerTimer = Timer(
+          _scenario.paymentConfirmed ? _paidPause : Duration.zero, _showOffer);
     } else if (!finished) {
       _offerShown = false;
+      _offerTimer?.cancel();
     }
   }
 
-  void _showOffer({bool finished = false}) => WebsiteOfferCard.show(context,
-      finished: finished, onRequest: _request);
+  void _showOffer() {
+    _offerTimer?.cancel();
+    WebsiteOfferCard.show(context,
+        finished: _scenario.step == StudioStep.finished, onRequest: _request);
+  }
 
   void _request() =>
       WebsiteStudioScr.requestInstallsApp ? StudioInstall.install(context) : _openRequest();
@@ -133,8 +145,8 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
         DemoMode.simulateOnSite.value = !DemoMode.simulateOnSite.value;
       case _Menu.fullCompany:
         _scenario.restart(fullCompany: true);
-      case _Menu.whatsapp:
-        GFunLaunch.openWhatsApp(AppOffer.whatsappNumber);
+      case _Menu.offer:
+        _showOffer();
       case _Menu.privacy:
         WebsiteLegalScr.open(context, WebsiteLegalPage.privacy);
       case _Menu.terms:
@@ -180,12 +192,22 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
               selectedIcon: const Icon(Icons.palette_rounded,
                   color: WebTheme.accentText),
             ),
-          IconButton(
-            tooltip: 'The offer'.tr,
-            visualDensity: VisualDensity.compact,
-            onPressed: _showOffer,
-            icon: const Icon(Icons.redeem_rounded, color: WebTheme.accentText),
-          ),
+          if (AppOffer.hasWhatsapp)
+            IconButton(
+              tooltip: 'WhatsApp'.tr,
+              visualDensity: VisualDensity.compact,
+              onPressed: () => GFunLaunch.openWhatsApp(AppOffer.whatsappNumber),
+              icon: const Icon(Icons.chat_rounded, color: WebTheme.statGreen),
+            ),
+          // A phone's bar has room for one of the two.
+          if (wide || !AppOffer.hasWhatsapp)
+            IconButton(
+              tooltip: 'The offer'.tr,
+              visualDensity: VisualDensity.compact,
+              onPressed: _showOffer,
+              icon:
+                  const Icon(Icons.redeem_rounded, color: WebTheme.accentText),
+            ),
           _menu(wide),
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 2, end: 10),
@@ -269,8 +291,8 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
             'Pretend I am at the site'.tr),
         item(_Menu.fullCompany, Icons.business_rounded,
             'Explore a large sample company'.tr),
-        if (AppOffer.hasWhatsapp)
-          item(_Menu.whatsapp, Icons.chat_rounded, 'WhatsApp'.tr),
+        if (!wide && AppOffer.hasWhatsapp)
+          item(_Menu.offer, Icons.redeem_rounded, 'The offer'.tr),
         item(_Menu.privacy, Icons.privacy_tip_outlined, 'Privacy policy'.tr),
         item(_Menu.terms, Icons.description_outlined, 'Terms of service'.tr),
       ],
