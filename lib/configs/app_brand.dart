@@ -3,8 +3,8 @@
 // =============================================================================
 //
 // The website's design studio edits [AppBrand.current]; every screen redraws
-// with the new colors, fonts, text size, name and icon at once. The website
-// keeps the visitor's design between visits (WebsiteDesignLocalDataSource).
+// with the new colors, fonts, text size, name and icon at once. The visitor's
+// design lasts until they leave the page.
 //
 // Anything not set keeps the default value from AppTheme.
 // =============================================================================

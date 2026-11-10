@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../configs/app_brand.dart';
 import '../../../../configs/app_theme.dart';
-import '../../data/datasource/website_design_local_data_source.dart';
 import '../studio_scenario.dart';
 import '../website_theme.dart';
 
@@ -39,10 +38,28 @@ class StudioDesign {
 
   static Color colorOf(AppBrandColor slot) =>
       AppBrand.value[slot] ?? defaultColor(slot);
+
+  /// The visitor has changed something from the app's own look.
+  static bool get isCustom {
+    final brand = AppBrand.value;
+    return brand.colors.isNotEmpty ||
+        brand.hasCustomName ||
+        brand.logo != null ||
+        brand.iconKey != AppBrand.defaultIconKey ||
+        brand.fontArabic != null ||
+        brand.fontEnglish != null ||
+        brand.fontScale != 1.0 ||
+        AppTheme.isDark;
+  }
+
+  /// Back to the app's own look.
+  static void clear() {
+    AppBrand.reset();
+    AppTheme.darkMode.value = false;
+  }
 }
 
 enum _DockTab {
-  guide('Steps', Icons.flag_rounded),
   colors('Colors', Icons.palette_rounded),
   text('Text', Icons.text_fields_rounded),
   identity('Name and logo', Icons.badge_rounded);
@@ -53,14 +70,16 @@ enum _DockTab {
   String get label => _label.tr;
 }
 
-/// The design tools beside the live app, and on a computer the scenario's
-/// steps too (on a phone Wizpoo carries them). The app stays visible, so one
-/// tap restyles it in front of the visitor.
+/// The design tools beside the live app, opened from the palette in the top
+/// bar. A computer's side column shows the scenario's steps until then (on a
+/// phone Wizpoo carries them). The app stays visible, so one tap restyles it
+/// in front of the visitor.
 class StudioWidgetDock extends StatefulWidget {
   const StudioWidgetDock({
     super.key,
     required this.scenario,
     required this.wide,
+    required this.designOpen,
     required this.onOffer,
   });
 
@@ -69,6 +88,9 @@ class StudioWidgetDock extends StatefulWidget {
   /// A tall side column on a computer; a short strip under the app on a
   /// phone.
   final bool wide;
+
+  /// The visitor pressed the palette to change the app's style.
+  final bool designOpen;
   final VoidCallback onOffer;
 
   @override
@@ -76,9 +98,8 @@ class StudioWidgetDock extends StatefulWidget {
 }
 
 class _StudioWidgetDockState extends State<StudioWidgetDock> {
-  late _DockTab _tab = widget.wide ? _DockTab.guide : _DockTab.colors;
+  _DockTab _tab = _DockTab.colors;
   bool _custom = false;
-  bool _noticeClosed = false;
   AppBrandColor _slot = AppBrandColor.primary;
   late HSVColor _hsv = HSVColor.fromColor(StudioDesign.colorOf(_slot));
 
@@ -116,10 +137,6 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
     AppBrand.update(brand);
     _redraw();
   }
-
-  /// The steps tab only exists beside the phone frame.
-  _DockTab get _active =>
-      !widget.wide && _tab == _DockTab.guide ? _DockTab.colors : _tab;
 
   void _selectTab(_DockTab tab) => setState(() => _tab = tab);
 
@@ -184,10 +201,9 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
       ),
     );
     if (clear != true) return;
-    await WebsiteDesignLocalDataSource.clear();
+    StudioDesign.clear();
     _name.clear();
     _selectSlot(_slot);
-    setState(() => _noticeClosed = true);
   }
 
   @override
@@ -199,23 +215,14 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
       return const SizedBox.shrink();
     }
 
-    final header = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (WebsiteDesignLocalDataSource.restored && !_noticeClosed)
-          _restoredNotice(),
-        _tabs(),
-      ],
-    );
-
     if (widget.wide) {
       return Column(
         children: [
-          header,
+          if (widget.designOpen) _tabs(),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              child: _content(),
+              child: widget.designOpen ? _content() : _guide(),
             ),
           ),
         ],
@@ -232,7 +239,7 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            header,
+            _tabs(),
             ConstrainedBox(
               constraints: BoxConstraints(maxHeight: media.size.height * .3),
               child: SingleChildScrollView(
@@ -246,51 +253,19 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
     );
   }
 
-  Widget _restoredNotice() {
-    return Container(
-      color: WebTheme.accent.withValues(alpha: .18),
-      padding: const EdgeInsetsDirectional.only(start: 14),
-      child: Row(children: [
-        const Icon(Icons.palette_rounded, color: WebTheme.accentText, size: 18),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text('Your design is back, as you left it.'.tr,
-              style: WebTheme.font(
-                  color: WebTheme.textPrimary,
-                  fontSize: WebTheme.textSmall,
-                  fontWeight: FontWeight.w700)),
-        ),
-        TextButton(
-          onPressed: _clearDesign,
-          child: Text('Clear'.tr,
-              style: WebTheme.font(
-                  color: WebTheme.statOrange,
-                  fontSize: WebTheme.textSmall,
-                  fontWeight: FontWeight.w800)),
-        ),
-        IconButton(
-          tooltip: 'Close'.tr,
-          onPressed: () => setState(() => _noticeClosed = true),
-          icon: const Icon(Icons.close_rounded,
-              color: WebTheme.textSecondary, size: 18),
-        ),
-      ]),
-    );
-  }
-
   Widget _tabs() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(6, 6, 6, 4),
       child: Row(children: [
         for (final tab in _DockTab.values)
-          if (widget.wide || tab != _DockTab.guide) Expanded(
+          Expanded(
             child: _TabButton(
               tab: tab,
-              selected: tab == _active,
+              selected: tab == _tab,
               onTap: () => _selectTab(tab),
             ),
           ),
-        if (WebsiteDesignLocalDataSource.isCustom)
+        if (StudioDesign.isCustom)
           IconButton(
             tooltip: 'Clear your design'.tr,
             onPressed: _clearDesign,
@@ -302,9 +277,7 @@ class _StudioWidgetDockState extends State<StudioWidgetDock> {
   }
 
   Widget _content() {
-    switch (_active) {
-      case _DockTab.guide:
-        return _guide();
+    switch (_tab) {
       case _DockTab.colors:
         return _colors();
       case _DockTab.text:

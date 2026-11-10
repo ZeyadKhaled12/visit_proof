@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import '../../../configs/app_theme.dart';
+import 'g_widget_navi_appbar.dart';
 
 class _PlaceSuggestion {
   final String name;
@@ -358,6 +359,7 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
     return GWidgetTourFlag(tour: AppTours.locationPicker, child: Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppTheme.scaffoldBackground,
+      appBar: GWidgetNaviAppbar.appBar(context, 'Choose the location'.tr),
       body: SafeArea(
         child: Stack(
           children: [
@@ -399,24 +401,13 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
               ),
             ),
 
-            // Navigation and search field.
+            // Search field.
             GTourTarget(id: 'search', child: Positioned(
               top: 16,
               left: 16,
               right: 16,
               child: Row(
                 children: [
-                  Material(
-                    color: AppTheme.surface,
-                    elevation: 3,
-                    shape: const CircleBorder(),
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back,
-                          color: AppTheme.textPrimary),
-                      onPressed: () => Navigator.pop(context, null),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   Expanded(
                     child: Material(
                       color: AppTheme.searchFieldBg,
@@ -471,7 +462,6 @@ class _GWidgetLocationPickerScrState extends State<GWidgetLocationPickerScr> {
                       ),
                     ),
                   ),
-                  const GWidgetTourFlagSpace(),
                 ],
               ),
             )),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -37,13 +38,15 @@ import 'package:visit_proof/features/visit_detail/domain/usecases/change_visit_s
 import 'package:visit_proof/features/visits/data/datasource/visits_remote_data_source.dart';
 import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_client_model.dart';
 import 'package:visit_proof/features/visits/data/models/visit_detail_models/visit_detail_model.dart';
-import 'package:visit_proof/features/website/data/datasource/website_design_local_data_source.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_location_view_scr.dart';
+import 'package:visit_proof/core/utils/general_widgets/g_widget_tour.dart';
+import 'package:visit_proof/features/website/presentation/widgets/studio_widget_bot.dart';
+import 'package:visit_proof/features/website/presentation/widgets/studio_widget_dock.dart';
 import 'package:visit_proof/features/website/data/models/website_request_model.dart';
 import 'package:visit_proof/features/website/presentation/screens/website_request_scr.dart';
 import 'package:visit_proof/features/website/presentation/screens/website_scr.dart';
 import 'package:visit_proof/features/website/presentation/screens/website_studio_scr.dart';
 import 'package:visit_proof/features/website/presentation/studio_scenario.dart';
-import 'package:visit_proof/features/website/presentation/widgets/studio_widget_bot.dart';
 import 'package:visit_proof/features/website/presentation/widgets/website_widget_offer.dart';
 import 'package:visit_proof/features/website/presentation/widgets/website_widget_parts.dart';
 
@@ -102,7 +105,7 @@ void main() {
   });
 
   tearDown(() async {
-    await WebsiteDesignLocalDataSource.clear();
+    StudioDesign.clear();
     AppSession.current.value = null;
   });
 
@@ -249,42 +252,18 @@ void main() {
     expect(texts.where((t) => !arabicTranslations.containsKey(t)), isEmpty);
   });
 
-  group('the design', () {
-    test('comes back after closing the website, and can be cleared', () async {
-      AppBrand.update(const AppBrandModel(
-        colors: {AppBrandColor.primary: Color(0xFF0B63CE)},
-        appName: 'Cool Air',
-      ));
-      AppTheme.darkMode.value = true;
-      await WebsiteDesignLocalDataSource.save();
+  test('the design can be cleared', () {
+    AppBrand.update(const AppBrandModel(
+      colors: {AppBrandColor.primary: Color(0xFF0B63CE)},
+      appName: 'Cool Air',
+    ));
+    AppTheme.darkMode.value = true;
+    expect(StudioDesign.isCustom, isTrue);
 
-      AppBrand.reset();
-      AppTheme.darkMode.value = false;
-      WebsiteDesignLocalDataSource.restore();
-      expect(AppBrand.value[AppBrandColor.primary], const Color(0xFF0B63CE));
-      expect(AppBrand.value.appName, 'Cool Air');
-      expect(AppTheme.isDark, isTrue);
-      expect(WebsiteDesignLocalDataSource.restored, isTrue);
-
-      await WebsiteDesignLocalDataSource.clear();
-      expect(AppBrand.value.colors, isEmpty);
-      expect(AppTheme.isDark, isFalse);
-      expect(
-          LocalPref.sharedPreferences
-              .getString(WebsiteDesignLocalDataSource.key),
-          isNull);
-    });
-
-    test('a damaged saved design is dropped', () async {
-      await LocalPref.sharedPreferences
-          .setString(WebsiteDesignLocalDataSource.key, '{not json');
-      WebsiteDesignLocalDataSource.restore();
-      expect(AppBrand.value.colors, isEmpty);
-      expect(
-          LocalPref.sharedPreferences
-              .getString(WebsiteDesignLocalDataSource.key),
-          isNull);
-    });
+    StudioDesign.clear();
+    expect(AppBrand.value.colors, isEmpty);
+    expect(AppTheme.isDark, isFalse);
+    expect(StudioDesign.isCustom, isFalse);
   });
 
   test('the request carries the design and the changes wanted', () {
@@ -348,8 +327,30 @@ void main() {
       expect(flag.height, lessThanOrEqualTo(40));
       expect(flag.top, 50, reason: 'hangs from the top of the app');
 
+      final atFlag = tester.getRect(find.byTooltip('Wizpoo'));
+      expect((atFlag.center - flag.center).distance, lessThan(90),
+          reason: 'Wizpoo stays right beside the flag');
+
       await tester.tap(find.text('Got it'));
       await _settle(tester);
+      expect(find.text('Make it your style'), findsOneWidget);
+      final palette = tester.getRect(find.byTooltip('Design your app'));
+      final mascot = tester.getRect(find.descendant(
+          of: find.byType(StudioWidgetPageCue),
+          matching: find.byType(GWidgetMascot)));
+      expect((mascot.center - palette.center).distance, lessThan(90),
+          reason: 'Wizpoo flies up to the palette');
+      expect(find.text('Colors'), findsNothing,
+          reason: 'the design tools wait for a press');
+
+      await tester.tap(find.byTooltip('Design your app'));
+      await _settle(tester);
+      expect(find.text('Colors'), findsOneWidget);
+      expect(find.text('Make it your style'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Design your app'));
+      await _settle(tester);
+      expect(find.text('Colors'), findsNothing);
       expect(find.text('Step 1 of ${StudioStep.total}'), findsOneWidget);
 
       final robot = tester.getRect(find.byTooltip('Wizpoo'));
@@ -368,6 +369,8 @@ void main() {
       await show(tester);
       await _settle(tester);
       await tester.tap(find.text('Let us start'));
+      await _settle(tester);
+      await tester.tap(find.text('Got it'));
       await _settle(tester);
       await tester.tap(find.text('Got it'));
       await _settle(tester);
@@ -428,7 +431,6 @@ void main() {
 
     testWidgets('restarting the scenario keeps the design', (tester) async {
       AppBrand.update(const AppBrandModel(appName: 'Cool Air'));
-      await WebsiteDesignLocalDataSource.save();
       await show(tester);
 
       await tester.tap(find.byTooltip('More'));
@@ -443,12 +445,69 @@ void main() {
       expect(find.byType(PopupMenuItem<dynamic>), findsNothing);
       expect(_step(), StudioStep.createVisit);
       expect(_read('technicians', TechnicianDetailModel.fromJson), isNotEmpty);
-      expect(
-          LocalPref.sharedPreferences
-              .getString(WebsiteDesignLocalDataSource.key),
-          contains('Cool Air'));
+      expect(AppBrand.value.appName, 'Cool Air');
       expect(AppSession.isAdmin, isTrue);
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('leaving asks first and deletes the design', (tester) async {
+      await show(tester);
+      await _settle(tester);
+
+      await tester.binding.handlePopRoute();
+      await _settle(tester);
+      expect(find.text('Leave the website?'), findsOneWidget);
+      expect(
+          find.text(
+              'If you leave, your try of the app will not be saved. Are you sure you want to leave?'),
+          findsOneWidget);
+      await tester.tap(find.text('Stay'));
+      await _settle(tester);
+      expect(find.text('Leave the website?'), findsNothing);
+
+      AppBrand.update(const AppBrandModel(appName: 'Cool Air'));
+      await _settle(tester);
+      await tester.binding.handlePopRoute();
+      await _settle(tester);
+      expect(
+          find.text(
+              'If you leave, the design you chose will be deleted. Are you sure you want to leave?'),
+          findsOneWidget);
+      await tester.tap(find.text('Leave'));
+      await _settle(tester);
+      expect(StudioDesign.isCustom, isFalse);
+    });
+
+    testWidgets('a map has a back arrow and Wizpoo goes to it', (tester) async {
+      await show(tester);
+      await _settle(tester);
+      await tester.tap(find.text('Let us start'));
+      await _settle(tester);
+      await tester.tap(find.text('Got it'));
+      await _settle(tester);
+      await tester.tap(find.text('Got it'));
+      await _settle(tester);
+
+      unawaited(App.navigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (_) => const GWidgetLocationViewScr(
+              latitude: 24.7, longitude: 46.7))));
+      await _settle(tester);
+
+      final arrow = find.byTooltip('Back');
+      expect(arrow, findsOneWidget);
+      expect(tester.getRect(arrow).top, lessThan(150),
+          reason: 'in the top bar');
+      expect(find.text('Press the arrow at the top to go back.'),
+          findsWidgets);
+      final robot = tester.getRect(find.byTooltip('Wizpoo'));
+      expect((robot.center - tester.getRect(arrow).center).distance,
+          lessThan(90));
+
+      // The browser's back button closes it and does not ask about leaving.
+      await tester.binding.handlePopRoute();
+      await _settle(tester);
+      expect(find.byType(GWidgetLocationViewScr), findsNothing);
+      expect(find.text('Leave the website?'), findsNothing);
     });
 
     testWidgets('the offer opens from the top bar', (tester) async {

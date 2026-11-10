@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
@@ -27,6 +28,7 @@ class GWidgetMenuButton extends StatelessWidget {
     if (canGoBack && scaffold == null) {
       return _button(
         icon: Icons.arrow_back_ios_new_rounded,
+        tooltip: 'Back'.tr,
         onTap: () => Navigator.maybePop(context),
       );
     }
@@ -34,8 +36,9 @@ class GWidgetMenuButton extends StatelessWidget {
     return _button(icon: Icons.menu_rounded, onTap: scaffold.openDrawer);
   }
 
-  Widget _button({required IconData icon, required VoidCallback onTap}) {
-    return Padding(
+  Widget _button(
+      {required IconData icon, required VoidCallback onTap, String? tooltip}) {
+    final button = Padding(
       padding: const EdgeInsetsDirectional.only(end: 6),
       child: InkResponse(
         onTap: onTap,
@@ -47,5 +50,6 @@ class GWidgetMenuButton extends StatelessWidget {
         ),
       ),
     );
+    return tooltip == null ? button : Tooltip(message: tooltip, child: button);
   }
 }

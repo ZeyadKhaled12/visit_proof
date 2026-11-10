@@ -68,7 +68,7 @@ class WebsiteHero extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         Text(
-            'No sign-up and no card. Your design stays saved in this browser.'
+            'No sign-up and no card. Your design stays until you leave the page.'
                 .tr,
             textAlign: align,
             style: WebTheme.font(
@@ -917,7 +917,7 @@ class WebsiteFaq extends StatelessWidget {
       ),
       (
         'Is the demo saving what I type?',
-        'The demo data starts again every time you open the page. Only your design is kept, in this browser, until you clear it. Nothing is sent until you press send on your request.'
+        'The demo data starts again every time you open the page, and your design is deleted when you leave it. Nothing is sent until you press send on your request.'
             .tr
       ),
     ];

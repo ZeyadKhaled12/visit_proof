@@ -9,6 +9,7 @@ extension type _WizpoPwa._(JSObject _) implements JSObject {
   external void setManifest(
       String json, String icon, String themeColor, String title);
   external void resetManifest();
+  external void setLeaveGuard(bool on);
   external bool canPrompt();
   external JSPromise<JSString> prompt();
   external bool isIos();
@@ -26,6 +27,9 @@ class PwaBridge {
 
   /// Back to the website's own (Wizpo) manifest.
   static void resetManifest() => _pwa?.resetManifest();
+
+  /// Whether closing or reloading the tab asks the visitor first.
+  static void setLeaveGuard(bool on) => _pwa?.setLeaveGuard(on);
 
   /// The browser has offered to install the current manifest.
   static bool get canPrompt => _pwa?.canPrompt() ?? false;

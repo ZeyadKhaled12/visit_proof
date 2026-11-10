@@ -1952,16 +1952,25 @@ const Map<String, String> arabicTranslations = {
       'استكشف شركة تجريبية كبيرة',
   'You are exploring a large sample company. Use the menu to start the scenario again.':
       'أنت تستكشف شركة تجريبية كبيرة. استخدم القائمة لبدء السيناريو من جديد.',
-  'Steps':
-      'الخطوات',
+  'Choose the location': 'اختر الموقع',
+  'Make it your style': 'اجعله بأسلوبك',
+  "Press the palette I am pointing at, at the top, to change the app's style. Press it again to close it.":
+      'اضغط على لوحة الألوان التي أشير إليها في الأعلى لتغيير مظهر التطبيق، واضغط عليها مرة أخرى لإغلاقها.',
+  'Press the arrow at the top to go back.':
+      'اضغط على السهم في الأعلى للرجوع.',
+  'Leave the website?': 'هل تريد مغادرة الموقع؟',
+  'If you leave, the design you chose will be deleted. Are you sure you want to leave?':
+      'إذا غادرت الموقع فسيُحذف التصميم الذي اخترته. هل أنت متأكد من رغبتك في المغادرة؟',
+  'If you leave, your try of the app will not be saved. Are you sure you want to leave?':
+      'إذا غادرت الموقع فلن تُحفظ تجربتك للتطبيق. هل أنت متأكد من رغبتك في المغادرة؟',
+  'Leave': 'مغادرة',
+  'Stay': 'البقاء',
   'Name and logo':
       'الاسم والشعار',
   'Any color you want':
       'أي لون تريده',
   'Your company or app name':
       'اسم شركتك أو تطبيقك',
-  'Your design is back, as you left it.':
-      'عاد تصميمك كما تركته.',
   'Clear':
       'مسح',
   'Clear your design':
@@ -2032,8 +2041,8 @@ const Map<String, String> arabicTranslations = {
       'أدِر الفنيين والصيانة من تطبيق واحد.',
   'Schedule visits, dispatch your technicians and get proof of every job: live location, photos and a clear record, in an app with your colors and your logo.':
       'جدول الزيارات، ووزّع فنييك، واحصل على إثبات لكل مهمة: موقع مباشر وصور وسجل واضح، في تطبيق بألوانك وشعارك.',
-  'No sign-up and no card. Your design stays saved in this browser.':
-      'بلا تسجيل ولا بطاقة. يبقى تصميمك محفوظًا في هذا المتصفح.',
+  'No sign-up and no card. Your design stays until you leave the page.':
+      'بلا تسجيل ولا بطاقة. يبقى تصميمك إلى أن تغادر الصفحة.',
   'Try the full cycle':
       'جرّب الدورة كاملة',
   'Follow one visit from start to finish, as the admin and then as the technician.':
@@ -2056,8 +2065,8 @@ const Map<String, String> arabicTranslations = {
       'كم أدفع بعد الفترة المجانية؟',
   'Anything the app does not do today: a new field, a new report, a new screen or a connection to another system. Small changes are free within a limit; anything beyond it is a paid feature, and nothing is built before you agree on its price.':
       'كل ما لا يقوم به التطبيق اليوم: حقل جديد أو تقرير جديد أو شاشة جديدة أو ربط بنظام آخر. التعديلات الصغيرة مجانية ضمن حد معين، وما يتجاوزه يصبح ميزة مدفوعة، ولا ننفذ شيئًا قبل الاتفاق على سعره.',
-  'The demo data starts again every time you open the page. Only your design is kept, in this browser, until you clear it. Nothing is sent until you press send on your request.':
-      'تبدأ بيانات التجربة من جديد في كل مرة تفتح فيها الصفحة. ولا يُحفظ إلا تصميمك، في هذا المتصفح، إلى أن تمسحه. ولا يُرسل شيء حتى تضغط إرسال في طلبك.',
+  'The demo data starts again every time you open the page, and your design is deleted when you leave it. Nothing is sent until you press send on your request.':
+      'تبدأ بيانات التجربة من جديد في كل مرة تفتح فيها الصفحة، ويُحذف تصميمك عند مغادرتها. ولا يُرسل شيء حتى تضغط إرسال في طلبك.',
   'We have received your request':
       'استلمنا طلبك',
   'We are preparing your version and will deliver it to you. We will contact you very soon on {0}.':
@@ -2170,8 +2179,8 @@ const Map<String, String> arabicTranslations = {
       'عند طلب نسختك نتلقى اسمك وشركتك ورقم هاتفك وبريدك الإلكتروني إن أدخلته والتعديلات التي تطلبها والتصميم الذي أعددته. ولا يطلب الموقع شيئًا غير ذلك.',
   'The demo':
       'النسخة التجريبية',
-  'What you type in the demo stays in your browser and starts again when you reopen the page. Your design is kept in this browser until you clear it.':
-      'ما تكتبه في النسخة التجريبية يبقى في متصفحك ويبدأ من جديد عند إعادة فتح الصفحة. ويُحفظ تصميمك في هذا المتصفح حتى تمسحه.',
+  'What you type in the demo stays in your browser and starts again when you reopen the page. Your design is deleted when you leave the page.':
+      'ما تكتبه في النسخة التجريبية يبقى في متصفحك ويبدأ من جديد عند إعادة فتح الصفحة. ويُحذف تصميمك عند مغادرة الصفحة.',
   'Why we use it':
       'الغرض من استخدامها',
   'Only to contact you, prepare your version and support you. We do not sell it or share it for advertising.':

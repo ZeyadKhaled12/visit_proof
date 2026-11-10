@@ -7,6 +7,8 @@ class PwaBridge {
 
   static void resetManifest() {}
 
+  static void setLeaveGuard(bool on) {}
+
   static bool get canPrompt => false;
 
   /// 'accepted', 'dismissed' or 'unavailable'.

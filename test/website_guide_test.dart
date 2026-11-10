@@ -70,6 +70,8 @@ void main() {
     await _settle(tester);
     await tester.tap(find.text('Got it'));
     await _settle(tester);
+    await tester.tap(find.text('Got it'));
+    await _settle(tester);
 
     Future<void> press(String label) async {
       final target = find.text(label).last;

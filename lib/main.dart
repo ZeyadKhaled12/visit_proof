@@ -22,7 +22,6 @@ import 'core/usecase/base_use_case.dart';
 import 'core/utils/general_widgets/g_widget_tour.dart';
 import 'features/auth/domain/usecases/enter_as_admin_uc.dart';
 import 'features/auth/domain/usecases/restore_session_uc.dart';
-import 'features/website/data/datasource/website_design_local_data_source.dart';
 import 'features/website/presentation/screens/website_scr.dart';
 import 'features/website/presentation/website_theme.dart';
 
@@ -70,8 +69,6 @@ void main() async {
       (savedArabic ??
           installed?.arabic ??
           (DemoMode.isOn || AppLanguage.arabicByDefault));
-  // The website brings back the design the visitor made last time.
-  if (DemoMode.isOn) WebsiteDesignLocalDataSource.restore();
 
   // An installed app loads the test company once and then keeps what the
   // user does in it.
@@ -81,11 +78,7 @@ void main() async {
     // Every start begins again from the test data (in its language): the
     // website from its guided scenario, test builds from the large company.
     // A customer's build keeps its data.
-    final savedDesign = prefs.getString(WebsiteDesignLocalDataSource.key);
     await prefs.clear();
-    if (savedDesign != null) {
-      await prefs.setString(WebsiteDesignLocalDataSource.key, savedDesign);
-    }
     if (savedDark != null) await prefs.setBool(darkModeKey, savedDark);
     if (savedArabic != null) await prefs.setBool(arabicKey, savedArabic);
     if (savedHelpFlags != null) {
@@ -106,7 +99,6 @@ void main() async {
   Intl.defaultLocale = AppLanguage.locale.languageCode;
   // Reopens as the admin or the technician who used the app last.
   await sl<RestoreSessionUc>().call(const NoParameters());
-  if (DemoMode.isOn) WebsiteDesignLocalDataSource.watch();
   // An installed app's link keeps its design on every screen.
   final raw = AppInstall.openedRaw;
   if (installed != null && raw != null) {

@@ -34,6 +34,7 @@ class StudioBotLines {
       'Press "Confirm". The money is added to the invoice.';
   static const confirm =
       'Press "Confirm". The time and your location are saved as proof.';
+  static const back = 'Press the arrow at the top to go back.';
 
   static const all = [
     newVisit,
@@ -52,6 +53,7 @@ class StudioBotLines {
     sendReceipt,
     openInvoice,
     confirmPayment,
+    back,
   ];
 }
 
@@ -62,7 +64,8 @@ class _Cue {
       this.tooltip,
       this.prefix = false,
       this.unticked = false,
-      this.first = false});
+      this.first = false,
+      this.stay = false});
   final String say;
   final String? text;
   final String? tooltip;
@@ -75,6 +78,10 @@ class _Cue {
 
   /// Take the first match rather than the last.
   final bool first;
+
+  /// Wizpoo stays beside it: something small at the top of the screen is
+  /// hard to find from a glance at the bubble.
+  final bool stay;
 
   bool matches(Widget widget) {
     if (unticked) {
@@ -214,7 +221,8 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     switch (widget.scenario.step) {
       case StudioStep.helpFlag:
         return [
-          _Cue(StudioStep.helpFlag.hint, tooltip: 'How this screen works'.tr)
+          _Cue(StudioStep.helpFlag.hint,
+              tooltip: 'How this screen works'.tr, stay: true)
         ];
       case StudioStep.createVisit:
         return [
@@ -314,10 +322,17 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     Rect? rect;
     String? say;
     Element? element;
-    for (final cue in menuOpen ? const <_Cue>[] : _cues) {
+    var stay = false;
+    final cues = [
+      ..._cues,
+      if (widget.scenario.offPath)
+        _Cue(StudioBotLines.back.tr, tooltip: 'Back'.tr, stay: true),
+    ];
+    for (final cue in menuOpen ? const <_Cue>[] : cues) {
       element = cue.find();
       if (element != null) {
         say = cue.say;
+        stay = cue.stay;
         break;
       }
     }
@@ -343,7 +358,7 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
         atHome != _atHome ||
         (height != null && height != _bubbleHeight)) {
       setState(() {
-        if (say != _say && rect != null && !_showingResult) _visitTarget();
+        if (say != _say) _visitTarget(rect != null && !_showingResult, stay);
         _atHome = atHome;
         _target = rect;
         _say = say;
@@ -359,9 +374,10 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
       widget.scenario.step == StudioStep.seeInvoice ||
       widget.scenario.step == StudioStep.finished;
 
-  void _visitTarget() {
-    _visiting = true;
+  void _visitTarget(bool visit, bool stay) {
+    _visiting = visit;
     _visitTimer?.cancel();
+    if (!visit || stay) return;
     _visitTimer = Timer(_visitFor, () {
       _visiting = false;
       _redraw();
@@ -399,16 +415,17 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
     final dx = target.center.dx - _robot / 2;
     final dy = target.center.dy - _robot / 2;
     final ring = target.inflate(gap - 2);
-    final room = Offset.zero & stage;
     for (final spot in [
       Offset(dx, target.top - _robot - gap),
       Offset(dx, target.bottom + gap),
       Offset(target.left - _robot - gap, dy),
       Offset(target.right + gap, dy),
     ]) {
-      final box = spot & const Size.square(_robot);
-      final fits = room.contains(box.topLeft) && room.contains(box.bottomRight);
-      if (fits && !box.overlaps(ring) && !box.overlaps(bubble)) return spot;
+      // Kept on the screen: what it points at can sit right at the edge.
+      final inside = Offset(spot.dx.clamp(4.0, stage.width - _robot - 4),
+          spot.dy.clamp(4.0, stage.height - _robot - 4));
+      final box = inside & const Size.square(_robot);
+      if (!box.overlaps(ring) && !box.overlaps(bubble)) return inside;
     }
     return null;
   }
@@ -483,7 +500,8 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
                 ),
               ),
             ),
-          AnimatedPositioned(
+          // The page draws it during the tip, up beside the palette.
+          if (scenario.step != StudioStep.themeTip) AnimatedPositioned(
             duration: const Duration(milliseconds: 650),
             curve: Curves.easeInOutCubic,
             left: robot.dx,
@@ -505,6 +523,107 @@ class _StudioWidgetBotState extends State<StudioWidgetBot>
         ],
       );
     });
+  }
+}
+
+/// Wizpoo outside the app: the palette is in the website's top bar, beyond
+/// the phone the guide lives in, so this flies there over the whole page.
+class StudioWidgetPageCue extends StatefulWidget {
+  const StudioWidgetPageCue(
+      {super.key, required this.scenario, required this.target});
+
+  final StudioScenario scenario;
+  final GlobalKey target;
+
+  @override
+  State<StudioWidgetPageCue> createState() => _StudioWidgetPageCueState();
+}
+
+class _StudioWidgetPageCueState extends State<StudioWidgetPageCue>
+    with SingleTickerProviderStateMixin {
+  static const double _robot = _StudioWidgetBotState._robot;
+
+  late final _idle =
+      AnimationController(vsync: this, duration: const Duration(seconds: 3));
+  late final Listenable _changes =
+      Listenable.merge([widget.scenario, GWidgetTour.playing]);
+  final _stage = GlobalKey();
+  Timer? _tracker;
+  Rect? _rect;
+
+  @override
+  void initState() {
+    super.initState();
+    _tracker = Timer.periodic(
+        _StudioWidgetBotState._trackEvery, (_) => _track());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _idle.stop();
+    } else if (!_idle.isAnimating) {
+      _idle.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tracker?.cancel();
+    _idle.dispose();
+    super.dispose();
+  }
+
+  void _track() {
+    final stage = _stage.currentContext?.findRenderObject() as RenderBox?;
+    final box = widget.target.currentContext?.findRenderObject() as RenderBox?;
+    if (stage == null || box == null || !stage.hasSize || !box.hasSize) return;
+    final rect = stage.globalToLocal(box.localToGlobal(Offset.zero)) & box.size;
+    if (rect != _rect) setState(() => _rect = rect);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: AnimatedBuilder(
+        animation: _changes,
+        builder: (context, _) {
+          if (widget.scenario.step != StudioStep.themeTip ||
+              GWidgetTour.playing.value) {
+            return const SizedBox.shrink();
+          }
+          return LayoutBuilder(builder: (context, constraints) {
+            final stage = constraints.biggest;
+            final rect = _rect;
+            // It starts low on the page, so the visitor sees it fly up.
+            final spot = rect == null
+                ? Offset((stage.width - _robot) / 2, stage.height * .6)
+                : Offset(
+                    (rect.center.dx - _robot / 2)
+                        .clamp(8.0, stage.width - _robot - 8),
+                    rect.bottom + 12);
+            return Stack(
+              key: _stage,
+              children: [
+                if (rect != null)
+                  Positioned.fromRect(
+                    rect: rect.inflate(4),
+                    child: _Ring(animation: _idle),
+                  ),
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 650),
+                  curve: Curves.easeInOutCubic,
+                  left: spot.dx,
+                  top: spot.dy,
+                  child: GWidgetMascot(size: _robot, idle: _idle),
+                ),
+              ],
+            );
+          });
+        },
+      ),
+    );
   }
 }
 
@@ -570,8 +689,12 @@ class _Bubble extends StatelessWidget {
       elevation: 8,
       borderRadius: BorderRadius.circular(18),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(
-            _StudioWidgetBotState._robot + 18, 6, 6, 12),
+        // Room for Wizpoo, who is at the palette during the tip.
+        padding: EdgeInsetsDirectional.fromSTEB(
+            step == StudioStep.themeTip ? 18 : _StudioWidgetBotState._robot + 18,
+            6,
+            6,
+            12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

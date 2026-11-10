@@ -62,6 +62,14 @@
       });
       window.addEventListener('appinstalled', function () { deferred = null; });
 
+      // Closing or reloading the tab: browsers show only their own wording.
+      var guardLeaving = false;
+      window.addEventListener('beforeunload', function (e) {
+        if (!guardLeaving) return;
+        e.preventDefault();
+        e.returnValue = '';
+      });
+
       function tag(selector, create) {
         var el = document.head.querySelector(selector);
         if (!el) { el = create(); document.head.appendChild(el); }
@@ -96,6 +104,7 @@
           meta('apple-mobile-web-app-title').content = 'Wizpo';
           deferred = null;
         },
+        setLeaveGuard: function (on) { guardLeaving = on; },
         canPrompt: function () { return deferred !== null; },
         prompt: async function () {
           if (!deferred) return 'unavailable';

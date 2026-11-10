@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../configs/app_theme.dart';
+import 'g_widget_navi_appbar.dart';
 
 /// Displays an immutable geographic location while allowing the camera to move.
 ///
@@ -120,6 +121,7 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
   Widget build(BuildContext context) {
     return GWidgetTourFlag(tour: AppTours.locationView, child: Scaffold(
       backgroundColor: AppTheme.textPrimary,
+      appBar: GWidgetNaviAppbar.appBar(context, 'Location'.tr),
       body: SafeArea(
         child: Stack(
           children: [
@@ -162,27 +164,6 @@ class _GWidgetLocationViewScrState extends State<GWidgetLocationViewScr> {
                 ),
               ],
             )),
-
-            // Same floating back button and pill styling as your picker.
-            Positioned(
-              top: 16,
-              left: 16,
-              right: 16,
-              child: Row(
-                children: [
-                  Material(
-                    color: AppTheme.surface,
-                    elevation: 3,
-                    shape: const CircleBorder(),
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back,
-                          color: AppTheme.textPrimary),
-                      onPressed: () => Navigator.pop(context, null),
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             // Moves only the CAMERA back to the marker, not the marker itself.
             GTourTarget(id: 'recenter', child: PositionedDirectional(

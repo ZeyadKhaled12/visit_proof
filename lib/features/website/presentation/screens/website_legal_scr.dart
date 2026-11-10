@@ -33,7 +33,7 @@ class WebsiteLegalScr extends StatelessWidget {
           ),
           (
             'The demo'.tr,
-            'What you type in the demo stays in your browser and starts again when you reopen the page. Your design is kept in this browser until you clear it.'
+            'What you type in the demo stays in your browser and starts again when you reopen the page. Your design is deleted when you leave the page.'
                 .tr
           ),
           (

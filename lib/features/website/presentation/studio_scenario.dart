@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 import 'package:visit_proof/configs/app_language.dart';
 
 import '../../../app/app.dart';
@@ -17,11 +17,14 @@ import '../../../core/utils/general_widgets/g_widget_tour.dart';
 import '../../auth/domain/usecases/enter_as_admin_uc.dart';
 import '../../auth/domain/usecases/login_technician_uc.dart';
 import '../../auth/domain/usecases/logout_uc.dart';
+import '../../add_visit/presentation/screens/add_visit_scr.dart';
 import '../../auth/presentation/widgets/auth_widget_account_actions.dart';
+import '../../clients/presentation/screens/add_client_scr.dart';
 import '../../dispatch/presentation/screens/dispatch_scr.dart';
+import '../../invoices/presentation/screens/invoice_detail_scr.dart';
+import '../../technicians/presentation/screens/add_tech_scr.dart';
 import '../../visit_detail/presentation/screens/visit_detail_scr.dart';
 import '../../visits/data/models/visit_detail_models/visit_detail_model.dart';
-import '../data/datasource/website_design_local_data_source.dart';
 
 /// One step of the full cycle the visitor plays: the office creates and
 /// dispatches a visit, the technician carries it out, the office sees the
@@ -35,6 +38,11 @@ enum StudioStep {
   helpFlag(
       'Your help is always here',
       'See this small gold flag at the top? It is on every screen. Tap it anytime and I will explain everything on that screen.',
+      technician: false,
+      action: 'Got it'),
+  themeTip(
+      'Make it your style',
+      'Press the palette I am pointing at, at the top, to change the app\'s style. Press it again to close it.',
       technician: false,
       action: 'Got it'),
   createVisit(
@@ -135,7 +143,7 @@ class StudioScenario extends ChangeNotifier {
 
   /// How far the introduction has got.
   int _intro = 0;
-  static const int _introSteps = 2;
+  static const int _introSteps = 3;
 
   /// How far the admin has got looking at the finished visit.
   int _reviewed = 0;
@@ -167,9 +175,19 @@ class StudioScenario extends ChangeNotifier {
     _check();
   }
 
+  void _nextIntro() {
+    _intro++;
+    _check();
+  }
+
   /// Trying the flag is the best way to finish its introduction.
   void _onTourChanged() {
-    if (step == StudioStep.helpFlag && !GWidgetTour.playing.value) skipIntro();
+    if (step == StudioStep.helpFlag && !GWidgetTour.playing.value) _nextIntro();
+  }
+
+  /// Opening the design tools and closing them again is all there is to learn.
+  void designToolsClosed() {
+    if (step == StudioStep.themeTip) _nextIntro();
   }
 
   @override
@@ -248,8 +266,8 @@ class StudioScenario extends ChangeNotifier {
     switch (step) {
       case StudioStep.welcome:
       case StudioStep.helpFlag:
-        _intro++;
-        _check();
+      case StudioStep.themeTip:
+        _nextIntro();
       case StudioStep.assign:
         await App.navigatorKey.currentState?.pushNamed(DispatchScr.route);
       case StudioStep.becomeTechnician:
@@ -285,6 +303,50 @@ class StudioScenario extends ChangeNotifier {
       return true;
     });
     return first;
+  }
+
+  /// The screens each step of the cycle is played on, besides the first one.
+  Set<String>? get _stepScreens {
+    switch (step) {
+      case StudioStep.createVisit:
+        return const {
+          AddVisitScr.route,
+          AddClientScr.route,
+          AddTechScr.route,
+        };
+      case StudioStep.assign:
+        return const {
+          DispatchScr.route,
+          VisitDetailScr.route,
+          AddTechScr.route,
+        };
+      case StudioStep.startTrip:
+      case StudioStep.startWork:
+      case StudioStep.complete:
+      case StudioStep.collect:
+        return const {VisitDetailScr.route};
+      case StudioStep.seeProof:
+      case StudioStep.seeInvoice:
+      case StudioStep.confirmPayment:
+        return const {VisitDetailScr.route, InvoiceDetailScr.route};
+      default:
+        return null;
+    }
+  }
+
+  /// The visitor opened a screen this step is not played on, such as a map.
+  bool get offPath {
+    final screens = _stepScreens;
+    if (screens == null) return false;
+    Route<dynamic>? current;
+    App.navigatorKey.currentState?.popUntil((route) {
+      current = route;
+      return true;
+    });
+    final route = current;
+    return route is PageRoute &&
+        !route.isFirst &&
+        !screens.contains(route.settings.name);
   }
 
   void _openVisit() {
@@ -325,12 +387,8 @@ class StudioScenario extends ChangeNotifier {
         await SchedulerBinding.instance.endOfFrame;
 
         final prefs = LocalPref.sharedPreferences;
-        const keep = {
-          WebsiteDesignLocalDataSource.key,
-          GWidgetTour.flagsKey,
-        };
         for (final key in prefs.getKeys().toList()) {
-          if (!keep.contains(key)) await prefs.remove(key);
+          if (key != GWidgetTour.flagsKey) await prefs.remove(key);
         }
         exploring = fullCompany;
         fullCompany ? await DemoSeed.run() : await DemoSeed.runScenario();

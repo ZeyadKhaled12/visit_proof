@@ -1,11 +1,13 @@
 import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../../../app/app.dart';
 import '../../../../configs/app_offer.dart';
 import '../../../../core/demo/demo_mode.dart';
+import '../../../../core/pwa/pwa_bridge.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/general_functions.dart/g_fun_launch.dart';
-import '../../data/datasource/website_design_local_data_source.dart';
 import '../studio_scenario.dart';
 import '../widgets/studio_widget_bot.dart';
 import '../widgets/studio_widget_dock.dart';
@@ -53,16 +55,17 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   static const double _dockWidth = 340;
 
   final _scenario = StudioScenario();
+  final _palette = GlobalKey();
   bool _offerShown = false;
 
-  /// Phones show the design tools only when asked, or to a returning visitor
-  /// whose design was brought back.
-  bool _designOpen = WebsiteDesignLocalDataSource.restored;
+  /// The design tools wait for the visitor to press the palette.
+  bool _designOpen = false;
 
   @override
   void initState() {
     super.initState();
     if (WebsiteStudioScr.requestInstallsApp) StudioInstall.start();
+    PwaBridge.setLeaveGuard(true);
     DemoMode.prefillNewVisit = true;
     _scenario
       ..start()
@@ -94,6 +97,7 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   @override
   void dispose() {
     if (WebsiteStudioScr.requestInstallsApp) StudioInstall.stop();
+    PwaBridge.setLeaveGuard(false);
     DemoMode.prefillNewVisit = false;
     _scenario.dispose();
     super.dispose();
@@ -110,6 +114,59 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
     } else if (!finished) {
       _offerShown = false;
     }
+  }
+
+  void _toggleDesign() {
+    setState(() => _designOpen = !_designOpen);
+    if (!_designOpen) _scenario.designToolsClosed();
+  }
+
+  /// The browser's back button: it steps back inside the app first, and only
+  /// asks once there is nothing left but leaving the website.
+  Future<void> _onBack(bool didPop, Object? result) async {
+    if (didPop) return;
+    if (await App.navigatorKey.currentState?.maybePop() ?? false) return;
+    if (mounted) _askToLeave();
+  }
+
+  /// The design lives only in this page, so leaving really does delete it.
+  Future<void> _askToLeave() async {
+    final leave = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: WebTheme.surface,
+        title: Text('Leave the website?'.tr,
+            style: WebTheme.font(
+                color: WebTheme.textPrimary, fontWeight: FontWeight.w800)),
+        content: Text(
+            (StudioDesign.isCustom
+                    ? 'If you leave, the design you chose will be deleted. Are you sure you want to leave?'
+                    : 'If you leave, your try of the app will not be saved. Are you sure you want to leave?')
+                .tr,
+            style: WebTheme.font(
+                color: WebTheme.textSecondary,
+                fontSize: WebTheme.textBodyLarge)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text('Leave'.tr,
+                style: WebTheme.font(
+                    color: WebTheme.statOrange, fontWeight: FontWeight.w800)),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            style: FilledButton.styleFrom(backgroundColor: WebTheme.primary),
+            child: Text('Stay'.tr,
+                style: WebTheme.font(
+                    color: WebTheme.onPrimary, fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
+    );
+    if (leave != true) return;
+    PwaBridge.setLeaveGuard(false);
+    StudioDesign.clear();
+    SystemNavigator.pop();
   }
 
   void _showOffer() => WebsiteOfferCard.show(context,
@@ -151,10 +208,13 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
   Widget build(BuildContext context) {
     final wide = MediaQuery.sizeOf(context).width >= 980;
     final dock = StudioWidgetDock(
-        scenario: _scenario, wide: wide, onOffer: _showOffer);
+        scenario: _scenario,
+        wide: wide,
+        designOpen: _designOpen,
+        onOffer: _showOffer);
     final bot = StudioWidgetBot(scenario: _scenario, onOffer: _showOffer);
 
-    return Scaffold(
+    final page = Scaffold(
       backgroundColor: WebTheme.scaffoldBackground,
       appBar: AppBar(
         backgroundColor: WebTheme.surface,
@@ -174,17 +234,17 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
             ),
             const WebsiteLanguageButton(),
           ],
-          if (!wide)
-            IconButton(
-              tooltip: 'Design your app'.tr,
-              isSelected: _designOpen,
-              visualDensity: VisualDensity.compact,
-              onPressed: () => setState(() => _designOpen = !_designOpen),
-              icon: const Icon(Icons.palette_outlined,
-                  color: WebTheme.textPrimary),
-              selectedIcon: const Icon(Icons.palette_rounded,
-                  color: WebTheme.accentText),
-            ),
+          IconButton(
+            key: _palette,
+            tooltip: 'Design your app'.tr,
+            isSelected: _designOpen,
+            visualDensity: VisualDensity.compact,
+            onPressed: _toggleDesign,
+            icon:
+                const Icon(Icons.palette_outlined, color: WebTheme.textPrimary),
+            selectedIcon:
+                const Icon(Icons.palette_rounded, color: WebTheme.accentText),
+          ),
           IconButton(
             tooltip: 'The offer'.tr,
             visualDensity: VisualDensity.compact,
@@ -257,6 +317,19 @@ class _WebsiteStudioScrState extends State<WebsiteStudioScr> {
                 if (_designOpen) dock,
               ],
             ),
+    );
+
+    return PopScope<Object?>(
+      canPop: false,
+      onPopInvokedWithResult: _onBack,
+      child: Stack(
+        children: [
+          page,
+          Positioned.fill(
+            child: StudioWidgetPageCue(scenario: _scenario, target: _palette),
+          ),
+        ],
+      ),
     );
   }
 

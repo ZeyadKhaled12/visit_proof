@@ -1,3 +1,4 @@
+import 'package:visit_proof/configs/app_language.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/app_theme.dart';
@@ -17,6 +18,7 @@ class GWidgetNaviAppbar {
       title: Row(
         children: [
           IconButton(
+            tooltip: 'Back'.tr,
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios_new_rounded,
                 color: AppTheme.textPrimary, size: 22),
